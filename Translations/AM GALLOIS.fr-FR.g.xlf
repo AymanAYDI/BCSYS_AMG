@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="fr-FR" original="AM GALLOIS">
+    <body>
+      <group id="body">
+        <trans-unit id="TableExtension 1994964448 - Field 1139653482 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1994964448">
+          <source>TEST</source>
+          <note from="Developer" annotates="general" priority="2">FRA="TEST FRA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Customer - Field TEST - Property Caption</note>
+          <target>TEST FRA</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

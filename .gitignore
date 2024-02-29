@@ -1,0 +1,7 @@
+*.app
+.alpackages/
+*.exe
+.alcache/
+.altemplates/
+*dump
+rad.json

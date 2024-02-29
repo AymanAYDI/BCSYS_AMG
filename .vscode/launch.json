@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Your own server",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "OnPrem",
+            "server": "http://localhost/8080/",
+            "serverInstance": "BC230",
+            "authentication": "Windows",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "launchBrowser": true,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "tenant": "default",
+            "startupCompany": "CNE 2007",
+            "schemaUpdateMode": "ForceSync"
+        },
+        {
+            "name": "AL: Generated Attach request",
+            "request": "attach",
+            "type": "al",
+            "server": "http://HYVMINFOLIB",
+            "serverInstance": "BC230",
+            "authentication": "Windows",
+            "port": 7049,
+            "sessionId": 8159,
+            "breakOnNext": "WebClient",
+            "breakOnError": "ExcludeTry"
+        }
+    ]
+}
