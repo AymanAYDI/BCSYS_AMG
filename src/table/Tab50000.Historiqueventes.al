@@ -9,14 +9,15 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.Archive;
 table 50000 "Historique ventes"
 {
-    // DrillDownPageID = 50010;
+    DrillDownPageID = 50010;
     LinkedObject = false;
-    // LookupPageID = 50010;
+    LookupPageID = 50010;
 
     fields
     {
         field(1; "N° client"; Code[20])
         {
+            Caption = 'N° client';
             DataClassification = ToBeClassified;
             TableRelation = Customer."No.";
         }

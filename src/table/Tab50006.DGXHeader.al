@@ -114,7 +114,8 @@ table 50006 "DGX Header"
     begin
         if "No DGX" = '' then begin
             ParamVente.Get();
-            "No DGX" := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
+            //todo not migrated yet
+            //"No DGX" := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
         end;
     end;
 

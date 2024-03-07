@@ -9,13 +9,12 @@ using Microsoft.Warehouse.Document;
 using Microsoft.Warehouse.History;
 table 50010 Colisage
 {
-    //todo page spe
-    // DrillDownPageID = 50020;
-    // LookupPageID = 50020;
+    DrillDownPageID = 50020;
+    LookupPageID = 50020;
 
     fields
     {
-        field(1; "N°"; Code[10])
+        field(1; "N°"; Code[20])
         {
             TableRelation = Colis."N°";
         }

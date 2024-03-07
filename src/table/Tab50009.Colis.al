@@ -23,7 +23,7 @@ table 50009 Colis
         field(16; "Nature du colis"; Code[10])
         {
             FieldClass = Normal;
-            TableRelation = NatureCoisage.No;
+            TableRelation = NatureColisage.No;
 
             trigger OnValidate()
             begin
@@ -130,7 +130,7 @@ table 50009 Colis
         }
         field(51; "Intituler Nature du colis"; Text[60])
         {
-            CalcFormula = lookup(NatureCoisage.Intituler where(No = field("Nature du colis")));
+            CalcFormula = lookup(NatureColisage.Intituler where(No = field("Nature du colis")));
             FieldClass = FlowField;
         }
     }
@@ -204,7 +204,8 @@ table 50009 Colis
     begin
         if "N°" = '' then begin
             ParamVente.Get();
-            "N°" := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° colis", TODAY, true, false);
+            //todo not migrated yet
+            //  "N°" := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° colis", TODAY, true, false);
         end;
 
         if Rec.GETFILTER("N° expédition") <> '' then
