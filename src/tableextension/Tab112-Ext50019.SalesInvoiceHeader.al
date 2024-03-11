@@ -9,16 +9,11 @@ tableextension 50019 SalesInvoiceHeader extends "Sales Invoice Header" //112
         {
             Caption = 'On Hold';
         }
-
-        //Unsupported feature: Deletion (FieldCollection) on ""Payment Reference"(Field 180)".
-
-
-        //Unsupported feature: Deletion (FieldCollection) on "Reversed(Field 1312)".
-
-        field(51010; "Compl. cond. livraison"; Text[80])
+        field(50000; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
         }
+        //todo delete field Payment Reference ,Reversed
     }
 }
 

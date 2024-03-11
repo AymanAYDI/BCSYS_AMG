@@ -10,7 +10,7 @@ page 50022 ListeColisage
     InsertAllowed = false;
     ModifyAllowed = false;
     PageType = List;
-    SourceTable = Colisage;
+    SourceTable = Packaging;
 
     layout
     {
@@ -18,31 +18,31 @@ page 50022 ListeColisage
         {
             repeater(Group)
             {
-                field("N°"; Rec."N°")
+                field("Package No."; Rec."Package No.")
                 {
                 }
-                field("N° ligne"; Rec."N° ligne")
+                field("Line No."; Rec."Line No.")
                 {
                 }
-                field("N° expédition"; Rec."N° expédition")
+                field("Shipping No."; Rec."Shipping No.")
                 {
                 }
-                field("N° ligne expédition"; Rec."N° ligne expédition")
+                field("Shipping Line No."; Rec."Shipping Line No.")
                 {
                 }
-                field("N° article"; Rec."N° article")
+                field("Item No."; Rec."Item No.")
                 {
                     Lookup = true;
                     LookupPageID = "Item Card";
                     TableRelation = Item."No.";
                 }
-                field(Quantité; Rec.Quantité)
+                field(Quantity; Rec."Quantity")
                 {
                 }
-                field("Poids Unitaire Net"; Rec."Poids Unitaire Net")
+                field("Net unit weight"; Rec."Net unit weight")
                 {
                 }
-                field("Poids Unitaire Brut"; Rec."Poids Unitaire Brut")
+                field("Gross Unit Weight"; Rec."Gross Unit Weight")
                 {
                 }
             }

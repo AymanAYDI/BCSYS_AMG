@@ -13,7 +13,7 @@ table 50007 "DGX Lines"
         field(10; DGXNo; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "DGX Header"."No DGX";
+            TableRelation = "DGX Header"."DGX No.";
         }
         field(20; ItemNo; Code[20])
         {
@@ -29,11 +29,11 @@ table 50007 "DGX Lines"
         {
             DataClassification = ToBeClassified;
         }
-        field(32; Classe; Text[30])
+        field(32; Class; Text[30])
         {
             DataClassification = ToBeClassified;
         }
-        field(33; "Groupe Emballage"; Option)
+        field(33; "Packaging Group"; Option)
         {
             DataClassification = ToBeClassified;
             OptionMembers = " ",I,II,III;
@@ -46,7 +46,7 @@ table 50007 "DGX Lines"
         {
             DataClassification = ToBeClassified;
         }
-        field(36; "Point éclair"; Decimal)
+        field(36; "Flash point"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
@@ -54,20 +54,20 @@ table 50007 "DGX Lines"
         {
             DataClassification = ToBeClassified;
         }
-        field(38; "Masse brute (kg)"; Decimal)
+        field(38; "Gross Mass (kg)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(39; "Masse nette (kg)"; Decimal)
+        field(39; "Net mass (kg)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(50; "No Colis"; Code[20])
+        field(50; "Package No."; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = Colis."N°";
+            TableRelation = Package."Package No.";
         }
-        field(55; "Unité de mesure"; Text[30])
+        field(55; "Unit of measure"; Text[30])
         {
             DataClassification = ToBeClassified;
         }
@@ -75,7 +75,7 @@ table 50007 "DGX Lines"
         {
             DataClassification = ToBeClassified;
         }
-        field(65; "Sous-classe"; Text[30])
+        field(65; "Sub-Class"; Text[30])
         {
             DataClassification = ToBeClassified;
         }

@@ -22,40 +22,40 @@ page 50014 "Lignes DGX"
                 field(Description; Rec.Description)
                 {
                 }
-                field(Classe; Rec.Classe)
+                field(Class; Rec.Class)
                 {
                 }
-                field("Sous-classe"; Rec."Sous-classe")
+                field("Sub-Class"; Rec."Sub-Class")
                 {
                 }
-                field("Groupe Emballage"; Rec."Groupe Emballage")
+                field("Packaging Group"; Rec."Packaging Group")
                 {
                 }
                 field(Qty; Rec.Qty)
                 {
                 }
-                field("Unité de mesure"; Rec."Unité de mesure")
+                field("Unit of measure"; Rec."Unit of measure")
                 {
                 }
                 field("Type of Packing"; Rec."Type of Packing")
                 {
                 }
-                field("Point éclair"; Rec."Point éclair")
+                field("Flash point"; Rec."Flash point")
                 {
                 }
                 field("Limited qty"; Rec."Limited qty")
                 {
                 }
-                field("Masse brute (kg)"; Rec."Masse brute (kg)")
+                field("Gross Mass (kg)"; Rec."Gross Mass (kg)")
                 {
                 }
-                field("Masse nette (kg)"; Rec."Masse nette (kg)")
+                field("Net mass (kg)"; Rec."Net mass (kg)")
                 {
                 }
                 field("Packing Inst"; Rec."Packing Inst")
                 {
                 }
-                field("No Colis"; Rec."No Colis")
+                field("Package No."; Rec."Package No.")
                 {
                 }
             }

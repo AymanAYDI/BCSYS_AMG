@@ -24,21 +24,21 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             {
                 Lookup = true;
                 DrillDown = true;
-                TableRelation = "Historique ventes"."Référence";
+                TableRelation = "Sales Archive"."Reference";
                 Importance = Promoted;
                 trigger OnLookup(var myText: Text): Boolean
                 var
-                    LRecHisto: Record "Historique ventes";
+                    LRecHisto: Record "Sales Archive";
                 begin
-                    LRecHisto.SETRANGE("Référence", Rec."No.");
+                    LRecHisto.SETRANGE("Reference", Rec."No.");
                     PAGE.RUNMODAL(Page::"Historique ventes article", LRecHisto);
                 end;
 
                 trigger OnDrillDown()
                 var
-                    LRecHisto: Record "Historique ventes";
+                    LRecHisto: Record "Sales Archive";
                 begin
-                    LRecHisto.SETRANGE("Référence", Rec."No.");
+                    LRecHisto.SETRANGE("Reference", Rec."No.");
                     PAGE.RUNMODAL(Page::"Historique ventes article", LRecHisto);
                 end;
             }

@@ -10,63 +10,64 @@ table 50006 "DGX Header"
 
     fields
     {
-        field(1; "No DGX"; Code[20])
+        field(1; "DGX No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(2; "Type DGX"; Option)
+        field(2; "DGX Type"; Option)
         {
             DataClassification = ToBeClassified;
             OptionCaption = 'Multimodal,Aérien cargo,Aérien passager';
             OptionMembers = "Multi-modal","Aerien cargo","Aerien passager";
         }
-        field(10; Destinataire; Code[20])
+        field(10; Recipient; Code[20])
         {
+            Caption = 'Recipient', Comment = 'FRA="Destinataire"';
             DataClassification = ToBeClassified;
             TableRelation = Customer."No.";
         }
-        field(11; "Destinataire nom"; Text[100])
+        field(11; "Recipient Name"; Text[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(12; "Destinataire adresse 1"; Text[100])
+        field(12; "Recipient Adress 1"; Text[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(13; "Destinataire adresse 2"; Text[50])
+        field(13; "Recipient Adress 2"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(14; "Destinataire code postal"; Code[20])
+        field(14; "Recipient Post Code"; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(15; "Destinataire ville"; Text[50])
+        field(15; "Recipient City"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(16; "Destinataire pays EN"; Text[50])
+        field(16; "Recipient Country EN"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(20; "Type de transport"; Option)
+        field(20; "Type of transport"; Option)
         {
             DataClassification = ToBeClassified;
             OptionMembers = cargo,passager;
         }
-        field(30; "Aéroport de départ"; Text[250])
+        field(30; "Airport of departure"; Text[250])
         {
             DataClassification = ToBeClassified;
         }
-        field(40; Radioactif; Boolean)
+        field(40; Radioactive; Boolean)
         {
             DataClassification = ToBeClassified;
         }
-        field(50; "Date document"; Date)
+        field(50; "Document Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(60; "No Bon Livraison"; Code[20])
+        field(60; "Delivery slip no."; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Sales Shipment Header"."No.";
@@ -76,32 +77,32 @@ table 50006 "DGX Header"
                 LRecBLHeader: Record "Sales Shipment Header";
                 LRecPays: Record "Country/Region";
             begin
-                if LRecBLHeader.Get("No Bon Livraison") then begin
-                    Destinataire := LRecBLHeader."Sell-to Customer No.";
-                    "Destinataire adresse 1" := LRecBLHeader."Ship-to Address";
-                    "Destinataire adresse 2" := LRecBLHeader."Ship-to Address 2";
-                    "Destinataire code postal" := LRecBLHeader."Ship-to Post Code";
-                    "Destinataire nom" := LRecBLHeader."Ship-to Name";
-                    "Destinataire ville" := LRecBLHeader."Ship-to City";
-                    "Date document" := LRecBLHeader."Document Date";
-                    if LRecPays.Get(LRecBLHeader."Sell-to Country/Region Code") then "Destinataire pays EN" := LRecPays."County Name";
+                if LRecBLHeader.Get("Delivery slip no.") then begin
+                    Recipient := LRecBLHeader."Sell-to Customer No.";
+                    "Recipient Adress 1" := LRecBLHeader."Ship-to Address";
+                    "Recipient Adress 2" := LRecBLHeader."Ship-to Address 2";
+                    "Recipient Post Code" := LRecBLHeader."Ship-to Post Code";
+                    "Recipient Name" := LRecBLHeader."Ship-to Name";
+                    "Recipient City" := LRecBLHeader."Ship-to City";
+                    "Document Date" := LRecBLHeader."Document Date";
+                    if LRecPays.Get(LRecBLHeader."Sell-to Country/Region Code") then "Recipient Country EN" := LRecPays."County Name";
                 end;
             end;
         }
-        field(70; "Masse brute totale"; Decimal)
+        field(70; "Total Gross Mass"; Decimal)
         {
-            CalcFormula = sum("DGX Lines"."Masse brute (kg)" where(DGXNo = field("No DGX")));
+            CalcFormula = sum("DGX Lines"."Gross Mass (kg)" where(DGXNo = field("DGX No.")));
             FieldClass = FlowField;
         }
     }
 
     keys
     {
-        key(Key1; "No DGX")
+        key(Key1; "DGX No.")
         {
             Clustered = true;
         }
-        key(Key2; "No Bon Livraison")
+        key(Key2; "Delivery slip no.")
         {
         }
     }
@@ -112,10 +113,10 @@ table 50006 "DGX Header"
 
     trigger OnInsert()
     begin
-        if "No DGX" = '' then begin
+        if "DGX No." = '' then begin
             ParamVente.Get();
             //todo not migrated yet
-            //"No DGX" := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
+            //"DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
         end;
     end;
 

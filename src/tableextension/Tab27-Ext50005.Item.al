@@ -65,10 +65,10 @@ tableextension 50005 Item extends Item //27
         }
         field(50100; Historique; Boolean)
         {
-            CalcFormula = exist("Historique ventes" where(Référence = field("No.")));
+            CalcFormula = exist("Sales Archive" where(Reference = field("No.")));
             Editable = false;
             FieldClass = FlowField;
-            TableRelation = "Historique ventes";
+            TableRelation = "Sales Archive";
         }
         field(50110; "Type carbo"; Boolean)
         {

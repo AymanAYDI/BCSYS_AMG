@@ -2,7 +2,7 @@ namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Purchases.Vendor;
 
-pageextension 50008 "VendorCard" extends "Vendor Card" //26
+pageextension 50007 "VendorCard" extends "Vendor Card" //26
 {
     layout
     {

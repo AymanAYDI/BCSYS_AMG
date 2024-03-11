@@ -11,28 +11,28 @@ page 50012 "Liste DGX"
         {
             repeater(Group)
             {
-                field("No DGX"; rec."No DGX")
+                field("DGX No."; rec."DGX No.")
                 {
                 }
-                field("Type DGX"; rec."Type DGX")
+                field("DGX Type"; rec."DGX Type")
                 {
                 }
-                field(Destinataire; rec.Destinataire)
+                field(Recipient; rec.Recipient)
                 {
                 }
-                field("Destinataire nom"; rec."Destinataire nom")
+                field("Recipient Name"; rec."Recipient Name")
                 {
                 }
-                field("Destinataire pays EN"; rec."Destinataire pays EN")
+                field("Recipient Country EN"; rec."Recipient Country EN")
                 {
                 }
-                field("Aéroport de départ"; rec."Aéroport de départ")
+                field("Airport of departure"; rec."Airport of departure")
                 {
                 }
-                field("Date document"; rec."Date document")
+                field("Document Date "; rec."Document Date")
                 {
                 }
-                field("No Bon Livraison"; rec."No Bon Livraison")
+                field("Delivery slip no."; rec."Delivery slip no.")
                 {
                 }
             }
@@ -53,12 +53,12 @@ page 50012 "Liste DGX"
 
                 trigger OnAction()
                 begin
-                    rec.SETFILTER("No DGX", Rec."No DGX");
-                    if Rec."Type DGX" = Rec."Type DGX"::"Multi-modal" then
+                    rec.SETFILTER("DGX No.", Rec."DGX No.");
+                    if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
                         REPORT.RUNMODAL(50017, true, false, xRec)
                     else
                         REPORT.RUNMODAL(50018, true, false, xRec);
-                    rec.SETFILTER("No DGX", '');
+                    rec.SETFILTER("DGX No.", '');
                 end;
             }
         }
@@ -66,10 +66,10 @@ page 50012 "Liste DGX"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        GTxtBonLivraison := rec.GETFILTER("No Bon Livraison");
-        if rec.GETFILTER("No Bon Livraison") <> '' then begin
-            rec."No Bon Livraison" := GTxtBonLivraison;
-            rec.VALIDATE("No Bon Livraison");
+        GTxtBonLivraison := rec.GETFILTER("Delivery slip no.");
+        if rec.GETFILTER("Delivery slip no.") <> '' then begin
+            rec."Delivery slip no." := GTxtBonLivraison;
+            rec.VALIDATE("Delivery slip no.");
         end;
     end;
 

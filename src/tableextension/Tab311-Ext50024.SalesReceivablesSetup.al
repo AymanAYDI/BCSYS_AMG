@@ -1,6 +1,8 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Setup;
+using Microsoft.Inventory.Item;
+using Microsoft.Foundation.NoSeries;
 tableextension 50024 SalesReceivablesSetup extends "Sales & Receivables Setup" //311
 {
     fields

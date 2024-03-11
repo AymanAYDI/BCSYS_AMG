@@ -24,13 +24,13 @@ page 50015 "Liste ONU"
                 field(Description; Rec.Description)
                 {
                 }
-                field(Classe; Rec.Classe)
+                field(Class; Rec.Class)
                 {
                 }
-                field("Sous-classe"; Rec."Sous-classe")
+                field("Sub-Class"; Rec."Sub-Class")
                 {
                 }
-                field("Groupe emballage"; Rec."Groupe emballage")
+                field("Packaging group"; Rec."Packaging group")
                 {
                 }
                 field("Packing instr passager"; Rec."Packing instr passager")

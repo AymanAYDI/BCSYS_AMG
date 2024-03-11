@@ -46,8 +46,8 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
                 PromotedIsBig = true;
                 Image = ListPage;
                 RunObject = Page 50010;
-                RunPageLink = "N° client" = field("No.");
-                RunPageView = sorting("Date document vente", "N° devis", "N° commande vente", "N° facture vente", "N° ligne vente")
+                RunPageLink = "Customer No." = field("No.");
+                RunPageView = sorting("Sales Document Date", "Quote No.", "Sales Order No.", "Sales Invoice No.", "Sales Line No.")
                                   order(descending);
             }
         }

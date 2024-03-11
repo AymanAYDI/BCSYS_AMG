@@ -1,6 +1,7 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Purchases.Vendor;
 tableextension 50026 ItemTemplate extends "Item Template" //1301
 {
     fields
@@ -8,16 +9,15 @@ tableextension 50026 ItemTemplate extends "Item Template" //1301
         modify("Price/Profit Calculation")
         {
             OptionCaption = 'Profit=Price-Cost,Price=Cost+Profit,No Relationship,Last Direct Cost+Profit';
-
             //Unsupported feature: Property Modification (OptionString) on ""Price/Profit Calculation"(Field 19)".
 
         }
-        field(31; Fournisseur; Code[20])
+        field(50001; Fournisseur; Code[20])
         {
+            TableRelation = Vendor."No.";
             DataClassification = ToBeClassified;
             Description = 'Spe AMG';
-            TableRelation = Vendor.No.;
-        }
+        }//TODO 
     }
 
 
@@ -96,7 +96,7 @@ tableextension 50026 ItemTemplate extends "Item Template" //1301
     if NOT GUIALLOWED Then
       EXIT;
 
-    ConfigTemplateHeader.SetRange("Table ID",DATABASE::Item);
+    ConfigTemplateHeader.SetRange("Tablùe ID",DATABASE::Item);
     ConfigTemplateHeader.SetRange(Enabled,TRUE);
     ConfigTemplates.SETTABLEVIEW(ConfigTemplateHeader);
     ConfigTemplates.LOOKUPMODE(TRUE);

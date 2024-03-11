@@ -14,17 +14,17 @@ table 50008 NatureColisage
         {
             DataClassification = ToBeClassified;
         }
-        field(10; "Longueur (cm)"; Decimal)
+        field(10; "Length (cm)"; Decimal)
         {
             DataClassification = ToBeClassified;
             DecimalPlaces = 3 : 3;
         }
-        field(15; "Largeur (cm)"; Decimal)
+        field(15; "Width (cm)"; Decimal)
         {
             DataClassification = ToBeClassified;
             DecimalPlaces = 3 : 3;
         }
-        field(20; "Hauteur (cm)"; Decimal)
+        field(20; "Height (cm)"; Decimal)
         {
             DataClassification = ToBeClassified;
             DecimalPlaces = 3 : 3;

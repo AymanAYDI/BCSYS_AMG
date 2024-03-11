@@ -9,7 +9,7 @@ tableextension 50020 SalesCrMemoHeader extends "Sales Cr.Memo Header" //114
         {
             Caption = 'On Hold';
         }
-        field(51010; "Compl. cond. livraison"; Text[80])
+        field(50000; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
         }

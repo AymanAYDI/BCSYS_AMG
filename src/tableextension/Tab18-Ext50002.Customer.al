@@ -32,10 +32,10 @@ tableextension 50002 Customer extends Customer //18
         }
         field(50100; Historique; Boolean)
         {
-            CalcFormula = exist("Historique ventes" where("N° client" = field("No.")));
+            CalcFormula = exist("Sales Archive" where("Customer No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
-            TableRelation = "Historique ventes";
+            TableRelation = "Sales Archive";
         }
         field(51010; "Compl. cond. livraison"; Text[80])
         {

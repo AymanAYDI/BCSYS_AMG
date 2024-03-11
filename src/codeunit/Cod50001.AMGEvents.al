@@ -1,4 +1,4 @@
-codeunit 50000 "AMG_Events"
+codeunit 50001 "AMG_Events"
 {
     //Record 18 
     //TODO verifier line 32
@@ -258,7 +258,7 @@ codeunit 50000 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeCheckNoAndShowConfirm', '', false, false)]
     local procedure OnBeforeCheckNoAndShowConfirm(SalesHeader: Record "Sales Header"; var SalesShptHeader: Record "Sales Shipment Header"; var SalesInvHeader: Record "Sales Invoice Header"; var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; var ReturnRcptHeader: Record "Return Receipt Header"; var SalesInvHeaderPrePmt: Record "Sales Invoice Header"; var SalesCrMemoHeaderPrePmt: Record "Sales Cr.Memo Header"; SourceCode: Record "Source Code"; var Result: Boolean; var IsHandled: Boolean)
     var
-        LRecHist: Record "Historique ventes";
+        LRecHist: Record "Sales Archive";
         ConfirmManagement: Codeunit "Confirm Management";
         Text009: Label 'Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?';
         Text012: Label 'Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?';
@@ -916,7 +916,7 @@ codeunit 50000 "AMG_Events"
                 if not PrePaymentLineAmountEntered then
                     PurchaseLine."Prepmt. Line Amount" := ROUND(PurchaseLine."Line Amount" * PurchaseLine."Prepayment %" / 100, Currency."Amount Rounding Precision");
                 if PurchaseLine."Prepmt. Line Amount" < PurchaseLine."Prepmt. Amt. Inv." then begin
-                    if PurchaseLine.IsServiceCharge then
+                    if PurchaseLine.IsServiceCharge() then
                         ERROR(CannotChangePrepaidServiceChargeErr);
                     PurchaseLine.FIELDERROR(PurchaseLine."Prepmt. Line Amount", STRSUBSTNO(Text037, PurchaseLine."Prepmt. Amt. Inv."));
                 end;
@@ -967,7 +967,7 @@ codeunit 50000 "AMG_Events"
     var
         ItemListPage: Page "Item List";
     begin
-        SelectionFilter := ItemListPage.SelectActiveItemsForPurchase;
+        SelectionFilter := ItemListPage.SelectActiveItemsForPurchase();
         if SelectionFilter = '' then
             IsHandled := true;
     end;
@@ -986,5 +986,567 @@ codeunit 50000 "AMG_Events"
                 Error(Text016, DialogText, PurchLine.FieldCaption("Line No."), PurchLine."Line No.");
         end;
         ShowDialog := ShowDialog::" ";
+    end;
+    //Record 60 
+    [EventSubscriber(ObjectType::Table, Database::"Document Sending Profile", 'OnSendVendorRecordsOnBeforeLookupProfile', '', false, false)]
+    local procedure OnSendVendorRecordsOnBeforeLookupProfile(ReportUsage: Integer; RecordVariant: Variant; VendorNo: Code[20]; var RecRefToSend: RecordRef; SingleVendorSelected: Boolean; var ShowDialog: Boolean)
+    begin
+        ShowDialog := false;
+    end;
+    //Record 77 
+    [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetEmailAddress', '', false, false)]
+    local procedure OnBeforeGetEmailAddress(ReportUsage: Option; RecordVariant: Variant; var TempBodyReportSelections: Record "Report Selections" temporary; var EmailAddress: Text[250]; var IsHandled: Boolean; CustNo: Code[20])
+    var
+        DataTypeManagement: Codeunit "Data Type Management";
+        RecordRef: RecordRef;
+        FieldRef: FieldRef;
+        DocumentNo: Code[20];
+        GRecSalesHeader: Record "Sales Header";
+        GRecContact: Record Contact;
+        GRecSalesInvoiceHeader: Record "Sales Invoice Header";
+        GRecPurchaseHeader: Record "Purchase Header";
+    begin
+        RecordRef.GetTable(RecordVariant);
+        if not RecordRef.IsEmpty() then
+            if DataTypeManagement.FindfieldByName(RecordRef, FieldRef, 'No.') then begin
+                DocumentNo := FieldRef.Value;
+                EmailAddress := TempBodyReportSelections.GetEmailAddressForDoc(DocumentNo, ReportUsage);
+                if EmailAddress <> '' then begin
+                    IsHandled := true;
+                    exit;
+                end;
+
+            end;
+
+        if not TempBodyReportSelections.IsEmpty() then begin
+            EmailAddress :=
+              TempBodyReportSelections.FindEmailAddressForEmailLayout(TempBodyReportSelections."Email Body Layout Code", CustNo, ReportUsage, Database::Customer);
+            if EmailAddress <> '' then begin
+                IsHandled := true;
+                exit;
+            end;
+        end;
+        //todo check i change GetCustEmailAddress by GetEmailAddressForCust
+        // r‚cup‚ration de l'adresse mail du contact indiqu‚ dans l'entˆte du document CV/Devis, CA, FV
+        GRecSalesHeader.RESET();
+        GRecSalesHeader.SETRANGE("No.", DocumentNo);
+        GRecSalesInvoiceHeader.RESET();
+
+        if GRecSalesHeader.FINDFIRST() then begin
+            if (GRecContact.GET(GRecSalesHeader."Sell-to Contact No.")) and (GRecContact."E-Mail" <> '') then
+                EmailAddress := GRecContact."E-Mail"
+            else
+                EmailAddress := TempBodyReportSelections.GetEmailAddressForCust(CustNo, ReportUsage);
+            // EmailAddress := TempBodyReportSelections.GetEmailAddress(CustNo, ReportUsage);
+        end else
+            if GRecSalesInvoiceHeader.GET(DocumentNo) then begin
+                if (GRecContact.GET(GRecSalesInvoiceHeader."Sell-to Contact No.")) and (GRecContact."E-Mail" <> '') then
+                    EmailAddress := GRecContact."E-Mail"
+                else
+                    EmailAddress := TempBodyReportSelections.GetEmailAddressForCust(CustNo, ReportUsage);
+                // EmailAddress := TempBodyReportSelections.GetCustEmailAddress(CustNo, ReportUsage);
+            end else
+                EmailAddress := TempBodyReportSelections.GetEmailAddressForCust(CustNo, ReportUsage);
+        // EmailAddress := TempBodyReportSelections.GetCustEmailAddress(CustNo, ReportUsage);
+        if EmailAddress <> '' then begin
+            IsHandled := true;
+            exit;
+        end;
+        if not RecordRef.IsEmpty() then
+            if TempBodyReportSelections.IsSalesDocument(RecordRef) then
+                if DataTypeManagement.FindfieldByName(RecordRef, FieldRef, 'Sell-to E-Mail') then begin
+                    EmailAddress := FieldRef.Value;
+                    if EmailAddress <> '' then begin
+                        IsHandled := true;
+                        exit;
+                    end;
+                end;
+        IsHandled := true;
+    end;
+    //Record 77 
+    [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeDoSaveReportAsHTML', '', false, false)]
+    local procedure OnBeforeDoSaveReportAsHTML(ReportID: Integer; var FilePath: Text[250]; var RecordVariant: Variant; var IsHandled: Boolean)
+    var
+        LDelphiText: Text;
+        LDelphiReportId: Text[80];
+    begin
+        LDelphiReportId := FORMAT(ReportID);
+        if LDelphiReportId = '1304' then
+            LDelphiText := REPORT.RUNREQUESTPAGE(ReportID);
+    end;
+    //todo verify modif for quantities to skip standard code 1461....
+    //Record 83 
+    [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCalcBaseQty', '', false, false)]
+    local procedure OnAfterCalcBaseQty(var ItemJournalLine: Record "Item Journal Line"; xItemJournalLine: Record "Item Journal Line"; FromFieldName: Text; var Result: Decimal)
+    begin
+        case FromFieldName of
+            'Quantity':
+                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine.Quantity);
+            'Invoiced Quantity':
+                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Invoiced Quantity");
+            'Output Quantity':
+                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Output Quantity");
+            'Scrap Quantity':
+                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Scrap Quantity");
+        end;
+    end;
+    //Record 246 
+    [EventSubscriber(ObjectType::Table, Database::"Requisition Line", 'OnBeforeInitRecordForOrderPlanning', '', false, false)]
+    local procedure OnBeforeInitRecordForOrderPlanning(var RequisitionLine: Record "Requisition Line"; var IsHandled: Boolean)
+    begin
+        RequisitionLine.Init();
+        RequisitionLine."Line No." := RequisitionLine."Line No." + 10000;
+        RequisitionLine."Planning Line Origin" := RequisitionLine."Planning Line Origin"::"Order Planning";
+        IsHandled := true;
+    end;
+    //Page 30
+    [EventSubscriber(ObjectType::Page, Page::"Item Card", 'OnCreateItemFromTemplateOnBeforeCurrPageUpdate', '', false, false)]
+    local procedure OnCreateItemFromTemplateOnBeforeCurrPageUpdate(var Item: Record Item)
+    begin
+        item."Price/Profit Calculation" := Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit";
+    end;
+    //Page 42
+    [EventSubscriber(ObjectType::Page, Page::"Sales Order", 'OnBeforeQueryClosePage', '', false, false)]
+    local procedure OnBeforeQueryClosePage(var DocumentIsScheduledForPosting: Boolean; var SalesHeader: Record "Sales Header"; CloseAction: Action; ShowReleaseNotification: Boolean; DocumentIsPosted: Boolean; var Result: Boolean; var IsHandled: Boolean)
+    var
+        InstructionMgt: Codeunit "Instruction Mgt.";
+    begin
+        if not DocumentIsScheduledForPosting and ShowReleaseNotification then
+            if not InstructionMgt.ShowConfirmUnreleased() then begin
+                Result := false;
+                IsHandled := true;
+                exit;
+            end;
+        //todo check return
+        //Result := true;
+        IsHandled := true;
+    end;
+    //Page 46
+    [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnBeforeSetDefaultType', '', false, false)]
+    local procedure OnBeforeSetDefaultType(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    var
+        ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
+    begin
+        if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
+            if xSalesLine."Document No." = '' then
+                SalesLine.Type := SalesLine.Type::Item;
+        IsHandled := true;
+    end;
+    //todo line 1733
+    //Page 46
+    [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnBeforeDeltaUpdateTotals', '', false, false)]
+    local procedure OnBeforeDeltaUpdateTotals(var SalesLine: Record "Sales Line"; var IsHandled: Boolean; xSalesLine: Record "Sales Line"; SuppressTotals: Boolean)
+    begin
+        // DocumentTotals.SalesDeltaUpdateTotals(SalesLine, xSalesLine, TotalSalesLine, VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct);
+    end;
+    //Page 50
+    [EventSubscriber(ObjectType::Page, Page::"Purchase Order", 'OnAfterOnAfterGetRecord', '', false, false)]
+    local procedure OnAfterOnAfterGetRecord(var PurchaseHeader: Record "Purchase Header")
+    begin
+        if PurchaseHeader."Document Date" <> 0D then
+            PurchaseHeader."Requested Receipt Date" := PurchaseHeader."Document Date";
+    end;
+    //Page 50
+    [EventSubscriber(ObjectType::Page, Page::"Purchase Order", 'OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted', '', false, false)]
+    local procedure OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted(var PurchaseHeader: Record "Purchase Header"; var ShowConfirmCloseUnposted: Boolean)
+    begin
+        ShowConfirmCloseUnposted := false;
+    end;
+    //Page 50
+    [EventSubscriber(ObjectType::Page, Page::"Purchase Order", 'OnBeforeCalculateCurrentShippingAndPayToOption', '', false, false)]
+    local procedure OnBeforeCalculateCurrentShippingAndPayToOption(var PurchaseHeader: Record "Purchase Header"; var ShipToOptions: Option "Default (Company Address)",Location,"Customer Address","Custom Address"; var PayToOptions: Option "Default (Vendor)","Another Vendor","Custom Address"; var IsHandled: Boolean)
+    begin
+        case true of
+            PurchaseHeader."Sell-to Customer No." <> '':
+                ShipToOptions := ShipToOptions::"Customer Address";
+            PurchaseHeader."Location Code" <> '':
+                ShipToOptions := ShipToOptions::Location;
+            else
+                if PurchaseHeader.ShipToAddressEqualsCompanyShipToAddress() then
+                    ShipToOptions := ShipToOptions::"Default (Company Address)"
+                else
+                    ShipToOptions := ShipToOptions::"Custom Address";
+        end;
+        if (PurchaseHeader."Pay-to Vendor No." = PurchaseHeader."Buy-from Vendor No.") then
+            PayToOptions := PayToOptions::"Default (Vendor)"
+        else
+            PayToOptions := PayToOptions::"Another Vendor";
+        IsHandled := true;
+    end;
+    //Codeunit 22
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnPostItemOnBeforeCheckInventoryPostingGroup', '', false, false)]
+    local procedure OnPostItemOnBeforeCheckInventoryPostingGroup(var ItemJnlLine: Record "Item Journal Line"; var CalledFromAdjustment: Boolean; var Item: Record Item; var ItemTrackingCode: Record "Item Tracking Code")
+    var
+        PurchasingBlockedErr: label 'Vous ne pouvez pas acheter cet article, car la case à cocher Achat bloqué est activée sur la fiche article.';
+        SalesBlockedErr: label 'Vous ne pouvez pas vendre cet article, car la case à cocher Vente bloquée est activée sur la fiche article.';
+    begin
+        if ItemJnlLine."Entry Type" = ItemJnlLine."Entry Type"::Purchase then
+            if not CalledFromAdjustment then
+                if Item."Purchasing Blocked" then
+                    ERROR(PurchasingBlockedErr);
+        if ItemJnlLine."Entry Type" = ItemJnlLine."Entry Type"::Sale then
+            if not CalledFromAdjustment then
+                if Item."Sales Blocked" then
+                    ERROR(SalesBlockedErr);
+    end;
+    //Codeunit 22
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnUpdateUnitCostOnAfterAssignLastDirectCost', '', false, false)]
+    local procedure OnUpdateUnitCostOnAfterAssignLastDirectCost(var ValueEntry: Record "Value Entry"; var Item: Record Item; LastDirectCost: Decimal)
+    var
+        AMGFunctions: codeunit "AMG_Functions";
+    begin
+        //todo verifier line 1331
+        Item.Validate("Last Direct Cost", LastDirectCost);
+        AMGFunctions.SetProperties(false);
+    end;
+    //Codeunit 22
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnUpdateUnitCostOnBeforeUpdateUnitCost', '', false, false)]
+    local procedure OnUpdateUnitCostOnBeforeUpdateUnitCost(ItemJournalLine: Record "Item Journal Line"; ValueEntry: Record "Value Entry"; Item: Record Item; var UpdateSKU: Boolean)
+    var
+        AMGFunctions: codeunit "AMG_Functions";
+    begin
+        AMGFunctions.SetProperties(false);
+    end;
+    //Codeunit 22
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeCheckItemCorrection', '', false, false)]
+    local procedure OnBeforeCheckItemCorrection(ItemLedgerEntry: Record "Item Ledger Entry"; var RaiseError: Boolean)
+    var
+        Text025: Label 'Le lettrage des écritures avec une écriture de correction ne peut pas être annulé.';
+    begin
+        if RaiseError then
+            Error(Text025);
+    end;
+    //Codeunit 22 //todo verfier !!!!!!!!!!!!!!!!!!!!!
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeSetOrderAdjmtProperties', '', false, false)]
+    local procedure OnBeforeSetOrderAdjmtProperties(ItemLedgEntryType: Option; OrderType: Option; OrderNo: Code[20]; OrderLineNo: Integer; OriginalPostingDate: Date; ValuationDate: Date; var IsHandled: Boolean; ItemJnlLine: Record "Item Journal Line")
+    var
+        ValueEntry: Record "Value Entry";
+        InventoryAdjmtEntryOrder: Record "Inventory Adjmt. Entry (Order)";
+        ProdOrderLine: Record "Prod. Order Line";
+        AssemblyHeader: Record "Assembly Header";
+        ModifyOrderAdjmt: Boolean;
+        AMGFunctions: Codeunit "AMG_Functions";
+        ItemJN: Codeunit "Item Jnl.-Post Line";
+    begin
+        if not (OrderType in [ValueEntry."Order Type"::Production,
+                            ValueEntry."Order Type"::Assembly])
+      then
+            exit;
+
+        if ItemLedgEntryType in [ValueEntry."Item Ledger Entry Type"::Output,
+                                 ValueEntry."Item Ledger Entry Type"::"Assembly Output"]
+        then
+            exit;
+
+        if InventoryAdjmtEntryOrder.Get(OrderType, OrderNo, OrderLineNo) then begin
+            if InventoryAdjmtEntryOrder."Allow Online Adjustment" or InventoryAdjmtEntryOrder."Cost is Adjusted" then begin
+                InventoryAdjmtEntryOrder.LOCKTABLE();
+                if InventoryAdjmtEntryOrder."Cost is Adjusted" then begin
+                    InventoryAdjmtEntryOrder."Cost is Adjusted" := false;
+                    ModifyOrderAdjmt := true;
+                end;
+                if InventoryAdjmtEntryOrder."Allow Online Adjustment" then begin
+                    InventoryAdjmtEntryOrder."Allow Online Adjustment" := ItemJN.AllowAdjmtOnPosting(OriginalPostingDate);
+                    ModifyOrderAdjmt := ModifyOrderAdjmt or not InventoryAdjmtEntryOrder."Allow Online Adjustment";
+                end;
+                if ModifyOrderAdjmt then
+                    InventoryAdjmtEntryOrder.MODIFY();
+            end;
+        end else
+            case OrderType of
+                InventoryAdjmtEntryOrder."Order Type"::Production:
+                    begin
+                        AMGFunctions.GetProdOrderLine(ProdOrderLine, OrderNo, OrderLineNo);
+                        InventoryAdjmtEntryOrder.SetProdOrderLine(ProdOrderLine);
+                        AMGFunctions.SetOrderAdjmtProperties(ItemLedgEntryType, OrderType, OrderNo, OrderLineNo, OriginalPostingDate, ValuationDate);
+                    end;
+                InventoryAdjmtEntryOrder."Order Type"::Assembly:
+                    begin
+                        if OrderLineNo = 0 then begin
+                            AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, OrderNo);
+                            InventoryAdjmtEntryOrder.SetAsmOrder(AssemblyHeader);
+                        end;
+                        AMGFunctions.SetOrderAdjmtProperties(ItemLedgEntryType, OrderType, OrderNo, 0, OriginalPostingDate, ValuationDate);
+                    end;
+            end;
+        IsHandled := true;
+    end;
+    //Codeunit 22
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnCorrectOutputValuationDateOnBeforeValueEntryFindSet', '', false, false)]
+    local procedure OnCorrectOutputValuationDateOnBeforeValueEntryFindSet(var ValueEntry: Record "Value Entry")
+    var
+        ValuationDate: Date;
+        AMGFunctions: Codeunit "AMG_Functions";
+    begin
+        //todo var global line 4811
+        ValueEntry.SetFilter("Valuation Date", '');
+        //ValuationDate := AMGFunctions.MaxConsumptionValuationDate(ItemLedgerEntry);
+        ValueEntry.SetFilter("Valuation Date", '<%1', ValuationDate);
+    end;
+    //todo codeunit 22 line 1215,1544,2247,2277,3082,3761,3980
+    //Codeunit 83
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order (Yes/No)", 'OnBeforeShowCreatedOrder', '', false, false)]
+    local procedure OnBeforeShowCreatedOrder(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    begin
+        IsHandled := true;
+    end;
+
+    //Codeunit 83
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order (Yes/No)", 'OnAfterSalesQuoteToOrderRun', '', false, false)]
+    local procedure OnAfterSalesQuoteToOrderRun(var SalesHeader2: Record "Sales Header"; var SalesHeader: Record "Sales Header")
+    var
+        OfficeMgt: Codeunit "Office Management";
+        SalesOrder: Page "Sales Order";
+        OpenPage: Boolean;
+        OpenNewInvoiceQst: Label 'The quote has been converted to order %1. Do you want to open the new order?', Comment = '%1 = No. of the new sales order document.';
+        LRecHisto: Record 50000;
+    begin
+        if GuiAllowed() then
+            if OfficeMgt.AttachAvailable() then
+                OpenPage := true
+            else
+                OpenPage := Confirm(StrSubstNo(OpenNewInvoiceQst, SalesHeader2."No."), true);
+        if OpenPage then begin
+            Clear(SalesOrder);
+            SalesOrder.CheckNotificationsOnce();
+            SalesHeader2.SetRecFilter();
+            SalesOrder.SetTableView(SalesHeader2);
+            SalesOrder.Run();
+        end;
+        LRecHisto.DELDeleteDevis(SalesHeader."No.");
+        LRecHisto.DELAddCmdVente(SalesHeader2."No.", SalesHeader2."Document Date");
+    end;
+    //Codeunit 229
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", 'OnBeforeDoPrintSalesHeader', '', false, false)]
+    local procedure OnBeforeDoPrintSalesHeader(var SalesHeader: Record "Sales Header"; ReportUsage: Integer; SendAsEmail: Boolean; var IsPrinted: Boolean)
+    var
+        Selected: Integer;
+        ReportSelections: Record "Report Selections";
+        DocumentPrint: Codeunit "Document-Print";
+    begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Quote then begin
+            Selected := DIALOG.STRMENU('Devis,Proforma', 1, 'Choisissez le modŠle de document');
+            if Selected = 2 then
+                OnBeforeDoPrintSalesHeader(SalesHeader, ReportSelections.Usage::"S.Proforma", SendAsEmail, IsPrinted)
+            else
+                OnBeforeDoPrintSalesHeader(SalesHeader, ReportSelections.Usage::"S.Quote", SendAsEmail, IsPrinted);
+        end else
+            OnBeforeDoPrintSalesHeader(SalesHeader, DocumentPrint.GetSalesDocTypeUsage(SalesHeader), SendAsEmail, IsPrinted); //DEFAULT CODE
+
+        if IsPrinted then
+            exit;
+        if (SalesHeader."Document Type" = SalesHeader."Document Type"::Quote) and (Selected = 2) then begin
+            if SendAsEmail then
+                ReportSelections.SendEmailToCust(
+                ReportSelections.Usage::"S.Proforma", SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
+            else
+                ReportSelections.PrintWithCheckForCust(ReportSelections.Usage::"S.Proforma", SalesHeader, SalesHeader.FIELDNO("Bill-to Customer No."));
+        end else
+            if SendAsEmail then
+                ReportSelections.SendEmailToCust(
+                  DocumentPrint.GetSalesDocTypeUsage(SalesHeader), SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
+            else
+                ReportSelections.PrintWithCheckForCust(DocumentPrint.GetSalesDocTypeUsage(SalesHeader), SalesHeader, SalesHeader.FIELDNO("Bill-to Customer No."));
+        IsPrinted := true;
+    end;
+    //Codeunit 703 //todo check
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Find Record Management", 'OnAfterGetRecRefAndFieldsNoByType', '', false, false)]
+    local procedure OnAfterGetRecRefAndFieldsNoByType(RecRef: RecordRef; Type: Option " ","G/L Account",Item,Resource,"Fixed Asset","Charge (Item)"; var SearchFieldNo: array[4] of Integer)
+    var
+        Item: Record Item;
+    begin
+        if Type = Type::Item then begin
+            RecRef.Open(DATABASE::Item);
+            SearchFieldNo[3] := Item.FIELDNO("No. 2");
+        end;
+    end;
+    //todo codeunit 260 line 363
+    //todo codeunit 703 line 118 not needed
+    //Codeunit 5056
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"CustCont-Update", 'OnAfterOnModify', '', false, false)]
+    local procedure OnAfterOnModify(var Contact: Record Contact; var OldContact: Record Contact; var Customer: Record Customer)
+    begin
+        Contact.VALIDATE("Mobile Phone No.", Customer."Mobile Phone No.");
+        Contact.Modify(true);
+        Customer.Get(Customer."No."); //todo check line 54
+    end;
+    //Codeunit 5804
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeCheckUpdateLastDirectCost', '', false, false)]
+    local procedure OnBeforeCheckUpdateLastDirectCost(var Item: Record Item; LastDirectCost: Decimal; var IsHandled: Boolean)
+    begin
+        if LastDirectCost <> 0 then
+            Item.Validate("Last Direct Cost", LastDirectCost);
+        IsHandled := true;
+    end;
+    //Codeunit 5804
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeUpdateUnitCostSKU', '', false, false)]
+    local procedure OnBeforeUpdateUnitCostSKU(Item: Record Item; var SKU: Record "Stockkeeping Unit"; LastDirectCost: Decimal; NewStdCost: Decimal; MatchSKU: Boolean; CalledByFieldNo: Integer; var UnitCostUpdated: Boolean; var CalledFromAdjustment: Boolean)
+    begin
+        //todo line 171
+    end;
+    //Codeunit 5804
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeCalcUnitCostFromAverageCost', '', false, false)]
+    local procedure OnBeforeCalcUnitCostFromAverageCost(var Item: Record Item; var CostCalcMgt: Codeunit "Cost Calculation Management"; GLSetup: Record "General Ledger Setup"; var IsHandled: Boolean)
+    var
+        Currency: record Currency;
+        AMGFunctions: codeunit "AMG_Functions";
+        AverageCost: Decimal;
+        AverageCostACY: Decimal;
+        RndgSetupRead: Boolean;
+    begin
+        with Item do begin
+            CostCalcMgt.GetRndgSetup(GLSetup, Currency, RndgSetupRead);
+            if AMGFunctions.CalculateAverageCost(Item, AverageCost, AverageCostACY) then begin
+                if AverageCost <> 0 then
+                    "Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
+            end else begin
+                AMGFunctions.CalcLastAdjEntryAvgCost(Item, AverageCost, AverageCostACY);
+                if AverageCost <> 0 then
+                    "Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
+            end;
+        end;
+    end;
+
+    //Record 79 //TODO Can't skip Standard Code
+    [EventSubscriber(ObjectType::Table, Database::"Company Information", 'OnBeforeCheckIBAN', '', false, false)]
+    local procedure OnBeforeCheckIBAN(IBANCode: Code[100])
+    var
+        CompanyInformation: Record "Company Information";
+        OriginalIBANCode: Code[100];
+        Modulus97: Integer;
+        I: Integer;
+    begin
+        if IBANCode = '' then
+            exit;
+        IBANCode := DELCHR(IBANCode);
+        Modulus97 := 97;
+        if (STRLEN(IBANCode) <= 5) or (STRLEN(IBANCode) > 34) then
+            CompanyInformation.IBANError(OriginalIBANCode);
+        CompanyInformation.ExtConvertIBAN(IBANCode);
+        while STRLEN(IBANCode) > 6 do
+            IBANCode := CompanyInformation.CalcModulus(COPYSTR(IBANCode, 1, 6), Modulus97) + COPYSTR(IBANCode, 7);
+        EVALUATE(I, IBANCode);
+        if (I mod Modulus97) <> 1 then
+            CompanyInformation.IBANError(OriginalIBANCode);
+        //IBANCode := '';
+    end;
+
+    //Record 81
+    [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnValidateAccountTypeOnBeforeCheckKeepDescription', '', false, false)]
+    local procedure OnValidateAccountTypeOnBeforeCheckKeepDescription(var GenJournalLine: Record "Gen. Journal Line"; var xGenJournalLine: Record "Gen. Journal Line"; CurrentFieldNo: Integer)
+    var
+        SourceCodeSetup: Record "Source Code Setup";
+    begin
+        if GenJournalLine."Source Code" = SourceCodeSetup."Trans. Bank Rec. to Gen. Jnl." then begin
+            if GenJournalLine.Description = '' then GenJournalLine.VALIDATE(Description, '');
+        end
+        else
+            GenJournalLine.VALIDATE(Description, '');
+    end;
+
+    //Record 81
+    [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromSalesHeader', '', false, false)]
+    local procedure OnAfterCopyGenJnlLineFromSalesHeader(SalesHeader: Record "Sales Header"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+        GenJournalLine."IC Partner Code" := SalesHeader."Sell-to IC Partner Code";
+    end;
+
+    //Page 39
+    [EventSubscriber(ObjectType::Page, Page::"General Journal", 'OnBeforeSelectTemplate', '', false, false)]
+    local procedure OnBeforeSelectTemplate(var GenJournalLine: Record "Gen. Journal Line"; var GenJnlManagement: Codeunit GenJnlManagement; var IsHandled: Boolean)
+    var
+        JnlSelected: Boolean;
+    begin
+        if GenJournalLine."Journal Template Name" = '' then begin
+            GenJnlManagement.TemplateSelection(PAGE::"General Journal", Enum::"Gen. Journal Template Type"::General, false, GenJournalLine, JnlSelected);
+            if not JnlSelected then
+                Error('');
+        end;
+        IsHandled := true;
+    end;
+
+    //Codeunit 80
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterPostSalesDoc', '', false, false)]
+    local procedure OnAfterPostSalesDoc(var SalesHeader: Record "Sales Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; SalesShptHdrNo: Code[20]; RetRcpHdrNo: Code[20]; SalesInvHdrNo: Code[20]; SalesCrMemoHdrNo: Code[20]; CommitIsSuppressed: Boolean; InvtPickPutaway: Boolean; var CustLedgerEntry: Record "Cust. Ledger Entry"; WhseShip: Boolean; WhseReceiv: Boolean; PreviewMode: Boolean)
+    var
+        LRecHisto: Record "Sales Archive";
+    begin
+        //DELPHI AUB 01.07.2020
+        LRecHisto.DELTransfCmdFactV(SalesHeader."No.", SalesInvHdrNo);
+        //END DELPHI AUB
+    end;
+
+
+    //Codeunit 80
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnInsertShipmentLineOnAfterInitQuantityFields', '', false, false)]
+    local procedure OnInsertShipmentLineOnAfterInitQuantityFields(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line"; var SalesShptLine: Record "Sales Shipment Line")
+    begin
+        SalesShptLine."Outstandin Qty report" := xSalesLine."Outstanding Quantity" - SalesShptLine.Quantity;
+    end;
+
+
+    //Codeunit365
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Format Address", 'OnBeforeSalesHeaderSellTo', '', false, false)]
+    local procedure OnBeforeSalesHeaderSellTo(var AddrArray: array[8] of Text[100]; var SalesHeader: Record "Sales Header"; var Handled: Boolean)
+    var
+        FormatAddress: Codeunit "Format Address";
+    begin
+        with SalesHeader do
+            FormatAddress.FormatAddr(
+                AddrArray, "Sell-to Customer Name", "Sell-to Customer Name 2", '', "Sell-to Address", "Sell-to Address 2",
+                "Sell-to City", "Sell-to Post Code", "Sell-to County", "Sell-to Country/Region Code");
+        Handled := true;
+    end;
+
+    //Codeunit365
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Format Address", 'OnBeforeSalesInvBillTo', '', false, false)]
+    local procedure OnBeforeSalesInvBillTo(var AddrArray: array[8] of Text[100]; var SalesInvHeader: Record "Sales Invoice Header"; var Handled: Boolean)
+    var
+        FormatAddress: Codeunit "Format Address";
+    begin
+        with SalesInvHeader do
+            FormatAddress.FormatAddr(
+              AddrArray, "Bill-to Name", "Bill-to Name 2", '', "Bill-to Address", "Bill-to Address 2",
+              "Bill-to City", "Bill-to Post Code", "Bill-to County", "Bill-to Country/Region Code");
+        Handled := true;
+    end;
+
+    //Codeunit5703
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Catalog Item Management", 'OnBeforeCreateNewItem', '', false, false)]
+    local procedure OnBeforeCreateNewItem(var NonstockItem: Record "Nonstock Item"; var IsHandled: Boolean)
+    var
+        Item: Record Item;
+        CatalogItemManagement: Codeunit "Catalog Item Management";
+        ItemTemplMgt: Codeunit "Item Templ. Mgt.";
+        ItemTempl: Record "Item Templ.";
+    begin
+        Item.Init();
+        Item."No." := NonstockItem."Item No.";
+        Item.Insert();
+
+        ItemTempl.Get(NonstockItem."Item Templ. Code");
+        ItemTemplMgt.ApplyItemTemplate(Item, ItemTempl, true);// TODO Verif
+
+        Item."No. Series" := NonstockItem."Item No. Series";
+        Item.Description := NonstockItem.Description;
+        Item.Validate(Description, Item.Description);
+        Item.Validate("Base Unit of Measure", NonstockItem."Unit of Measure");
+        Item."Unit Price" := NonstockItem."Unit Price";
+        Item."Unit Cost" := NonstockItem."Negotiated Cost";
+        Item.VALIDATE("Last Direct Cost", NonstockItem."Negotiated Cost");
+        if Item."Costing Method" = Item."Costing Method"::Standard then
+            Item."Standard Cost" := NonstockItem."Negotiated Cost";
+        Item."Automatic Ext. Texts" := false;
+        Item.Validate("Vendor No.", NonstockItem."Vendor No.");
+        Item."Vendor Item No." := NonstockItem."Vendor Item No.";
+        Item."Net Weight" := NonstockItem."Net Weight";
+        Item."Gross Weight" := NonstockItem."Gross Weight";
+        Item."Manufacturer Code" := NonstockItem."Manufacturer Code";
+        Item."Created From Nonstock Item" := true;
+        Item.Modify();
+
+        ItemTemplMgt.InsertDimensions(Item."No.", NonstockItem."Item Templ. Code", Database::Item, Database::"Item Templ.");
+        Item.Get(NonstockItem."Item No.");
+
     end;
 }

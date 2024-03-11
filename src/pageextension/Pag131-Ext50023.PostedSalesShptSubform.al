@@ -108,45 +108,45 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
         }
         addafter("ShortcutDimCode[8]")
         {
-            field("N° Colis"; rec."N° Colis")
+            field("N° Package"; rec."N° Package")
             {
                 Lookup = true;
                 DrillDown = false;
-                TableRelation = Colis."N°" where("N°" = field("N° Colis"));
-                LookupPageID = Colis;
+                TableRelation = Package."Package No." where("Package No." = field("N° Package"));
+                LookupPageID = Package;
                 trigger OnValidate()
                 var
                     LRecColis: Record 50009;
                     LRecColisage: Record 50010;
                     LNoColis: Code[20];
                 begin
-                    if (xRec."N° Colis" <> Rec."N° Colis") and (xRec."N° Colis" <> '') then begin
-                        LRecColisage.SETRANGE("N° expédition", Rec."Document No.");
-                        LRecColisage.SETRANGE("N° ligne expédition", Rec."Line No.");
+                    if (xRec."N° Package" <> Rec."N° Package") and (xRec."N° Package" <> '') then begin
+                        LRecColisage.SETRANGE("Shipping No.", Rec."Document No.");
+                        LRecColisage.SETRANGE("Shipping Line No.", Rec."Line No.");
                         if LRecColisage.FINDFIRST() then begin
-                            LNoColis := LRecColisage."N°";
+                            LNoColis := LRecColisage."Package No.";
                             LRecColisage.DELETE(true);
                             CLEAR(LRecColis);
                             if LRecColis.GET(LNoColis) then begin
-                                LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LNoColis);
+                                LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LNoColis);
                                 LRecColis.MODIFY();
                             end;
                         end;
                     end;
 
-                    if Rec."N° Colis" <> '' then begin
+                    if Rec."N° Package" <> '' then begin
                         CLEAR(LRecColisage);
                         LRecColisage.INIT();
-                        LRecColisage."N°" := Rec."N° Colis";
-                        LRecColisage."N° ligne" := LRecColisage.NextLineNo(Rec."N° Colis");
-                        LRecColisage."N° expédition" := Rec."Document No.";
-                        LRecColisage."N° ligne expédition" := Rec."Line No.";
-                        LRecColisage."N° article" := Rec."No.";
-                        LRecColisage.Quantité := Rec.Quantity;
+                        LRecColisage."Package No." := Rec."N° Package";
+                        LRecColisage."Line No." := LRecColisage.NextLineNo(Rec."N° Package");
+                        LRecColisage."Shipping No." := Rec."Document No.";
+                        LRecColisage."Shipping Line No." := Rec."Line No.";
+                        LRecColisage."Item No." := Rec."No.";
+                        LRecColisage.Quantity := Rec.Quantity;
                         LRecColisage.INSERT(true);
                         CLEAR(LRecColis);
-                        if LRecColis.GET(Rec."N° Colis") then begin
-                            LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LRecColis."N°");
+                        if LRecColis.GET(Rec."N° Package") then begin
+                            LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
                             LRecColis.MODIFY();
                         end;
                     end;
@@ -160,10 +160,10 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
     {
         addafter("&Line")
         {
-            group(Colis)
+            group(Package)
             {
                 Image = NewItem;
-                action("Create Colis")
+                action("Create Package")
                 {
                     Image = Item;
                     trigger OnAction()
@@ -178,35 +178,35 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                         CurrPage.SETSELECTIONFILTER(LRecSalesShipmentLine);
 
                         if LRecSalesShipmentLine.FINDFIRST() then
-                            if LRecSalesShipmentLine."N° Colis" <> '' then
+                            if LRecSalesShipmentLine."N° Package" <> '' then
                                 ERROR('Un Numéro de colis est déja atribué … cette ligne, veuillez le supprimer ou s‚lectionnez une autre ligne')
                             else begin
                                 LRecColis.INIT();
-                                LRecColis."N° expédition" := LRecSalesShipmentLine."Document No.";
+                                LRecColis."Shipping No." := LRecSalesShipmentLine."Document No.";
                                 LRecColis.INSERT(true);
 
                                 LRecColisage.INIT();
-                                LRecColisage."N°" := LRecColis."N°";
-                                LRecColisage."N° ligne" := 1;
-                                LRecColisage."N° expédition" := LRecSalesShipmentLine."Document No.";
-                                LRecColisage."N° ligne expédition" := LRecSalesShipmentLine."Line No.";
-                                LRecColisage."N° article" := LRecSalesShipmentLine."No.";
-                                LRecColisage."Quantité" := LRecSalesShipmentLine.Quantity;
+                                LRecColisage."Package No." := LRecColis."Package No.";
+                                LRecColisage."Line No." := 1;
+                                LRecColisage."Shipping No." := LRecSalesShipmentLine."Document No.";
+                                LRecColisage."Shipping Line No." := LRecSalesShipmentLine."Line No.";
+                                LRecColisage."Item No." := LRecSalesShipmentLine."No.";
+                                LRecColisage."Quantity" := LRecSalesShipmentLine.Quantity;
                                 LRecColisage.INSERT(true);
 
-                                LRecSalesShipmentLine."N° Colis" := LRecColis."N°";
+                                LRecSalesShipmentLine."N° Package" := LRecColis."Package No.";
                                 LRecSalesShipmentLine.MODIFY();
 
-                                LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LRecColis."N°");
+                                LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
                                 LRecColis.MODIFY();
                                 COMMIT();
                                 LIntI := 1;
                                 LRecColis2.RESET();
-                                LRecColis2.SETFILTER("N° expédition", LRecColis."N° expédition");
+                                LRecColis2.SETFILTER("Shipping No.", LRecColis."Shipping No.");
                                 LIntNbColis := LRecColis2.COUNT;
                                 if LRecColis2.FIND('-') then
                                     repeat
-                                        LRecColis2."Référence Colis" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
+                                        LRecColis2."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
                                         LRecColis2.MODIFY();
                                         COMMIT();
                                         LIntI += 1;

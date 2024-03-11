@@ -1,15 +1,15 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
-page 50021 "Sous-formulaire Colis"
+page 50021 "Sous-formulaire Package"
 {
-    Caption = 'Expéditions - Colis';
+    Caption = 'Expéditions - Package';
     PageType = ListPart;
     RefreshOnActivate = false;
     SaveValues = true;
     ShowFilter = false;
-    SourceTable = Colis;
-    SourceTableView = sorting("N°")
+    SourceTable = Package;
+    SourceTableView = sorting("Package No.")
                       order(ascending);
     layout
     {
@@ -17,46 +17,46 @@ page 50021 "Sous-formulaire Colis"
         {
             repeater(Group)
             {
-                field("N°"; Rec."N°")
+                field("Package No."; Rec."Package No.")
                 {
                     DrillDownPageID = ListeColisage;
                     Editable = false;
                     Enabled = false;
                 }
-                field("N° expédition"; Rec."N° expédition")
+                field("Shipping No."; Rec."Shipping No.")
                 {
                     TableRelation = "Sales Shipment Header"."No.";
                 }
-                field("Nature du colis"; Rec."Nature du colis")
+                field("Type of package"; Rec."Type of package")
                 {
 
                 }
-                field("Référence Colis"; Rec."Référence Colis")
+                field("Package Reference"; Rec."Package Reference")
                 {
                     Editable = false;
                 }
-                field("Désignation marchandise"; Rec."Désignation marchandise")
+                field("Product Description"; Rec."Product Description")
                 {
                 }
-                field("Longueur (cm)"; Rec."Longueur (cm)")
+                field("Length (cm)"; Rec."Length (cm)")
                 {
                 }
-                field("Largeur (cm)"; Rec."Largeur (cm)")
+                field("Width (cm)"; Rec."Width (cm)")
                 {
                 }
-                field("Hauteur (cm)"; Rec."Hauteur (cm)")
+                field("Height (cm)"; Rec."Height (cm)")
                 {
                 }
                 field("Volume (m3)"; Rec."Volume (m3)")
                 {
                 }
-                field("Poids net"; Rec."Poids net")
+                field("Net Weight"; Rec."Net Weight")
                 {
                 }
-                field("Poids brut"; Rec."Poids brut")
+                field("Gross Weight"; Rec."Gross Weight")
                 {
                 }
-                field("Nb pièce dans le colis"; Rec."Nb pièce dans le colis")
+                field("Nb of pieces"; Rec."Nb of pieces")
                 {
                     Editable = false;
                     Enabled = false;
@@ -83,7 +83,7 @@ page 50021 "Sous-formulaire Colis"
                     CurrPage.SETSELECTIONFILTER(LRecColis);
 
                     if LRecColis.FINDFIRST() then begin
-                        LRecColisages.SETRANGE("N°", LRecColis."N°");
+                        LRecColisages.SETRANGE("Package No.", LRecColis."Package No.");
                         PAGE.RUNMODAL(50022, LRecColisages);
                     end;
                 end;
@@ -99,13 +99,13 @@ page 50021 "Sous-formulaire Colis"
     begin
         LIntI := 1;
         LRecColis.RESET();
-        LRecColis.SETFILTER("N° expédition", Rec."N° expédition");
+        LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT - 1;
         CurrPage.UPDATE(true);
         if LRecColis.FIND('-') then
             repeat
-                if LRecColis."N°" <> Rec."N°" then begin
-                    LRecColis."Référence Colis" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
+                if LRecColis."Package No." <> Rec."Package No." then begin
+                    LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
                     LRecColis.MODIFY();
                     COMMIT();
                     LIntI += 1;
@@ -121,16 +121,16 @@ page 50021 "Sous-formulaire Colis"
         LIntNbColis: Integer;
     begin
         CLEAR(GRecColis);
-        GRecColis.SETRANGE("N° expédition", Rec."N° expédition");
-        Rec."Référence Colis" := FORMAT(GRecColis.COUNT + 1) + '/' + FORMAT(GRecColis.COUNT + 1);
+        GRecColis.SETRANGE("Shipping No.", Rec."Shipping No.");
+        Rec."Package Reference" := FORMAT(GRecColis.COUNT + 1) + '/' + FORMAT(GRecColis.COUNT + 1);
         LIntI := 1;
         LRecColis.RESET();
-        LRecColis.SETFILTER("N° expédition", Rec."N° expédition");
+        LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT + 1;
         if LRecColis.FIND('-') then
             repeat
-                if LRecColis."N°" <> Rec."N°" then begin
-                    LRecColis."Référence Colis" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
+                if LRecColis."Package No." <> Rec."Package No." then begin
+                    LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
                     LRecColis.MODIFY();
                     COMMIT();
                     LIntI += 1;

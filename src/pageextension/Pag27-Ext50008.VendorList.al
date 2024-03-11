@@ -2,7 +2,7 @@ namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Purchases.Vendor;
 
-pageextension 50009 "VendorList" extends "Vendor List" //27
+pageextension 50008 "VendorList" extends "Vendor List" //27
 {
     layout
     {
