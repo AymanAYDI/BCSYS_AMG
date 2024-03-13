@@ -109,7 +109,7 @@ page 50013 "Fiche DGX"
                                         LRecDGXLines."Packaging Group" := LRecONU."Packaging group";
                                         LRecDGXLines.Description := LRecONU.Description;
                                         LRecDGXLines."Sub-Class" := LRecONU."Sub-Class";
-                                        LRecDGXLines."Package No." := LRecShipLines."N° Package";
+                                        LRecDGXLines."Package No." := LRecShipLines."Package No.";
                                         LRecDGXLines."Unit of measure" := LRecShipLines."Unit of Measure";
                                         if LRecDGXHeader.GET(Rec."DGX No.") then
                                             if LRecDGXHeader."DGX Type" = LRecDGXHeader."DGX Type"::"Aerien cargo" then
@@ -121,7 +121,7 @@ page 50013 "Fiche DGX"
                                                     LRecDGXLines."Packing Inst" := '';
 
                                         //DELPHI AUB récupération du poids net du colis
-                                        if LRecColis.GET(LRecShipLines."N° Package") then begin
+                                        if LRecColis.GET(LRecShipLines."Package No.") then begin
                                             LRecDGXLines."Net mass (kg)" := LRecColis."Net Weight";
                                             LRecDGXLines."Gross Mass (kg)" := LRecColis."Gross Weight";
                                             LRecColis.CALCFIELDS("Nb of pieces");
