@@ -314,6 +314,9 @@ report 50007 "Edition Bon colisage"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
@@ -327,11 +330,11 @@ report 50007 "Edition Bon colisage"
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO('%1 - %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
                                       STRSUBSTNO(
-                                        '%1; %2 - %3', DimText,
+                                        Text02, DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                                 if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
@@ -461,6 +464,9 @@ report 50007 "Edition Bon colisage"
                             }
 
                             trigger OnAfterGetRecord()
+                            var
+                                Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                                Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
                                     if not DimSetEntry2.FINDSET() then
@@ -474,11 +480,11 @@ report 50007 "Edition Bon colisage"
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO('%1 - %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := STRSUBSTNO(Text01, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
                                           STRSUBSTNO(
-                                            '%1; %2 - %3', DimText,
+                                            Text02, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
                                     if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
@@ -634,6 +640,9 @@ report 50007 "Edition Bon colisage"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry3.FINDSET() then
@@ -647,11 +656,11 @@ report 50007 "Edition Bon colisage"
                             repeat
                                 OldDimText := DimText3;
                                 if DimText3 = '' then
-                                    DimText3 := STRSUBSTNO('%1 - %2', DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
+                                    DimText3 := STRSUBSTNO(Text01, DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
                                 else
                                     DimText3 :=
                                       STRSUBSTNO(
-                                        '%1; %2 - %3', DimText3,
+                                        Text02, DimText3,
                                         DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code");
                                 if STRLEN(DimText3) > MAXSTRLEN(OldDimText) then begin
                                     DimText3 := OldDimText;

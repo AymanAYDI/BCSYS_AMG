@@ -67,7 +67,7 @@ table 50007 "DGX Lines"
             DataClassification = ToBeClassified;
             TableRelation = Package."Package No.";
         }
-        field(55; "Unit of measure"; Text[30])
+        field(55; "Unit of measure"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
@@ -83,7 +83,7 @@ table 50007 "DGX Lines"
         {
             DataClassification = ToBeClassified;
         }
-        field(75; "Qty colis"; Decimal)
+        field(75; "Package Qty"; Decimal)
         {
             DataClassification = ToBeClassified;
         }

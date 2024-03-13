@@ -1,13 +1,13 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using System.Utilities;
-using BCSYS.AMGALLOIS.Basic;
+using Microsoft.Finance.Dimension;
+using Microsoft.Utilities;
 using System.Globalization;
-report 50018 "DGX IATA RDLC"
+report 50008 "DGX IATA"
 {
-    RDLCLayout = './DGXIATARDLC.rdlc';
-    DefaultLayout = RDLC;
-    EnableExternalImages = true;
+    RDLCLayout = './DGXIATA.rdlc';
+    DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
 
@@ -60,9 +60,9 @@ report 50018 "DGX IATA RDLC"
                     column(Radioactif_DGXHeader; "DGX Header".Radioactive)
                     {
                     }
-                    column(Datedocument_DGXHeader; FORMAT("DGX Header"."Document Date", 0, '<Day,2>/<Month,2>/<Year4>'))
+                    column(Datedocument_DGXHeader; FORMAT("DGX Header"."Document Date", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>'))
                     {
-                        AutoFormatExpression = FORMAT("DGX Header"."Document Date", 0, '<Day,2>/<Month,2>/<Year4>');
+                        AutoFormatExpression = FORMAT("DGX Header"."Document Date", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>');
                     }
                     column(NoBonLivraison_DGXHeader; "DGX Header"."Delivery slip no.")
                     {
@@ -138,9 +138,6 @@ report 50018 "DGX IATA RDLC"
                     column(Classe_DGXLines; "DGX Lines".Class)
                     {
                     }
-                    column(SousClasse_DGXLines; GTxtSousClasse)
-                    {
-                    }
                     column(GroupeEmballage_DGXLines; "DGX Lines"."Packaging Group")
                     {
                     }
@@ -179,10 +176,6 @@ report 50018 "DGX IATA RDLC"
                     trigger OnAfterGetRecord()
                     begin
                         LinNo := LineNo;
-
-                        GTxtSousClasse := '';
-                        if "DGX Lines"."Sub-Class" <> '' then
-                            GTxtSousClasse := '(' + "DGX Lines"."Sub-Class" + ')';
                     end;
 
                     trigger OnPreDataItem()
@@ -247,16 +240,15 @@ report 50018 "DGX IATA RDLC"
         NoOfCopies: Integer;
         OutputNo: Integer;
         NoOfLoops: Integer;
-        CopyText: Text;
-        DimText: Text;
-        FormatDocument: Codeunit 368;
-        DimSetEntry1: Record 480;
+        CopyText: Text[30];
+        DimText: Text[120];
+        FormatDocument: Codeunit "Format Document";
+        DimSetEntry1: Record "Dimension Set Entry";
         Continue: Boolean;
-        OldDimText: Text;
+        OldDimText: Text[75];
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         LinNo: Integer;
         CTxtAirport: Label 'ROISSY';
-        GTxtSousClasse: Text;
         CDULanguage: codeunit Language;
 }
 

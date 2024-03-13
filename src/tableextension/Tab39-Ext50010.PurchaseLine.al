@@ -69,15 +69,11 @@ tableextension 50010 PurchaseLine extends "Purchase Line" //39
         // }
     }
     var
-        FindRecordMgt: codeunit "703";
+        FindRecordMgt: codeunit 703;
 
-    var
-        ConfirmManagement: codeunit "27";
+        ConfirmManagement: codeunit 27;
 
-    var
         Text017: Label '\The entered information may be disregarded by warehouse operations.';
-
-    var
         AnotherItemWithSameDescrQst: Label 'Item No. %1 also has the description "%2".\Do you want to change the current item no. to %1?', Comment = '%1=Item no., %2=item description';
         AnotherChargeItemWithSameDescQst: Label 'Item charge No. %1 also has the description "%2".\Do you want to change the current item charge no. to %1?', Comment = '%1=Item charge no., %2=item charge description';
 
@@ -128,7 +124,5 @@ tableextension 50010 PurchaseLine extends "Purchase Line" //39
     //todo i can't find slution for line 4499
     //todo i can't find slution for line 4348
     //todo i can't find slution for line 4495,4515
-
-    //todo im in 4765
 }
 

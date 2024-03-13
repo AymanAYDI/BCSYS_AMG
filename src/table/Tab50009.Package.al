@@ -24,54 +24,6 @@ table 50009 Package
         {
             FieldClass = Normal;
             TableRelation = NatureColisage.No;
-
-            trigger OnValidate()
-            begin
-                /*
-                if xRec."Type of package" <> '' Then
-                BEGIN
-                  CLEAR(GRecColis);
-                  GRecColis.SetRange("Shipping No.",xRec."Shipping No.");
-                  GRecColis.SetRange("Type of package",xRec."Type of package");
-                  if GRecColis.COUNT >0 Then
-                    if GRecColis.FINDFIRST Then
-                      FModiReferenceColis(1,GRecColis); // 1 pour décrémentation
-                  CLEAR(GRecColis);
-                  GRecColis.SetRange("Shipping No.",Rec."Shipping No.");
-                  GRecColis.SetRange("Type of package",Rec."Type of package");
-                  if GRecColis.COUNT >0 Then
-                  BEGIN
-                    FModiReferenceColis(0,Rec); // 0 pour incrémentation
-                    if GRecColis.FINDFIRST Then
-                    BEGIN
-                      Rec."Package Reference" := FORMAT(GRecColis.COUNT+1) + '/'+FORMAT(GRecColis.COUNT+1);
-                      //Rec.MODIFY;
-                      //COMMIT;
-                    END;
-                  END
-                  else
-                  BEGIN
-                    Rec."Package Reference" := '1/1';
-                  END;
-                END
-                else
-                BEGIN
-                  CLEAR(GRecColis);
-                  GRecColis.SetRange("Shipping No.",Rec."Shipping No.");
-                  GRecColis.SetRange("Type of package",Rec."Type of package");
-                  if GRecColis.COUNT >0 Then
-                  BEGIN
-                    FModiReferenceColis(0,Rec); // 0 pour incrémentation
-                    Rec."Package Reference" := FORMAT(GRecColis.COUNT+1) + '/'+FORMAT(GRecColis.COUNT+1);
-                  END
-                  else
-                  BEGIN
-                    Rec."Package Reference" := '1/1';
-                  END;
-                END;
-                */
-
-            end;
         }
         field(17; "Product Description"; Text[50])
         {
@@ -124,8 +76,7 @@ table 50009 Package
         }
         field(50; "Nb of pieces"; Decimal)
         {
-            //todo table spe
-            // CalcFormula = Sum(Packaging.Quantité WHERE("Package No."=FIELD("Package No.")));
+            CalcFormula = sum(Packaging.Quantity where("Package No." = field("Package No.")));
             FieldClass = FlowField;
         }
         field(51; "Title type of package"; Text[60])
@@ -151,61 +102,35 @@ table 50009 Package
     }
 
     trigger OnDelete()
-    var
-        LIntI: Integer;
-        LIntNbColis: Integer;
     begin
         GRecColis.SetRange("Shipping No.", Rec."Shipping No.");
         GRecColis.SetRange("Type of package", Rec."Type of package");
-        //todo table spe
-        // if GRecColis.FINDLAST then begin
-        //  GRecColisage.SetRange("Package No.", Rec."Package No.");
-        //     if GRecColisage.FINDFIRST then begin
-        //         if not CONFIRM('Attention : des lignes de colisage sont rattachées à ce colis, êtes-vous sûr de vouloir les supprimer ?', false) then
-        //             Error('Suppression annulée par l''utilisateur');
-        //         // supresion de la lsite colisage
-        //         CLEAR(GRecColisage);
-        //         GRecColisage.SetRange("Package No.", Rec."Package No.");
-        //         GRecColisage.DELETEALL;
+        if GRecColis.FINDLAST() then begin
+            GRecColisage.SetRange("Package No.", Rec."Package No.");
+            if GRecColisage.FINDFIRST() then begin
+                if not CONFIRM('Attention : des lignes de colisage sont rattachées à ce colis, êtes-vous sûr de vouloir les supprimer ?', false) then
+                    Error('Suppression annulée par l''utilisateur');
+                // supresion de la lsite colisage
+                CLEAR(GRecColisage);
+                GRecColisage.SetRange("Package No.", Rec."Package No.");
+                GRecColisage.DELETEALL();
 
-        //         GRecSalesShipingLine.SetRange("Document No.", Rec."Shipping No.");
-        //         GRecSalesShipingLine.SetRange("N° Package", Rec."Package No.");
-        //         GRecSalesShipingLine.MODIFYALL("N° Package", '');
-        //         COMMIT;
-        //         //DELPHI AUB 05.07.2021
-        //         /*LIntI := 1;
-        //         LRecColis.Reset();
-        //         LRecColis.SETFILTER("Shipping No.",Rec."Shipping No.");
-        //         LIntNbColis := LRecColis.COUNT - 1;
-
-        //         if LRecColis.FIND('-') Then
-        //         REPEAT
-        //           LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-        //           LRecColis.MODIFY;
-        //           //COMMIT();
-        //           LIntI += 1;
-        //         UNTIL LRecColis.NEXT<=0;
-        //         */
-        //         //END DELPHI AUB
-        //         //FRecalculer(GRecColis,FALSE); //comment by AUB
-
-        //     end;
-        // end
-        // else
-        //     Error('Aucun colis pour cette expédition');
+                GRecSalesShipingLine.SetRange("Document No.", Rec."Shipping No.");
+                GRecSalesShipingLine.SetRange("N° Package", Rec."Package No.");
+                GRecSalesShipingLine.MODIFYALL("N° Package", '');
+                COMMIT();
+            end;
+        end
+        else
+            Error('Aucun colis pour cette expédition');
 
     end;
 
     trigger OnInsert()
-    var
-        LRecColis: Record Package;
-        LIntI: Integer;
-        LIntNoFinal: Integer;
     begin
         if "Package No." = '' then begin
             ParamVente.Get();
-            //todo not migrated yet
-            //  "Package No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° colis", TODAY, true, false);
+            "Package No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° colis", TODAY, true, false);
         end;
 
         if Rec.GETFILTER("Shipping No.") <> '' then
@@ -214,16 +139,12 @@ table 50009 Package
 
     var
         ParamVente: Record "Sales & Receivables Setup";
-        GestionNoSouche: Codeunit NoSeriesManagement;
-        //todo table spe
-        // GRecColisage: Record 50010;
+        GRecColisage: Record 50010;
         GRecSalesShipingLine: Record "Sales Shipment Line";
         GRecColis: Record Package;
-        LRecColis: Record Package;
+        GestionNoSouche: Codeunit NoSeriesManagement;
 
     procedure FModiReferenceColis(PSigne: Option PLUS,MOINS)
-    var
-        LRecColis: Record Package;
     begin
         MESSAGE(Rec."Shipping No.");
     end;
@@ -233,23 +154,8 @@ table 50009 Package
         LRecColis: Record Package;
         LIntNoFinal: Integer;
         LIntI: Integer;
-        LRecColis2: Record Package;
     begin
         LIntI := 1;
-        /*LRecColis.SetRange("Shipping No.",PRecColis."Shipping No.");
-        LRecColis.SETFILTER("Package No.",'<>%1',PRecColis."Package No.");
-        LIntNoFinal := LRecColis.COUNT();
-        if LRecColis.FINDFIRST Then
-        REPEAT
-          if PBooAjout Then
-            LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal+1)
-          else
-            LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal);
-          LRecColis.MODIFY;
-          LIntI += 1;
-        UNTIL LRecColis.NEXT=0;
-        */
-
         LRecColis.SetRange("Shipping No.", PRecColis."Shipping No.");
         LIntNoFinal := LRecColis.COUNT();
         if LRecColis.FINDFIRST() then

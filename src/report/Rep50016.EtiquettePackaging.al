@@ -275,6 +275,9 @@ report 50016 "Etiquette Packaging"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
@@ -288,11 +291,11 @@ report 50016 "Etiquette Packaging"
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO('%1 - %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
                                       STRSUBSTNO(
-                                        '%1; %2 - %3', DimText,
+                                        Text02, DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                                 if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
@@ -414,6 +417,9 @@ report 50016 "Etiquette Packaging"
                             }
 
                             trigger OnAfterGetRecord()
+                            var
+                                Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                                Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
                                     if not DimSetEntry2.FINDSET() then
@@ -427,11 +433,11 @@ report 50016 "Etiquette Packaging"
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO('%1 - %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := STRSUBSTNO(Text01, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
                                           STRSUBSTNO(
-                                            '%1; %2 - %3', DimText,
+                                            Text02, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
                                     if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
@@ -511,9 +517,9 @@ report 50016 "Etiquette Packaging"
                             //DELPHI AUB 03.10.2019
                             GRecSalesLine.SETFILTER("Document No.", "Sales Shipment Line"."Order No.");
                             GRecSalesLine.SETRANGE("Line No.", "Sales Shipment Line"."Order Line No.");
-                            if GRecSalesLine.FINDFIRST() then begin
-                                GIntQteCommandee := GRecSalesLine.Quantity;
-                            end else begin
+                            if GRecSalesLine.FINDFIRST() then
+                                GIntQteCommandee := GRecSalesLine.Quantity
+                            else begin
                                 //On regarde dans les commandes archivées si pas de commande trouvée
                                 GRecSalesHeaderArchive.SETFILTER("No.", "Sales Shipment Line"."Order No.");
                                 if GRecSalesHeaderArchive.FINDLAST() then begin
@@ -574,6 +580,9 @@ report 50016 "Etiquette Packaging"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
+                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry3.FINDSET() then
@@ -587,11 +596,11 @@ report 50016 "Etiquette Packaging"
                             repeat
                                 OldDimText := DimText3;
                                 if DimText3 = '' then
-                                    DimText3 := STRSUBSTNO('%1 - %2', DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
+                                    DimText3 := STRSUBSTNO(Text01, DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
                                 else
                                     DimText3 :=
                                       STRSUBSTNO(
-                                        '%1; %2 - %3', DimText3,
+                                        Text02, DimText3,
                                         DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code");
                                 if STRLEN(DimText3) > MAXSTRLEN(OldDimText) then begin
                                     DimText3 := OldDimText;
@@ -976,12 +985,6 @@ report 50016 "Etiquette Packaging"
         actions
         {
         }
-
-        trigger OnInit()
-        begin
-            LogInteractionEnable := true;
-        end;
-
         trigger OnOpenPage()
         begin
             InitLogInteraction();
@@ -1022,7 +1025,6 @@ report 50016 "Etiquette Packaging"
     end;
 
     var
-        Text002: Label 'Sales - Shipment %1', Comment = '%1 = Document No.';
         SalesPurchPerson: Record 13;
         CompanyInfo: Record 79;
         CompanyInfo1: Record 79;
@@ -1031,7 +1033,6 @@ report 50016 "Etiquette Packaging"
         SalesSetup: Record 311;
         DimSetEntry1: Record 480;
         DimSetEntry2: Record 480;
-        Language: Record 8;
         TrackingSpecBuffer: Record 336 temporary;
         PostedAsmHeader: Record 910;
         PostedAsmLine: Record 911;
@@ -1040,16 +1041,15 @@ report 50016 "Etiquette Packaging"
         ShipmentMethod: Record 10;
         GRecSalesShipmentLine: Record 111;
         GrecTransporteur: Record 291;
-        GRecItemEntryRelation: Record 6507;
         FormatAddr: Codeunit 365;
         FormatDocument: Codeunit 368;
         SegManagement: Codeunit 5051;
         ItemTrackingDocMgt: Codeunit 6503;
-        CustAddr: array[8] of Text[100];
-        ShipToAddr: array[8] of Text[100];
-        CompanyAddr: array[8] of Text[100];
-        SalesPersonText: Text[20];
-        ReferenceText: Text[80];
+        CustAddr: array[8] of Text;
+        ShipToAddr: array[8] of Text;
+        CompanyAddr: array[8] of Text;
+        SalesPersonText: Text;
+        ReferenceText: Text;
         MoreLines: Boolean;
         NoOfCopies: Integer;
         OutputNo: Integer;
@@ -1057,10 +1057,10 @@ report 50016 "Etiquette Packaging"
         TrackingSpecCount: Integer;
         OldRefNo: Integer;
         OldNo: Code[20];
-        CopyText: Text[30];
+        CopyText: Text;
         ShowCustAddr: Boolean;
-        DimText: Text[120];
-        OldDimText: Text[75];
+        DimText: Text;
+        OldDimText: Text;
         ShowInternalInfo: Boolean;
         Continue: Boolean;
         LogInteraction: Boolean;
@@ -1069,7 +1069,6 @@ report 50016 "Etiquette Packaging"
         ShowTotal: Boolean;
         ShowGroup: Boolean;
         TotalQty: Decimal;
-        [InDataSet]
 
         LogInteractionEnable: Boolean;
         DisplayAssemblyInformation: Boolean;
@@ -1095,44 +1094,27 @@ report 50016 "Etiquette Packaging"
         DescriptionCaptionLbl: Label 'Description';
         NoCaptionLbl: Label 'No.';
         PageCaptionCap: Label 'Page %1 of %2';
-        GTxtCondLivraisonEtendues: Text[150];
-        GTxtNomenclatureArticle: Text[20];
+        GTxtCondLivraisonEtendues: Text;
+        GTxtNomenclatureArticle: Text;
         GDecPoidsBrut: Decimal;
         GDecPoidsnet: Decimal;
-        GTxtTransporteur: Text[80];
+        GTxtTransporteur: Text;
         GRecCountry: Record 9;
-        GTxtCompanyInfoPays: Text[50];
+        GTxtCompanyInfoPays: Text;
         GRecCust2: Record 18;
-        GTxtNumTVAClient: Text[60];
+        GTxtNumTVAClient: Text;
         PaymentTerms: Record 3;
-        GTxtPayementsTerm: Text[150];
-        GrecTraductionShipMethode: Record 463;
-        ShipmentMethod2: Record 10;
-        GTxtShipmentMethodedescription: Text[150];
-        GTxtItemNo: Text[20];
-        GTxtCompanyVAT_ICE: Text[80];
-        GTxtOrigineCE: Text[250];
+        GTxtPayementsTerm: Text;
+        GTxtItemNo: Text;
+        GTxtCompanyVAT_ICE: Text;
+        GTxtOrigineCE: Text;
         GTxtCompanyBankBranch: Label 'Bk Code';
-        GTxtCompanyPhoneNo: Label 'Phone';
         GTxtCompanyFaxNo: Label 'Fax.';
-        GTxtCompanyHomepage: Label 'Website';
-        GTxtCompanyemail: Label 'E-Mail';
         GTxtCompanyVAT: Label 'VAT Id. Num.';
-        GTxtCompanyGesch: Label 'Director';
-        GTxtCompanySitz: Label 'H. Q.';
-        GTxtCompanyBankNr: Label 'Bk Num.';
-        GTxtCompanyTrib: Label 'Trial court';
         GTxtCompanyBankSWIFT: Label 'SWIFT';
-        GTxtCompanySalespers: Label 'Agent';
-        GTxtCustomerNum: Label 'Customer num.';
-        GTxtQuantity_Line_Lbl: Label 'Qty';
-        GTxtUnitOfMeasure_Lbl: Label 'Unit';
-        GTxtUnitPrice_Lbl: Label 'Unit Price';
         GTxtCompanyBankIBAN: Label 'IBAN';
         GTxtSalesShptCopyText: Label 'Shipment';
-        GTxtItemNo_Line_Lbl: Label 'Item No.';
         GTxtYourRef_Lbl: Label 'Your Reference';
-        TextTransporteur: Label 'Transporteur';
         TextPackingDetaile: Label 'Packing details';
         TextPoids: Label 'Gross Weight';
         ShptMethodDescLbl: Label 'Shipment Method';
@@ -1145,12 +1127,12 @@ report 50016 "Etiquette Packaging"
         GIntQteCommandee: Decimal;
         GRecSalesLineArchive: Record 5108;
         GTxtQteExpedieeLbl: Label 'Qté expédiée';
-        GTxtDocumentNo: Text[50];
+        GTxtDocumentNo: Text;
         GTxtQteRestante: Label 'Qté restante';
         DimSetEntry3: Record 480;
-        DimText3: Text[120];
-        GTxtColisCaption: Text[50];
-        GTxtColisREF: Text[100];
+        DimText3: Text;
+        GTxtColisCaption: Text;
+        GTxtColisREF: Text;
         LRecColis: Record 50009;
         CDULanguage: codeunit Language;
 
@@ -1191,7 +1173,7 @@ report 50016 "Etiquette Packaging"
         end;
     end;
 
-    local procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text[10]
+    local procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text
     var
         UnitOfMeasure: Record 204;
     begin
