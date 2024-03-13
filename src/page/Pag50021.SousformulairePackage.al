@@ -76,8 +76,8 @@ page 50021 "Sous-formulaire Package"
 
                 trigger OnAction()
                 var
-                    LRecColisages: Record 50010;
                     LRecColis: Record 50009;
+                    LRecColisages: Record 50010;
                     LPagColisage: Page 50022;
                 begin
                     CurrPage.SETSELECTIONFILTER(LRecColis);
@@ -93,8 +93,8 @@ page 50021 "Sous-formulaire Package"
 
     trigger OnDeleteRecord(): Boolean
     var
-        LIntI: Integer;
         LRecColis: Record 50009;
+        LIntI: Integer;
         LIntNbColis: Integer;
     begin
         LIntI := 1;
@@ -102,7 +102,7 @@ page 50021 "Sous-formulaire Package"
         LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT - 1;
         CurrPage.UPDATE(true);
-        if LRecColis.FIND('-') then
+        if LRecColis.FINDFIRST() then
             repeat
                 if LRecColis."Package No." <> Rec."Package No." then begin
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
@@ -116,8 +116,8 @@ page 50021 "Sous-formulaire Package"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
-        LIntI: Integer;
         LRecColis: Record 50009;
+        LIntI: Integer;
         LIntNbColis: Integer;
     begin
         CLEAR(GRecColis);
@@ -127,7 +127,7 @@ page 50021 "Sous-formulaire Package"
         LRecColis.RESET();
         LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT + 1;
-        if LRecColis.FIND('-') then
+        if LRecColis.FINDFIRST() then
             repeat
                 if LRecColis."Package No." <> Rec."Package No." then begin
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);

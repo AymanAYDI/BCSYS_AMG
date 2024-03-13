@@ -187,7 +187,7 @@ report 50018 "DGX IATA RDLC"
 
                     trigger OnPreDataItem()
                     begin
-                        MoreLines := FIND('+');
+                        MoreLines := FINDLAST();
                         while MoreLines and (ItemNo = '') do
                             MoreLines := NEXT(-1) <> 0;
                         if not MoreLines then
@@ -243,20 +243,28 @@ report 50018 "DGX IATA RDLC"
     end;
 
     var
-        MoreLines: Boolean;
-        NoOfCopies: Integer;
-        OutputNo: Integer;
-        NoOfLoops: Integer;
-        CopyText: Text;
-        DimText: Text;
-        FormatDocument: Codeunit 368;
-        DimSetEntry1: Record 480;
+        GRecLanguage: Record "8";
+        DimSetEntry1: Record "480";
+        FormatDocument: Codeunit "368";
+        CDULanguage: codeunit Language;
         Continue: Boolean;
-        OldDimText: Text;
+        MoreLines: Boolean;
+        LinNo: Integer;
+        NoOfCopies: Integer;
+        NoOfLoops: Integer;
+        CopyText: Text[30];
+        DimText: Text[120];
+        FormatDocument: Codeunit "368";
+        DimSetEntry1: Record "480";
+        DimText1: Text[120];
+        Continue: Boolean;
+        OldDimText: Text[75];
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         LinNo: Integer;
         CTxtAirport: Label 'ROISSY';
-        GTxtSousClasse: Text;
+        GTxtPackingInstr: Text[20];
+        GRecLanguage: Record "8";
+        GTxtSousClasse: Text[20];
         CDULanguage: codeunit Language;
 }
 

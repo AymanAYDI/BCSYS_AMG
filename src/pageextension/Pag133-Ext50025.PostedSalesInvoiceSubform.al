@@ -7,7 +7,7 @@ pageextension 50025 PostedSalesInvoiceSubform extends "Posted Sales Invoice Subf
     {
         addafter("Unit of Measure")
         {
-            field("Dernier Coût direct"; GDecLastDirectCost)
+            field("Last direct cost"; GDecLastDirectCost)
             {
                 Editable = false;
             }

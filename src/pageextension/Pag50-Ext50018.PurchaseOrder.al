@@ -126,8 +126,8 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
     }
     trigger OnOpenPage()
     var
-        LCodUserID: Code[20];
         LRecUserSetup: Record 91;
+        LCodUserID: Code[20];
     begin
         Rec."Posting Date" := 0D;
         LCodUserID := USERID();

@@ -72,7 +72,7 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
             field(Marque; Rec.Marque)
             {
                 Style = StrongAccent;
-                StyleExpr = TRUE;
+                StyleExpr = true;
                 trigger OnValidate()
                 begin
                     Rec.FCalculateOnMargeChange(Rec."No.", Rec.Marque);

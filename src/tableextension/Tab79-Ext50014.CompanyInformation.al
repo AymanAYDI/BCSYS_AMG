@@ -95,21 +95,21 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
     //Parameters and return type have not been exported.
     var
         OriginalIBANCode: Code[100];
-        Modulus97: Integer;
         I: Integer;
+        Modulus97: Integer;
     begin
 
-        if IBANCode = '' Then
-            EXIT;
+        if IBANCode = '' then
+            exit;
         IBANCode := DELCHR(IBANCode);
         Modulus97 := 97;
-        if (STRLEN(IBANCode) <= 5) OR (STRLEN(IBANCode) > 34) Then
+        if (STRLEN(IBANCode) <= 5) or (STRLEN(IBANCode) > 34) then
             IBANError(OriginalIBANCode);
         ExtConvertIBAN(IBANCode);
-        WHILE STRLEN(IBANCode) > 6 DO
+        while STRLEN(IBANCode) > 6 do
             IBANCode := CalcModulus(COPYSTR(IBANCode, 1, 6), Modulus97) + COPYSTR(IBANCode, 7);
         EVALUATE(I, IBANCode);
-        if (I MOD Modulus97) <> 1 Then
+        if (I mod Modulus97) <> 1 then
             IBANError(OriginalIBANCode);
 
     end;
@@ -135,8 +135,8 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
         LetterCharInt: Integer;
     begin
 
-        IF (Letter >= 'A') AND (Letter <= 'Z') THEN BEGIN
-            CASE Letter OF
+        if (Letter >= 'A') and (Letter <= 'Z') then begin
+            case Letter of
                 'A':
                     Letter2 := '10';
                 'B':
@@ -189,20 +189,20 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
                     Letter2 := '34';
                 'Z':
                     Letter2 := '35';
-            END;
-            if LetterPlace = 1 Then
+            end;
+            if LetterPlace = 1 then
                 IBANCode := Letter2 + COPYSTR(IBANCode, 2)
-            else BEGIN
-                if LetterPlace = STRLEN(IBANCode) Then
+            else begin
+                if LetterPlace = STRLEN(IBANCode) then
                     IBANCode := COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2
                 else
                     IBANCode :=
                       COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2 + COPYSTR(IBANCode, LetterPlace + 1);
-            END;
-            EXIT(TRUE);
-        END;
-        if (Letter >= '0') AND (Letter <= '9') Then
-            EXIT(FALSE);
+            end;
+            exit(true);
+        end;
+        if (Letter >= '0') and (Letter <= '9') then
+            exit(false);
 
         IBANError(IBANCode);
 

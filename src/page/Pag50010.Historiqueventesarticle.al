@@ -2,6 +2,8 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
+using BCSYS_AMG.BCSYS_AMG;
+using Microsoft.Sales.Archive;
 page 50010 "Historique ventes article"
 {
     DeleteAllowed = false;
@@ -208,18 +210,17 @@ page 50010 "Historique ventes article"
         {
             action("Recharger Historique")
             {
-                //todo report spe
                 Image = Recalculate;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-                // RunObject = Report 50020;
+                RunObject = Report CopyLinesHisto;
                 RunPageOnRec = false;
             }
         }
     }
 
     var
-        GRecSalesLineArchive: Record 5107;
+        GRecSalesLineArchive: Record "Sales Header Archive";
 }
 

@@ -1,44 +1,46 @@
-namespace BCSYS.AMGALLOIS.Basic;
+namespace BCSYS_AMG.BCSYS_AMG;
 
-using Microsoft.Sales.History;
-using Microsoft.Assembly.History;
-using Microsoft.Inventory.Ledger;
+using Microsoft.Sales.Document;
+using System.Utilities;
+using Microsoft.Assembly.Document;
 using Microsoft.Finance.VAT.Calculation;
 using Microsoft.Foundation.Reporting;
-using System.Utilities;
+using Microsoft.Finance.Currency;
+using Microsoft.Utilities;
+using Microsoft.Sales.Posting;
+using Microsoft.CRM.Contact;
+using System.Globalization;
+using Microsoft.CRM.Interaction;
+using Microsoft.Foundation.UOM;
+using Microsoft.Sales.Customer;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.PaymentTerms;
-using Microsoft.CRM.Team;
 using Microsoft.Bank.BankAccount;
+using Microsoft.CRM.Team;
 using Microsoft.Foundation.Company;
 using Microsoft.Sales.Setup;
-using Microsoft.Sales.Customer;
 using Microsoft.Inventory.Location;
-using System.Globalization;
 using Microsoft.Finance.VAT.Clause;
 using Microsoft.Foundation.Address;
-using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
-using Microsoft.Foundation.UOM;
-using Microsoft.CRM.Contact;
-report 50001 "Standard Sales - Credit Memo W"
+report 50000 "Standard Sales - Order Conf. W"
 {
-    RDLCLayout = './StandardSalesCreditMemoW.rdlc';
-    WordLayout = './StandardSalesCreditMemoW.docx';
-    Caption = 'Sales - Credit Memo';
+    RDLCLayout = './StandardSalesOrderConfW.rdlc';
+    WordLayout = './StandardSalesOrderConfW.docx';
+    Caption = 'Sales - Confirmation';
     DefaultLayout = Word;
-    Permissions = TableData "Sales Shipment Buffer" = rimd;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
 
     dataset
     {
-        dataitem(Header; "Sales Cr.Memo Header")
+        dataitem(Header; "Sales Header")
         {
-            DataItemTableView = sorting("No.");
+            DataItemTableView = sorting("Document Type", "No.")
+                                where("Document Type" = const(Order));
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
-            RequestFilterHeading = 'Posted Sales Credit Memo';
+            RequestFilterHeading = 'Sales Order';
             column(CompanyAddress1; CompanyAddr[1])
             {
             }
@@ -183,13 +185,13 @@ report 50001 "Standard Sales - Credit Memo W"
             column(ShipmentMethodDescription_Lbl; ShptMethodDescLbl)
             {
             }
+            column(Shipment_Lbl; ShipmentLbl)
+            {
+            }
             column(ShipmentDate; FORMAT("Shipment Date", 0, 4))
             {
             }
             column(ShipmentDate_Lbl; FIELDCAPTION("Shipment Date"))
-            {
-            }
-            column(Shipment_Lbl; ShipmentLbl)
             {
             }
             column(ShowShippingAddress; ShowShippingAddr)
@@ -240,7 +242,7 @@ report 50001 "Standard Sales - Credit Memo W"
             column(BilltoCustumerNo; "Bill-to Customer No.")
             {
             }
-            column(BilltoCustumerNo_Lbl; FIELDCAPTION("Bill-to Customer No."))
+            column(BilltoCustomerNo_Lbl; FIELDCAPTION("Bill-to Customer No."))
             {
             }
             column(DocumentDate; FORMAT("Document Date", 0, 4))
@@ -261,10 +263,10 @@ report 50001 "Standard Sales - Credit Memo W"
             column(DocumentNo_Lbl; InvNoLbl)
             {
             }
-            column(AppliesToDocument; AppliesToText)
+            column(QuoteNo; "Quote No.")
             {
             }
-            column(AppliesToDocument_Lbl; AppliesToTextLbl)
+            column(QuoteNo_Lbl; FIELDCAPTION("Quote No."))
             {
             }
             column(PricesIncludingVAT; "Prices Including VAT")
@@ -279,7 +281,7 @@ report 50001 "Standard Sales - Credit Memo W"
             column(SalesPerson_Lbl; SalespersonLbl)
             {
             }
-            column(SalesPersonBlank_Lbl; SalesPersonText)
+            column(SalesPersonText_Lbl; SalesPersonText)
             {
             }
             column(SalesPersonName; SalespersonPurchaser.Name)
@@ -312,10 +314,10 @@ report 50001 "Standard Sales - Credit Memo W"
             column(Copy_Lbl; CopyLbl)
             {
             }
-            column(EMail_Header_Lbl; EMailLbl)
+            column(EMail_Lbl; EMailLbl)
             {
             }
-            column(HomePage_Header_Lbl; HomePageLbl)
+            column(HomePage_Lbl; HomePageLbl)
             {
             }
             column(InvoiceDiscountBaseAmount_Lbl; InvDiscBaseAmtLbl)
@@ -330,7 +332,7 @@ report 50001 "Standard Sales - Credit Memo W"
             column(LocalCurrency_Lbl; LocalCurrencyLbl)
             {
             }
-            column(ExchangeRateASText; ExchangeRateText)
+            column(ExchangeRateAsText; ExchangeRateText)
             {
             }
             column(Page_Lbl; PageLbl)
@@ -339,7 +341,7 @@ report 50001 "Standard Sales - Credit Memo W"
             column(SalesInvoiceLineDiscount_Lbl; SalesInvLineDiscLbl)
             {
             }
-            column(DocumentTitle_Lbl; SalesCreditMemoLbl)
+            column(Invoice_Lbl; SalesConfirmationLbl)
             {
             }
             column(Subtotal_Lbl; SubtotalLbl)
@@ -369,30 +371,36 @@ report 50001 "Standard Sales - Credit Memo W"
             column(VATClause_Lbl; VATClause.TABLECAPTION)
             {
             }
-            dataitem(Line; "Sales Cr.Memo Line")
+            column(ExtDocNo_SalesHeader; "External Document No.")
+            {
+            }
+            column(ShowWorkDescription; ShowWorkDescription)
+            {
+            }
+            dataitem(Line; "Sales Line")
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = Header;
                 DataItemTableView = sorting("Document No.", "Line No.");
+                UseTemporary = true;
                 column(LineNo_Line; "Line No.")
                 {
                 }
-                column(AmountExcludingVAT_Line; Amount)
+                column(AmountExcludingVAT_Line; ZeroIsBlanckDecimal(Amount))
                 {
-                    AutoFormatExpression = GetCurrencyCode();
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
                 column(AmountExcludingVAT_Line_Lbl; FIELDCAPTION(Amount))
                 {
                 }
-                column(AmountIncludingVAT_Line; "Amount Including VAT")
+                column(AmountIncludingVAT_Line; ZeroIsBlanckDecimal("Amount Including VAT"))
                 {
-                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 1;
                 }
                 column(AmountIncludingVAT_Line_Lbl; FIELDCAPTION("Amount Including VAT"))
                 {
-                    AutoFormatExpression = GetCurrencyCode();
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
                 column(Description_Line; Description)
@@ -401,15 +409,14 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(Description_Line_Lbl; FIELDCAPTION(Description))
                 {
                 }
-                column(LineDiscountPercent_Line; "Line Discount %")
+                column(LineDiscountPercent_Line; ZeroIsBlanckDecimal("Line Discount %"))
                 {
                 }
                 column(LineDiscountPercentText_Line; LineDiscountPctText)
                 {
                 }
-                column(LineAmount_Line; "Line Amount")
+                column(LineAmount_Line; ZeroIsBlanckDecimal("Line Amount"))
                 {
-                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 1;
                 }
                 column(LineAmount_Line_Lbl; FIELDCAPTION("Line Amount"))
@@ -427,7 +434,7 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(ShipmentDate_Line_Lbl; PostedShipmentDateLbl)
                 {
                 }
-                column(Quantity_Line; Quantity)
+                column(Quantity_Line; ZeroIsBlanckInteger(Quantity))
                 {
                 }
                 column(Quantity_Line_Lbl; FIELDCAPTION(Quantity))
@@ -436,9 +443,8 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(Type_Line; FORMAT(Type))
                 {
                 }
-                column(UnitPrice; "Unit Price")
+                column(UnitPrice; ZeroIsBlanckDecimal("Unit Price"))
                 {
-                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 2;
                 }
                 column(UnitPrice_Lbl; FIELDCAPTION("Unit Price"))
@@ -464,75 +470,19 @@ report 50001 "Standard Sales - Credit Memo W"
                 }
                 column(TransHeaderAmount; TransHeaderAmount)
                 {
-                    AutoFormatExpression = Header."Currency Code";
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
-                dataitem(ShipmentLine; "Sales Shipment Buffer")
+                column(CrossReferenceNo; "Item Reference No.") //replaced "Cross-Reference No."
                 {
-                    DataItemTableView = sorting("Document No.", "Line No.", "Entry No.");
-                    UseTemporary = true;
-                    column(DocumentNo_ShipmentLine; "Document No.")
-                    {
-                    }
-                    column(PostingDate_ShipmentLine; "Posting Date")
-                    {
-                    }
-                    column(PostingDate_ShipmentLine_Lbl; FIELDCAPTION("Posting Date"))
-                    {
-                    }
-                    column(Quantity_ShipmentLine; Quantity)
-                    {
-                        DecimalPlaces = 0 : 5;
-                    }
-                    column(Quantity_ShipmentLine_Lbl; FIELDCAPTION(Quantity))
-                    {
-                    }
-
-                    trigger OnPreDataItem()
-                    begin
-                        SETRANGE("Line No.", Line."Line No.");
-                    end;
                 }
-                dataitem(AssemblyLine; "Posted Assembly Line")
+                column(CrossReferenceNo_Lbl; FIELDCAPTION("Item Reference No."))//replaced "Cross-Reference No."
                 {
-                    DataItemTableView = sorting("Document No.", "Line No.");
-                    UseTemporary = true;
-                    column(LineNo_AssemblyLine; "No.")
-                    {
-                    }
-                    column(Description_AssemblyLine; Description)
-                    {
-                    }
-                    column(Quantity_AssemblyLine; Quantity)
-                    {
-                        DecimalPlaces = 0 : 5;
-                    }
-                    column(UnitOfMeasure_AssemblyLine; GetUOMText("Unit of Measure Code"))
-                    {
-                    }
-                    column(VariantCode_AssemblyLine; "Variant Code")
-                    {
-                    }
-
-                    trigger OnPreDataItem()
-                    var
-                        ValueEntry: Record "Value Entry";
-                    begin
-                        CLEAR(AssemblyLine);
-                        if not DisplayAssemblyInformation then
-                            CurrReport.BREAK();
-                        GetAssemblyLinesForDocument(
-                          AssemblyLine, ValueEntry."Document Type"::"Sales Credit Memo", Line."Document No.", Line."Line No.");
-                    end;
                 }
 
                 trigger OnAfterGetRecord()
-                var
-                    Text01: Label '%1%', Comment = '%1 = "Line Discount %"';
                 begin
                     PostedShipmentDate := 0D;
-                    if Quantity <> 0 then
-                        PostedShipmentDate := FindPostedShipmentDate();
 
                     if Type = Type::"G/L Account" then
                         "No." := '';
@@ -540,22 +490,10 @@ report 50001 "Standard Sales - Credit Memo W"
                     if "Line Discount %" = 0 then
                         LineDiscountPctText := ''
                     else
-                        LineDiscountPctText := STRSUBSTNO(Text01, -ROUND("Line Discount %", 0.1));
+                        LineDiscountPctText := STRSUBSTNO('%1%', -ROUND("Line Discount %", 0.1));
 
-                    VATAmountLine.INIT();
-                    VATAmountLine."VAT Identifier" := "VAT Identifier";
-                    VATAmountLine."VAT Calculation Type" := "VAT Calculation Type";
-                    VATAmountLine."Tax Group Code" := "Tax Group Code";
-                    VATAmountLine."VAT %" := "VAT %";
-                    VATAmountLine."VAT Base" := Amount;
-                    VATAmountLine."Amount Including VAT" := "Amount Including VAT";
-                    VATAmountLine."Line Amount" := "Line Amount";
-                    if "Allow Invoice Disc." then
-                        VATAmountLine."Inv. Disc. Base Amount" := "Line Amount";
-                    VATAmountLine."Invoice Discount Amount" := "Inv. Discount Amount";
-                    VATAmountLine."VAT Clause Code" := "VAT Clause Code";
-                    if ("VAT %" <> 0) or ("VAT Clause Code" <> '') or (Amount <> "Amount Including VAT") then
-                        VATAmountLine.InsertLine();
+                    if DisplayAssemblyInformation then
+                        AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
 
                     TransHeaderAmount += PrevLineAmount;
                     PrevLineAmount := "Line Amount";
@@ -573,10 +511,6 @@ report 50001 "Standard Sales - Credit Memo W"
 
                 trigger OnPreDataItem()
                 begin
-                    VATAmountLine.DELETEALL();
-                    VATClauseLine.DELETEALL();
-                    ShipmentLine.RESET();
-                    ShipmentLine.DELETEALL();
                     MoreLines := FINDLAST();
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                         MoreLines := NEXT(-1) <> 0;
@@ -590,11 +524,72 @@ report 50001 "Standard Sales - Credit Memo W"
                     CompanyInfo.CALCFIELDS(Picture);
                 end;
             }
+            dataitem(WorkDescriptionLines; Integer)
+            {
+                DataItemTableView = sorting(Number)
+                                    where(Number = filter(1 .. 99999));
+                column(WorkDescriptionLineNumber; Number)
+                {
+                }
+                column(WorkDescriptionLine; WorkDescriptionLine)
+                {
+                }
+                dataitem(AssemblyLine; "Assembly Line")
+                {
+                    DataItemTableView = sorting("Document No.", "Line No.");
+                    column(LineNo_AssemblyLine; "No.")
+                    {
+                    }
+                    column(Description_AssemblyLine; Description)
+                    {
+                    }
+                    column(Quantity_AssemblyLine; ZeroIsBlanckInteger(Quantity))
+                    {
+                    }
+                    column(UnitOfMeasure_AssemblyLine; GetUOMText("Unit of Measure Code"))
+                    {
+                    }
+                    column(VariantCode_AssemblyLine; "Variant Code")
+                    {
+                    }
+
+                    trigger OnPreDataItem()
+                    begin
+                        if not DisplayAssemblyInformation then
+                            CurrReport.BREAK();
+                        if not AsmInfoExistsForLine then
+                            CurrReport.BREAK();
+                        SETRANGE("Document Type", AsmHeader."Document Type");
+                        SETRANGE("Document No.", AsmHeader."No.");
+                    end;
+                }
+
+                trigger OnAfterGetRecord()
+                begin
+                    if WorkDescriptionInstream.EOS then
+                        CurrReport.Break();
+                    WorkDescriptionInstream.ReadText(WorkDescriptionLine);
+                end;
+
+                trigger OnPostDataItem()
+                begin
+                    Clear(WorkDescriptionInstream)
+                end;
+
+                trigger OnPreDataItem()
+                begin
+                    if not ShowWorkDescription then
+                        CurrReport.Break();
+                    Header."Work Description".CreateInStream(WorkDescriptionInstream, TEXTENCODING::UTF8);
+                end;
+
+
+            }
             dataitem(VATAmountLine; "VAT Amount Line")
             {
                 DataItemTableView = sorting("VAT Identifier", "VAT Calculation Type", "Tax Group Code", "Use Tax", Positive);
                 UseTemporary = true;
-                column(InvoiceDiscountAmount_VATAmountLine; "Invoice Discount Amount")
+                column(InvoiceDiscountAmount_VATAmountLine; ZeroIsBlanckDecimal("Invoice Discount Amount"))
                 {
                     AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
@@ -602,7 +597,7 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(InvoiceDiscountAmount_VATAmountLine_Lbl; FIELDCAPTION("Invoice Discount Amount"))
                 {
                 }
-                column(InvoiceDiscountBaseAmount_VATAmountLine; "Inv. Disc. Base Amount")
+                column(InvoiceDiscountBaseAmount_VATAmountLine; ZeroIsBlanckDecimal("Inv. Disc. Base Amount"))
                 {
                     AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
@@ -610,23 +605,21 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(InvoiceDiscountBaseAmount_VATAmountLine_Lbl; FIELDCAPTION("Inv. Disc. Base Amount"))
                 {
                 }
-                column(LineAmount_VatAmountLine; "Line Amount")
+                column(LineAmount_VatAmountLine; ZeroIsBlanckDecimal("Line Amount"))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(LineAmount_VatAmountLine_Lbl; FIELDCAPTION("Line Amount"))
                 {
                 }
-                column(VATAmount_VatAmountLine; "VAT Amount")
+                column(VATAmount_VatAmountLine; ZeroIsBlanckDecimal("VAT Amount"))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(VATAmount_VatAmountLine_Lbl; FIELDCAPTION("VAT Amount"))
                 {
                 }
-                column(VATAmountLCY_VATAmountLine; VATAmountLCY)
+                column(VATAmountLCY_VATAmountLine; ZeroIsBlanckDecimal(VATAmountLCY))
                 {
                 }
                 column(VATAmountLCY_VATAmountLine_Lbl; VATAmountLCYLbl)
@@ -634,13 +627,13 @@ report 50001 "Standard Sales - Credit Memo W"
                 }
                 column(VATBase_VatAmountLine; "VAT Base")
                 {
-                    AutoFormatExpression = Line.GetCurrencyCode();
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(VATBase_VatAmountLine_Lbl; FIELDCAPTION("VAT Base"))
                 {
                 }
-                column(VATBaseLCY_VATAmountLine; VATBaseLCY)
+                column(VATBaseLCY_VATAmountLine; ZeroIsBlanckDecimal(VATBaseLCY))
                 {
                 }
                 column(VATBaseLCY_VATAmountLine_Lbl; VATBaseLCYLbl)
@@ -685,13 +678,15 @@ report 50001 "Standard Sales - Credit Memo W"
 
                 trigger OnPreDataItem()
                 begin
-                    CurrReport.CREATETOTALS(
-                      "Line Amount", "Inv. Disc. Base Amount",
-                      "Invoice Discount Amount", "VAT Base", "VAT Amount",
-                      VATBaseLCY, VATAmountLCY);
+                    // CurrReport.CREATETOTALS(
+                    //   "Line Amount", "Inv. Disc. Base Amount",
+                    //   "Invoice Discount Amount", "VAT Base", "VAT Amount",
+                    //   VATBaseLCY, VATAmountLCY);
 
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
+
+                    VATClauseLine.DELETEALL();
                 end;
             }
             dataitem(VATClauseLine; "VAT Amount Line")
@@ -712,9 +707,8 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(Description2_VATClauseLine; VATClause."Description 2")
                 {
                 }
-                column(VATAmount_VATClauseLine; "VAT Amount")
+                column(VATAmount_VATClauseLine; ZeroIsBlanckDecimal("VAT Amount"))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(NoOfVATClauses; COUNT)
@@ -737,7 +731,7 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(Description_ReportTotalsLine; Description)
                 {
                 }
-                column(Amount_ReportTotalsLine; Amount)
+                column(Amount_ReportTotalsLine; ZeroIsBlanckDecimal(Amount))
                 {
                 }
                 column(AmountFormatted_ReportTotalsLine; "Amount Formatted")
@@ -768,38 +762,44 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(ClosingText; ClosingLbl)
                 {
                 }
+                column(PmtDiscText; PmtDiscText)
+                {
+                }
+
+                trigger OnPreDataItem()
+                begin
+                    PmtDiscText := '';
+                    if Header."Payment Discount %" <> 0 then
+                        PmtDiscText := STRSUBSTNO(PmtDiscTxt, Header."Pmt. Discount Date", Header."Payment Discount %");
+                end;
             }
             dataitem(Totals; Integer)
             {
                 DataItemTableView = sorting(Number)
                                     where(Number = const(1));
-                column(TotalNetAmount; TotalAmount)
+                column(TotalNetAmount; ZeroIsBlanckDecimal(TotalAmount))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATBaseLCY; TotalVATBaseLCY)
+                column(TotalVATBaseLCY; ZeroIsBlanckDecimal(TotalVATBaseLCY))
                 {
                 }
-                column(TotalAmountIncludingVAT; TotalAmountInclVAT)
+                column(TotalAmountIncludingVAT; ZeroIsBlanckDecimal(TotalAmountInclVAT))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmount; TotalAmountVAT)
+                column(TotalVATAmount; ZeroIsBlanckDecimal(TotalAmountVAT))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmountLCY; TotalVATAmountLCY)
+                column(TotalVATAmountLCY; ZeroIsBlanckDecimal(TotalVATAmountLCY))
                 {
                 }
-                column(TotalInvoiceDiscountAmount; TotalInvDiscAmount)
+                column(TotalInvoiceDiscountAmount; ZeroIsBlanckDecimal(TotalInvDiscAmount))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalPaymentDiscountOnVAT; TotalPaymentDiscOnVAT)
+                column(TotalPaymentDiscountOnVAT; ZeroIsBlanckDecimal(TotalPaymentDiscOnVAT))
                 {
                 }
                 column(TotalVATAmountText; VATAmountLine.VATAmountText())
@@ -811,12 +811,11 @@ report 50001 "Standard Sales - Credit Memo W"
                 column(TotalIncludingVATText; TotalInclVATText)
                 {
                 }
-                column(TotalSubTotal; TotalSubTotal)
+                column(TotalSubTotal; ZeroIsBlanckDecimal(TotalSubTotal))
                 {
-                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalSubTotalMinusInvoiceDiscount; TotalSubTotal + TotalInvDiscAmount)
+                column(TotalSubTotalMinusInvoiceDiscount; ZeroIsBlanckDecimal(TotalSubTotal + TotalInvDiscAmount))
                 {
                 }
                 column(TotalText; TotalText)
@@ -826,15 +825,30 @@ report 50001 "Standard Sales - Credit Memo W"
 
             trigger OnAfterGetRecord()
             var
-                CurrencyExchangeRate: Record "330";
+                CurrencyExchangeRate: Record "Currency Exchange Rate";
+                ArchiveManagement: Codeunit ArchiveManagement;
+                SalesPost: Codeunit "Sales-Post";
             begin
+                FirstLineHasBeenOutput := false;
+                CLEAR(Line);
+                CLEAR(SalesPost);
+                VATAmountLine.DELETEALL();
+                Line.DELETEALL();
+                SalesPost.GetSalesLines(Header, Line, 0);
+                Line.CalcVATAmountLines(0, Header, Line, VATAmountLine);
+                Line.UpdateVATOnLines(0, Header, Line, VATAmountLine);
+
                 if not CurrReport.PREVIEW then
-                    CODEUNIT.RUN(CODEUNIT::"Sales Cr. Memo-Printed", Header);
+                    CODEUNIT.RUN(CODEUNIT::"Sales-Printed", Header);
 
-                CurrReport.LANGUAGE := CDULanguage.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                FormatAddressFields(Header);
-                FormatDocumentFields(Header);
+                CALCFIELDS("Work Description");
+                ShowWorkDescription := "Work Description".HASVALUE;
+
+                FormatAddr.GetCompanyAddr("Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
+                FormatAddr.SalesHeaderBillTo(CustAddr, Header);
+                ShowShippingAddr := FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
                     CLEAR(Cust);
@@ -846,15 +860,27 @@ report 50001 "Standard Sales - Credit Memo W"
                     ExchangeRateText := STRSUBSTNO(ExchangeRateTxt, CalculatedExchRate, CurrencyExchangeRate."Exchange Rate Amount");
                 end;
 
-                if LogInteraction and not CurrReport.PREVIEW then
+                FormatDocumentFields(Header);
+
+                if not CurrReport.PREVIEW and
+                   (CurrReport.USEREQUESTPAGE and ArchiveDocument or
+                    not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders")
+                then
+                    ArchiveManagement.StoreSalesDocument(Header, LogInteraction);
+
+                if LogInteraction and not CurrReport.PREVIEW then begin
+                    CALCFIELDS("No. of Archived Versions");
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
-                          6, "No.", 0, 0, DATABASE::Contact, "Bill-to Contact No.", "Salesperson Code",
-                          "Campaign No.", "Posting Description", '')
+                          3, "No.", "Doc. No. Occurrence",
+                          "No. of Archived Versions", DATABASE::Contact, "Bill-to Contact No."
+                          , "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.")
                     else
                         SegManagement.LogDocument(
-                          6, "No.", 0, 0, DATABASE::Customer, "Bill-to Customer No.", "Salesperson Code",
-                          "Campaign No.", "Posting Description", '');
+                          3, "No.", "Doc. No. Occurrence",
+                          "No. of Archived Versions", DATABASE::Customer, "Bill-to Customer No.",
+                          "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.");
+                end;
 
                 TotalSubTotal := 0;
                 TotalInvDiscAmount := 0;
@@ -862,11 +888,6 @@ report 50001 "Standard Sales - Credit Memo W"
                 TotalAmountVAT := 0;
                 TotalAmountInclVAT := 0;
                 TotalPaymentDiscOnVAT := 0;
-            end;
-
-            trigger OnPreDataItem()
-            begin
-                FirstLineHasBeenOutput := false;
             end;
         }
     }
@@ -893,11 +914,17 @@ report 50001 "Standard Sales - Credit Memo W"
                     {
                         Caption = 'Show Assembly Components';
                     }
-                    field(DisplayShipmentInformation; DisplayShipmentInformation)
+                    field(ArchiveDocument; ArchiveDocument)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Show Shipments';
-                        ToolTip = 'Specifies that shipments are shown on the document.';
+                        Caption = 'Archive Document';
+                        ToolTip = 'Specifies if the document is archived after you print it.';
+
+                        trigger OnValidate()
+                        begin
+                            if not ArchiveDocument then
+                                LogInteraction := false;
+                        end;
                     }
                 }
             }
@@ -916,6 +943,7 @@ report 50001 "Standard Sales - Credit Memo W"
         begin
             InitLogInteraction();
             LogInteractionEnable := LogInteraction;
+            ArchiveDocument := SalesSetup."Archive Orders";
         end;
     }
 
@@ -943,6 +971,7 @@ report 50001 "Standard Sales - Credit Memo W"
     end;
 
     var
+        AsmHeader: Record "Assembly Header";
         CompanyInfo: Record "Company Information";
         Cust: Record Customer;
         GLSetup: Record "General Ledger Setup";
@@ -955,16 +984,19 @@ report 50001 "Standard Sales - Credit Memo W"
         VATClause: Record "VAT Clause";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        CDULanguage: codeunit Language;
+        Language: Codeunit Language;
         SegManagement: Codeunit SegManagement;
+        //TempBlobWorkDescription: Record TempBlob;
+        TempBlobWorkDescription: Codeunit "Temp Blob";
+        ArchiveDocument: Boolean;
+        AsmInfoExistsForLine: Boolean;
         DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
         FirstLineHasBeenOutput: Boolean;
         LogInteraction: Boolean;
-        [InDataSet]
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowShippingAddr: Boolean;
+        ShowWorkDescription: Boolean;
         PostedShipmentDate: Date;
         CalculatedExchRate: Decimal;
         PrevLineAmount: Decimal;
@@ -979,9 +1011,9 @@ report 50001 "Standard Sales - Credit Memo W"
         TransHeaderAmount: Decimal;
         VATAmountLCY: Decimal;
         VATBaseLCY: Decimal;
+        WorkDescriptionInstream: InStream;
         CompanyLogoPosition: Integer;
-        AppliesToTextLbl: Label 'Applies to Document';
-        BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.';
+        BodyLbl: Label 'Thank you for your business. Your order confirmation is attached to this message.';
         ClosingLbl: Label 'Sincerely';
         CompanyInfoBankAccNoLbl: Label 'Account No.';
         CompanyInfoBankNameLbl: Label 'Bank';
@@ -994,19 +1026,18 @@ report 50001 "Standard Sales - Credit Memo W"
         HomePageLbl: Label 'Home Page';
         InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount';
         InvDiscountAmtLbl: Label 'Invoice Discount';
-        InvNoLbl: Label 'Credit Memo No.';
+        InvNoLbl: Label 'Order No.';
         LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT';
         LocalCurrencyLbl: Label 'Local Currency';
         NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
         PageLbl: Label 'Page';
         PaymentMethodDescLbl: Label 'Payment Method';
         PaymentTermsDescLbl: Label 'Payment Terms';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1 Discount Due Date %2 = value of Payment Discount % ';
         PostedShipmentDateLbl: Label 'Shipment Date';
-        SalesCreditMemoLbl: Label 'Credit Memo';
-        SalesCreditMemoNoLbl: Label 'Sales - Credit Memo %1';
+        SalesConfirmationLbl: Label 'Order Confirmation';
         SalesInvLineDiscLbl: Label 'Discount %';
         SalespersonLbl: Label 'Sales person';
-        SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1';
         ShipmentLbl: Label 'Shipment';
         ShiptoAddrLbl: Label 'Ship-to Address';
         ShptMethodDescLbl: Label 'Shipment Method';
@@ -1020,96 +1051,33 @@ report 50001 "Standard Sales - Credit Memo W"
         VATClausesLbl: Label 'VAT Clause';
         VATIdentifierLbl: Label 'VAT Identifier';
         VATPercentageLbl: Label 'VAT %';
-        AppliesToText: Text;
         ExchangeRateText: Text;
         LineDiscountPctText: Text;
+        PmtDiscText: Text;
+        WorkDescriptionLine: Text;
         CopyText: Text[30];
         SalesPersonText: Text[30];
         CompanyAddr: array[8] of Text[50];
         CustAddr: array[8] of Text[50];
+        GTxtBankIBAN: Text[50];
         ShipToAddr: array[8] of Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
-        LineDiscountPctText: Text;
-        MoreLines: Boolean;
-        CopyText: Text[30];
-        ShowShippingAddr: Boolean;
-        LogInteraction: Boolean;
-        SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1';
-        TotalSubTotal: Decimal;
-        TotalAmount: Decimal;
-        TotalAmountInclVAT: Decimal;
-        TotalAmountVAT: Decimal;
-        TotalInvDiscAmount: Decimal;
-        TotalPaymentDiscOnVAT: Decimal;
-        TransHeaderAmount: Decimal;
-        [InDataSet]
-        LogInteractionEnable: Boolean;
-        DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
-        CompanyLogoPosition: Integer;
-        FirstLineHasBeenOutput: Boolean;
-        CalculatedExchRate: Decimal;
-        ExchangeRateText: Text;
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
-        VATBaseLCY: Decimal;
-        VATAmountLCY: Decimal;
-        TotalVATBaseLCY: Decimal;
-        TotalVATAmountLCY: Decimal;
-        PrevLineAmount: Decimal;
-        AppliesToText: Text;
-        AppliesToTextLbl: Label 'Applies to Document';
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
-        GreetingLbl: Label 'Hello';
-        ClosingLbl: Label 'Sincerely';
-        BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.';
+        TotalText: Text[50];
 
     local procedure InitLogInteraction()
-    begin
-        LogInteraction := SegManagement.FindInteractTmplCode(6) <> '';
-    end;
-
-    local procedure FindPostedShipmentDate(): Date
     var
-        ReturnReceiptHeader: Record "Return Receipt Header";
-        SalesShipmentBuffer2: Record "Sales Shipment Buffer";
+        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        if Line."Return Receipt No." <> '' then
-            if ReturnReceiptHeader.GET(Line."Return Receipt No.") then
-                exit(ReturnReceiptHeader."Posting Date");
-        if Header."Return Order No." = '' then
-            exit(Header."Posting Date");
-        if Line.Type = Line.Type::" " then
-            exit(0D);
-
-        ShipmentLine.GetLinesForSalesCreditMemoLine(Line, Header);
-
-        ShipmentLine.RESET();
-        ShipmentLine.SETRANGE("Line No.", Line."Line No.");
-        if ShipmentLine.FINDFIRST() then begin
-            SalesShipmentBuffer2 := ShipmentLine;
-            if not DisplayShipmentInformation then
-                if ShipmentLine.NEXT() = 0 then begin
-                    ShipmentLine.GET(
-                      SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
-                    ShipmentLine.DELETE();
-                    exit(SalesShipmentBuffer2."Posting Date");
-                end;
-            ShipmentLine.CALCSUMS(Quantity);
-            if ShipmentLine.Quantity <> Line.Quantity then begin
-                ShipmentLine.DELETEALL();
-                exit(Header."Posting Date");
-            end;
-        end;
-        exit(Header."Posting Date");
+        //LogInteraction := SegManagement.FindInteractTmplCode(3) <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Ord. Cnfrmn.") <> '';
     end;
 
     local procedure DocumentCaption(): Text[250]
     begin
-        if Header."Prepayment Credit Memo" then
-            exit(SalesPrepCreditMemoNoLbl);
-        exit(SalesCreditMemoNoLbl);
+        exit(SalesConfirmationLbl);
     end;
+
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
@@ -1117,7 +1085,18 @@ report 50001 "Standard Sales - Credit Memo W"
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
-    local procedure GetUOMText(UOMCode: Code[10]): Text[50]
+    local procedure FormatDocumentFields(SalesHeader: Record "Sales Header")
+    begin
+        with SalesHeader do begin
+            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+            FormatDocument.SetSalesPerson(SalespersonPurchaser, "Salesperson Code", SalesPersonText);
+            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
+            FormatDocument.SetPaymentMethod(PaymentMethod, "Payment Method Code", "Language Code");
+            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
+        end;
+    end;
+
+    local procedure GetUOMText(UOMCode: Code[10]): Text[10]
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin
@@ -1140,26 +1119,20 @@ report 50001 "Standard Sales - Credit Memo W"
             ReportTotalsLine.Add(VATAmountLine.VATAmountText(), TotalAmountVAT, false, true, false);
     end;
 
-    local procedure FormatAddressFields(var SalesCrMemoHeader: Record "Sales Cr.Memo Header")
+    local procedure ZeroIsBlanckDecimal(Decimale: Decimal) Return: Text[150]
     begin
-        FormatAddr.GetCompanyAddr(SalesCrMemoHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
-        FormatAddr.SalesCrMemoBillTo(CustAddr, SalesCrMemoHeader);
-        ShowShippingAddr := FormatAddr.SalesCrMemoShipTo(ShipToAddr, CustAddr, SalesCrMemoHeader);
+        if Decimale <> 0 then
+            Return := FORMAT(Decimale, 10, '<Standard Format,0>')
+        else
+            Return := '';
     end;
 
-    local procedure FormatDocumentFields(SalesCrMemoHeader: Record "Sales Cr.Memo Header")
-    var
-        Text01: Label '%1 %2', Comment = '%1 = "Applies-to Doc. Type" , %2 = "Applies-to Doc. No."';
+    local procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[150]
     begin
-        with SalesCrMemoHeader do begin
-            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
-            FormatDocument.SetSalesPerson(SalespersonPurchaser, "Salesperson Code", SalesPersonText);
-            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
-            FormatDocument.SetPaymentMethod(PaymentMethod, "Payment Method Code", "Language Code");
-            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
-
-            FormatDocument.SetText("Applies-to Doc. No." <> '', STRSUBSTNO(Text01, FORMAT("Applies-to Doc. Type"), "Applies-to Doc. No."));
-        end;
+        if Integer <> 0 then
+            Return := FORMAT(Integer)
+        else
+            Return := '';
     end;
 }
 

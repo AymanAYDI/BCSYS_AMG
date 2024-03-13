@@ -75,7 +75,7 @@ tableextension 50008 SalesLine extends "Sales Line" //37
             Description = 'AMG,EVO34';
             FieldClass = FlowField;
         }
-        field(50020; "Nom Client"; Text[100])
+        field(50020; "Customer Name"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
             Caption = 'Customer Name';
@@ -154,8 +154,8 @@ tableextension 50008 SalesLine extends "Sales Line" //37
 
     procedure FAddLinesForCarbo(DELRecSalesHeader: Record 36; DELCodItemNo: Code[20]; DELDecQty: Decimal)
     var
-        LRecSalesLine: Record 37;
         LRecItem: Record 27;
+        LRecSalesLine: Record 37;
         LRecSalesLinetoInsert: Record 37;
         LIntLineNo: Integer;
     begin
@@ -200,15 +200,15 @@ tableextension 50008 SalesLine extends "Sales Line" //37
     end;
 
     var
-        FindRecordMgt: codeunit 703;
         LRecItem: Record 27;
-        LTextParam: Text;
-        XMLBufferWriter: codeunit 1235;
         XMLBuffer: Record 1235;
         XMLSpecialInterestNode: Record 1235;
-        NodeNotFoundErr: Text;
+        FindRecordMgt: codeunit 703;
+        XMLBufferWriter: codeunit 1235;
         LCodItemNo: Code[20];
         LDecQty: Decimal;
+        LTextParam: Text;
+        NodeNotFoundErr: Text;
 
     //todo Ondelete
     //todo Onvalidate No. line 

@@ -70,13 +70,13 @@ page 50013 "Fiche DGX"
 
                 trigger OnAction()
                 var
-                    LRecDGXLines: Record 50007;
-                    LIntLineNo: Integer;
-                    LRecShipLines: Record 111;
                     LRecItem: Record 27;
-                    LRecONU: Record 50012;
-                    LRecColis: Record 50009;
+                    LRecShipLines: Record 111;
                     LRecDGXHeader: Record 50006;
+                    LRecDGXLines: Record 50007;
+                    LRecColis: Record 50009;
+                    LRecONU: Record 50012;
+                    LIntLineNo: Integer;
                 begin
                     if Rec."Delivery slip no." <> '' then begin
                         LRecDGXLines.SETFILTER(DGXNo, Rec."DGX No.");
@@ -94,8 +94,8 @@ page 50013 "Fiche DGX"
                         LRecShipLines.SETFILTER("Code ONU", '<>%1', '');
 
 
-                        if LRecShipLines.FIND('-') then
-                            repeat
+                        IF LRecShipLines.FIND('-') THEN BEGIN
+                            REPEAT
                                 LRecDGXLines.RESET();
                                 LRecDGXLines.LineNo := LIntLineNo;
                                 LRecDGXLines.DGXNo := Rec."DGX No.";
@@ -119,35 +119,37 @@ page 50013 "Fiche DGX"
                                                     LRecDGXLines."Packing Inst" := LRecONU."Packing instr passager"
                                                 else
                                                     LRecDGXLines."Packing Inst" := '';
-                                        //DELPHI AUB récupération du poids net du colis
-                                        if LRecColis.GET(LRecShipLines."N° Package") then begin
-                                            LRecDGXLines."Net mass (kg)" := LRecColis."Net Weight";
-                                            LRecDGXLines."Gross Mass (kg)" := LRecColis."Gross Weight";
-                                            LRecColis.CALCFIELDS("Nb of pieces");
-                                            LRecDGXLines.Qty := LRecColis."Nb of pieces";
-                                            LRecDGXLines."Package Qty" := LRecColis."Nb of pieces";
-                                            LRecDGXLines."Flash point" := LRecONU."Flash Point";
-                                            LRecDGXLines."Limited qty" := LRecONU."Limited quantity";
-                                        end;
-                                        LRecDGXLines.Qty := LRecShipLines.Quantity
-                                        else begin
-                                            LRecDGXLines.UN := '';
-                                            LRecDGXLines.Class := '';
-                                            LRecDGXLines.Description := '';
-                                            LRecDGXLines."Sub-Class" := '';
-                                            LRecDGXLines."Packaging Group" := LRecDGXLines."Packaging Group"::" ";
-                                            LRecDGXLines."Package No." := '';
-                                            LRecDGXLines."Unit of measure" := '';
-                                            LRecDGXLines."Packing Inst" := '';
-                                        end;
-                                    end;
-                                LRecDGXLines."Type of Packing" := '1 FIBREBOARD BOX';
-                                LRecDGXLines.INSERT();
-                                COMMIT();
-                                LIntLineNo += 10000;
-                            until LRecShipLines.NEXT() <= 0;
+                                    END;
+                                //DELPHI AUB récupération du poids net du colis
+                                if LRecColis.GET(LRecShipLines."N° Package") then begin
+                                    LRecDGXLines."Net mass (kg)" := LRecColis."Net Weight";
+                                    LRecDGXLines."Gross Mass (kg)" := LRecColis."Gross Weight";
+                                    LRecColis.CALCFIELDS("Nb of pieces");
+                                    LRecDGXLines.Qty := LRecColis."Nb of pieces";
+                                    LRecDGXLines."Package Qty" := LRecColis."Nb of pieces";
+                                    LRecDGXLines."Flash point" := LRecONU."Flash Point";
+                                    LRecDGXLines."Limited qty" := LRecONU."Limited quantity";
+                                END;
+                                LRecDGXLines.Qty := LRecShipLines.Quantity;
+                                    END ELSE BEGIN
+                                LRecDGXLines.UN := '';
+                                LRecDGXLines.Class := '';
+                                LRecDGXLines.Description := '';
+                                LRecDGXLines."Sub-Class" := '';
+                                LRecDGXLines."Packaging Group" := LRecDGXLines."Packaging Group"::" ";
+                                LRecDGXLines."Package No." := '';
+                                LRecDGXLines."Unit of measure" := '';
+                                LRecDGXLines."Packing Inst" := '';
+                            END;
+                        END;
+                        LRecDGXLines."Type of Packing" := '1 FIBREBOARD BOX';
+                        LRecDGXLines.INSERT();
+                        COMMIT();
+                        LIntLineNo += 10000;
+                            UNTIL LRecShipLines.NEXT() <= 0;
+                    END;
 
-                    end else
+                end else
                         MESSAGE('Le No de bon de colisage est manquant');
                 end;
             }

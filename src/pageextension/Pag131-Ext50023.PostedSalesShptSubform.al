@@ -168,12 +168,12 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                     Image = Item;
                     trigger OnAction()
                     var
-                        LRecColis: Record 50009;
                         LRecSalesShipmentLine: Record 111;
-                        LRecColisage: Record 50010;
+                        LRecColis: Record 50009;
                         LRecColis2: Record 50009;
-                        LIntNbColis: Integer;
+                        LRecColisage: Record 50010;
                         LIntI: Integer;
+                        LIntNbColis: Integer;
                     begin
                         CurrPage.SETSELECTIONFILTER(LRecSalesShipmentLine);
 
@@ -204,7 +204,7 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                                 LRecColis2.RESET();
                                 LRecColis2.SETFILTER("Shipping No.", LRecColis."Shipping No.");
                                 LIntNbColis := LRecColis2.COUNT;
-                                if LRecColis2.FIND('-') then
+                                if LRecColis2.FINDFIRST() then
                                     repeat
                                         LRecColis2."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
                                         LRecColis2.MODIFY();

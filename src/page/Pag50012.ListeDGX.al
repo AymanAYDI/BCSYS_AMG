@@ -66,7 +66,7 @@ page 50012 "Liste DGX"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        GTxtBonLivraison := rec.GETFILTER("Delivery slip no.");
+        GTxtBonLivraison := Rec.GETFILTER("Delivery slip no.");
         if rec.GETFILTER("Delivery slip no.") <> '' then begin
             rec."Delivery slip no." := GTxtBonLivraison;
             rec.VALIDATE("Delivery slip no.");
