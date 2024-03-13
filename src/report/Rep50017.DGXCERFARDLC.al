@@ -189,7 +189,7 @@ report 50017 "DGX CERFA RDLC"
                         column(NoColis_DGXLines; "DGX Lines"."Package No.")
                         {
                         }
-                        column(QtyColis_DGXLines; "DGX Lines"."Qty colis")
+                        column(QtyColis_DGXLines; "DGX Lines"."Package Qty")
                         {
                         }
                     }

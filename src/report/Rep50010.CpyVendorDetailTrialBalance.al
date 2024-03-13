@@ -371,6 +371,8 @@ report 50010 "CpyVendor Detail Trial Balance"
             end;
 
             trigger OnPreDataItem()
+            var
+                AMG_Functions: Codeunit AMG_Functions;
             begin
                 if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
@@ -380,7 +382,7 @@ report 50010 "CpyVendor Detail Trial Balance"
                 PreviousEndDate := CLOSINGDATE(StartDate - 1);
                 FiltreDateCalc.CreateFiscalYearFilter(TextDate, TextDate, StartDate, 0);
                 TextDate := CONVERTSTR(TextDate, '.', ',');
-                FiltreDateCalc.VerifiyDateFilter(TextDate);
+                AMG_Functions.VerifiyDateFilter(TextDate);
                 TextDate := COPYSTR(TextDate, 1, 8);
                 EVALUATE(PreviousStartDate, TextDate);
                 if COPYSTR(GETFILTER("Date Filter"), STRLEN(GETFILTER("Date Filter")), 1) = '.' then

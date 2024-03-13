@@ -357,7 +357,7 @@ report 50007 "Edition Bon colisage"
                         DataItemTableView = sorting("Document No.", "Line No.")
                                             where(Quantity = filter(> 0),
                                                   Type = filter(Item),
-                                                  "N° Package" = filter(<> ''));
+                                                  "Package No." = filter(<> ''));
                         column(Description_SalesShptLine; Description)
                         {
                         }
@@ -437,7 +437,7 @@ report 50007 "Edition Bon colisage"
                         column(NomenclatureArticle; GTxtNomenclatureArticle)
                         {
                         }
-                        column(SalesLine_NoColis; "Sales Shipment Line"."N° Package")
+                        column(SalesLine_NoColis; "Sales Shipment Line"."Package No.")
                         {
                         }
                         column(SalesLine_NoColisCaption; GTxtColisCaption)
@@ -595,9 +595,9 @@ report 50007 "Edition Bon colisage"
                                             GTxtUnClasse += ' GRPIII';
                                     end
                             end;
-                            if "Sales Shipment Line"."N° Package" <> '' then begin
+                            if "Sales Shipment Line"."Package No." <> '' then begin
                                 GTxtColisCaption := 'Package : ';
-                                LRecColis.GET("Sales Shipment Line"."N° Package");
+                                LRecColis.GET("Sales Shipment Line"."Package No.");
                                 GTxtColisREF := LRecColis."Type of package" + ' ' + LRecColis."Package Reference";
                             end
                             else begin
