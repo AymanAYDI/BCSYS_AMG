@@ -396,7 +396,7 @@ report 50016 "Etiquette Packaging"
                         column(NomenclatureArticle; GTxtNomenclatureArticle)
                         {
                         }
-                        column(SalesLine_NoColis; "Sales Shipment Line"."N° Package")
+                        column(SalesLine_NoColis; "Sales Shipment Line"."Package No.")
                         {
                         }
                         column(SalesLine_NoColisCaption; GTxtColisCaption)
@@ -535,9 +535,9 @@ report 50016 "Etiquette Packaging"
                             //END DELPHI AUB 03.10.2019
 
                             //DEB DELPHI XAV Package 24/03/21
-                            if "Sales Shipment Line"."N° Package" <> '' then begin
+                            if "Sales Shipment Line"."Package No." <> '' then begin
                                 GTxtColisCaption := 'Package : ';
-                                LRecColis.GET("Sales Shipment Line"."N° Package");
+                                LRecColis.GET("Sales Shipment Line"."Package No.");
                                 GTxtColisREF := LRecColis."Package Reference" + ' ' + LRecColis."Type of package";
                             end
                             else begin
@@ -1025,7 +1025,6 @@ report 50016 "Etiquette Packaging"
     end;
 
     var
-        Text002: Label 'Sales - Shipment %1', Comment = '%1 = Document No.';
         SalesPurchPerson: Record 13;
         GRecCust2: Record 18;
         GRecSalesLine: Record 37;
@@ -1033,49 +1032,35 @@ report 50016 "Etiquette Packaging"
         CompanyInfo1: Record 79;
         CompanyInfo2: Record 79;
         CompanyInfo3: Record 79;
-        GRecSalesShipmentLine: Record 111;
-        GrecTransporteur: Record 291;
         SalesSetup: Record 311;
-        TrackingSpecBuffer: Record 336 temporary;
-        GrecTraductionShipMethode: Record 463;
         DimSetEntry1: Record 480;
         DimSetEntry2: Record 480;
-        Language: Record 8;
         TrackingSpecBuffer: Record 336 temporary;
         PostedAsmHeader: Record 910;
         PostedAsmLine: Record 911;
-        GRecSalesHeaderArchive: Record 5107;
-        GRecSalesLineArchive: Record 5108;
         RespCenter: Record 5714;
         ItemTrackingAppendix: report 6521;
         ShipmentMethod: Record 10;
         GRecSalesShipmentLine: Record 111;
         GrecTransporteur: Record 291;
+        GrecTraductionShipMethode: Record 463;
+        DimSetEntry3: Record 480;
+        GRecSalesHeaderArchive: Record 5107;
+        GRecSalesLineArchive: Record 5108;
         GRecItemEntryRelation: Record 6507;
+        LRecColis: Record 50009;
         FormatAddr: Codeunit 365;
         FormatDocument: Codeunit 368;
         SegManagement: Codeunit 5051;
         ItemTrackingDocMgt: Codeunit 6503;
-        CustAddr: array[8] of Text[100];
-        ShipToAddr: array[8] of Text[100];
-        CompanyAddr: array[8] of Text[100];
-        SalesPersonText: Text[20];
-        ReferenceText: Text[80];
-        MoreLines: Boolean;
-        NoOfCopies: Integer;
-        OutputNo: Integer;
-        NoOfLoops: Integer;
-        TrackingSpecCount: Integer;
-        OldRefNo: Integer;
-        OldNo: Code[20];
-        CopyText: Text[30];
-        ShowCustAddr: Boolean;
-        DimText: Text[120];
-        OldDimText: Text[75];
-        ShowInternalInfo: Boolean;
         Continue: Boolean;
         DisplayAssemblyInformation: Boolean;
         LogInteraction: Boolean;
+        AsmHeaderExists: Boolean;
+        GRecCountry: Record 9;
+        PaymentTerms: Record 3;
+
+        CDULanguage: codeunit Language;
         [InDataSet]
 
         LogInteractionEnable: Boolean;
@@ -1091,11 +1076,6 @@ report 50016 "Etiquette Packaging"
         GDecPoidsnet: Decimal;
         GIntQteCommandee: Decimal;
         TotalQty: Decimal;
-        [InDataSet]
-
-        LogInteractionEnable: Boolean;
-        DisplayAssemblyInformation: Boolean;
-        AsmHeaderExists: Boolean;
         LinNo: Integer;
         NoOfCopies: Integer;
         NoOfLoops: Integer;
@@ -1106,66 +1086,75 @@ report 50016 "Etiquette Packaging"
         BankNameCaptionLbl: Label 'Bank';
         BilltoAddressCaptionLbl: Label 'Bill-to Address';
         DescriptionCaptionLbl: Label 'Description';
-        NoCaptionLbl: Label 'No.';
-        PageCaptionCap: Label 'Page %1 of %2';
-        GTxtCondLivraisonEtendues: Text[150];
-        GTxtNomenclatureArticle: Text[20];
-        GDecPoidsBrut: Decimal;
-        GDecPoidsnet: Decimal;
-        GTxtTransporteur: Text[80];
-        GRecCountry: Record 9;
-        GTxtCompanyInfoPays: Text[50];
-        GRecCust2: Record 18;
-        GTxtNumTVAClient: Text[60];
-        PaymentTerms: Record 3;
-        GTxtPayementsTerm: Text[150];
-        GrecTraductionShipMethode: Record 463;
-        ShipmentMethod2: Record 10;
-        GTxtShipmentMethodedescription: Text[150];
-        GTxtItemNo: Text[20];
-        GTxtCompanyVAT_ICE: Text[80];
-        GTxtOrigineCE: Text[250];
+        DocumentDateCaptionLbl: Label 'Document Date';
+        EmailCaptionLbl: Label 'Email';
+        GiroNoCaptionLbl: Label 'Giro No.';
         GTxtCompanyBankBranch: Label 'Bk Code';
-        GTxtCompanyPhoneNo: Label 'Phone';
-        GTxtCompanyFaxNo: Label 'Fax.';
-        GTxtCompanyHomepage: Label 'Website';
-        GTxtCompanyemail: Label 'E-Mail';
-        GTxtCompanyVAT: Label 'VAT Id. Num.';
-        GTxtCompanyGesch: Label 'Director';
-        GTxtCompanySitz: Label 'H. Q.';
+        GTxtCompanyBankIBAN: Label 'IBAN';
         GTxtCompanyBankNr: Label 'Bk Num.';
-        GTxtCompanyTrib: Label 'Trial court';
         GTxtCompanyBankSWIFT: Label 'SWIFT';
+        GTxtCompanyemail: Label 'E-Mail';
+        GTxtCompanyFaxNo: Label 'Fax.';
+        GTxtCompanyGesch: Label 'Director';
+        GTxtCompanyHomepage: Label 'Website';
+        GTxtCompanyPhoneNo: Label 'Phone';
         GTxtCompanySalespers: Label 'Agent';
+        GTxtCompanySitz: Label 'H. Q.';
+        GTxtCompanyTrib: Label 'Trial court';
+        GTxtCompanyVAT: Label 'VAT Id. Num.';
         GTxtCustomerNum: Label 'Customer num.';
+        GTxtItemNo_Line_Lbl: Label 'Item No.';
+        GTxtItemNoLbl: Label 'N° article';
+        GTxtQteCommandeeLbl: Label 'Qté commandée';
+        GTxtQteExpedieeLbl: Label 'Qté expédiée';
+        GTxtQteRestante: Label 'Qté restante';
         GTxtQuantity_Line_Lbl: Label 'Qty';
+        GTxtResteALivrerLbl: Label 'Reste à livrer';
+        GTxtSalesShptCopyText: Label 'Shipment';
         GTxtUnitOfMeasure_Lbl: Label 'Unit';
         GTxtUnitPrice_Lbl: Label 'Unit Price';
-        GTxtCompanyBankIBAN: Label 'IBAN';
-        GTxtSalesShptCopyText: Label 'Shipment';
-        GTxtItemNo_Line_Lbl: Label 'Item No.';
         GTxtYourRef_Lbl: Label 'Your Reference';
-        TextTransporteur: Label 'Transporteur';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
+        HomePageCaptionLbl: Label 'Home Page';
+        ItemTrackingAppendixCaptionLbl: Label 'Item Tracking - Appendix';
+        LineDimensionsCaptionLbl: Label 'Line Dimensions';
+        LotNoCaptionLbl: Label 'Lot No.';
+        NoCaptionLbl: Label 'No.';
+        PageCaptionCap: Label 'Page %1 of %2';
+        PaymentTermsDescLbl: Label 'Payment Terms';
+        PhoneNoCaptionLbl: Label 'Phone No.';
+        QuantityCaptionLbl: Label 'Quantity';
+        SerialNoCaptionLbl: Label 'Serial No.';
+        ShipmentDateCaptionLbl: Label 'Shipment Date';
+        ShipmentNoCaptionLbl: Label 'Shipment No.';
+        ShptMethodDescLbl: Label 'Shipment Method';
+        Text002: Label 'Sales - Shipment %1', Comment = '%1 = Document No.';
         TextPackingDetaile: Label 'Packing details';
         TextPoids: Label 'Gross Weight';
-        ShptMethodDescLbl: Label 'Shipment Method';
-        PaymentTermsDescLbl: Label 'Payment Terms';
-        GTxtQteCommandeeLbl: Label 'Qté commandée';
-        GTxtResteALivrerLbl: Label 'Reste à livrer';
-        GTxtItemNoLbl: Label 'N° article';
-        GRecSalesLine: Record 37;
-        GRecSalesHeaderArchive: Record 5107;
-        GIntQteCommandee: Decimal;
-        GRecSalesLineArchive: Record 5108;
-        GTxtQteExpedieeLbl: Label 'Qté expédiée';
-        GTxtDocumentNo: Text[50];
-        GTxtQteRestante: Label 'Qté restante';
-        DimSetEntry3: Record 480;
-        DimText3: Text[120];
+        TextTransporteur: Label 'Transporteur';
+        VATRegNoCaptionLbl: Label 'VAT Reg. No.';
+        GTxtItemNo: Text[20];
+        GTxtNomenclatureArticle: Text[20];
+        SalesPersonText: Text[20];
+        CopyText: Text[30];
         GTxtColisCaption: Text[50];
+        GTxtCompanyInfoPays: Text[50];
+        GTxtDocumentNo: Text[50];
+        GTxtNumTVAClient: Text[60];
+        OldDimText: Text[75];
+        GTxtCompanyVAT_ICE: Text[80];
+        GTxtTransporteur: Text[80];
+        ReferenceText: Text[80];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
         GTxtColisREF: Text[100];
-        LRecColis: Record 50009;
-        CDULanguage: codeunit Language;
+        ShipToAddr: array[8] of Text[100];
+        DimText: Text[120];
+        DimText3: Text[120];
+        GTxtCondLivraisonEtendues: Text[150];
+        GTxtPayementsTerm: Text[150];
+        GTxtShipmentMethodedescription: Text[150];
+        GTxtOrigineCE: Text[250];
 
     procedure InitLogInteraction()
     begin

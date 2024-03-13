@@ -118,8 +118,8 @@ table 50009 Package
                 GRecColisage.SetRange("Package No.", Rec."Package No.");
                 GRecColisage.DELETEALL();
                 GRecSalesShipingLine.SetRange("Document No.", Rec."Shipping No.");
-                GRecSalesShipingLine.SetRange("N° Package", Rec."Package No.");
-                GRecSalesShipingLine.MODIFYALL("N° Package", '');
+                GRecSalesShipingLine.SetRange("Package No.", Rec."Package No.");
+                GRecSalesShipingLine.MODIFYALL("Package No.", '');
                 COMMIT();
             end;
         end
