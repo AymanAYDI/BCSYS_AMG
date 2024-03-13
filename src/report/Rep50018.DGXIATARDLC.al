@@ -243,7 +243,6 @@ report 50018 "DGX IATA RDLC"
     end;
 
     var
-        GRecLanguage: Record "8";
         DimSetEntry1: Record "480";
         FormatDocument: Codeunit "368";
         CDULanguage: codeunit Language;
@@ -254,17 +253,13 @@ report 50018 "DGX IATA RDLC"
         NoOfLoops: Integer;
         CopyText: Text[30];
         DimText: Text[120];
-        FormatDocument: Codeunit "368";
-        DimSetEntry1: Record "480";
         DimText1: Text[120];
-        Continue: Boolean;
         OldDimText: Text[75];
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        LinNo: Integer;
         CTxtAirport: Label 'ROISSY';
         GTxtPackingInstr: Text[20];
         GRecLanguage: Record "8";
         GTxtSousClasse: Text[20];
-        CDULanguage: codeunit Language;
+        OutputNo: Integer;
 }
 
