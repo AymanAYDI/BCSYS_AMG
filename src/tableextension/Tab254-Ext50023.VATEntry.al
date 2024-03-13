@@ -27,25 +27,25 @@ tableextension 50023 VATEntry extends "VAT Entry" //254
         }
         field(50001; Adresse; Text[100])
         {
-            CalcFormula = Lookup(Vendor.Address WHERE("No." = FIELD("Bill-to/Pay-to No.")));
+            CalcFormula = lookup(Vendor.Address where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
         }
         field(50002; "Code postal"; Code[20])
         {
-            CalcFormula = Lookup(Vendor."Post Code" WHERE("No." = FIELD("Bill-to/Pay-to No.")));
+            CalcFormula = lookup(Vendor."Post Code" where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
         }
         field(50003; Ville; Text[30])
         {
-            CalcFormula = Lookup(Vendor.City WHERE("No." = FIELD("Bill-to/Pay-to No.")));
+            CalcFormula = lookup(Vendor.City where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
         }
         field(50004; "N° Facture Fourn"; Code[35])
         {
-            CalcFormula = Lookup("Purch. Inv. Header"."Vendor Invoice No." WHERE("No." = FIELD("Document No.")));
+            CalcFormula = lookup("Purch. Inv. Header"."Vendor Invoice No." where("No." = field("Document No.")));
             Editable = false;
             FieldClass = FlowField;
         }

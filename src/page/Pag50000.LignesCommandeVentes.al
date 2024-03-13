@@ -6,11 +6,11 @@ page 50000 "Lignes Commande Ventes"
 {
     PageType = ListPlus;
     SourceTable = "Sales Line";
-    SourceTableView = SORTING("Document Type", "Document No.", "Line No.")
-                      ORDER(Ascending)
-                      WHERE("Document Type" = CONST(Order),
-                            Type = CONST(Item),
-                            "Outstanding Quantity" = FILTER(> 0));
+    SourceTableView = sorting("Document Type", "Document No.", "Line No.")
+                      order(ascending)
+                      where("Document Type" = const(Order),
+                            Type = const(Item),
+                            "Outstanding Quantity" = filter(> 0));
 
     layout
     {
@@ -100,15 +100,15 @@ page 50000 "Lignes Commande Ventes"
 
     trigger OnAfterGetRecord()
     begin
-        IF EVALUATE(GIntAnnee, COPYSTR(Rec."Document No.", 3, 2)) THEN;
-        IF EVALUATE(GIntNoCV, COPYSTR(Rec."Document No.", 6, 8)) THEN;
+        if EVALUATE(GIntAnnee, COPYSTR(Rec."Document No.", 3, 2)) then;
+        if EVALUATE(GIntNoCV, COPYSTR(Rec."Document No.", 6, 8)) then;
         GIntNoCVComplet := GIntAnnee * 100000 + GIntNoCV;
         //MESSAGE(FORMAT(GIntNoCVComplet));
     end;
 
     var
-        GIntNoCV: Integer;
         GIntAnnee: Integer;
+        GIntNoCV: Integer;
         GIntNoCVComplet: Integer;
 }
 

@@ -74,8 +74,8 @@ table 50006 "DGX Header"
 
             trigger OnValidate()
             var
-                LRecBLHeader: Record "Sales Shipment Header";
                 LRecPays: Record "Country/Region";
+                LRecBLHeader: Record "Sales Shipment Header";
             begin
                 if LRecBLHeader.Get("Delivery slip no.") then begin
                     Recipient := LRecBLHeader."Sell-to Customer No.";
@@ -113,11 +113,10 @@ table 50006 "DGX Header"
 
     trigger OnInsert()
     begin
-        if "DGX No." = '' then begin
+        if "DGX No." = '' then
             ParamVente.Get();
-            //todo not migrated yet
-            //"DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
-        end;
+        //todo not migrated yet
+        "DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
     end;
 
     var

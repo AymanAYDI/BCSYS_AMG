@@ -44,13 +44,13 @@ page 50006 "Sales Lines Couleur"
                 {
                     StyleExpr = GTxtStyleText;
                 }
-                field("Qté réceptionnée"; GDecQtyReceived)
+                field("Qty received"; GDecQtyReceived)
                 {
                     Caption = 'Qté reçue du Fourn.';
                     DecimalPlaces = 0 : 1;
                     StyleExpr = GTxtStyleText;
                 }
-                field("Qté en stock"; GDecStock)
+                field("Qty In Stock"; GDecStock)
                 {
                     DecimalPlaces = 0 : 1;
                     StyleExpr = GTxtStyleText;
@@ -135,10 +135,10 @@ page 50006 "Sales Lines Couleur"
     trigger OnAfterGetRecord()
     var
         GRecItem: Record Item;
-        LRecPurchaseLine: Record "Purchase Line";
-        LRecPurchInvLine: Record "Purch. Inv. Line";
         LRecPurchInvHeader: Record "Purch. Inv. Header";
+        LRecPurchInvLine: Record "Purch. Inv. Line";
         LRecPurchHeaderArchive: Record "Purchase Header Archive";
+        LRecPurchaseLine: Record "Purchase Line";
         LRecPurchLineArchive: Record "Purchase Line Archive";
     begin
         rec.ShowShortcutDimCode(ShortcutDimCode);
@@ -160,13 +160,13 @@ page 50006 "Sales Lines Couleur"
                 else begin
                     // If no result, search in Purch. Invoice Lines
                     LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
-                    if LRecPurchInvHeader.FIND('-') then
+                    if LRecPurchInvHeader.FINDFIRST() then
                         repeat
                             LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
                             LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
                             LRecPurchInvLine.SETRANGE("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
-                            if LRecPurchInvLine.FIND('-') then
+                            if LRecPurchInvLine.FINDFIRST() then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
                                 until LRecPurchInvLine.NEXT() = 0;
@@ -209,8 +209,8 @@ page 50006 "Sales Lines Couleur"
     var
         SalesHeader: Record "Sales Header";
         ShortcutDimCode: array[8] of Code[20];
-        GDecStock: Decimal;
         GDecQtyReceived: Decimal;
+        GDecStock: Decimal;
         GTxtStyleText: Text[80];
 }
 

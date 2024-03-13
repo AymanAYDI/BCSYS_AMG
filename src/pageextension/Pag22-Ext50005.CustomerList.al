@@ -12,14 +12,14 @@ pageextension 50005 CustomerList extends "Customer List" //22
 {
     layout
     {
-        Addafter(Name)
+        addafter(Name)
         {
             field(Historique; Rec.Historique)
             {
                 TableRelation = "Sales Archive"."Customer No.";
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Historique field.';
-                Trigger OnLookup(var Text: Text): Boolean
+                trigger OnLookup(var Text: Text): Boolean
                 var
                     Historique: Record "Sales Archive";
                 begin
@@ -38,7 +38,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
                 ToolTip = 'Specifies the value of the Mobile Phone No. field.';
             }
         }
-        Addafter("Payments (LCY)")
+        addafter("Payments (LCY)")
         {
             field(City; Rec.City)
             {
@@ -53,7 +53,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
 
         }
     }
-    Actions
+    actions
     {
 
         addafter("Item &Tracking Entries")
@@ -62,9 +62,9 @@ pageextension 50005 CustomerList extends "Customer List" //22
             {
                 ApplicationArea = All;
                 RunObject = Page "Historique ventes article";
-                RunPageView = SORTING("Reference", "Customer No.", "Quote No.", "Sales Line No.", "Sales Order No.", "Sales Invoice No.")
-                                  ORDER(Descending);
-                RunPageLink = "Customer No." = FIELD("No.");
+                RunPageView = sorting("Reference", "Customer No.", "Quote No.", "Sales Line No.", "Sales Order No.", "Sales Invoice No.")
+                                  order(descending);
+                RunPageLink = "Customer No." = field("No.");
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
@@ -80,7 +80,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
         {
             visible = false;
         }
-        Addafter(ReportCustomerTrialBalance)
+        addafter(ReportCustomerTrialBalance)
         {
             action("Report&CustomerDetailTrial")
             {
@@ -94,7 +94,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
                 begin
                     //DELPHI AUB 19.05.2020
                     Customer.SETRANGE("No.", Rec."No.");
-                    REPORT.RUNMODAL(REPORT::"Customer Detail Trial Balance", TRUE, TRUE, Customer);
+                    REPORT.RUNMODAL(REPORT::"Customer Detail Trial Balance", true, true, Customer);
                     //END DELPHI AUB
                 end;
             }

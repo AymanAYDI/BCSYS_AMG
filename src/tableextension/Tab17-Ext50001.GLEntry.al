@@ -21,8 +21,8 @@ tableextension 50001 GLEntry extends "G/L Entry" //17
     }
     trigger OnAfterInsert()
     var
-        LRecSalesInvoiceHeader: Record "Sales Invoice Header";
         LRecPurchaseInvoiceHeader: Record "Purch. Inv. Header";
+        LRecSalesInvoiceHeader: Record "Sales Invoice Header";
     begin
         if "Document Type" = "Document Type"::Invoice then
             if LRecSalesInvoiceHeader.Get("Document No.") then

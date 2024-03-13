@@ -13,7 +13,7 @@ tableextension 50003 CustLedgerEntry extends "Cust. Ledger Entry" //21
 
         field(50000; "Nom Client"; Text[100])
         {
-            CalcFormula = lookup(Customer.Name where("No." = field("Customer No.")));
+            CalcFormula = Lookup(Customer.Name WHERE("No." = FIELD("Customer No.")));
             Caption = 'Nom Client';
             FieldClass = FlowField;
             TableRelation = Customer.Name;

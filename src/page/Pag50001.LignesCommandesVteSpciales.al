@@ -30,7 +30,7 @@ page 50001 "Lignes Commandes Vte Spéciales"
                 {
                     trigger OnValidate()
                     var
-                        GRecSelection: Record 37;
+                        GRecSelection: Record "Sales Line";
                     begin
                         GRecSelection := Rec;
                         if (rec.Sel) then
@@ -51,7 +51,7 @@ page 50001 "Lignes Commandes Vte Spéciales"
                 {
                     Visible = false;
                 }
-                field("Nom Client"; rec."Nom Client")
+                field("Customer Name"; rec."Customer Name")
                 {
                     Editable = false;
                 }

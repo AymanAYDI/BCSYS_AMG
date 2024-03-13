@@ -141,9 +141,9 @@ table 50000 "Sales Archive"
 
     procedure DELAddCmdVente(DocumentNo: Code[20]; DocumentDate: Date)
     var
-        LRecSalesLine: Record "Sales Line";
         LRecHisto: Record "Sales Archive";
         LRecSalesHeader: Record "Sales Header";
+        LRecSalesLine: Record "Sales Line";
     begin
         // -> suppression des lignes de la commande vente dans l'historique
         DELDeleteCmdVente(DocumentNo);
@@ -161,12 +161,12 @@ table 50000 "Sales Archive"
                 if LRecSalesHeader.Get(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
                 LRecHisto."Quote No." := LRecSalesHeader."Quote No.";
                 LRecHisto."Customer No." := LRecSalesLine."Sell-to Customer No.";
-                //    LRecHisto."Customer Name" := LRecSalesLine."Nom Client";
+                LRecHisto."Customer Name" := LRecSalesLine."Customer Name";
                 LRecHisto."Sales Document Date" := DocumentDate;
                 LRecHisto."Sales Order No." := LRecSalesLine."Document No.";
                 LRecHisto.Reference := LRecSalesLine."No.";
                 LRecHisto.Description := LRecSalesLine.Description;
-                // LRecHisto."External Reference" := LRecSalesLine."Cross-Reference No.";
+                LRecHisto."External Reference" := LRecSalesLine."Item Reference No.";
                 LRecHisto.Quantity := LRecSalesLine.Quantity;
                 LRecHisto."Sales Amount" := LRecSalesLine."Unit Price";
                 LRecHisto."% Discount" := LRecSalesLine."Line Discount %";
@@ -179,9 +179,9 @@ table 50000 "Sales Archive"
 
     procedure DELTransfCmdFactV(DELCodCmdeVente: Code[20]; DELCodFactVente: Code[20])
     var
-        LRecLignesFV: Record "Sales Invoice Line";
         LRecHisto: Record "Sales Archive";
         LRecFactVenteHeader: Record "Sales Invoice Header";
+        LRecLignesFV: Record "Sales Invoice Line";
     begin
         // Lors de la validation d'une commande vente
         // -> suppression des lignes de la commande vente dans l'historique
@@ -199,12 +199,12 @@ table 50000 "Sales Archive"
                 LRecHisto."Quote No." := LRecFactVenteHeader."Quote No.";
                 LRecHisto."Customer No." := LRecLignesFV."Sell-to Customer No.";
                 LRecHisto."Sales Document Date" := LRecLignesFV."Posting Date";
-                // LRecHisto."Sales Order No." := DELCodCmdeVente;
+                LRecHisto."Sales Order No." := DELCodCmdeVente;
                 LRecHisto."Sales Order No." := LRecFactVenteHeader."Order No.";
                 LRecHisto."Sales Invoice No." := LRecLignesFV."Document No.";
                 LRecHisto.Reference := LRecLignesFV."No.";
                 LRecHisto.Description := LRecLignesFV.Description;
-                //  LRecHisto."External Reference" := LRecLignesFV."Cross-Reference No.";
+                LRecHisto."External Reference" := LRecLignesFV."Item Reference No.";
                 LRecHisto.Quantity := LRecLignesFV.Quantity;
                 LRecHisto."Sales Amount" := LRecLignesFV."Unit Price";
                 LRecHisto."% Discount" := LRecLignesFV."Line Discount %";
@@ -217,8 +217,8 @@ table 50000 "Sales Archive"
 
     procedure DELAddDevis(DocumentNo: Code[20]; DocumentDate: Date)
     var
-        LRecSalesLine: Record "Sales Line";
         LRecHisto: Record "Sales Archive";
+        LRecSalesLine: Record "Sales Line";
     begin
         // Récupération des lignes du devis pour ajout dans l'historique
         LRecSalesLine.Reset();
@@ -245,12 +245,12 @@ table 50000 "Sales Archive"
                 if LRecHisto.FINDFIRST() then LRecHisto.DELETE();
                 LRecHisto.Reset();
                 LRecHisto."Customer No." := LRecSalesLine."Sell-to Customer No.";
-                // LRecHisto."Customer Name" := LRecSalesLine."Nom Client";
+                LRecHisto."Customer Name" := LRecSalesLine."Customer Name";
                 LRecHisto."Sales Document Date" := DocumentDate;
                 LRecHisto."Quote No." := LRecSalesLine."Document No.";
                 LRecHisto.Reference := LRecSalesLine."No.";
                 LRecHisto.Description := LRecSalesLine.Description;
-                //   LRecHisto."External Reference" := LRecSalesLine."Cross-Reference No.";
+                LRecHisto."External Reference" := LRecSalesLine."Item Reference No.";
                 LRecHisto.Quantity := LRecSalesLine.Quantity;
                 LRecHisto."Sales Amount" := LRecSalesLine."Unit Price";
                 LRecHisto."% Discount" := LRecSalesLine."Line Discount %";
@@ -272,8 +272,8 @@ table 50000 "Sales Archive"
 
     procedure DELAddDevisArchive(DocumentNo: Code[20]; DocumentDate: Date)
     var
-        LRecSalesLineArchive: Record "Sales Line Archive";
         LRecHisto: Record "Sales Archive";
+        LRecSalesLineArchive: Record "Sales Line Archive";
     begin
         // Récupération des lignes du devis archivé pour ajout dans l'historique
         LRecSalesLineArchive.Reset();
@@ -297,7 +297,7 @@ table 50000 "Sales Archive"
                     LRecHisto."Quote No." := LRecSalesLineArchive."Document No.";
                     LRecHisto.Reference := LRecSalesLineArchive."No.";
                     LRecHisto.Description := LRecSalesLineArchive.Description;
-                    //  LRecHisto."External Reference" := LRecSalesLineArchive."Cross-Reference No.";
+                    LRecHisto."External Reference" := LRecSalesLineArchive."Item Reference No.";
                     LRecHisto.Quantity := LRecSalesLineArchive.Quantity;
                     LRecHisto."Sales Amount" := LRecSalesLineArchive."Unit Price";
                     LRecHisto."% Discount" := LRecSalesLineArchive."Line Discount %";
@@ -311,8 +311,8 @@ table 50000 "Sales Archive"
 
     procedure DELAddCmdVenteArchive(DocumentNo: Code[20]; DocumentDate: Date)
     var
-        LRecSalesLineArchive: Record "Sales Line Archive";
         LRecHisto: Record "Sales Archive";
+        LRecSalesLineArchive: Record "Sales Line Archive";
     begin
         // Récupération des lignes du devis archivé pour ajout dans l'historique
 
@@ -336,7 +336,7 @@ table 50000 "Sales Archive"
                     LRecHisto."Quote No." := LRecSalesLineArchive."Document No.";
                     LRecHisto.Reference := LRecSalesLineArchive."No.";
                     LRecHisto.Description := LRecSalesLineArchive.Description;
-                    //   LRecHisto."External Reference" := LRecSalesLineArchive."Cross-Reference No.";
+                    LRecHisto."External Reference" := LRecSalesLineArchive."Item Reference No.";
                     LRecHisto.Quantity := LRecSalesLineArchive.Quantity;
                     LRecHisto."Sales Amount" := LRecSalesLineArchive."Unit Price";
                     LRecHisto."% Discount" := LRecSalesLineArchive."Line Discount %";
@@ -350,9 +350,9 @@ table 50000 "Sales Archive"
 
     procedure DELSupprDevisHisto(DocumentNo: Code[20])
     var
-        LRecSalesLine: Record "Sales Line";
         LRecHisto: Record "Sales Archive";
         LRecSalesLineHeader: Record "Sales Header";
+        LRecSalesLine: Record "Sales Line";
     begin
         // Suppression des lignes du devis archivé dans l'historique
         LRecSalesLine.Reset();

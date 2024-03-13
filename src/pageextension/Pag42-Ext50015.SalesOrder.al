@@ -137,8 +137,8 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
     }
     var
-        GCodUserID: Code[20];
         GRecUserSetup: Record 91;
+        GCodUserID: Code[20];
 
     trigger OnOpenPage()
     begin

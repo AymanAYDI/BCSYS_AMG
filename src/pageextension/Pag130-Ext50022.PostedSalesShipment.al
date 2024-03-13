@@ -43,7 +43,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
         {
             part("Sous-formulaire Package"; "Sous-formulaire Package")
             {
-                SubPageLink = "Shipping No." = FIELD("No.");
+                SubPageLink = "Shipping No." = field("No.");
                 UpdatePropagation = Both;
             }
         }
@@ -80,7 +80,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
                 RunObject = Page "Liste DGX";
-                RunPageLink = "Delivery slip no." = FIELD("No.");
+                RunPageLink = "Delivery slip no." = field("No.");
             }
             action("Etiquette colisage")
             {
@@ -94,7 +94,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 begin
                     //DELPHI AUB 23.04.2021
                     Rec.SETFILTER("No.", Rec."No.");
-                    REPORT.RUNMODAL(50016, TRUE, FALSE, Rec)
+                    REPORT.RUNMODAL(50016, true, false, Rec)
                 end;
             }
         }
@@ -103,7 +103,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
     trigger OnModifyRecord(): Boolean
     begin
         CODEUNIT.RUN(CODEUNIT::"Shipment Header - Edit", Rec);
-        EXIT(FALSE);
+        exit(false);
     end;
 }
 

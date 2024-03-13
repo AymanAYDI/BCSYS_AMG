@@ -5,6 +5,22 @@ using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Finance.Deferral;
 using Microsoft.Finance.Dimension;
 using Microsoft.Purchases.History;
+using Microsoft.Sales.Pricing;
+using Microsoft.Inventory.BOM;
+using Microsoft.Foundation.ExtendedText;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Availability;
+using Microsoft.Foundation.Attachment;
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Archive;
+using Microsoft.Finance.Currency;
+using System.Environment.Configuration;
+using Microsoft.Inventory.Setup;
+using Microsoft.Sales.Setup;
+using System.Utilities;
+using Microsoft.Foundation.Navigate;
 page 50007 "Sales Order Subform Color"
 {
     AutoSplitKey = true;
@@ -263,13 +279,13 @@ page 50007 "Sales Order Subform Color"
                         //FIN DELPHI XAV
                     end;
                 }
-                field("Qté réceptionnée"; GDecQtyReceived)
+                field("Qty received"; GDecQtyReceived)
                 {
                     Caption = 'Qté Reçue du Fourn.';
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
                 }
-                field("Qté en stock"; GDecStock)
+                field("Qty In Stock"; GDecStock)
                 {
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
@@ -323,7 +339,7 @@ page 50007 "Sales Order Subform Color"
                     ToolTip = 'Specifies the unit of measure for the item or resource on the sales line.';
                     Visible = false;
                 }
-                field("Dernier coût direct"; GDecLastDirectCost)
+                field("Last direct cost"; GDecLastDirectCost)
                 {
                 }
                 field("Unit Cost (LCY)"; Rec."Unit Cost (LCY)")
@@ -941,7 +957,7 @@ page 50007 "Sales Order Subform Color"
         {
             action(SelectMultiItems)
             {
-                AccessByPermission = TableData 27 = R;
+                AccessByPermission = TableData Item = R;
                 ApplicationArea = Basic, Suite;
                 Caption = 'Select items';
                 Ellipsis = true;
@@ -1038,7 +1054,7 @@ page 50007 "Sales Order Subform Color"
                     Image = "Action";
                     action(GetPrice)
                     {
-                        AccessByPermission = TableData 7002 = R;
+                        AccessByPermission = TableData "Sales Price" = R;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Get Price';
                         Ellipsis = true;
@@ -1052,7 +1068,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action("Get Li&ne Discount")
                     {
-                        AccessByPermission = TableData 7004 = R;
+                        AccessByPermission = TableData "Sales Line Discount" = R;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Get Li&ne Discount';
                         Ellipsis = true;
@@ -1066,7 +1082,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(ExplodeBOM_Functions)
                     {
-                        AccessByPermission = TableData 90 = R;
+                        AccessByPermission = TableData "BOM Component" = R;
                         ApplicationArea = Suite;
                         Caption = 'E&xplode BOM';
                         Image = ExplodeBOM;
@@ -1079,7 +1095,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action("Insert Ext. Texts")
                     {
-                        AccessByPermission = TableData 279 = R;
+                        AccessByPermission = TableData "Extended Text Header" = R;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Insert &Ext. Texts';
                         Image = Text;
@@ -1118,7 +1134,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action("Select Nonstoc&k Items")
                     {
-                        AccessByPermission = TableData 5718 = R;
+                        AccessByPermission = TableData "Nonstock Item" = R;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Select Ca&talog Items';
                         Image = NonStockItem;
@@ -1172,7 +1188,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(ItemAvailabilityByLocation)
                     {
-                        AccessByPermission = TableData 14 = R;
+                        AccessByPermission = TableData Location = R;
                         ApplicationArea = Location;
                         Caption = 'Location';
                         Image = Warehouse;
@@ -1185,7 +1201,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action("BOM Level")
                     {
-                        AccessByPermission = TableData 5870 = R;
+                        AccessByPermission = TableData "BOM Buffer" = R;
                         ApplicationArea = Assembly;
                         Caption = 'BOM Level';
                         Image = BOMLevel;
@@ -1202,7 +1218,7 @@ page 50007 "Sales Order Subform Color"
                     Caption = 'Related Information';
                     action("Reservation Entries")
                     {
-                        AccessByPermission = TableData 27 = R;
+                        AccessByPermission = TableData Item = R;
                         ApplicationArea = Reservation;
                         Caption = 'Reservation Entries';
                         Image = ReservationLedger;
@@ -1228,7 +1244,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(SelectItemSubstitution)
                     {
-                        AccessByPermission = TableData 5715 = R;
+                        AccessByPermission = TableData "Item Substitution" = R;
                         ApplicationArea = Suite;
                         Caption = 'Select Item Substitution';
                         Image = SelectItemSubstitution;
@@ -1244,7 +1260,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(Dimensions)
                     {
-                        AccessByPermission = TableData 348 = R;
+                        AccessByPermission = TableData Dimension = R;
                         ApplicationArea = Dimensions;
                         Caption = 'Dimensions';
                         Image = Dimensions;
@@ -1270,7 +1286,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action("Item Charge &Assignment")
                     {
-                        AccessByPermission = TableData 5800 = R;
+                        AccessByPermission = TableData "Item Charge" = R;
                         ApplicationArea = ItemCharges;
                         Caption = 'Item Charge &Assignment';
                         Image = ItemCosts;
@@ -1284,7 +1300,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(OrderPromising)
                     {
-                        AccessByPermission = TableData 99000880 = R;
+                        AccessByPermission = TableData "Order Promising Line" = R;
                         ApplicationArea = OrderPromising;
                         Caption = 'Order &Promising';
                         Image = OrderPromising;
@@ -1304,7 +1320,7 @@ page 50007 "Sales Order Subform Color"
 
                         trigger OnAction()
                         var
-                            DocumentAttachmentDetails: Page "1173";
+                            DocumentAttachmentDetails: Page "Document Attachment Details";
                             RecRef: RecordRef;
                         begin
                             RecRef.GETTABLE(Rec);
@@ -1318,7 +1334,7 @@ page 50007 "Sales Order Subform Color"
                         Image = AssemblyBOM;
                         action(AssembleToOrderLines)
                         {
-                            AccessByPermission = TableData 90 = R;
+                            AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
                             Caption = 'Assemble-to-Order Lines';
                             ToolTip = 'View any linked assembly order lines if the documents represents an assemble-to-order sale.';
@@ -1330,7 +1346,7 @@ page 50007 "Sales Order Subform Color"
                         }
                         action("Roll Up &Price")
                         {
-                            AccessByPermission = TableData 90 = R;
+                            AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
                             Caption = 'Roll Up &Price';
                             Ellipsis = true;
@@ -1343,7 +1359,7 @@ page 50007 "Sales Order Subform Color"
                         }
                         action("Roll Up &Cost")
                         {
-                            AccessByPermission = TableData 90 = R;
+                            AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
                             Caption = 'Roll Up &Cost';
                             Ellipsis = true;
@@ -1392,7 +1408,7 @@ page 50007 "Sales Order Subform Color"
                     Image = Delivery;
                     action("Purchase &Order")
                     {
-                        AccessByPermission = TableData 120 = R;
+                        AccessByPermission = TableData "Purch. Rcpt. Header" = R;
                         ApplicationArea = Suite;
                         Caption = 'Purchase &Order';
                         Image = Document;
@@ -1410,7 +1426,7 @@ page 50007 "Sales Order Subform Color"
                     Image = SpecialOrder;
                     action(OpenSpecialPurchaseOrder)
                     {
-                        AccessByPermission = TableData 120 = R;
+                        AccessByPermission = TableData "Purch. Rcpt. Header" = R;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Purchase &Order';
                         Image = Document;
@@ -1431,8 +1447,8 @@ page 50007 "Sales Order Subform Color"
 
                     trigger OnAction()
                     var
-                        SalesHeader: Record 36;
-                        BlanketSalesOrder: Page 507;
+                        SalesHeader: Record "Sales Header";
+                        BlanketSalesOrder: Page "Blanket Sales Order";
                     begin
                         Rec.TESTFIELD("Blanket Order No.");
                         SalesHeader.SETRANGE("No.", Rec."Blanket Order No.");
@@ -1459,12 +1475,12 @@ page 50007 "Sales Order Subform Color"
 
     trigger OnAfterGetRecord()
     var
-        LRecItem: Record 27;
-        LRecPurchaseLine: Record 39;
-        LRecPurchInvLine: Record 123;
-        LRecPurchInvHeader: Record 122;
-        LRecPurchHeaderArchive: Record 5109;
-        LRecPurchLineArchive: Record 5110;
+        LRecItem: Record Item;
+        LRecPurchInvHeader: Record "Purch. Inv. Header";
+        LRecPurchInvLine: Record "Purch. Inv. Line";
+        LRecPurchHeaderArchive: Record "Purchase Header Archive";
+        LRecPurchaseLine: Record "Purchase Line";
+        LRecPurchLineArchive: Record "Purchase Line Archive";
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
         UpdateTypeText();
@@ -1484,23 +1500,23 @@ page 50007 "Sales Order Subform Color"
             if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
                 LRecPurchaseLine.SETRANGE("Document No.", Rec."Special Order Purchase No.");
                 LRecPurchaseLine.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
-                if LRecPurchaseLine.FINDFIRST() then begin
-                    GDecQtyReceived := LRecPurchaseLine."Quantity Received";
-                end else begin
+                if LRecPurchaseLine.FINDFIRST() then
+                    GDecQtyReceived := LRecPurchaseLine."Quantity Received"
+                else begin
                     // If no result, search in Purch. Invoice Lines
                     LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
-                    if LRecPurchInvHeader.FIND('-') then begin
+                    if LRecPurchInvHeader.FINDSET() then
                         repeat
                             LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
                             LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
                             LRecPurchInvLine.SETRANGE("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
-                            if LRecPurchInvLine.FIND('-') then
+                            if LRecPurchInvLine.FINDSET() then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
                                 until LRecPurchInvLine.NEXT() = 0;
-                        until LRecPurchInvHeader.NEXT() = 0;
-                    end else begin
+                        until LRecPurchInvHeader.NEXT() = 0
+                    else begin
                         LRecPurchHeaderArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
                         LRecPurchHeaderArchive.SETRANGE("No.", Rec."Special Order Purchase No.");
                         if LRecPurchHeaderArchive.FINDLAST() then begin
@@ -1514,13 +1530,13 @@ page 50007 "Sales Order Subform Color"
                         end;
                     end;
                 end;
-            end else begin
+            end else
                 //No Special Order - verify quantity in stock
                 if (Rec.Quantity > GDecStock) then
                     GTxtStyleText := 'StandardAccent'
                 else
                     GTxtStyleText := 'StrongAccent';
-            end;
+
         end;
         if (GDecQtyReceived > 0) and (GDecQtyReceived >= Rec.Quantity) then
             GTxtStyleText := 'Favorable'
@@ -1531,7 +1547,7 @@ page 50007 "Sales Order Subform Color"
 
     trigger OnDeleteRecord(): Boolean
     var
-        ReserveSalesLine: Codeunit 99000832;
+        ReserveSalesLine: Codeunit "Sales Line-Reserve";
     begin
         if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
             COMMIT();
@@ -1550,7 +1566,7 @@ page 50007 "Sales Order Subform Color"
 
     trigger OnInit()
     var
-        ApplicationAreaMgmtFacade: Codeunit 9179;
+        ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
     begin
         SalesSetup.GET();
         InventorySetup.GET();
@@ -1578,7 +1594,7 @@ page 50007 "Sales Order Subform Color"
 
     trigger OnOpenPage()
     var
-        Location: Record 14;
+        Location: Record Location;
     begin
         if Location.READPERMISSION then
             LocationCodeVisible := not Location.ISEMPTY;
@@ -1587,36 +1603,21 @@ page 50007 "Sales Order Subform Color"
     end;
 
     var
-        Currency: Record 4;
-        TotalSalesHeader: Record 36;
-        TotalSalesLine: Record 37;
-        SalesHeader: Record 36;
-        SalesSetup: Record 311;
-        InventorySetup: Record 313;
-        TempOptionLookupBuffer: Record 1670 temporary;
-        ApplicationAreaMgmtFacade: Codeunit 9179;
-        SalesPriceCalcMgt: Codeunit 7000;
-        TransferExtendedText: Codeunit 378;
-        ItemAvailFormsMgt: Codeunit 353;
-        SalesCalcDiscountByType: Codeunit 56;
-        DocumentTotals: Codeunit 57;
-        VATAmount: Decimal;
-        AmountWithDiscountAllowed: Decimal;
-        ShortcutDimCode: array[8] of Code[20];
-        Text001: Label 'You cannot use the Explode BOM function because a prepayment of the sales order has been invoiced.';
-        LocationCodeMandatory: Boolean;
-        InvDiscAmountEditable: Boolean;
-        UnitofMeasureCodeIsChangeable: Boolean;
-        LocationCodeVisible: Boolean;
-        IsFoundation: Boolean;
-        IsCommentLine: Boolean;
+        Currency: Record Currency;
+        InventorySetup: Record "Inventory Setup";
+        TempOptionLookupBuffer: Record "Option Lookup Buffer" temporary;
+        SalesSetup: Record "Sales & Receivables Setup";
+        SalesHeader: Record "Sales Header";
+        TotalSalesHeader: Record "Sales Header";
+        GRecSalesLine: Record "Sales Line";
+        TotalSalesLine: Record "Sales Line";
+        ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
+        DocumentTotals: Codeunit "Document Totals";
+        ItemAvailFormsMgt: Codeunit "Item Availability Forms Mgt";
+        SalesCalcDiscountByType: Codeunit "Sales - Calc Discount By Type";
+        SalesPriceCalcMgt: Codeunit "Sales Price Calc. Mgt.";
+        TransferExtendedText: Codeunit "Transfer Extended Text";
         CurrPageIsEditable: Boolean;
-        IsBlankNumber: Boolean;
-        InvoiceDiscountAmount: Decimal;
-        InvoiceDiscountPct: Decimal;
-        UpdateInvDiscountQst: Label 'One or more lines have been invoiced. The discount distributed to invoiced lines will not be taken into account.\\Do you want to update the invoice discount?';
-        ItemChargeStyleExpression: Text;
-        TypeAsText: Text[30];
         DimVisible1: Boolean;
         DimVisible2: Boolean;
         DimVisible3: Boolean;
@@ -1625,11 +1626,26 @@ page 50007 "Sales Order Subform Color"
         DimVisible6: Boolean;
         DimVisible7: Boolean;
         DimVisible8: Boolean;
-        GRecSalesLine: Record 37;
-        GDecStock: Decimal;
-        GDecQtyReceived: Decimal;
-        GTxtStyleText: Text[80];
+        InvDiscAmountEditable: Boolean;
+        IsBlankNumber: Boolean;
+        IsCommentLine: Boolean;
+        IsFoundation: Boolean;
+        LocationCodeMandatory: Boolean;
+        LocationCodeVisible: Boolean;
+        UnitofMeasureCodeIsChangeable: Boolean;
+        ShortcutDimCode: array[8] of Code[20];
+        AmountWithDiscountAllowed: Decimal;
         GDecLastDirectCost: Decimal;
+        GDecQtyReceived: Decimal;
+        GDecStock: Decimal;
+        InvoiceDiscountAmount: Decimal;
+        InvoiceDiscountPct: Decimal;
+        VATAmount: Decimal;
+        Text001: Label 'You cannot use the Explode BOM function because a prepayment of the sales order has been invoiced.';
+        UpdateInvDiscountQst: Label 'One or more lines have been invoiced. The discount distributed to invoiced lines will not be taken into account.\\Do you want to update the invoice discount?';
+        ItemChargeStyleExpression: Text;
+        TypeAsText: Text[30];
+        GTxtStyleText: Text[80];
 
     procedure ApproveCalcInvDisc()
     begin
@@ -1639,8 +1655,8 @@ page 50007 "Sales Order Subform Color"
 
     local procedure ValidateInvoiceDiscountAmount()
     var
-        SalesHeader: Record 36;
-        ConfirmManagement: Codeunit 27;
+        SalesHeader: Record "Sales Header";
+        ConfirmManagement: Codeunit "Confirm Management";
     begin
         SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         if SalesHeader.InvoicedLineExists() then
@@ -1654,7 +1670,7 @@ page 50007 "Sales Order Subform Color"
 
     procedure CalcInvDisc()
     var
-        SalesCalcDiscount: Codeunit 60;
+        SalesCalcDiscount: Codeunit "Sales-Calc. Discount";
     begin
         SalesCalcDiscount.CalculateInvoiceDiscountOnLine(Rec);
         DocumentTotals.SalesDocTotalsNotUpToDate();
@@ -1670,8 +1686,8 @@ page 50007 "Sales Order Subform Color"
 
     procedure OpenPurchOrderForm()
     var
-        PurchHeader: Record 38;
-        PurchOrder: Page 50;
+        PurchHeader: Record "Purchase Header";
+        PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Purchase Order No.");
         PurchHeader.SETRANGE("No.", Rec."Purchase Order No.");
@@ -1682,9 +1698,9 @@ page 50007 "Sales Order Subform Color"
 
     procedure OpenSpecialPurchOrderForm()
     var
-        PurchHeader: Record 38;
-        PurchRcptHeader: Record 120;
-        PurchOrder: Page 50;
+        PurchRcptHeader: Record "Purch. Rcpt. Header";
+        PurchHeader: Record "Purchase Header";
+        PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Special Order Purchase No.");
         PurchHeader.SETRANGE("No.", Rec."Special Order Purchase No.");
@@ -1720,7 +1736,7 @@ page 50007 "Sales Order Subform Color"
 
     procedure ShowTracking()
     var
-        TrackingForm: Page 99000822;
+        TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetSalesLine(Rec);
         TrackingForm.RUNMODAL();
@@ -1752,14 +1768,14 @@ page 50007 "Sales Order Subform Color"
 
     procedure OrderPromisingLine()
     var
-        OrderPromisingLine: Record 99000880 temporary;
-        OrderPromisingLines: Page 99000959;
+        OrderPromisingLine: Record "Order Promising Line" temporary;
+        OrderPromisingLines: Page "Order Promising Lines";
     begin
         OrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
         OrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
         OrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
 
-        OrderPromisingLines.SetSourceType(OrderPromisingLine."Source Type"::Sales);
+        OrderPromisingLines.SetSource(OrderPromisingLine."Source Type"::Sales);
         OrderPromisingLines.SETTABLEVIEW(OrderPromisingLine);
         OrderPromisingLines.RUNMODAL();
     end;
@@ -1866,7 +1882,7 @@ page 50007 "Sales Order Subform Color"
 
     procedure ShowDocumentLineTracking()
     var
-        DocumentLineTracking: Page 6560;
+        DocumentLineTracking: Page "Document Line Tracking";
     begin
         CLEAR(DocumentLineTracking);
         DocumentLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
@@ -1924,7 +1940,7 @@ page 50007 "Sales Order Subform Color"
 
     local procedure SetDimensionsVisibility()
     var
-        DimMgt: Codeunit 408;
+        DimMgt: Codeunit DimensionManagement;
     begin
         DimVisible1 := false;
         DimVisible2 := false;
@@ -1942,12 +1958,12 @@ page 50007 "Sales Order Subform Color"
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnAfterQuantityOnAfterValidate(var SalesLine: Record 37; xSalesLine: Record 37)
+    local procedure OnAfterQuantityOnAfterValidate(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeInsertExtendedText(var SalesLine: Record 37)
+    local procedure OnBeforeInsertExtendedText(var SalesLine: Record "Sales Line")
     begin
     end;
 

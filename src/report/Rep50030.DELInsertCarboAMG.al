@@ -69,7 +69,7 @@ report 50030 DELInsertCarboAMG
 
     var
         GRecSalesSetup: Record "Sales & Receivables Setup";
-        GDecQty: Decimal;
         ItemNo: Code[20];
+        GDecQty: Decimal;
 }
 

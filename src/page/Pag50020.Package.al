@@ -62,10 +62,10 @@ page 50020 Package
                 begin
                     Package.INIT();
                     Package."Line No." := 1;
-                    IF Rec.GETFILTER("Shipping No.") <> '' THEN BEGIN
-                        Package."Shipping No." := Rec.GETFILTER("Shipping No.");
-                        Package.INSERT(TRUE);
-                    END;
+                    if Rec.GETFILTER("Shipping No.") <> '' then begin
+                        Package."Shipping No." := CopyStr(Rec.GETFILTER("Shipping No."), 1, MaxStrLen(Package."Shipping No."));
+                        Package.INSERT(true);
+                    end;
                 end;
             }
         }

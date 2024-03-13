@@ -138,6 +138,6 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
     end;
 
     var
-        GCodUserID: Code[20];
         GRecUserSetup: Record "User Setup";
+        GCodUserID: Code[20];
 }

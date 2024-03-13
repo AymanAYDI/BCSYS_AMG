@@ -30,10 +30,10 @@ report 50021 "MAJ Description GL Entry"
 
     trigger OnInitReport()
     var
-        LRecSalesInvoiceHeader: Record "Sales Invoice Header";
         LRecPurchaseInvoiceHeader: Record "Purch. Inv. Header";
+        LRecSalesInvoiceHeader: Record "Sales Invoice Header";
     begin
-        if GRecGLEntry.FIND('-') then
+        if GRecGLEntry.FINDFIRST() then
             repeat
                 if GRecGLEntry."Document Type" = GRecGLEntry."Document Type"::Invoice then
                     if LRecSalesInvoiceHeader.GET(GRecGLEntry."Document No.") then

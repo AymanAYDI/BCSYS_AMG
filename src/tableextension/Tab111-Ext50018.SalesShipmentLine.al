@@ -41,7 +41,7 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
     }
     procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[50]
     begin
-        if Integer <> 0 Then
+        if Integer <> 0 then
             Return := FORMAT(Integer)
         else
             Return := '';
@@ -49,7 +49,7 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
 
     procedure ZeroIsBlanckDecimal(Decimale: Decimal) Return: Text[50]
     begin
-        if Decimale <> 0 Then
+        if Decimale <> 0 then
             Return := FORMAT(Decimale, 10, '<Standard Format,0>')
         else
             Return := '';

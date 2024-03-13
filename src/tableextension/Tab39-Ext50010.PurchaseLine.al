@@ -78,8 +78,8 @@ tableextension 50010 PurchaseLine extends "Purchase Line" //39
         Text017: Label '\The entered information may be disregarded by warehouse operations.';
 
     var
-        AnotherItemWithSameDescrQst: Label 'Item No. %1 also has the description "%2".\Do you want to change the current item no. to %1?', Comment = '%1=Item no., %2=item description';
         AnotherChargeItemWithSameDescQst: Label 'Item charge No. %1 also has the description "%2".\Do you want to change the current item charge no. to %1?', Comment = '%1=Item charge no., %2=item charge description';
+        AnotherItemWithSameDescrQst: Label 'Item No. %1 also has the description "%2".\Do you want to change the current item no. to %1?', Comment = '%1=Item no., %2=item description';
 
     procedure SendBlockedItemNotification()
     var
