@@ -957,47 +957,19 @@ report 50001 "Standard Sales - Credit Memo W"
         FormatDocument: Codeunit "Format Document";
         CDULanguage: codeunit Language;
         SegManagement: Codeunit SegManagement;
-        DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
-        FirstLineHasBeenOutput: Boolean;
-        LogInteraction: Boolean;
-        [InDataSet]
-        LogInteractionEnable: Boolean;
-        MoreLines: Boolean;
-        ShowShippingAddr: Boolean;
         PostedShipmentDate: Date;
-        CalculatedExchRate: Decimal;
-        PrevLineAmount: Decimal;
-        TotalAmount: Decimal;
-        TotalAmountInclVAT: Decimal;
-        TotalAmountVAT: Decimal;
-        TotalInvDiscAmount: Decimal;
-        TotalPaymentDiscOnVAT: Decimal;
-        TotalSubTotal: Decimal;
-        TotalVATAmountLCY: Decimal;
-        TotalVATBaseLCY: Decimal;
-        TransHeaderAmount: Decimal;
-        VATAmountLCY: Decimal;
-        VATBaseLCY: Decimal;
-        CompanyLogoPosition: Integer;
-        AppliesToTextLbl: Label 'Applies to Document';
-        BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.';
-        ClosingLbl: Label 'Sincerely';
         CompanyInfoBankAccNoLbl: Label 'Account No.';
         CompanyInfoBankNameLbl: Label 'Bank';
         CompanyInfoGiroNoLbl: Label 'Giro No.';
         CompanyInfoPhoneNoLbl: Label 'Phone No.';
         CopyLbl: Label 'Copy';
         EMailLbl: Label 'Email';
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
-        GreetingLbl: Label 'Hello';
         HomePageLbl: Label 'Home Page';
         InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount';
         InvDiscountAmtLbl: Label 'Invoice Discount';
         InvNoLbl: Label 'Credit Memo No.';
         LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT';
         LocalCurrencyLbl: Label 'Local Currency';
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
         PageLbl: Label 'Page';
         PaymentMethodDescLbl: Label 'Payment Method';
         PaymentTermsDescLbl: Label 'Payment Terms';
@@ -1006,7 +978,6 @@ report 50001 "Standard Sales - Credit Memo W"
         SalesCreditMemoNoLbl: Label 'Sales - Credit Memo %1';
         SalesInvLineDiscLbl: Label 'Discount %';
         SalespersonLbl: Label 'Sales person';
-        SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1';
         ShipmentLbl: Label 'Shipment';
         ShiptoAddrLbl: Label 'Ship-to Address';
         ShptMethodDescLbl: Label 'Shipment Method';
@@ -1020,10 +991,6 @@ report 50001 "Standard Sales - Credit Memo W"
         VATClausesLbl: Label 'VAT Clause';
         VATIdentifierLbl: Label 'VAT Identifier';
         VATPercentageLbl: Label 'VAT %';
-        AppliesToText: Text;
-        ExchangeRateText: Text;
-        LineDiscountPctText: Text;
-        CopyText: Text[30];
         SalesPersonText: Text[30];
         CompanyAddr: array[8] of Text[50];
         CustAddr: array[8] of Text[50];
@@ -1043,7 +1010,6 @@ report 50001 "Standard Sales - Credit Memo W"
         TotalInvDiscAmount: Decimal;
         TotalPaymentDiscOnVAT: Decimal;
         TransHeaderAmount: Decimal;
-        [InDataSet]
         LogInteractionEnable: Boolean;
         DisplayAssemblyInformation: Boolean;
         DisplayShipmentInformation: Boolean;
@@ -1063,6 +1029,7 @@ report 50001 "Standard Sales - Credit Memo W"
         GreetingLbl: Label 'Hello';
         ClosingLbl: Label 'Sincerely';
         BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.';
+        TotalText: Text[50];
 
     local procedure InitLogInteraction()
     begin
