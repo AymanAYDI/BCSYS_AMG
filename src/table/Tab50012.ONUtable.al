@@ -3,14 +3,15 @@ table 50012 "ONU table"
 {
     DataClassification = ToBeClassified;
     Description = 'AMG.DGX';
-    DrillDownPageID = 50015;
-    LookupPageID = 50015;
+    DrillDownPageID = "Liste ONU";
+    LookupPageID = "Liste ONU";
 
     fields
     {
         field(10; "Code"; Code[10])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Code';
         }
         field(20; Description; Text[250])
         {
@@ -20,10 +21,12 @@ table 50012 "ONU table"
         field(30; Class; Text[30])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Class';
         }
         field(35; "Sub-Class"; Text[30])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Sub-Class';
         }
         field(40; "Packaging group"; Option)
         {
@@ -44,14 +47,17 @@ table 50012 "ONU table"
         field(60; "Flash Point"; Decimal)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Flash Point';
         }
         field(70; "Limited quantity"; Decimal)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Limited quantity';
         }
         field(75; Version; Integer)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Version';
         }
     }
 

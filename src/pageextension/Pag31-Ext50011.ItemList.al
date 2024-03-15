@@ -10,6 +10,8 @@ pageextension 50011 ItemList extends "Item List" //31
         {
             field("No. 2"; Rec."No. 2")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the No. 2 field.';
             }
         }
         addafter("Unit Price")
@@ -17,7 +19,8 @@ pageextension 50011 ItemList extends "Item List" //31
             field(Historique; Rec.Historique)
             {
                 TableRelation = "Sales Archive".Reference;
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Historique field.';
                 trigger OnLookup(var Text: Text): Boolean
                 var
                     LRecHisto: Record "Sales Archive";
@@ -108,6 +111,8 @@ pageextension 50011 ItemList extends "Item List" //31
                 //The property 'PromotedOnly' can only be set if the property 'Promoted' is set to 'true'
                 PromotedOnly = true;
                 RunObject = Page "Liste ONU";
+                ApplicationArea = All;
+                ToolTip = 'Executes the ONU action.';
             }
         }
     }

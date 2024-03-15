@@ -9,6 +9,7 @@ using Microsoft.Finance.ReceivablesPayables;
 using System.Environment.Configuration;
 using Microsoft.Finance.VAT.Calculation;
 using Microsoft.Finance.Currency;
+using System.Utilities;
 tableextension 50010 PurchaseLine extends "Purchase Line" //39
 {
     fields
@@ -62,16 +63,16 @@ tableextension 50010 PurchaseLine extends "Purchase Line" //39
         {
             Caption = 'Blanket Order Line No.';
         }
-        //todo editable cannot be customized
+        //TODO editable cannot be customized
         // modify("Receipt No.")
         // {
         //     editable = true;
         // }
     }
     var
-        FindRecordMgt: codeunit 703;
+        FindRecordMgt: codeunit "Find Record Management";
 
-        ConfirmManagement: codeunit 27;
+        ConfirmManagement: codeunit "Confirm Management";
 
         Text017: Label '\The entered information may be disregarded by warehouse operations.';
 
@@ -114,17 +115,17 @@ tableextension 50010 PurchaseLine extends "Purchase Line" //39
             LineAmountChanged := true;
         end;
     end;
-    //todo ondelete
-    //todo Onvalidate de Type
-    //todo Onvalidate "No."
-    //todo Onvalidate Location Code
-    //todo OnValidate Description
-    //todo OnValidate Allow Invoice Disc.
-    //todo OnValidate  VAT Prod. Posting Group
-    //todo i can't find slution for line 3513
-    //todo i can't find slution for line 3551
-    //todo i can't find slution for line 4499
-    //todo i can't find slution for line 4348
-    //todo i can't find slution for line 4495,4515
+    //TODO ondelete
+    //TODO Onvalidate de Type
+    //TODO Onvalidate "No."
+    //TODO Onvalidate Location Code
+    //TODO OnValidate Description
+    //TODO OnValidate Allow Invoice Disc.
+    //TODO OnValidate  VAT Prod. Posting Group
+    //TODO i can't find slution for line 3513
+    //TODO i can't find slution for line 3551
+    //TODO i can't find slution for line 4499
+    //TODO i can't find slution for line 4348
+    //TODO i can't find slution for line 4495,4515
 }
 

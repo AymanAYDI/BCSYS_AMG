@@ -32,6 +32,7 @@ report 50000 "Standard Sales - Order Conf. W"
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
+    ApplicationArea = All;
 
     dataset
     {
@@ -481,6 +482,8 @@ report 50000 "Standard Sales - Order Conf. W"
                 }
 
                 trigger OnAfterGetRecord()
+                var
+                    Text01: Label '%1', Comment = '%1 = "Line Discount %"';
                 begin
                     PostedShipmentDate := 0D;
 
@@ -490,7 +493,7 @@ report 50000 "Standard Sales - Order Conf. W"
                     if "Line Discount %" = 0 then
                         LineDiscountPctText := ''
                     else
-                        LineDiscountPctText := STRSUBSTNO('%1%', -ROUND("Line Discount %", 0.1));
+                        LineDiscountPctText := STRSUBSTNO(Text01, -ROUND("Line Discount %", 0.1));
 
                     if DisplayAssemblyInformation then
                         AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
@@ -913,6 +916,8 @@ report 50000 "Standard Sales - Order Conf. W"
                     field(DisplayAsmInformation; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
                     field(ArchiveDocument; ArchiveDocument)
                     {
@@ -1069,7 +1074,6 @@ report 50000 "Standard Sales - Order Conf. W"
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        //LogInteraction := SegManagement.FindInteractTmplCode(3) <> '';
         LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Ord. Cnfrmn.") <> '';
     end;
 

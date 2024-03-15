@@ -12,6 +12,7 @@ tableextension 50028 Contact extends Contact //5050
         field(50000; "Holding Company"; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Holding Company';
         }
     }
 

@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.Customer;
+using BCSYS.AMGALLOIS.Basic;
 
 pageextension 50004 "CustomerCard" extends "Customer Card" //21
 {
@@ -20,6 +21,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
             field(ICE; Rec.ICE)
             {
                 ApplicationArea = Basic, Suite;
+                ToolTip = 'Specifies the value of the ICE field.';
             }
         }
         modify("Use GLN in Electronic Document")
@@ -31,6 +33,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
             field("Compl. cond. livraison"; Rec."Compl. cond. livraison")
             {
                 ApplicationArea = Basic, Suite;
+                ToolTip = 'Specifies the value of the Compl. cond. livraison field.';
             }
         }
     }
@@ -45,10 +48,11 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = ListPage;
-                RunObject = Page 50010;
+                RunObject = Page "Historique ventes article";
                 RunPageLink = "Customer No." = field("No.");
                 RunPageView = sorting("Sales Document Date", "Quote No.", "Sales Order No.", "Sales Invoice No.", "Sales Line No.")
                                   order(descending);
+                ToolTip = 'Executes the Historique Ventes action.';
             }
         }
     }

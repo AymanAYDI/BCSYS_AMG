@@ -9,9 +9,9 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.Archive;
 table 50000 "Sales Archive"
 {
-    DrillDownPageID = 50010;
+    DrillDownPageID = "Historique ventes article";
     LinkedObject = false;
-    LookupPageID = 50010;
+    LookupPageID = "Historique ventes article";
 
     fields
     {
@@ -62,7 +62,7 @@ table 50000 "Sales Archive"
             Caption = 'Description', Comment = 'FRA="Description"';
             DataClassification = ToBeClassified;
         }
-        field(22; "External Reference"; Code[20])
+        field(22; "External Reference"; Code[50])
         {
             Caption = 'External Reference', Comment = 'FRA="Reference externe"';
             DataClassification = ToBeClassified;
@@ -156,7 +156,7 @@ table 50000 "Sales Archive"
 
         if LRecSalesLine.FINDSET(false) then
             repeat
-                //todo field spe ,field removed
+                //TODO field spe ,field removed
                 LRecHisto.Reset();
                 if LRecSalesHeader.Get(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
                 LRecHisto."Quote No." := LRecSalesHeader."Quote No.";
@@ -193,7 +193,6 @@ table 50000 "Sales Archive"
         LRecLignesFV.SETFILTER(Quantity, '>0');
         if LRecLignesFV.FINDSET(false) then
             repeat
-                //todo field spe ,field removed
                 if LRecFactVenteHeader.Get(LRecLignesFV."Document No.") then;
                 LRecHisto.Reset();
                 LRecHisto."Quote No." := LRecFactVenteHeader."Quote No.";
@@ -229,7 +228,6 @@ table 50000 "Sales Archive"
 
         if LRecSalesLine.FINDSET(false) then
             repeat
-                //todo field spe ,field removed
                 // Suppression d'une version archivée de ce devis pour cet article et cette ligne de vente
                 LRecHisto.Reset();
                 LRecHisto.SETFILTER("Quote No.", LRecSalesLine."Document No.");
@@ -286,7 +284,6 @@ table 50000 "Sales Archive"
 
         if LRecSalesLineArchive.FINDSET(false) then
             repeat
-                //todo field spe ,field removed
                 LRecHisto.Reset();
                 LRecHisto.SetRange("Quote No.", LRecSalesLineArchive."Document No.");
                 LRecHisto.SetRange(Reference, LRecSalesLineArchive."No.");
@@ -325,7 +322,6 @@ table 50000 "Sales Archive"
 
         if LRecSalesLineArchive.FINDSET(false) then
             repeat
-                //todo field removed
                 LRecHisto.Reset();
                 LRecHisto.SETFILTER("Quote No.", LRecSalesLineArchive."Document No.");
                 LRecHisto.SetRange(Reference, LRecSalesLineArchive."No.");

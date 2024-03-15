@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.Document;
+using Microsoft.Purchases.Document;
 pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
 {
     layout
@@ -35,18 +36,24 @@ pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
             {
                 DrillDown = false;
                 Lookup = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
             }
             field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
             }
             field("Nom fournisseur"; GTxtNomFournisseur)
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the GTxtNomFournisseur field.';
             }
         }
     }
     trigger OnAfterGetRecord()
     var
-        LRecPurchaseHeader: Record 38;
+        LRecPurchaseHeader: Record "Purchase Header";
     begin
         LRecPurchaseHeader.RESET();
         if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
@@ -55,7 +62,7 @@ pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
                 GTxtNomFournisseur := LRecPurchaseHeader."Buy-from Vendor Name";
         end;
     end;
-    //todo i can't find solution for 194
+    //TODO i can't find solution for 194
     var
         GTxtNomFournisseur: Text[250];
 }

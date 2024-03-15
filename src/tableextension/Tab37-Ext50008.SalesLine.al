@@ -7,6 +7,7 @@ using Microsoft.Projects.Resources.Resource;
 using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Customer;
+using System.IO;
 tableextension 50008 SalesLine extends "Sales Line" //37
 {
     fields
@@ -60,38 +61,33 @@ tableextension 50008 SalesLine extends "Sales Line" //37
         {
             Caption = 'Marge';
             DataClassification = ToBeClassified;
-            Description = 'AMG';
         }
         field(50002; Marque; Decimal)
         {
             Caption = '% Marge';
             DataClassification = ToBeClassified;
-            Description = 'AMG';
         }
         field(50010; "Fournisseur article"; Code[20])
         {
             CalcFormula = lookup(Item."Vendor No." where("No." = field("No.")));
             Caption = 'Vendor';
-            Description = 'AMG,EVO34';
             FieldClass = FlowField;
         }
         field(50020; "Customer Name"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
             Caption = 'Customer Name';
-            Description = 'AMG';
             FieldClass = FlowField;
         }
         field(50030; Sel; Boolean)
         {
             Caption = 'Sel';
             DataClassification = ToBeClassified;
-            Description = 'AMG';
         }
     }
     procedure FCalculeMarge("Item No": Code[20]; Quantiter: Decimal; "Prix Vente Remiser": Decimal) Marge: Decimal
     var
-        LRecItem: Record 27;
+        LRecItem: Record Item;
         LDecMarge: Decimal;
     begin
         Marge := 0;
@@ -113,7 +109,7 @@ tableextension 50008 SalesLine extends "Sales Line" //37
 
     procedure FCalculateOnMargeChange(NoItem: Code[20]; Marque: Decimal)
     var
-        LRecItem: Record 27;
+        LRecItem: Record Item;
         LDecUnitCost: Decimal;
     begin
         if LRecItem.Get(NoItem) then begin
@@ -135,7 +131,7 @@ tableextension 50008 SalesLine extends "Sales Line" //37
 
     procedure FCalculateMargeOnLineDiscountChange(ItemNo: Code[20])
     var
-        LRecItem: Record 27;
+        LRecItem: Record Item;
         LDecUnitCost: Decimal;
     begin
         if LRecItem.Get(ItemNo) then begin
@@ -152,11 +148,11 @@ tableextension 50008 SalesLine extends "Sales Line" //37
         end;
     end;
 
-    procedure FAddLinesForCarbo(DELRecSalesHeader: Record 36; DELCodItemNo: Code[20]; DELDecQty: Decimal)
+    procedure FAddLinesForCarbo(DELRecSalesHeader: Record "Sales Header"; DELCodItemNo: Code[20]; DELDecQty: Decimal)
     var
-        LRecItem: Record 27;
-        LRecSalesLine: Record 37;
-        LRecSalesLinetoInsert: Record 37;
+        LRecItem: Record Item;
+        LRecSalesLine: Record "Sales Line";
+        LRecSalesLinetoInsert: Record "Sales Line";
         LIntLineNo: Integer;
     begin
         // Si un article avec la case "type carbo" est cochée, affichage d'une fenêtre de choix
@@ -200,28 +196,28 @@ tableextension 50008 SalesLine extends "Sales Line" //37
     end;
 
     var
-        LRecItem: Record 27;
-        XMLBuffer: Record 1235;
-        XMLSpecialInterestNode: Record 1235;
-        FindRecordMgt: codeunit 703;
-        XMLBufferWriter: codeunit 1235;
+        LRecItem: Record Item;
+        XMLBuffer: Record "XML Buffer";
+        XMLSpecialInterestNode: Record "XML Buffer";
+        FindRecordMgt: codeunit "Find Record Management";
+        XMLBufferWriter: codeunit "XML Buffer Writer";
         LCodItemNo: Code[20];
         LDecQty: Decimal;
         LTextParam: Text;
         NodeNotFoundErr: Text;
 
-    //todo Ondelete
-    //todo Onvalidate No. line 
-    //todo Onvalidate location code line 437
-    //todo Onvalidate Allow Invoice Disc. line 985
-    //todo prod CalcBaseQty line 2930
-    //todo verif  line 2974
-    //todo prod GetItem line 3121
-    //todo prod UpdateVATAmounts line 3364
-    //todo prod UpdateVATAmounts 
-    //todo prod additem line 3893
-    //todo  line 4373
-    //todo verif prod ValidateCrossReferenceNo line 4811
-    //todo verifier prod CheckApplFromItemLedgEntry line 4950
+    //TODO Ondelete
+    //TODO Onvalidate No. line 
+    //TODO Onvalidate location code line 437
+    //TODO Onvalidate Allow Invoice Disc. line 985
+    //TODO prod CalcBaseQty line 2930
+    //TODO verif  line 2974
+    //TODO prod GetItem line 3121
+    //TODO prod UpdateVATAmounts line 3364
+    //TODO prod UpdateVATAmounts 
+    //TODO prod additem line 3893
+    //TODO  line 4373
+    //TODO verif prod ValidateCrossReferenceNo line 4811
+    //TODO verifier prod CheckApplFromItemLedgEntry line 4950
 }
 

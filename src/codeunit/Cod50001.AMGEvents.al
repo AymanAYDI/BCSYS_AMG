@@ -50,14 +50,14 @@ codeunit 50001 "AMG_Events"
         DimMgt.SaveDefaultDim(DATABASE::Customer, Customer."No.", FieldNumber, ShortcutDimCode);
         Customer.Modify();
     end;
-    //todo verifier line 1626,1650
+    //TODO verifier line 1626,1650
     //Record 18 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeCheckBlockedCust', '', false, false)]
     local procedure OnBeforeCheckBlockedCust(Customer: Record Customer; Source: Option Journal,Document; DocType: Option; Shipment: Boolean; Transaction: Boolean; var IsHandled: Boolean)
     begin
         IsHandled := false;
     end;
-    //todo check for line 1740 possibly not needed
+    //TODO check for line 1740 possibly not needed
     //Record 18 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeGetTotalAmountLCYCommon', '', false, false)]
     local procedure OnBeforeGetTotalAmountLCYCommon(var Customer: Record Customer; var AdditionalAmountLCY: Decimal; var IsHandled: Boolean)
@@ -179,7 +179,7 @@ codeunit 50001 "AMG_Events"
             Item.UpdateItemCategoryId();
         end;
     end;
-    //Record 27 //todo verifier line 2215
+    //Record 27 //TODO verifier line 2215
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterValidateShortcutDimCode', '', false, false)]
     local procedure OnAfterValidateShortcutDimCode(var Item: Record Item; xItem: Record Item; FieldNumber: Integer; var ShortcutDimCode: Code[20])
     var
@@ -197,13 +197,13 @@ codeunit 50001 "AMG_Events"
     begin
         IsHandled := true;
     end;
-    //Record 36 //todo verifier line 192
+    //Record 36 //TODO verifier line 192
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnValidateSellToCustomerNoOnBeforeUpdateSellToCont', '', false, false)]
     local procedure OnValidateSellToCustomerNoOnBeforeUpdateSellToCont(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; SellToCustomer: Record Customer; var SkipSellToContact: Boolean)
     begin
         SalesHeader.Validate("Ship-to Code", SellToCustomer."Ship-to Code");
     end;
-    //Record 36 //todo verifier
+    //Record 36 //TODO verifier
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeCheckShipmentInfo', '', false, false)]
     local procedure OnBeforeCheckShipmentInfo(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; BillTo: Boolean; var IsHandled: Boolean)
     begin
@@ -236,7 +236,7 @@ codeunit 50001 "AMG_Events"
     begin
         IsHandled := true;
     end;
-    //Record 36 //todo verifier 1 et 2
+    //Record 36 //TODO verifier 1 et 2
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnInitRecordOnBeforeAssignShipmentDate', '', false, false)]
     local procedure OnInitRecordOnBeforeAssignShipmentDate(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     begin
@@ -248,7 +248,7 @@ codeunit 50001 "AMG_Events"
             SalesHeader."Order Date" := WorkDate();
         IsHandled := true;
     end;
-    //Record 36 //todo verifier 1 et 2
+    //Record 36 //TODO verifier 1 et 2
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnInitRecordOnBeforeAssignOrderDate', '', false, false)]
     local procedure OnInitRecordOnBeforeAssignOrderDate(var SalesHeader: Record "Sales Header"; var NewOrderDate: Date)
     begin
@@ -322,7 +322,7 @@ codeunit 50001 "AMG_Events"
         else
             SalesHeader."Bill-to Contact" := Conact.Name;
     end;
-    //Record 36 //todo verifier line 3694
+    //Record 36 //TODO verifier line 3694
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeSetSecurityFilterOnRespCenter', '', false, false)]
     local procedure OnBeforeSetSecurityFilterOnRespCenter(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
@@ -340,7 +340,7 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnCreateSalesLineOnBeforeValidateQuantity', '', false, false)]
     local procedure OnCreateSalesLineOnBeforeValidateQuantity(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary; var ShouldValidateQuantity: Boolean)
     begin
-        //todo field spe 
+        //TODO field spe 
         if ShouldValidateQuantity then begin
             SalesLine.Validate(Quantity, TempSalesLine.Quantity);
             SalesLine.Validate("Qty. to Assemble to Order", TempSalesLine."Qty. to Assemble to Order");
@@ -379,11 +379,11 @@ codeunit 50001 "AMG_Events"
     local procedure OnValidateNoOnAfterUpdateUnitPrice(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary)
     var
         PostingSetupMgt: Codeunit PostingSetupManagement;
-        LRecItem: Record 27;
+        LRecItem: Record Item;
         LTextParam: Text;
-        XMLBufferWriter: Codeunit 1235;
-        XMLBuffer: Record 1235;
-        XMLSpecialInterestNode: Record 1235;
+        XMLBufferWriter: Codeunit "XML Buffer Writer";
+        XMLBuffer: Record "XML Buffer";
+        XMLSpecialInterestNode: Record "XML Buffer";
         NodeNotFoundErr: Text;
         LCodItemNo: Code[20];
         LDecQty: Decimal;
@@ -399,8 +399,8 @@ codeunit 50001 "AMG_Events"
         LDecQty := 0;
         if LRecItem.Get(SalesLine."No.") then begin
             if LRecItem."Type carbo" then
-                LTextParam := REPORT.RUNREQUESTPAGE(50030); //r‚cup‚ration des valeurs saisies sur la RequestPage
-                                                            //MESSAGE(LTextParam);
+                LTextParam := REPORT.RUNREQUESTPAGE(Report::DELInsertCarboAMG); //r‚cup‚ration des valeurs saisies sur la RequestPage
+                                                                                //MESSAGE(LTextParam);
             if (LTextParam <> '') then begin
 
                 XMLBufferWriter.InitializeXMLBufferFromText(XMLBuffer, LTextParam);
@@ -437,8 +437,8 @@ codeunit 50001 "AMG_Events"
         DescriptionIsNo: Boolean;
         DefaultCreate: Boolean;
         SalesSetup: Record "Sales & Receivables Setup";
-        LookupRequested: Boolean; //todo verifier not used
-        IdentityManagement: Codeunit 9801;
+        LookupRequested: Boolean; //TODO verifier not used
+        IdentityManagement: Codeunit "Identity Management";
         Confirmed: Boolean;
         CannotFindDescErr: Label 'Cannot find %1 with Description %2.\\Make sure to use the correct type.', Comment = '%1 = Type caption %2 = Description';
         AnotherItemWithSameDescrQst: Label 'We found an item with the description "%2" (No. %1).\Did you mean to change the current item to %1?', Comment = '%1=Item no., %2=item description';
@@ -460,7 +460,7 @@ codeunit 50001 "AMG_Events"
 
                     // if (SalesLine."No." <> '') and (not DescriptionIsNo) and (SalesLine.Description <> '') then begin
                     //     Item.SetRange(Description, SalesLine.Description);
-                    //     //todo IsInvAppId removed
+                    //     //TODO IsInvAppId removed
                     //     if Item.FINDFIRST then
                     //         Confirmed := IdentityManagement.IsInvAppId
                     //     else begin
@@ -471,7 +471,7 @@ codeunit 50001 "AMG_Events"
 
                     //     if Item."No." = SalesLine."No." then
                     //         exit;
-                    //     //todo IsInvAppId removed
+                    //     //TODO IsInvAppId removed
                     //     if GUIALLOWED then
                     //         if not IdentityManagement.IsInvAppId then
                     //             Confirmed := CONFIRM(AnotherItemWithSameDescrQst, false, Item."No.", Item.Description);
@@ -482,7 +482,7 @@ codeunit 50001 "AMG_Events"
 
                     SalesSetup.Get();
                     DefaultCreate := (SalesLine."No." = '') and SalesSetup."Create Item from Description";
-                    //     //todo IsInvAppId removed
+                    //     //TODO IsInvAppId removed
                     //         if Item.TryGetItemNoOpenCard(
                     //              ReturnValue, SalesLine.Description, DefaultCreate, not SalesLine.GetHideValidationDialog(), not IdentityManagement.IsInvAppId)
                     //         then
@@ -502,7 +502,7 @@ codeunit 50001 "AMG_Events"
                     //     end;
                     // else
                     //     if SalesLine."No." = '' then begin
-                    //         //todo FindNoByDescription has scope Onprem
+                    //         //TODO FindNoByDescription has scope Onprem
                     //         //   ReturnValue := FindRecordMgt.FindNoByDescription(Type.AsInteger(), SalesLine.Description, true);
                     //         if ReturnValue <> '' then begin
                     //             CurrentFieldNo := SalesLine.FieldNo("No.");
@@ -578,7 +578,7 @@ codeunit 50001 "AMG_Events"
     begin
         SalesLine2.SetRange("Tax Area Code");
     end;
-    //Record 37 //todo verifier line 3868
+    //Record 37 //TODO verifier line 3868
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnBeforeAddItems', '', false, false)]
     local procedure OnBeforeAddItems(var SalesLine: Record "Sales Line"; SelectionFilter: Text; var IsHandled: Boolean)
     var
@@ -756,8 +756,8 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeAddSpecialOrderToAddress', '', false, false)]
     local procedure OnBeforeAddSpecialOrderToAddress(var PurchaseHeader: Record "Purchase Header"; var SalesHeader: Record "Sales Header"; var IsHandled: Boolean; ShowError: Boolean)
     var
-        PurchLine3: Record 39;
-        LocationCode: Record 14;
+        PurchLine3: Record "Purchase Line";
+        LocationCode: Record Location;
         Text052: Label 'The %1 field on the purchase order %2 must be the same as on sales order %3.';
     begin
         if ShowError then begin
@@ -802,7 +802,7 @@ codeunit 50001 "AMG_Events"
               ReportSelections.Usage::"P.Order", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
               PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."))
         else
-            //todo type spe
+            //TODO type spe
             // if Selected = 2 Then
             //     DocumentSendingProfile.SendVendorRecords(
             //       ReportSelections.Usage::"P.OrderVAT", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
@@ -824,7 +824,7 @@ codeunit 50001 "AMG_Events"
             DocumentSendingProfile.TrySendToPrinterVendor(
               DummyReportSelections.Usage::"P.Order", PurchaseHeader, PurchaseHeader.FieldNo("Buy-from Vendor No."), ShowRequestForm)
         else
-            //todo type spe
+            //TODO type spe
             // if Selected = 2 Then
             //     DocumentSendingProfile.TrySendToPrinterVendor(
             //      DummyReportSelections.Usage::"P.OrderVAT",
@@ -863,7 +863,7 @@ codeunit 50001 "AMG_Events"
     begin
         Item.TestField(Blocked, false);
         Item.TestField("Gen. Prod. Posting Group");
-        if Item."Purchasing Blocked" then//todo verifier line 3181
+        if Item."Purchasing Blocked" then//TODO verifier line 3181
             // if PurchaseLine.IsCreditDocType() then
             //     PurchaseLine.SendBlockedItemNotification()
             // else
@@ -890,7 +890,7 @@ codeunit 50001 "AMG_Events"
         Text038: Label 'cannot be less than %1.';
         Text039: Label 'cannot be more than %1.';
         Text043: Label 'must be positive when %1 is not 0.';
-        PrePaymentLineAmountEntered: Boolean; //todo verifier 
+        PrePaymentLineAmountEntered: Boolean; //TODO verifier 
         CannotChangePrepaidServiceChargeErr: Label 'You cannot change the line because it will affect service charges that are already invoiced as part of a prepayment.';
     begin
         if PurchaseLine.Type = PurchaseLine.Type::" " then
@@ -960,7 +960,7 @@ codeunit 50001 "AMG_Events"
     begin
         PurchaseLine2.SetRange("Tax Area Code");
     end;
-    //todo verifier line 3758
+    //TODO verifier line 3758
     //Record 39 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnBeforeAddItems', '', false, false)]
     local procedure OnBeforeAddItemsPL(var PurchaseLine: Record "Purchase Line"; SelectionFilter: Text; var IsHandled: Boolean)
@@ -1026,7 +1026,7 @@ codeunit 50001 "AMG_Events"
                 exit;
             end;
         end;
-        //todo check i change GetCustEmailAddress by GetEmailAddressForCust
+        //TODO check i change GetCustEmailAddress by GetEmailAddressForCust
         // r‚cup‚ration de l'adresse mail du contact indiqu‚ dans l'entˆte du document CV/Devis, CA, FV
         GRecSalesHeader.RESET();
         GRecSalesHeader.SETRANGE("No.", DocumentNo);
@@ -1074,7 +1074,7 @@ codeunit 50001 "AMG_Events"
         if LDelphiReportId = '1304' then
             LDelphiText := REPORT.RUNREQUESTPAGE(ReportID);
     end;
-    //todo verify modif for quantities to skip standard code 1461....
+    //TODO verify modif for quantities to skip standard code 1461....
     //Record 83 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCalcBaseQty', '', false, false)]
     local procedure OnAfterCalcBaseQty(var ItemJournalLine: Record "Item Journal Line"; xItemJournalLine: Record "Item Journal Line"; FromFieldName: Text; var Result: Decimal)
@@ -1117,7 +1117,7 @@ codeunit 50001 "AMG_Events"
                 IsHandled := true;
                 exit;
             end;
-        //todo check return
+        //TODO check return
         //Result := true;
         IsHandled := true;
     end;
@@ -1132,7 +1132,7 @@ codeunit 50001 "AMG_Events"
                 SalesLine.Type := SalesLine.Type::Item;
         IsHandled := true;
     end;
-    //todo line 1733
+    //TODO line 1733
     //Page 46
     [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnBeforeDeltaUpdateTotals', '', false, false)]
     local procedure OnBeforeDeltaUpdateTotals(var SalesLine: Record "Sales Line"; var IsHandled: Boolean; xSalesLine: Record "Sales Line"; SuppressTotals: Boolean)
@@ -1195,7 +1195,7 @@ codeunit 50001 "AMG_Events"
     var
         AMGFunctions: codeunit "AMG_Functions";
     begin
-        //todo verifier line 1331
+        //TODO verifier line 1331
         Item.Validate("Last Direct Cost", LastDirectCost);
         AMGFunctions.SetProperties(false);
     end;
@@ -1216,7 +1216,7 @@ codeunit 50001 "AMG_Events"
         if RaiseError then
             Error(Text025);
     end;
-    //Codeunit 22 //todo verfier !!!!!!!!!!!!!!!!!!!!!
+    //Codeunit 22 //TODO verfier !!!!!!!!!!!!!!!!!!!!!
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeSetOrderAdjmtProperties', '', false, false)]
     local procedure OnBeforeSetOrderAdjmtProperties(ItemLedgEntryType: Option; OrderType: Option; OrderNo: Code[20]; OrderLineNo: Integer; OriginalPostingDate: Date; ValuationDate: Date; var IsHandled: Boolean; ItemJnlLine: Record "Item Journal Line")
     var
@@ -1278,12 +1278,12 @@ codeunit 50001 "AMG_Events"
         ValuationDate: Date;
         AMGFunctions: Codeunit "AMG_Functions";
     begin
-        //todo var global line 4811
+        //TODO var global line 4811
         ValueEntry.SetFilter("Valuation Date", '');
         //ValuationDate := AMGFunctions.MaxConsumptionValuationDate(ItemLedgerEntry);
         ValueEntry.SetFilter("Valuation Date", '<%1', ValuationDate);
     end;
-    //todo codeunit 22 line 1215,1544,2247,2277,3082,3761,3980
+    //TODO codeunit 22 line 1215,1544,2247,2277,3082,3761,3980
     //Codeunit 83
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order (Yes/No)", 'OnBeforeShowCreatedOrder', '', false, false)]
     local procedure OnBeforeShowCreatedOrder(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
@@ -1299,7 +1299,7 @@ codeunit 50001 "AMG_Events"
         SalesOrder: Page "Sales Order";
         OpenPage: Boolean;
         OpenNewInvoiceQst: Label 'The quote has been converted to order %1. Do you want to open the new order?', Comment = '%1 = No. of the new sales order document.';
-        LRecHisto: Record 50000;
+        LRecHisto: Record "Sales Archive";
     begin
         if GuiAllowed() then
             if OfficeMgt.AttachAvailable() then
@@ -1349,7 +1349,7 @@ codeunit 50001 "AMG_Events"
                 ReportSelections.PrintWithCheckForCust(DocumentPrint.GetSalesDocTypeUsage(SalesHeader), SalesHeader, SalesHeader.FIELDNO("Bill-to Customer No."));
         IsPrinted := true;
     end;
-    //Codeunit 703 //todo check
+    //Codeunit 703 //TODO check
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Find Record Management", 'OnAfterGetRecRefAndFieldsNoByType', '', false, false)]
     local procedure OnAfterGetRecRefAndFieldsNoByType(RecRef: RecordRef; Type: Option " ","G/L Account",Item,Resource,"Fixed Asset","Charge (Item)"; var SearchFieldNo: array[4] of Integer)
     var
@@ -1360,15 +1360,15 @@ codeunit 50001 "AMG_Events"
             SearchFieldNo[3] := Item.FIELDNO("No. 2");
         end;
     end;
-    //todo codeunit 260 line 363
-    //todo codeunit 703 line 118 not needed
+    //TODO codeunit 260 line 363
+    //TODO codeunit 703 line 118 not needed
     //Codeunit 5056
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CustCont-Update", 'OnAfterOnModify', '', false, false)]
     local procedure OnAfterOnModify(var Contact: Record Contact; var OldContact: Record Contact; var Customer: Record Customer)
     begin
         Contact.VALIDATE("Mobile Phone No.", Customer."Mobile Phone No.");
         Contact.Modify(true);
-        Customer.Get(Customer."No."); //todo check line 54
+        Customer.Get(Customer."No."); //TODO check line 54
     end;
     //Codeunit 5804
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeCheckUpdateLastDirectCost', '', false, false)]
@@ -1382,7 +1382,7 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeUpdateUnitCostSKU', '', false, false)]
     local procedure OnBeforeUpdateUnitCostSKU(Item: Record Item; var SKU: Record "Stockkeeping Unit"; LastDirectCost: Decimal; NewStdCost: Decimal; MatchSKU: Boolean; CalledByFieldNo: Integer; var UnitCostUpdated: Boolean; var CalledFromAdjustment: Boolean)
     begin
-        //todo line 171
+        //TODO line 171
     end;
     //Codeunit 5804
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"ItemCostManagement", 'OnBeforeCalcUnitCostFromAverageCost', '', false, false)]

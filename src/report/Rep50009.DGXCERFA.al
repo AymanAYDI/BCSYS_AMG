@@ -9,6 +9,7 @@ report 50009 "DGX CERFA"
 {
     RDLCLayout = './DGXCERFA.rdlc';
     DefaultLayout = RDLC;
+    ApplicationArea = All;
 
     dataset
     {
@@ -266,6 +267,8 @@ report 50009 "DGX CERFA"
                     field("DGX No."; "DGX Header"."DGX No.")
                     {
                         TableRelation = "DGX Header"."DGX No.";
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the DGX No. field.';
                     }
                 }
             }
@@ -299,7 +302,7 @@ report 50009 "DGX CERFA"
         FormatDocument: Codeunit "Format Document";
         DimSetEntry1: Record "Dimension Set Entry";
         Continue: Boolean;
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         MoreLines: Boolean;
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         CTxtAirport: Label 'ROISSY';

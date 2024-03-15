@@ -22,12 +22,14 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.Archive;
 using System.EMail;
 using Microsoft.Foundation.UOM;
+using Microsoft.CRM.Interaction;
 report 50007 "Edition Bon colisage"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './EditionBoncolisage.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -1201,23 +1203,25 @@ report 50007 "Edition Bon colisage"
         GTxtCompanyInfoPays: Text[50];
         GTxtDocumentNo: Text[50];
         GTxtNumTVAClient: Text[60];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         GTxtCompanyVAT_ICE: Text[80];
         GTxtTransporteur: Text[80];
         ReferenceText: Text[80];
-        CompanyAddr: array[8] of Text[100];
-        CustAddr: array[8] of Text[100];
-        GTxtColisREF: Text[100];
-        GTxtUnClasse: Text[100];
-        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text;
+        CustAddr: array[8] of Text;
+        GTxtColisREF: Text;
+        GTxtUnClasse: Text;
+        ShipToAddr: array[8] of Text;
         DimText: Text[120];
         DimText3: Text[120];
         GTxtPayementsTerm: Text[150];
         GTxtOrigineCE: Text[250];
 
     procedure InitLogInteraction()
+    var
+        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractTmplCode(5) <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
     end;
 
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean; NewShowCorrectionLines: Boolean; NewShowLotSN: Boolean; DisplayAsmInfo: Boolean)

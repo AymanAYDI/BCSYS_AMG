@@ -11,6 +11,7 @@ report 50017 "DGX CERFA RDLC"
 {
     RDLCLayout = './DGXCERFARDLC.rdlc';
     DefaultLayout = RDLC;
+    ApplicationArea = All;
 
     dataset
     {
@@ -88,6 +89,9 @@ report 50017 "DGX CERFA RDLC"
                     }
 
                     trigger OnAfterGetRecord()
+                    var
+                        Text01: Label '%1 - %2', Comment = '%1 = DimSetEntry1."Dimension Code",%2 = DimSetEntry1."Dimension Value Code"';
+                        Text02: Label '%1; %2 - %3', Comment = '%1 = DimText ,%2 = DimSetEntry1."Dimension Code",%3 = DimSetEntry1."Dimension Value Code';
                     begin
                         if Number = 1 then begin
                             if not DimSetEntry1.FINDSET() then
@@ -101,11 +105,11 @@ report 50017 "DGX CERFA RDLC"
                         repeat
                             OldDimText := DimText;
                             if DimText = '' then
-                                DimText := STRSUBSTNO('%1 - %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                             else
                                 DimText :=
                                   STRSUBSTNO(
-                                    '%1; %2 - %3', DimText,
+                                    Text02, DimText,
                                     DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                             if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                 DimText := OldDimText;
@@ -271,6 +275,8 @@ report 50017 "DGX CERFA RDLC"
                     field("No DGX"; "DGX Header"."DGX No.")
                     {
                         TableRelation = "DGX Header"."DGX No.";
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the DGX No. field.';
                     }
                 }
             }
@@ -314,7 +320,7 @@ report 50017 "DGX CERFA RDLC"
         GTxtPackingInstr: Text[20];
         CopyText: Text[30];
         GTxtSousClasse: Text[50];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         GTxtRefClient: Text[100];
         DimText: Text[120];
         DimText1: Text[120];

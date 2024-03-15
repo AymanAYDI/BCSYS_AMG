@@ -10,6 +10,7 @@ report 50008 "DGX IATA"
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
+    ApplicationArea = All;
 
     dataset
     {
@@ -245,7 +246,7 @@ report 50008 "DGX IATA"
         FormatDocument: Codeunit "Format Document";
         DimSetEntry1: Record "Dimension Set Entry";
         Continue: Boolean;
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         LinNo: Integer;
         CTxtAirport: Label 'ROISSY';

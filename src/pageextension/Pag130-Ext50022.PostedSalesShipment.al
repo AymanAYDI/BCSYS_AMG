@@ -1,6 +1,7 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
+using BCSYS_AMG.BCSYS_AMG;
 pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
 {
     PromotedActionCategories = 'New,Process,Report,Print/Send,Shipment';
@@ -31,12 +32,16 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
         {
             field("Your Reference"; Rec."Your Reference")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Your Reference field.';
             }
         }
         addafter("Shipment Method Code")
         {
             field("Compl. cond. livraison"; Rec."Compl. cond. livraison")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Additional terms of delivery field.';
             }
         }
         addafter("Shipment Date")
@@ -45,6 +50,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
             {
                 SubPageLink = "Shipping No." = field("No.");
                 UpdatePropagation = Both;
+                ApplicationArea = All;
             }
         }
         // modify(SalesShipmLines)
@@ -81,6 +87,8 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 PromotedIsBig = true;
                 RunObject = Page "Liste DGX";
                 RunPageLink = "Delivery slip no." = field("No.");
+                ApplicationArea = All;
+                ToolTip = 'Executes the DGX action.';
             }
             action("Etiquette colisage")
             {
@@ -89,12 +97,13 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ApplicationArea = All;
+                ToolTip = 'Executes the Etiquette colisage action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 23.04.2021
                     Rec.SETFILTER("No.", Rec."No.");
-                    REPORT.RUNMODAL(50016, true, false, Rec)
+                    REPORT.RUNMODAL(Report::"Etiquette Packaging", true, false, Rec)
                 end;
             }
         }

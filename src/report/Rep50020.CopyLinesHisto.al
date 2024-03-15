@@ -8,6 +8,7 @@ report 50020 CopyLinesHisto
 {
     ProcessingOnly = true;
     UseRequestPage = false;
+    ApplicationArea = All;
 
     dataset
     {
@@ -42,14 +43,11 @@ report 50020 CopyLinesHisto
 
     var
         GRecHisto: Record "Sales Archive";
-        GRecSalesLine: Record "Sales Line";
 
     local procedure DelphiCopySalesLinesHisto()
     var
         LRecHisto: Record "Sales Archive";
         LRecSalesHeader: Record "Sales Header";
-        LRecSalesInvoiceHeader: Record "Sales Invoice Header";
-        LRecSalesInvoiceLines: Record "Sales Invoice Line";
         LRecSalesLine: Record "Sales Line";
     begin
         //DEV MLA
@@ -58,7 +56,7 @@ report 50020 CopyLinesHisto
         LRecSalesLine.SETFILTER(Type, 'Item');
         LRecSalesLine.SETFILTER(Quantity, '>0');
         LRecSalesLine.SETFILTER("Document Type", 'Quote');
-        if LRecSalesLine.FINDSET(false, false) then
+        if LRecSalesLine.FindSet() then
             repeat
                 if LRecSalesHeader.GET(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
                 CLEAR(LRecHisto);
@@ -90,7 +88,7 @@ report 50020 CopyLinesHisto
         LRecSalesLine.SETFILTER(Type, 'Item');
         LRecSalesLine.SETFILTER(Quantity, '>0');
         LRecSalesLine.SETFILTER("Document Type", 'Order');
-        if LRecSalesLine.FINDSET(false, false) then
+        if LRecSalesLine.FindSet() then
             repeat
                 if LRecSalesHeader.GET(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
                 CLEAR(LRecHisto);
@@ -129,13 +127,12 @@ report 50020 CopyLinesHisto
         LRecHisto: Record "Sales Archive";
         LRecSalesInvoiceHeader: Record "Sales Invoice Header";
         LRecSalesInvoiceLine: Record "Sales Invoice Line";
-        LRecSalesLine: Record "Sales Invoice Line";
     begin
 
         LRecSalesInvoiceLine.RESET();
         LRecSalesInvoiceLine.SETFILTER(Type, 'Item');
         LRecSalesInvoiceLine.SETFILTER(Quantity, '>0');
-        if LRecSalesInvoiceLine.FINDSET(false, false) then
+        if LRecSalesInvoiceLine.FindSet() then
             repeat
                 if LRecSalesInvoiceHeader.GET(LRecSalesInvoiceLine."Document No.") then;
                 CLEAR(LRecHisto);
@@ -175,14 +172,14 @@ report 50020 CopyLinesHisto
     begin
         LRecHisto.RESET();
         LRecHisto.SETFILTER(Archive, 'TRUE');
-        if LRecHisto.FINDSET(false, false) then
+        if LRecHisto.FindSet() then
             repeat
                 if LRecHisto.FINDFIRST() then
                     LRecHisto.RESET();
                 LRecHisto.SETFILTER(Archive, 'TRUE');
 
                 LRecHisto.DELETEALL();
-            until LRecHisto.NEXT() = 0;
+            until LRecHisto.Next() = 0;
     end;
 
     local procedure DelphiInsertArchiveLineHisto()
@@ -198,7 +195,7 @@ report 50020 CopyLinesHisto
         LRecSalesLineArchive.SETFILTER(Type, 'Item');
         LRecSalesLineArchive.SETFILTER(Quantity, '>0');
         LRecSalesLineArchive.SETFILTER("Document Type", 'Quote');
-        if LRecSalesLineArchive.FINDSET(false, false) then
+        if LRecSalesLineArchive.FindSet() then
             repeat
                 if LRecSalesHeaderArchive.GET(LRecSalesLineArchive."Document Type", LRecSalesLineArchive."Document No.", LRecSalesLineArchive."Doc. No. Occurrence", LRecSalesLineArchive."Version No.") then;
                 LRecHisto.RESET();
@@ -223,10 +220,6 @@ report 50020 CopyLinesHisto
                     LRecHisto.INSERT(false);
                 end;
             until LRecSalesLineArchive.NEXT() = 0;
-
-
-
-
         //COMMANDE VENTE ARCHVE
         LRecSalesLineArchive.RESET();
         LRecSalesLineArchive.SETCURRENTKEY("Document Type", "Document No.", "Version No.", "Doc. No. Occurrence", "Line No.");
@@ -234,7 +227,7 @@ report 50020 CopyLinesHisto
         LRecSalesLineArchive.SETFILTER(Type, 'Item');
         LRecSalesLineArchive.SETFILTER(Quantity, '>0');
         LRecSalesLineArchive.SETFILTER("Document Type", 'Order');
-        if LRecSalesLineArchive.FINDSET(false, false) then
+        if LRecSalesLineArchive.FindSet() then
             repeat
                 if LRecSalesHeaderArchive.GET(LRecSalesLineArchive."Document Type", LRecSalesLineArchive."Document No.", LRecSalesLineArchive."Doc. No. Occurrence", LRecSalesLineArchive."Version No.") then;
                 CLEAR(LRecHisto);

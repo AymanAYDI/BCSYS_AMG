@@ -10,14 +10,14 @@ tableextension 50009 PurchaseHeader extends "Purchase Header" //38
         modify("Pay-to Name")
         {
             TableRelation = Vendor;
-            //todo Onlookup
+            //TODO Onlookup
         }
-        //todo Onlookup "Pay-to Contact"
-        //todo Onlookup Buy-from Vendor Name
-        //todo Onlookup Buy-from Contact
+        //TODO Onlookup "Pay-to Contact"
+        //TODO Onlookup Buy-from Vendor Name
+        //TODO Onlookup Buy-from Contact
         modify("On Hold")
         {
-            Caption = 'On Hold';
+            Caption = 'On Hold', Comment = 'FRA="En attente"';
         }
         modify("Buy-from Vendor Name")
         {
@@ -53,9 +53,9 @@ tableextension 50009 PurchaseHeader extends "Purchase Header" //38
                 PurchaseLine."Prepmt. Line Amount" := PurchaseLine."Line Amount" - PurchaseLine."Inv. Discount Amount";
         end;
     end;
-    //todo Onvalidate Vendor Shipment No. line 855
-    //todo i can't find solution for prod InitRecord
-    //todo i can't find solution for line 2394
-    //todo i can't find solution for line 2569
+    //TODO Onvalidate Vendor Shipment No. line 855
+    //TODO i can't find solution for prod InitRecord
+    //TODO i can't find solution for line 2394
+    //TODO i can't find solution for line 2569
 }
 

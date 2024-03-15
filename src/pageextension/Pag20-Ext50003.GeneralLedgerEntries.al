@@ -8,8 +8,10 @@ pageextension 50003 GeneralLedgerEntries extends "General Ledger Entries" //20
     {
         addafter("Description")
         {
-            field("Description longue"; Rec."Description longue")
+            field("Long description"; Rec."Long description")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Description longue field.';
             }
         }
     }

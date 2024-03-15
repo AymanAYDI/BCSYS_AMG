@@ -8,6 +8,7 @@ tableextension 50000 ShipmentMethod extends "Shipment Method" //10
         field(50000; Incoterms; Boolean)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Incoterms';
         }
     }
 }

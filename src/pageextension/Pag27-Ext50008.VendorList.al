@@ -10,7 +10,7 @@ pageextension 50008 "VendorList" extends "Vendor List" //27
     }
     actions
     {
-        //todo check modif line 158
+        //TODO check modif line 158
         modify("Item Refe&rences")
         {
             Promoted = true;
@@ -30,10 +30,10 @@ pageextension 50008 "VendorList" extends "Vendor List" //27
                 ToolTip = 'View a detail trial balance for selected vendors.';
                 trigger OnAction()
                 var
-                    LRecVendor: Record 23;
+                    LRecVendor: Record Vendor;
                 begin
                     LRecVendor.SETRANGE("No.", Rec."No.");
-                    //todo report spe
+                    //TODO report spe
                     //  REPORT.RUNMODAL(REPORT::"Vendor Detail Trial Balance", true, true, LRecVendor);
                 end;
             }

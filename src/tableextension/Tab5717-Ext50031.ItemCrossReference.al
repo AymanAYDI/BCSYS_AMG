@@ -1,8 +1,10 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item;
 tableextension 50031 ItemCrossReference extends "Item Cross Reference" //5717
 {
+    //TODO check 
     fields
     {
         modify("Item No.")
@@ -35,9 +37,9 @@ tableextension 50031 ItemCrossReference extends "Item Cross Reference" //5717
         }
     }
 
-    local procedure FRempliDescriptionArt(var Rec: Record 5717)
+    local procedure FRempliDescriptionArt(var Rec: Record "Item Cross Reference")
     var
-        LRecItem: Record 27;
+        LRecItem: Record Item;
     begin
         //DEB DELPHI MHR 18/01/2019
         if LRecItem.Get(Rec."Item No.") then begin

@@ -7,34 +7,34 @@ tableextension 50030 ItemSubstitution extends "Item Substitution" //5715
 {
     fields
     {
-        field(50000; "Dernier Prix achat"; Decimal)
+        field(50000; "Last Purchase Price"; Decimal)
         {
             CalcFormula = lookup(Item."Last Direct Cost" where("No." = field("Substitute No.")));
-            Caption = 'Dernier Prix achat';
+            Caption = 'Last Purchase Price', Comment = 'FRA="Dernier Prix achat"';
             FieldClass = FlowField;
         }
-        field(50010; Fournisseur; Code[20])
+        field(50010; Supplier; Code[20])
         {
             CalcFormula = lookup(Item."Vendor No." where("No." = field("Substitute No.")));
-            Caption = 'Fournisseur';
+            Caption = 'Supplier', Comment = 'FRA="Fournisseur';
             FieldClass = FlowField;
         }
-        field(50020; "Nom Fournisseur"; Text[100])
+        field(50020; "Supplier Name"; Text[100])
         {
-            CalcFormula = lookup(Vendor.Name where("No." = field(Fournisseur)));
-            Caption = 'Nom Fournisseur';
+            CalcFormula = lookup(Vendor.Name where("No." = field(Supplier)));
+            Caption = 'Supplier Name', Comment = 'FRA="Nom Fournisseur"';
             FieldClass = FlowField;
         }
-        field(50030; "Unité de base"; Code[10])
+        field(50030; "Basic unit"; Code[10])
         {
             CalcFormula = lookup(Item."Base Unit of Measure" where("No." = field("Substitute No.")));
-            Caption = 'Unité de Base';
+            Caption = 'Basic unit', Comment = 'FRA="Unité de Base"';
             FieldClass = FlowField;
         }
-        field(50040; "Unité Achat"; Code[10])
+        field(50040; "Purchasing unit"; Code[10])
         {
             CalcFormula = lookup(Item."Purch. Unit of Measure" where("No." = field("Substitute No.")));
-            Caption = 'Unité Achat';
+            Caption = 'Purchasing unit', Comment = 'FRA="Unité Achat"';
             FieldClass = FlowField;
         }
     }

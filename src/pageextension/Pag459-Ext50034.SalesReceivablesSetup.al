@@ -6,12 +6,12 @@ pageextension 50034 "SalesReceivablesSetup" extends "Sales & Receivables Setup" 
 {
     layout
     {
-        //todo not migrated yet
+        //TODO not migrated yet
         addafter(General)
         {
             group(CARBOGLACE)
             {
-                // field("Code catégorie Carbo"; rec."Code catégorie Carbo")
+                // field("Category Code Carbo"; rec."Category Code Carbo")
                 // {
 
                 // }
@@ -19,11 +19,11 @@ pageextension 50034 "SalesReceivablesSetup" extends "Sales & Receivables Setup" 
         }
         addafter("Direct Debit Mandate Nos.")
         {
-            // field("Souche N° colis"; rec."Souche N° colis")
+            // field("Package Serie No."; rec."Package Serie No.")
             // {
             //     Caption = 'N° colis';
             // }
-            // field("Souche N° DGX"; rec."Souche N° DGX")
+            // field("DGX Serie No."; rec."DGX Serie No.")
             // {
             //     Caption = 'N° DGX';
             // }

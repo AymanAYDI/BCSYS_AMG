@@ -7,13 +7,14 @@ tableextension 50019 SalesInvoiceHeader extends "Sales Invoice Header" //112
     {
         modify("On Hold")
         {
-            Caption = 'On Hold';
+            Caption = 'On Hold', Comment = 'FRA="En attente"';
         }
         field(50000; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Compl. cond. livraison';
         }
-        //todo delete field Payment Reference ,Reversed
+        //TODO delete field Payment Reference ,Reversed
     }
 }
 

@@ -3,7 +3,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Foundation.Reporting;
 tableextension 50013 ReportSelections extends "Report Selections" //77
 {
-    //todo GetEmailBodyInPdf not used
+    //TODO GetEmailBodyInPdf not used
     // procedure GetEmailBodyInPdf(var ServerEmailBodyFilePath: Text[250]; ReportUsage: Integer; RecordVariant: Variant; CustNo: Code[20]; var CustEmailAddress: Text[250]): Boolean
     // var
     //     TempBodyReportSelections: Record "77" temporary;
@@ -45,9 +45,9 @@ tableextension 50013 ReportSelections extends "Report Selections" //77
 
 
 
-    //todo check prod GetHtmlReport 
-    //todo prod SendEmailToCust
-    //todo prod SendEmailTovendor
-    //todo prod  SendEmailToVendorDirectly
+    //TODO check prod GetHtmlReport 
+    //TODO prod SendEmailToCust
+    //TODO prod SendEmailTovendor
+    //TODO prod  SendEmailToVendorDirectly
 }
 

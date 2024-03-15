@@ -28,6 +28,7 @@ report 50004 "Standard Purchase - Order W"
     EnableHyperlinks = true;
     PreviewMode = PrintLayout;
     WordMergeDataItem = "Purchase Header";
+    ApplicationArea = All;
 
     dataset
     {

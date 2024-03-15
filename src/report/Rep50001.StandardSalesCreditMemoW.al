@@ -22,6 +22,7 @@ using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
 using Microsoft.Foundation.UOM;
 using Microsoft.CRM.Contact;
+using Microsoft.CRM.Interaction;
 report 50001 "Standard Sales - Credit Memo W"
 {
     RDLCLayout = './StandardSalesCreditMemoW.rdlc';
@@ -31,6 +32,7 @@ report 50001 "Standard Sales - Credit Memo W"
     Permissions = TableData "Sales Shipment Buffer" = rimd;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
+    ApplicationArea = All;
 
     dataset
     {
@@ -892,6 +894,8 @@ report 50001 "Standard Sales - Credit Memo W"
                     field(DisplayAsmInformation; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
                     field(DisplayShipmentInformation; DisplayShipmentInformation)
                     {
@@ -1032,8 +1036,10 @@ report 50001 "Standard Sales - Credit Memo W"
         TotalText: Text[50];
 
     local procedure InitLogInteraction()
+    var
+        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractTmplCode(6) <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Cr. Memo") <> '';
     end;
 
     local procedure FindPostedShipmentDate(): Date

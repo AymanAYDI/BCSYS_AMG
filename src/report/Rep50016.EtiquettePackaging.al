@@ -5,12 +5,32 @@ using System.Utilities;
 using BCSYS.AMGALLOIS.Basic;
 using Microsoft.Sales.Customer;
 using System.Globalization;
+using Microsoft.Inventory.Item;
+using Microsoft.CRM.Team;
+using Microsoft.Sales.Document;
+using Microsoft.Foundation.Company;
+using Microsoft.Sales.Setup;
+using Microsoft.Finance.Dimension;
+using Microsoft.Assembly.History;
+using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Reports;
+using Microsoft.Foundation.Shipping;
+using Microsoft.Sales.Archive;
+using Microsoft.Foundation.Address;
+using Microsoft.Utilities;
+using Microsoft.CRM.Segment;
+using Microsoft.Foundation.PaymentTerms;
+using System.EMail;
+using Microsoft.Foundation.UOM;
+using Microsoft.CRM.Interaction;
 report 50016 "Etiquette Packaging"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './EtiquetteColisage.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Sales Shipment Header"; "Sales Shipment Header")
@@ -472,7 +492,7 @@ report 50016 "Etiquette Packaging"
 
                             trigger OnAfterGetRecord()
                             var
-                                ItemTranslation: Record 30;
+                                ItemTranslation: Record "Item Translation";
                             begin
                                 if Number = 1 then
                                     PostedAsmLine.FINDSET()
@@ -894,7 +914,7 @@ report 50016 "Etiquette Packaging"
 
             trigger OnAfterGetRecord()
             var
-                LRecPays: Record 9;
+                LRecPays: Record "Country/Region";
             begin
                 CurrReport.LANGUAGE := CDULanguage.GetLanguageID("Language Code");
 
@@ -1025,43 +1045,40 @@ report 50016 "Etiquette Packaging"
     end;
 
     var
-        SalesPurchPerson: Record 13;
-        GRecCust2: Record 18;
-        GRecSalesLine: Record 37;
-        CompanyInfo: Record 79;
-        CompanyInfo1: Record 79;
-        CompanyInfo2: Record 79;
-        CompanyInfo3: Record 79;
-        SalesSetup: Record 311;
-        DimSetEntry1: Record 480;
-        DimSetEntry2: Record 480;
-        TrackingSpecBuffer: Record 336 temporary;
-        PostedAsmHeader: Record 910;
-        PostedAsmLine: Record 911;
-        RespCenter: Record 5714;
-        ItemTrackingAppendix: report 6521;
-        ShipmentMethod: Record 10;
-        GRecSalesShipmentLine: Record 111;
-        GrecTransporteur: Record 291;
-        GrecTraductionShipMethode: Record 463;
-        DimSetEntry3: Record 480;
-        GRecSalesHeaderArchive: Record 5107;
-        GRecSalesLineArchive: Record 5108;
-        GRecItemEntryRelation: Record 6507;
-        LRecColis: Record 50009;
-        FormatAddr: Codeunit 365;
-        FormatDocument: Codeunit 368;
-        SegManagement: Codeunit 5051;
-        ItemTrackingDocMgt: Codeunit 6503;
+        SalesPurchPerson: Record "Salesperson/Purchaser";
+        GRecCust2: Record Customer;
+        GRecSalesLine: Record "Sales Line";
+        CompanyInfo: Record "Company Information";
+        CompanyInfo1: Record "Company Information";
+        CompanyInfo2: Record "Company Information";
+        CompanyInfo3: Record "Company Information";
+        SalesSetup: Record "Sales & Receivables Setup";
+        DimSetEntry1: Record "Dimension Set Entry";
+        DimSetEntry2: Record "Dimension Set Entry";
+        TrackingSpecBuffer: Record "Tracking Specification" temporary;
+        PostedAsmHeader: Record "Posted Assembly Header";
+        PostedAsmLine: Record "Posted Assembly Line";
+        RespCenter: Record "Responsibility Center";
+        ItemTrackingAppendix: report "Item Tracking Appendix";
+        ShipmentMethod: Record "Shipment Method";
+        GRecSalesShipmentLine: Record "Sales Shipment Line";
+        GrecTransporteur: Record "Shipping Agent";
+        DimSetEntry3: Record "Dimension Set Entry";
+        GRecSalesHeaderArchive: Record "Sales Header Archive";
+        GRecSalesLineArchive: Record "Sales Line Archive";
+        LRecColis: Record Package;
+        FormatAddr: Codeunit "Format Address";
+        FormatDocument: Codeunit "Format Document";
+        SegManagement: Codeunit SegManagement;
+        ItemTrackingDocMgt: Codeunit "Item Tracking Doc. Management";
         Continue: Boolean;
         DisplayAssemblyInformation: Boolean;
         LogInteraction: Boolean;
         AsmHeaderExists: Boolean;
-        GRecCountry: Record 9;
-        PaymentTerms: Record 3;
+        GRecCountry: Record "Country/Region";
+        PaymentTerms: Record "Payment Terms";
 
         CDULanguage: codeunit Language;
-        [InDataSet]
 
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
@@ -1091,28 +1108,15 @@ report 50016 "Etiquette Packaging"
         GiroNoCaptionLbl: Label 'Giro No.';
         GTxtCompanyBankBranch: Label 'Bk Code';
         GTxtCompanyBankIBAN: Label 'IBAN';
-        GTxtCompanyBankNr: Label 'Bk Num.';
         GTxtCompanyBankSWIFT: Label 'SWIFT';
-        GTxtCompanyemail: Label 'E-Mail';
         GTxtCompanyFaxNo: Label 'Fax.';
-        GTxtCompanyGesch: Label 'Director';
-        GTxtCompanyHomepage: Label 'Website';
-        GTxtCompanyPhoneNo: Label 'Phone';
-        GTxtCompanySalespers: Label 'Agent';
-        GTxtCompanySitz: Label 'H. Q.';
-        GTxtCompanyTrib: Label 'Trial court';
         GTxtCompanyVAT: Label 'VAT Id. Num.';
-        GTxtCustomerNum: Label 'Customer num.';
-        GTxtItemNo_Line_Lbl: Label 'Item No.';
         GTxtItemNoLbl: Label 'N° article';
         GTxtQteCommandeeLbl: Label 'Qté commandée';
         GTxtQteExpedieeLbl: Label 'Qté expédiée';
         GTxtQteRestante: Label 'Qté restante';
-        GTxtQuantity_Line_Lbl: Label 'Qty';
         GTxtResteALivrerLbl: Label 'Reste à livrer';
         GTxtSalesShptCopyText: Label 'Shipment';
-        GTxtUnitOfMeasure_Lbl: Label 'Unit';
-        GTxtUnitPrice_Lbl: Label 'Unit Price';
         GTxtYourRef_Lbl: Label 'Your Reference';
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         HomePageCaptionLbl: Label 'Home Page';
@@ -1128,37 +1132,36 @@ report 50016 "Etiquette Packaging"
         ShipmentDateCaptionLbl: Label 'Shipment Date';
         ShipmentNoCaptionLbl: Label 'Shipment No.';
         ShptMethodDescLbl: Label 'Shipment Method';
-        Text002: Label 'Sales - Shipment %1', Comment = '%1 = Document No.';
         TextPackingDetaile: Label 'Packing details';
         TextPoids: Label 'Gross Weight';
-        TextTransporteur: Label 'Transporteur';
         VATRegNoCaptionLbl: Label 'VAT Reg. No.';
         GTxtItemNo: Text[20];
         GTxtNomenclatureArticle: Text[20];
-        SalesPersonText: Text[20];
+        SalesPersonText: Text[50];
         CopyText: Text[30];
         GTxtColisCaption: Text[50];
         GTxtCompanyInfoPays: Text[50];
         GTxtDocumentNo: Text[50];
         GTxtNumTVAClient: Text[60];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         GTxtCompanyVAT_ICE: Text[80];
         GTxtTransporteur: Text[80];
         ReferenceText: Text[80];
         CompanyAddr: array[8] of Text[100];
         CustAddr: array[8] of Text[100];
         GTxtColisREF: Text[100];
-        ShipToAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text;
         DimText: Text[120];
         DimText3: Text[120];
-        GTxtCondLivraisonEtendues: Text[150];
+        GTxtCondLivraisonEtendues: Text;
         GTxtPayementsTerm: Text[150];
-        GTxtShipmentMethodedescription: Text[150];
         GTxtOrigineCE: Text[250];
 
     procedure InitLogInteraction()
+    var
+        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractTmplCode(5) <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
     end;
 
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean; NewShowCorrectionLines: Boolean; NewShowLotSN: Boolean; DisplayAsmInfo: Boolean)
@@ -1173,19 +1176,19 @@ report 50016 "Etiquette Packaging"
 
     local procedure IsReportInPreviewMode(): Boolean
     var
-        MailManagement: codeunit 9520;
+        MailManagement: codeunit "Mail Management";
     begin
         exit(CurrReport.PREVIEW or MailManagement.IsHandlingGetEmailBody());
     end;
 
-    local procedure FormatAddressFields(SalesShipmentHeader: Record 110)
+    local procedure FormatAddressFields(SalesShipmentHeader: Record "Sales Shipment Header")
     begin
         FormatAddr.GetCompanyAddr(SalesShipmentHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
         FormatAddr.SalesShptShipTo(ShipToAddr, SalesShipmentHeader);
         ShowCustAddr := FormatAddr.SalesShptBillTo(CustAddr, ShipToAddr, SalesShipmentHeader);
     end;
 
-    local procedure FormatDocumentFields(SalesShipmentHeader: Record 110)
+    local procedure FormatDocumentFields(SalesShipmentHeader: Record "Sales Shipment Header")
     begin
         with SalesShipmentHeader do begin
             FormatDocument.SetSalesPerson(SalesPurchPerson, "Salesperson Code", SalesPersonText);
@@ -1195,7 +1198,7 @@ report 50016 "Etiquette Packaging"
 
     local procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text
     var
-        UnitOfMeasure: Record 204;
+        UnitOfMeasure: Record "Unit of Measure";
     begin
         if not UnitOfMeasure.GET(UOMCode) then
             exit(UOMCode);
@@ -1213,7 +1216,7 @@ report 50016 "Etiquette Packaging"
     end;
 
     [IntegrationEvent(true, true)]
-    local procedure OnAfterPostDataItem(var SalesShipmentHeader: Record 110)
+    local procedure OnAfterPostDataItem(var SalesShipmentHeader: Record "Sales Shipment Header")
     begin
     end;
 

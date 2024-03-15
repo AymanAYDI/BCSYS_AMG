@@ -18,7 +18,7 @@ tableextension 50004 Vendor extends Vendor //23
         }
         modify("E-Mail")
         {
-            //todo chech line 750
+            //TODO check line 750
             trigger OnAfterValidate()
             var
                 MailManagement: Codeunit "Mail Management";
@@ -28,7 +28,7 @@ tableextension 50004 Vendor extends Vendor //23
         }
         modify("Primary Contact No.")
         {
-            //todo check line 1015
+            //TODO check line 1015
             trigger OnAfterValidate()
             var
                 Cont: Record Contact;
@@ -40,14 +40,15 @@ tableextension 50004 Vendor extends Vendor //23
                 end;
             end;
         }
-        field(50000; "Nb écritures non lettrées"; Integer)
+        field(50000; "No. of unlettered entries"; Integer)
         {
             CalcFormula = count("Vendor Ledger Entry" where("Vendor No." = field("No."),
                                                              Open = const(true)));
             FieldClass = FlowField;
+            Caption = 'No. of unlettered entries', Comment = 'FRA="Nb écritures non lettrées"';
         }
     }
-    //todo verifier Ondelete
-    //todo i can't find solution for OnValidate Phone No. line 236
+    //TODO verifier Ondelete
+    //TODO i can't find solution for OnValidate Phone No. line 236
 }
 

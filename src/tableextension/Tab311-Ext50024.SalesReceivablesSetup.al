@@ -19,22 +19,23 @@ tableextension 50024 SalesReceivablesSetup extends "Sales & Receivables Setup" /
         {
             Caption = 'Freight G/L Acc. No.';
         }
-        field(50000; "Code catégorie Carbo"; Code[20])
+        field(50000; "Category Code Carbo"; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Item Category".Code;
+            Caption = 'Category Code Carbo', Comment = 'FRA="Code catégorie Carbo"';
         }
-        field(50010; "Souche N° colis"; Code[20])
+        field(50010; "Package Serie No."; Code[20])
         {
             DataClassification = ToBeClassified;
-            Description = 'AMG.COLIS';
             TableRelation = "No. Series".Code;
+            Caption = 'Package Serie No.', Comment = 'FRA="Souche N° colis"';
         }
-        field(50020; "Souche N° DGX"; Code[20])
+        field(50020; "DGX Serie No."; Code[20])
         {
             DataClassification = ToBeClassified;
-            Description = 'AMG.DGX';
             TableRelation = "No. Series".Code;
+            Caption = 'DGX Serie No.', Comment = 'FRA="Souche N° DGX"';
         }
     }
 }

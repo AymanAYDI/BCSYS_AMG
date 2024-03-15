@@ -3,9 +3,10 @@ namespace BCSYS.AMGALLOIS.Basic;
 using System.Reflection;
 page 50060 "Liste des Obkets"
 {
+    ApplicationArea = All;
     // PageType = List;
     // SourceTable = Object;
-    // //todo table object has scope onprem
+    // //TODO table object has scope onprem
     // layout
     // {
     //     area(content)

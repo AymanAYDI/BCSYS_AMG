@@ -11,9 +11,11 @@ pageextension 50031 ApplyVendorEntries extends "Apply Vendor Entries" //233
             field("Document Date"; Rec."Document Date")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Document Date field.';
             }
         }
     }
-    //todo i can't find solution line 58,914
+    //TODO i can't find solution line 58,914
 }
 

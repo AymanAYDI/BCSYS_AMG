@@ -17,6 +17,7 @@ tableextension 50026 ItemTemplate extends "Item Template" //1301
             TableRelation = Vendor."No.";
             DataClassification = ToBeClassified;
             Description = 'Spe AMG';
+            Caption = 'Fournisseur';
         } //TODO
     }
 

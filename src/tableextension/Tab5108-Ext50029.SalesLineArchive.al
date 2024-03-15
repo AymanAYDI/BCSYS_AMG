@@ -13,7 +13,7 @@ tableextension 50029 SalesLineArchive extends "Sales Line Archive" //5108
         {
             Caption = 'Blanket Order Line No.';
         }
-        //todo Requested Delivery Date AccessByPermission
+        //TODO Requested Delivery Date AccessByPermission
     }
     keys
     {

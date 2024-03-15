@@ -10,11 +10,13 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
         {
             field("Special Order Sales No."; rec."Prepmt. VAT Amount Inv. (LCY)")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Prepmt. VAT Amount Inv. (LCY) field.';
             }
             field("Special Order Sales Line No."; rec."Special Order Sales Line No.")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special Order Sales Line No. field.';
             }
         }
         modify("Location Code")
@@ -58,6 +60,8 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 PromotedIsBig = true;
                 Image = AutofillQtyToHandle;
                 PromotedOnly = true;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Remplir Qté à recevoir action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();
@@ -81,6 +85,8 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Vider Qté à recevoir action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();
@@ -103,6 +109,8 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Vider Qté à facturer action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();
@@ -122,5 +130,5 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
     }
     var
         GRecPurchLine: Record "Purchase Line";
-    //todo line 489,1019
+    //TODO line 489,1019
 }

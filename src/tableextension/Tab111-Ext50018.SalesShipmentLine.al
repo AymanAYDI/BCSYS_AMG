@@ -32,11 +32,13 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
         {
             DataClassification = ToBeClassified;
             TableRelation = Package."Package No." where("Shipping No." = field("Document No."));
+            Caption = 'Package No.';
         }
         field(50020; "Code ONU"; Code[10])
         {
             CalcFormula = lookup(Item."Code ONU" where("No." = field("No.")));
             FieldClass = FlowField;
+            Caption = 'Code ONU';
         }
     }
     procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[50]
@@ -54,6 +56,6 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
         else
             Return := '';
     end;
-    //todo Requested Delivery Date AccessByPermission
+    //TODO Requested Delivery Date AccessByPermission
 }
 

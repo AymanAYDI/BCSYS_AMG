@@ -9,6 +9,8 @@ pageextension 50041 SalesOrderArchives extends "Sales Order Archives" //9349
         {
             field("Order Date"; Rec."Order Date")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Order Date field.';
             }
         }
     }

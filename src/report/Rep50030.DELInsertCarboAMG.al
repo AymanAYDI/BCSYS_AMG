@@ -7,6 +7,7 @@ report 50030 DELInsertCarboAMG
 {
     Caption = 'Choix de l''emballage Carboglace';
     ProcessingOnly = true;
+    ApplicationArea = All;
 
     dataset
     {
@@ -36,7 +37,8 @@ report 50030 DELInsertCarboAMG
                     {
                         Caption = 'Item No.';
                         TableRelation = Item."No.";
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Item No. field.';
                         trigger OnLookup(var Text: Text): Boolean
                         begin
                             if PAGE.RUNMODAL(PAGE::DELItemDrillDownCarbo, Item) = ACTION::LookupOK then
@@ -46,6 +48,8 @@ report 50030 DELInsertCarboAMG
                     field("Quantity"; GDecQty)
                     {
                         Caption = 'Quantity';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Quantity field.';
                     }
                 }
             }
@@ -57,8 +61,8 @@ report 50030 DELInsertCarboAMG
 
         trigger OnOpenPage()
         begin
-            if GRecSalesSetup.FINDFIRST() and (GRecSalesSetup."Code catégorie Carbo" <> '') then
-                Item.SETFILTER("Item Category Code", GRecSalesSetup."Code catégorie Carbo");
+            if GRecSalesSetup.FINDFIRST() and (GRecSalesSetup."Category Code Carbo" <> '') then
+                Item.SETFILTER("Item Category Code", GRecSalesSetup."Category Code Carbo");
             GDecQty := 1;
         end;
     }

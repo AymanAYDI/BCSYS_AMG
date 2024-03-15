@@ -7,6 +7,7 @@ page 50030 DELItemDrillDownCarbo
     SourceTable = Item;
     SourceTableView = sorting("No.")
                       order(ascending);
+    ApplicationArea = All;
 
     layout
     {
@@ -16,12 +17,15 @@ page 50030 DELItemDrillDownCarbo
             {
                 field("No."; Rec."No.")
                 {
+                    ToolTip = 'Specifies the value of the No. field.';
                 }
                 field(Description; Rec.Description)
                 {
+                    ToolTip = 'Specifies the value of the Description field.';
                 }
                 field("Unit Price"; Rec."Unit Price")
                 {
+                    ToolTip = 'Specifies the value of the Unit Price field.';
                 }
             }
         }

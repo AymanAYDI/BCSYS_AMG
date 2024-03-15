@@ -9,6 +9,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
     DefaultLayout = RDLC;
     RDLCLayout = './GdLivreFournEcrNonLettr.rdlc';
     Caption = 'Vendor Detail Trial Balance';
+    ApplicationArea = All;
 
     dataset
     {
@@ -545,6 +546,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.';
+                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
                     field(ExcludeBalanceOnly; ExcludeBalanceOnly)
                     {
@@ -552,10 +554,13 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                         Caption = 'Exclude Vendors That Have A Balance Only';
                         MultiLine = true;
                         Visible = false;
+                        ToolTip = 'Specifies the value of the Exclude Vendors That Have A Balance Only field.';
                     }
                     field(ShowOnlyUnappliedWritings; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Only Unapplied Writings field.';
                     }
                 }
             }
@@ -595,9 +600,9 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
         Text006: Label 'Balance at %1 ';
         Text007: Label 'Balance at %1';
         Text008: Label 'Total';
-        VendLedgEntry: Record 380;
-        OriginalLedgerEntry: Record 25;
-        VendLedgEntry2: Record 380;
+        VendLedgEntry: Record "Detailed Vendor Ledg. Entry";
+        OriginalLedgerEntry: Record "Vendor Ledger Entry";
+        VendLedgEntry2: Record "Detailed Vendor Ledg. Entry";
         FiltreDateCalc: codeunit "DateFilter-Calc";
         StartDate: Date;
         EndDate: Date;
@@ -635,7 +640,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
         Current_pageCaptionLbl: Label 'Current page';
         PreviousDebitAmountLCY_Open: Decimal;
         PreviousCreditAmountLCY_Open: Decimal;
-        GRecVendLedgEntry: Record 25;
+        GRecVendLedgEntry: Record "Vendor Ledger Entry";
         GBooOpen: Boolean;
         GeneralDebitAmountLCY_Open: Decimal;
         GeneralCreditAmountLCY_Open: Decimal;

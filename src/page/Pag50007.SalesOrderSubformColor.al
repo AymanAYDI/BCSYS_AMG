@@ -31,6 +31,7 @@ page 50007 "Sales Order Subform Color"
     PageType = ListPart;
     SourceTable = "Sales Line";
     SourceTableView = where("Document Type" = filter(Order));
+    ApplicationArea = All;
 
     layout
     {
@@ -119,6 +120,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Fournisseur article"; Rec."Fournisseur article")
                 {
+                    ToolTip = 'Specifies the value of the Vendor field.';
                 }
                 field("IC Partner Code"; Rec."IC Partner Code")
                 {
@@ -197,6 +199,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Description 2"; Rec."Description 2")
                 {
+                    ToolTip = 'Specifies the value of the Description 2 field.';
                 }
                 field("Drop Shipment"; Rec."Drop Shipment")
                 {
@@ -213,10 +216,12 @@ page 50007 "Sales Order Subform Color"
                 field("Special Order Purchase No."; Rec."Special Order Purchase No.")
                 {
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
                 }
                 field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
                 {
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
                 }
                 field("Return Reason Code"; Rec."Return Reason Code")
                 {
@@ -284,11 +289,13 @@ page 50007 "Sales Order Subform Color"
                     Caption = 'Qté Reçue du Fourn.';
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Qté Reçue du Fourn. field.';
                 }
                 field("Qty In Stock"; GDecStock)
                 {
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the GDecStock field.';
                 }
                 field("Qty. to Assemble to Order"; Rec."Qty. to Assemble to Order")
                 {
@@ -341,6 +348,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Last direct cost"; GDecLastDirectCost)
                 {
+                    ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
                 }
                 field("Unit Cost (LCY)"; Rec."Unit Cost (LCY)")
                 {
@@ -403,12 +411,13 @@ page 50007 "Sales Order Subform Color"
                     Importance = Standard;
                     Style = Strong;
                     StyleExpr = true;
+                    ToolTip = 'Specifies the value of the Marge field.';
                 }
                 field(Marque; Rec.Marque)
                 {
                     Style = StrongAccent;
                     StyleExpr = true;
-
+                    ToolTip = 'Specifies the value of the % Marge field.';
                     trigger OnValidate()
                     begin
                         //DELPHI AUB 16.07.2019 Réactualisation Marge
@@ -769,7 +778,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible3;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(3, ShortcutDimCode[3]);
@@ -783,7 +792,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible4;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(4, ShortcutDimCode[4]);
@@ -797,7 +806,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible5;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(5, ShortcutDimCode[5]);
@@ -811,7 +820,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible6;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(6, ShortcutDimCode[6]);
@@ -825,7 +834,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible7;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(7, ShortcutDimCode[7]);
@@ -839,7 +848,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible8;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(8, ShortcutDimCode[8]);
@@ -854,9 +863,11 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
                 {
+                    ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
                 }
                 field("Gen. Prod. Posting Group"; Rec."Gen. Prod. Posting Group")
                 {
+                    ToolTip = 'Specifies the value of the Gen. Prod. Posting Group field.';
                 }
                 field("Line No."; Rec."Line No.")
                 {
@@ -976,14 +987,14 @@ page 50007 "Sales Order Subform Color"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ToolTip = 'Executes the Remplir Qté action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
                             if GRecSalesLine."Qty. to Ship (Base)" <> GRecSalesLine."Outstanding Qty. (Base)" then
@@ -1001,14 +1012,14 @@ page 50007 "Sales Order Subform Color"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ToolTip = 'Executes the Vider Qté à expédier action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Ship", 0);
                             if GRecSalesLine."Qty. to Ship (Base)" <> 0 then
@@ -1026,14 +1037,14 @@ page 50007 "Sales Order Subform Color"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ToolTip = 'Executes the Vider Qté à facturer action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Invoice", 0);
                             if GRecSalesLine."Qty. to Invoice (Base)" <> 0 then

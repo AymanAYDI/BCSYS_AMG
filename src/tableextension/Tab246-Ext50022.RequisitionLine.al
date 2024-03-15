@@ -15,16 +15,16 @@ tableextension 50022 RequisitionLine extends "Requisition Line" //246
             else
             if (Type = const(Item)) Item where(Type = const(Inventory));
         }
-        field(50000; "Nom du client"; Text[100])
+        field(50000; "Customer Name"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
-            Caption = 'Nom du client';
+            Caption = 'Customer Name', Comment = 'FRA="Nom du client"';
             FieldClass = FlowField;
         }
-        field(50001; "Nom du fournisseur"; Text[100])
+        field(50001; "Supplier Name"; Text[100])
         {
             CalcFormula = lookup(Vendor.Name where("No." = field("Vendor No.")));
-            Caption = 'Nom du fournisseur';
+            Caption = 'Supplier name', Comment = 'FRA"Nom du fournisseur"';
             FieldClass = FlowField;
         }
     }

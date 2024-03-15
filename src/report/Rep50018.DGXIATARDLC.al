@@ -10,6 +10,7 @@ report 50018 "DGX IATA RDLC"
     EnableExternalImages = true;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
+    ApplicationArea = All;
 
     dataset
     {
@@ -254,7 +255,7 @@ report 50018 "DGX IATA RDLC"
         CopyText: Text[30];
         DimText: Text[120];
         DimText1: Text[120];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         CTxtAirport: Label 'ROISSY';
         GTxtPackingInstr: Text[20];

@@ -13,12 +13,14 @@ table 50006 "DGX Header"
         field(1; "DGX No."; Code[20])
         {
             DataClassification = ToBeClassified;
+            Caption = 'DGX No.';
         }
         field(2; "DGX Type"; Option)
         {
             DataClassification = ToBeClassified;
             OptionCaption = 'Multimodal,Aérien cargo,Aérien passager';
             OptionMembers = "Multi-modal","Aerien cargo","Aerien passager";
+            Caption = 'DGX Type';
         }
         field(10; Recipient; Code[20])
         {
@@ -29,49 +31,59 @@ table 50006 "DGX Header"
         field(11; "Recipient Name"; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient Name';
         }
         field(12; "Recipient Adress 1"; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient Adress 1';
         }
         field(13; "Recipient Adress 2"; Text[50])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient Adress 2';
         }
         field(14; "Recipient Post Code"; Code[20])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient Post Code';
         }
         field(15; "Recipient City"; Text[50])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient City';
         }
         field(16; "Recipient Country EN"; Text[50])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Recipient Country EN';
         }
         field(20; "Type of transport"; Option)
         {
             DataClassification = ToBeClassified;
             OptionMembers = cargo,passager;
+            Caption = 'Type of transport';
         }
         field(30; "Airport of departure"; Text[250])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Airport of departure';
         }
         field(40; Radioactive; Boolean)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Radioactive';
         }
         field(50; "Document Date"; Date)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Document Date';
         }
         field(60; "Delivery slip no."; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Sales Shipment Header"."No.";
-
+            Caption = 'Delivery slip no.';
             trigger OnValidate()
             var
                 LRecPays: Record "Country/Region";
@@ -93,6 +105,7 @@ table 50006 "DGX Header"
         {
             CalcFormula = sum("DGX Lines"."Gross Mass (kg)" where(DGXNo = field("DGX No.")));
             FieldClass = FlowField;
+            Caption = 'Total Gross Mass';
         }
     }
 
@@ -115,8 +128,7 @@ table 50006 "DGX Header"
     begin
         if "DGX No." = '' then
             ParamVente.Get();
-        //todo not migrated yet
-        "DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche N° DGX", TODAY, true, false);
+        "DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."DGX Serie No.", TODAY, true, false);
     end;
 
     var

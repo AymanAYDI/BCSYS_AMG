@@ -27,6 +27,9 @@ using Microsoft.CRM.Segment;
 using Microsoft.Foundation.UOM;
 using Microsoft.Sales.Receivables;
 using Microsoft.Projects.Project.Job;
+using Microsoft.Finance.Currency;
+using System.Environment;
+using Microsoft.CRM.Interaction;
 report 50002 "Standard Sales - Invoice word"
 {
     RDLCLayout = './StandardSalesInvoiceword.rdlc';
@@ -37,6 +40,7 @@ report 50002 "Standard Sales - Invoice word"
     Permissions = TableData "Sales Shipment Buffer" = rimd;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
+    ApplicationArea = All;
 
     dataset
     {
@@ -574,15 +578,15 @@ report 50002 "Standard Sales - Invoice word"
 
                 trigger OnAfterGetRecord()
                 var
-                    PermissionManager: Codeunit "Permission Manager";
+                    EnvironmentInformation: Codeunit "Environment Information";
                     Text01: Label '%1%', Comment = '%1 = "Line Discount %"';
 
                 begin
-                    if ("Job No." <> '') and (not PermissionManager.SoftwareAsAService) then
+                    if ("Job No." <> '') and (not EnvironmentInformation.IsSaas()) then
                         JobNo := ''
                     else
                         JobNo := "Job No.";
-                    if ("Job Task No." <> '') and (not PermissionManager.SoftwareAsAService) then
+                    if ("Job Task No." <> '') and (not EnvironmentInformation.IsSaas()) then
                         JobTaskNo := ''
                     else
                         JobTaskNo := "Job Task No.";
@@ -670,28 +674,25 @@ report 50002 "Standard Sales - Invoice word"
                 column(WorkDescriptionLine; WorkDescriptionLine)
                 {
                 }
-
                 trigger OnAfterGetRecord()
-                var
-                    is: InStream;
                 begin
-                    // is.EOS
-                    if not TempBlobWorkDescription.MoreTextLines then
-                        CurrReport.BREAK();
-                    WorkDescriptionLine := TempBlobWorkDescription.ReadTextLine;
+                    if WorkDescriptionInstream.EOS then
+                        CurrReport.Break();
+                    WorkDescriptionInstream.ReadText(WorkDescriptionLine);
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    CLEAR(TempBlobWorkDescription);
+                    Clear(WorkDescriptionInstream)
                 end;
 
                 trigger OnPreDataItem()
                 begin
                     if not ShowWorkDescription then
-                        CurrReport.BREAK();
-                    TempBlobWorkDescription.Blob := Header."Work Description";
+                        CurrReport.Break();
+                    Header."Work Description".CreateInStream(WorkDescriptionInstream, TEXTENCODING::UTF8);
                 end;
+
             }
             dataitem(VATAmountLine; "VAT Amount Line")
             {
@@ -1010,8 +1011,8 @@ report 50002 "Standard Sales - Invoice word"
 
             trigger OnAfterGetRecord()
             var
-                CurrencyExchangeRate: Record 330;
-                PaymentServiceSetup: Record 1060;
+                CurrencyExchangeRate: Record "Currency Exchange Rate";
+                PaymentServiceSetup: Record "Payment Service Setup";
             begin
                 FillLeftHeader();
                 FillRightHeader();
@@ -1087,6 +1088,8 @@ report 50002 "Standard Sales - Invoice word"
                     field(DisplayAsmInformation; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
                     field(DisplayShipmentInformation; DisplayShipmentInformation)
                     {
@@ -1177,7 +1180,6 @@ report 50002 "Standard Sales - Invoice word"
         VATClausesLbl: Label 'VAT Clause';
         VATIdentifierLbl: Label 'VAT Identifier';
         VATPercentageLbl: Label 'VAT %';
-        TempBlobWorkDescription: Record "Temp Blob";
         GLSetup: Record "General Ledger Setup";
         ShipmentMethod: Record "Shipment Method";
         PaymentTerms: Record "Payment Terms";
@@ -1247,10 +1249,14 @@ report 50002 "Standard Sales - Invoice word"
         JobTaskNoLbl2: Label 'Job Task No.';
         JobTaskDescription: Text[50];
         JobTaskDescLbl: Label 'Job Task Description';
+        WorkDescriptionInstream: InStream;
 
     local procedure InitLogInteraction()
+    var
+        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractTmplCode(4) <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Inv.") <> '';
+
     end;
 
     local procedure FindPostedShipmentDate(): Date
@@ -1393,7 +1399,7 @@ report 50002 "Standard Sales - Invoice word"
         FillNameValueTable(RightHeader, Header.GetPaymentReferenceLbl(), Header.GetPaymentReference());
     end;
 
-    local procedure FillNameValueTable(var NameValueBuffer: Record 823; Name: Text; Value: Text)
+    local procedure FillNameValueTable(var NameValueBuffer: Record "Name/Value Buffer"; Name: Text; Value: Text)
     var
         KeyIndex: Integer;
     begin
@@ -1410,14 +1416,14 @@ report 50002 "Standard Sales - Invoice word"
         end;
     end;
 
-    local procedure FormatAddressFields(var SalesInvoiceHeader: Record 112)
+    local procedure FormatAddressFields(var SalesInvoiceHeader: Record "Sales Invoice Header")
     begin
         FormatAddr.GetCompanyAddr(SalesInvoiceHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
         FormatAddr.SalesInvBillTo(CustAddr, SalesInvoiceHeader);
         ShowShippingAddr := FormatAddr.SalesInvShipTo(ShipToAddr, CustAddr, SalesInvoiceHeader);
     end;
 
-    local procedure FormatDocumentFields(SalesInvoiceHeader: Record 112)
+    local procedure FormatDocumentFields(SalesInvoiceHeader: Record "Sales Invoice Header")
     begin
         with SalesInvoiceHeader do begin
             FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);

@@ -22,6 +22,7 @@ using Microsoft.CRM.Segment;
 using Microsoft.Utilities;
 using Microsoft.Sales.Customer;
 using Microsoft.CRM.Interaction;
+using Microsoft.Sales.Posting;
 
 report 50006 "Sales-Quote AMGallois ICE"
 {
@@ -29,6 +30,7 @@ report 50006 "Sales-Quote AMGallois ICE"
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -258,10 +260,10 @@ report 50006 "Sales-Quote AMGallois ICE"
                     column(PricesIncludingVAT_SalesHdrCaption; "Sales Header".FIELDCAPTION("Prices Including VAT"))
                     {
                     }
-                    column(SalesHeaderDelaiLivraison; "Sales Header"."Délai de livraison")
+                    column(SalesHeaderDelaiLivraison; "Sales Header"."Delivery time")
                     {
                     }
-                    column(SalesHeaderDelaiLivraisonCaption; "Sales Header".FIELDCAPTION("Délai de livraison"))
+                    column(SalesHeaderDelaiLivraisonCaption; "Sales Header".FIELDCAPTION("Delivery time"))
                     {
                     }
                     dataitem(DimensionLoop1; integer)
@@ -277,6 +279,9 @@ report 50006 "Sales-Quote AMGallois ICE"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            Text01: Label '%1 %2', Comment = '%1 = DimSetEntry2."Dimension Code",%2 = DimSetEntry2."Dimension Value Code"';
+                            Text02: Label '%1, %2 %3', Comment = '%1 = DimText ,%2 = DimSetEntry2."Dimension Code",%3 = DimSetEntry2."Dimension Value Code';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
@@ -290,11 +295,11 @@ report 50006 "Sales-Quote AMGallois ICE"
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
                                       STRSUBSTNO(
-                                        '%1, %2 %3', DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
+                                        Text02, DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                                 if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
@@ -457,6 +462,9 @@ report 50006 "Sales-Quote AMGallois ICE"
                             }
 
                             trigger OnAfterGetRecord()
+                            var
+                                Text01: Label '%1 %2', Comment = '%1 = DimSetEntry2."Dimension Code",%2 = DimSetEntry2."Dimension Value Code"';
+                                Text02: Label '%1, %2 %3', Comment = '%1 = DimText ,%2 = DimSetEntry2."Dimension Code",%3 = DimSetEntry2."Dimension Value Code';
                             begin
                                 if Number = 1 then begin
                                     if not DimSetEntry2.FINDSET() then
@@ -470,11 +478,11 @@ report 50006 "Sales-Quote AMGallois ICE"
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := STRSUBSTNO(Text01, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
                                           STRSUBSTNO(
-                                            '%1, %2 %3', DimText,
+                                            Text02, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
                                     if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
@@ -725,7 +733,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                 trigger OnAfterGetRecord()
                 var
-                    SalesPost: Codeunit 80;
+                    SalesPost: Codeunit "Sales-Post";
                 begin
                     CLEAR(SalesLine);
                     CLEAR(SalesPost);
@@ -810,9 +818,6 @@ report 50006 "Sales-Quote AMGallois ICE"
             end;
 
             trigger OnPostDataItem()
-            var
-                ToDo: Record "To-do";
-                FileManagement: Codeunit "File Management";
             begin
                 MARKEDONLY := true;
                 COMMIT();
@@ -844,15 +849,20 @@ report 50006 "Sales-Quote AMGallois ICE"
                     field(NoOfCopies; NoOfCopies)
                     {
                         Caption = 'No. of Copies';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the No. of Copies field.';
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
                         Caption = 'Show Internal Information';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Internal Information field.';
                     }
                     field(ArchiveDocument; ArchiveDocument)
                     {
                         Caption = 'Archive Document';
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Archive Document field.';
                         trigger OnValidate()
                         begin
                             if not ArchiveDocument then
@@ -863,7 +873,8 @@ report 50006 "Sales-Quote AMGallois ICE"
                     {
                         Caption = 'Log Interaction';
                         Enabled = LogInteractionEnable;
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Log Interaction field.';
                         trigger OnValidate()
                         begin
                             if LogInteraction then
@@ -978,7 +989,7 @@ report 50006 "Sales-Quote AMGallois ICE"
         ShipmentMethodDescriptionCaptionLbl: Label 'Shipment Method';
         ShiptoAddressCaptionLbl: Label 'Ship-to Address';
         SubtotalCaptionLbl: Label 'Subtotal';
-        Text004: Label 'Quote ';
+        Text004: Label 'Quote %1';
         Text005: Label 'Page %1';
         Text007: Label 'Do you want to create a follow-up to-do?';
         Text008: Label 'VAT Amount Specification in ';
@@ -1002,12 +1013,12 @@ report 50006 "Sales-Quote AMGallois ICE"
         TotalText: Text[50];
         VALExchRate: Text[50];
         GTxtNumTVAClient: Text[60];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         GTxtCompanyVAT_ICE: Text[80];
         ReferenceText: Text[80];
         VALSpecLCYHeader: Text[80];
         VATNoText: Text[80];
-        DimText: Text[120];
+        DimText: Text[150];
         GTxtDescriptionLine: Text[250];
         GTxtOrigineCE: Text[250];
 

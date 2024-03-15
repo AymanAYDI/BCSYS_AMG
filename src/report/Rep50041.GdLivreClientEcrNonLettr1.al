@@ -3,6 +3,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
     DefaultLayout = RDLC;
     RDLCLayout = './GdLivreClientEcrNonLettr1.rdlc';
     Caption = 'Customer Detail Trial Balance';
+    ApplicationArea = All;
 
     dataset
     {
@@ -541,6 +542,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.';
+                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
                     field(ExcludeBalanceOnly; ExcludeBalanceOnly)
                     {
@@ -548,10 +550,13 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                         Caption = 'Exclude Customers That Have a Balance Only';
                         MultiLine = true;
                         Visible = false;
+                        ToolTip = 'Specifies the value of the Exclude Customers That Have a Balance Only field.';
                     }
                     field(ShowOnlyUnappliedWritings; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Only Unapplied Writings field.';
                     }
                 }
             }

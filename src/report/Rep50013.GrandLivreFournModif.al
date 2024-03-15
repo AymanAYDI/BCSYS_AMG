@@ -9,6 +9,7 @@ report 50013 "Grand Livre Fourn. Modif."
     DefaultLayout = RDLC;
     RDLCLayout = './GrandLivreFournModif.rdlc';
     Caption = 'Vendor Detail Trial Balance';
+    ApplicationArea = All;
 
     dataset
     {
@@ -570,21 +571,29 @@ report 50013 "Grand Livre Fourn. Modif."
                     {
                         Caption = 'Sorted by Document No.';
                         Visible = false;
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
                     field(ExcludeBalanceOnly; ExcludeBalanceOnly)
                     {
                         Caption = 'Exclude Vendors That Have a Balance Only';
                         MultiLine = true;
                         Visible = false;
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Exclude Vendors That Have a Balance Only field.';
                     }
                     field(ShowOnlyUnappliedWritings; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Only Unapplied Writings field.';
                     }
                     field(GBoolSoldeZero; GBoolSoldeZero)
                     {
                         Caption = 'Exclure les fournisseurs avec solde à 0';
                         Visible = false;
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Exclure les fournisseurs avec solde à 0 field.';
                     }
                 }
             }

@@ -5,10 +5,10 @@ tableextension 50032 ConfigTemplateLine extends "Config. Template Line" //8619
 {
     fields
     {
-        //todo property editable cannot be customized Line No.
+        //TODO property editable cannot be customized Line No.
         modify("Template Code")
         {
-            //todo check
+            //TODO check
             trigger OnBeforeValidate()
             var
                 ConfigTemplateHeader: Record "Config. Template Header";
@@ -20,7 +20,7 @@ tableextension 50032 ConfigTemplateLine extends "Config. Template Line" //8619
                         if ConfigTemplateHeader."Table ID" <> ConfigTemplateHeader2."Table ID" then
                             ERROR(Text002, ConfigTemplateHeader.Code, ConfigTemplateHeader2."Table ID");
             end;
-            //todo Onlookup !!!!!!!!!!!!!!!
+            //TODO Onlookup !!!!!!!!!!!!!!!
         }
     }
 

@@ -7,47 +7,40 @@ tableextension 50023 VATEntry extends "VAT Entry" //254
 {
     fields
     {
-
-        //Unsupported feature: Deletion (FieldCollection) on ""Realized Amount"(Field 81)".
-
-
-        //Unsupported feature: Deletion (FieldCollection) on ""Realized Base"(Field 82)".
-
-
-        //Unsupported feature: Deletion (FieldCollection) on ""Add.-Curr. Realized Amount"(Field 83)".
-
-
-        //Unsupported feature: Deletion (FieldCollection) on ""Add.-Curr. Realized Base"(Field 84)".
-
-        field(50000; "Nom Fournisseur"; Text[100])
+        field(50000; "Supplier Name"; Text[100])
         {
             CalcFormula = lookup(Vendor.Name where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
+            Caption = 'Supplier Name', Comment = 'FRA="Nom Fournisseur"';
         }
-        field(50001; Adresse; Text[100])
+        field(50001; Adress; Text[100])
         {
             CalcFormula = lookup(Vendor.Address where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
+            Caption = 'Adress', Comment = 'FRA="Adresse"';
         }
-        field(50002; "Code postal"; Code[20])
+        field(50002; "Postal code"; Code[20])
         {
             CalcFormula = lookup(Vendor."Post Code" where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
+            Caption = 'Postal code', Comment = 'FRA="Code postal"';
         }
-        field(50003; Ville; Text[30])
+        field(50003; City; Text[30])
         {
             CalcFormula = lookup(Vendor.City where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
+            Caption = 'City', Comment = 'FRA="Ville"';
         }
-        field(50004; "N° Facture Fourn"; Code[35])
+        field(50004; "Supp Invoice No."; Code[35])
         {
             CalcFormula = lookup("Purch. Inv. Header"."Vendor Invoice No." where("No." = field("Document No.")));
             Editable = false;
             FieldClass = FlowField;
+            Caption = 'Supp Invoice No.', Comment = 'FRA="N° Facture Fourn"';
         }
     }
 

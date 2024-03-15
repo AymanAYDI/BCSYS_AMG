@@ -1,9 +1,10 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.Document;
+using BCSYS.AMGALLOIS.Basic;
 pageextension 50039 SalesOrderList extends "Sales Order List" //9305
 {
-    //todo SourceTableView cannot be customized
+    //TODO SourceTableView cannot be customized
     layout
     {
         modify("Quote No.")
@@ -22,7 +23,7 @@ pageextension 50039 SalesOrderList extends "Sales Order List" //9305
         {
             trigger OnAfterAction()
             var
-                LRecHisto: Record 50000;
+                LRecHisto: Record "Sales Archive";
             begin
                 // ajout des lignes de vente … l'historique
                 LRecHisto.DELAddCmdVente(Rec."No.", Rec."Document Date");
@@ -32,13 +33,13 @@ pageextension 50039 SalesOrderList extends "Sales Order List" //9305
         {
             trigger OnAfterAction()
             var
-                LRecHisto: Record 50000;
+                LRecHisto: Record "Sales Archive";
             begin
                 // suppression des lignes de vente dans l'historique
                 LRecHisto.DELDeleteCmdVente(Rec."No.");
             end;
         }
     }
-    //todo i can't find solution for Onopenpage 
+    //TODO i can't find solution for Onopenpage 
 }
 

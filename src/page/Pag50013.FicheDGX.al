@@ -1,8 +1,13 @@
 namespace BCSYS.AMGALLOIS.Basic;
+
+using Microsoft.Sales.History;
+using Microsoft.Inventory.Item;
+using BCSYS_AMG.BCSYS_AMG;
 page 50013 "Fiche DGX"
 {
     PageType = Card;
     SourceTable = "DGX Header";
+    ApplicationArea = All;
 
     layout
     {
@@ -12,42 +17,55 @@ page 50013 "Fiche DGX"
             {
                 field("DGX No."; Rec."DGX No.")
                 {
+                    ToolTip = 'Specifies the value of the DGX No. field.';
                 }
                 field("DGX Type"; Rec."DGX Type")
                 {
+                    ToolTip = 'Specifies the value of the DGX Type field.';
                 }
                 field("Delivery slip no."; Rec."Delivery slip no.")
                 {
+                    ToolTip = 'Specifies the value of the Delivery slip no. field.';
                 }
                 field(Recipient; Rec.Recipient)
                 {
+                    ToolTip = 'Specifies the value of the Recipient field.', Comment = 'FRA="Destinataire"';
                 }
                 field("Recipient Name"; Rec."Recipient Name")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Name field.';
                 }
                 field("Recipient Adress 1"; Rec."Recipient Adress 1")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Adress 1 field.';
                 }
                 field("Recipient Adress 2"; Rec."Recipient Adress 2")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Adress 2 field.';
                 }
                 field("Recipient Post Code"; Rec."Recipient Post Code")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Post Code field.';
                 }
                 field("Recipient City"; Rec."Recipient City")
                 {
+                    ToolTip = 'Specifies the value of the Recipient City field.';
                 }
                 field("Recipient Country EN"; Rec."Recipient Country EN")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Country EN field.';
                 }
                 field("Airport of departure"; Rec."Airport of departure")
                 {
+                    ToolTip = 'Specifies the value of the Airport of departure field.';
                 }
                 field(Radioactive; Rec.Radioactive)
                 {
+                    ToolTip = 'Specifies the value of the Radioactive field.';
                 }
                 field("Document Date "; Rec."Document Date")
                 {
+                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
             }
             part(LignesDGX; "Lignes DGX")
@@ -67,15 +85,15 @@ page 50013 "Fiche DGX"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-
+                ToolTip = 'Executes the Importer lignes action.';
                 trigger OnAction()
                 var
-                    LRecItem: Record 27;
-                    LRecShipLines: Record 111;
-                    LRecDGXHeader: Record 50006;
-                    LRecDGXLines: Record 50007;
-                    LRecColis: Record 50009;
-                    LRecONU: Record 50012;
+                    LRecItem: Record Item;
+                    LRecShipLines: Record "Sales Shipment Line";
+                    LRecDGXHeader: Record "DGX Header";
+                    LRecDGXLines: Record "DGX Lines";
+                    LRecColis: Record Package;
+                    LRecONU: Record "ONU table";
                     LIntLineNo: Integer;
                 begin
                     if Rec."Delivery slip no." <> '' then begin
@@ -159,14 +177,14 @@ page 50013 "Fiche DGX"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ToolTip = 'Executes the Imprimer action.';
                 trigger OnAction()
                 begin
                     Rec.SETFILTER("DGX No.", Rec."DGX No.");
                     if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
-                        REPORT.RUNMODAL(50017, true, false, Rec)
+                        REPORT.RUNMODAL(Report::"DGX CERFA RDLC", true, false, Rec)
                     else
-                        REPORT.RUNMODAL(50018, true, false, Rec);
+                        REPORT.RUNMODAL(Report::"DGX IATA RDLC", true, false, Rec);
                     Rec.SETFILTER("DGX No.", '');
                 end;
             }

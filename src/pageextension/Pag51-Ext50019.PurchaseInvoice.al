@@ -74,5 +74,5 @@ pageextension 50019 "PurchaseInvoice" extends "Purchase Invoice" //51
             }
         }
     }
-    //todo line 45,1079,1225,1248,1501,1679
+    //TODO line 45,1079,1225,1248,1501,1679
 }

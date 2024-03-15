@@ -75,11 +75,15 @@ pageextension 50017 "SalesInvoiceSubform" extends "Sales Invoice Subform" //47
                 Importance = Standard;
                 Style = Strong;
                 StyleExpr = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Marge field.';
             }
             field(Marque; Rec.Marque)
             {
                 Style = StrongAccent;
                 StyleExpr = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the % Marge field.';
                 trigger OnValidate()
                 begin
                     Rec.FCalculateMargeOnLineDiscountChange(Rec."No.");
@@ -101,5 +105,5 @@ pageextension 50017 "SalesInvoiceSubform" extends "Sales Invoice Subform" //47
     {
 
     }
-    //todo check 49,383,423,437,657,791,1189
+    //TODO check 49,383,423,437,657,791,1189
 }

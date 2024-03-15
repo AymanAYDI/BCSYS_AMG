@@ -7,6 +7,7 @@ report 50021 "MAJ Description GL Entry"
 {
     ProcessingOnly = true;
     UseRequestPage = false;
+    ApplicationArea = All;
 
     dataset
     {
@@ -37,10 +38,10 @@ report 50021 "MAJ Description GL Entry"
             repeat
                 if GRecGLEntry."Document Type" = GRecGLEntry."Document Type"::Invoice then
                     if LRecSalesInvoiceHeader.GET(GRecGLEntry."Document No.") then
-                        GRecGLEntry."Description longue" := LRecSalesInvoiceHeader."Sell-to Customer Name" + ' Ref: ' + LRecSalesInvoiceHeader."Your Reference" + ' ' + GRecGLEntry.Description
+                        GRecGLEntry."Long description" := LRecSalesInvoiceHeader."Sell-to Customer Name" + ' Ref: ' + LRecSalesInvoiceHeader."Your Reference" + ' ' + GRecGLEntry.Description
                     else
                         if LRecPurchaseInvoiceHeader.GET(GRecGLEntry."Document No.") then
-                            GRecGLEntry."Description longue" := LRecPurchaseInvoiceHeader."Buy-from Vendor Name" + ' - Ref: ' + LRecPurchaseInvoiceHeader."Vendor Invoice No." + ' ' + GRecGLEntry.Description;
+                            GRecGLEntry."Long description" := LRecPurchaseInvoiceHeader."Buy-from Vendor Name" + ' - Ref: ' + LRecPurchaseInvoiceHeader."Vendor Invoice No." + ' ' + GRecGLEntry.Description;
                 GRecGLEntry.MODIFY();
             until GRecGLEntry.NEXT() <= 0;
 

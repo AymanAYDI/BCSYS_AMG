@@ -16,6 +16,7 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
         field(50011; "Nom Factor"; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Nom Factor';
         }
         field(50012; "Téléphone Factor"; Text[20])
         {
@@ -37,9 +38,10 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
             Caption = 'RIB Factor';
             DataClassification = ToBeClassified;
         }
-        field(50016; "Adresse Factor"; Text[100])
+        field(50016; "Adress Factor"; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Adress Factor';
         }
         field(50017; "IBAN Factor"; Text[80])
         {

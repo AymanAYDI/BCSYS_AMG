@@ -14,11 +14,13 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
         {
             field("Special Order Purchase No."; Rec."Special Order Purchase No.")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
             }
             field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
             }
         }
         modify("Location Code")
@@ -68,11 +70,15 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 Importance = Standard;
                 Style = Strong;
                 StyleExpr = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Marge field.';
             }
             field(Marque; Rec.Marque)
             {
                 Style = StrongAccent;
                 StyleExpr = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the % Marge field.';
                 trigger OnValidate()
                 begin
                     Rec.FCalculateOnMargeChange(Rec."No.", Rec.Marque);
@@ -81,7 +87,7 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
             }
         }
         moveafter(Marque; "Line Discount %")
-        //todo verifier
+        //TODO verifier
         modify("Line Discount %")
         {
             trigger OnAfterValidate()
@@ -111,12 +117,14 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
         {
             action(ActRemplir)
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the ActRemplir action.';
                 trigger OnAction()
                 begin
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
                             if GRecSalesLine."Qty. to Ship (Base)" <> GRecSalesLine."Outstanding Qty. (Base)" then
@@ -132,12 +140,14 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
+                ApplicationArea = All;
+                ToolTip = 'Executes the ActViderAExpedier action.';
                 trigger OnAction()
                 begin
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Ship", 0);
                             if GRecSalesLine."Qty. to Ship (Base)" <> 0 then
@@ -153,12 +163,14 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
+                ApplicationArea = All;
+                ToolTip = 'Executes the ActViderAFacturer action.';
                 trigger OnAction()
                 begin
                     GRecSalesLine.RESET();
                     GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
                     GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FINDSET(true, false) then
+                    if GRecSalesLine.FindSet() then
                         repeat
                             GRecSalesLine.VALIDATE("Qty. to Invoice", 0);
                             if GRecSalesLine."Qty. to Invoice (Base)" <> 0 then
@@ -171,7 +183,7 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
         }
     }
     var
-        GRecSalesLine: Record 37;
+        GRecSalesLine: Record "Sales Line";
         IsBlankNumber: Boolean;
-    //todo i can't find solution for line 307,578,585,649,706,1011,1198,1733,1742
+    //TODO i can't find solution for line 307,578,585,649,706,1011,1198,1733,1742
 }

@@ -34,8 +34,8 @@ tableextension 50016 ItemJournalLine extends "Item Journal Line" //83
     end;
 
     var
-        //todo check line 531
-        //todo i can't find solution for line 1461
+        //TODO check line 531
+        //TODO i can't find solution for line 1461
         Text034: Label 'You cannot revalue individual item ledger entries for items that use the average costing method.';
 }
 

@@ -2,6 +2,8 @@ namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory;
+using System.Security.User;
 
 pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
 {
@@ -19,7 +21,8 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
         {
             field("Gen. Bus. Posting Group"; rec."Gen. Bus. Posting Group")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
         }
         modify("Quote No.")
@@ -30,11 +33,13 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
         {
             field("Supplier Ack. date"; rec."A. Rcd. Not Inv. Ex. VAT (LCY)")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Amount Received Not Invoiced (LCY) field.';
             }
             field("Supplier Ack. date validation"; rec."Supplier Ack. date validation")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Validate supplier acknowledgment field.';
             }
         }
         modify("Pay-to Address")
@@ -110,14 +115,14 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
                 Image = CoupledOrder;
                 PromotedCategory = Process;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Inject New Special Order action.';
                 trigger OnAction()
                 var
-                    PurchHeader: Record 38;
-                    DistIntegration: Codeunit 5702;
+                    PurchHeader: Record "Purchase Header";
+                    AMG_Functions: Codeunit "AMG_Functions";
                 begin
                     PurchHeader.COPY(Rec);
-                    //todo prod spe
-                    //DistIntegration.GetNewSpecialOrders(PurchHeader);
+                    AMG_Functions.GetNewSpecialOrders(PurchHeader);
                     Rec := PurchHeader;
                 end;
             }
@@ -126,7 +131,7 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
     }
     trigger OnOpenPage()
     var
-        LRecUserSetup: Record 91;
+        LRecUserSetup: Record "User Setup";
         LCodUserID: Code[20];
     begin
         Rec."Posting Date" := 0D;
@@ -144,5 +149,5 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
         if Rec."Document Date" <> 0D then
             Rec."Requested Receipt Date" := Rec."Document Date";
     end;
-    //todo check line 1420,1659
+    //TODO check line 1420,1659
 }

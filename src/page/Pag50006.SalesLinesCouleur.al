@@ -12,6 +12,7 @@ page 50006 "Sales Lines Couleur"
     LinksAllowed = false;
     PageType = List;
     SourceTable = "Sales Line";
+    ApplicationArea = All;
 
     layout
     {
@@ -29,6 +30,7 @@ page 50006 "Sales Lines Couleur"
                 {
                     Caption = 'No.';
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the No. field.';
                 }
                 field(Description; rec.Description)
                 {
@@ -39,35 +41,42 @@ page 50006 "Sales Lines Couleur"
                 field("Qty. to Ship"; rec."Qty. to Ship")
                 {
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Qty. to Ship field.';
                 }
                 field("Quantity Shipped"; rec."Quantity Shipped")
                 {
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Quantity Shipped field.';
                 }
                 field("Qty received"; GDecQtyReceived)
                 {
                     Caption = 'Qté reçue du Fourn.';
                     DecimalPlaces = 0 : 1;
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Qté reçue du Fourn. field.';
                 }
                 field("Qty In Stock"; GDecStock)
                 {
                     DecimalPlaces = 0 : 1;
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the GDecStock field.';
                 }
                 field("Special Order Purchase No."; rec."Special Order Purchase No.")
                 {
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
                 }
                 field("Special Order Purch. Line No."; rec."Special Order Purch. Line No.")
                 {
                     StyleExpr = GTxtStyleText;
                     Visible = false;
+                    ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
                 }
                 field("Fournisseur article"; rec."Fournisseur article")
                 {
                     Caption = 'Fourn.';
                     StyleExpr = GTxtStyleText;
+                    ToolTip = 'Specifies the value of the Fourn. field.';
                 }
             }
         }
@@ -108,7 +117,7 @@ page 50006 "Sales Lines Couleur"
                     Promoted = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-
+                    ToolTip = 'Executes the Reservation Entries action.';
                     trigger OnAction()
                     begin
                         rec.ShowReservationEntries(true);
@@ -122,7 +131,7 @@ page 50006 "Sales Lines Couleur"
                     PromotedCategory = Process;
                     PromotedIsBig = true;
                     ShortCutKey = 'Shift+Ctrl+I';
-
+                    ToolTip = 'Executes the Item &Tracking Lines action.';
                     trigger OnAction()
                     begin
                         rec.OpenItemTrackingLines();

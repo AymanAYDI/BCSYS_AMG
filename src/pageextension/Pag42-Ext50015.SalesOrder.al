@@ -3,6 +3,7 @@ namespace BCSYS_AMG.BCSYS_AMG;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using BCSYS.AMGALLOIS.Basic;
+using System.Security.User;
 
 pageextension 50015 "SalesOrder" extends "Sales Order" //42
 {
@@ -37,7 +38,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         {
             part(SalesLinesspe; "Sales Order Subform Color")
             {
-                //todo var removed
+                //TODO var removed
                 ApplicationArea = Basic, Suite;
                 //  Editable = DynamicEditable;
                 Enabled = Rec."Sell-to Customer No." <> '';
@@ -49,7 +50,8 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         {
             field("Gen. Bus. Posting Group"; rec."Gen. Bus. Posting Group")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
         }
         modify("Bill-to Name")
@@ -99,7 +101,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
         addbefore(ApprovalFactBox)
         {
-            //todo page spe 
+            //TODO page spe 
             // part(Substitution; 50002)
             // {
             //     ApplicationArea = Basic, Suite;
@@ -121,7 +123,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Customer';
-                //todo check this line 179
+                //TODO check this line 179
                 // Enabled = IsCustomerOrContactNotEmpty;
                 Image = Customer;
                 RunObject = Page "Customer Card";
@@ -132,12 +134,12 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
         modify("Work Order")
         {
-            //todo check line 1165
+            //TODO check line 1165
             ApplicationArea = all;
         }
     }
     var
-        GRecUserSetup: Record 91;
+        GRecUserSetup: Record "User Setup";
         GCodUserID: Code[20];
 
     trigger OnOpenPage()
@@ -148,7 +150,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
         if Rec."No." <> '' then Rec.MODIFY();
     end;
-    //todo i can't find solution for line 38
-    //todo check line 1318
-    //todo check line 1658,1763,1917
+    //TODO i can't find solution for line 38
+    //TODO check line 1318
+    //TODO check line 1658,1763,1917
 }

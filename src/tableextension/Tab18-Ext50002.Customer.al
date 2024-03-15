@@ -16,7 +16,7 @@ tableextension 50002 Customer extends Customer //18
         {
             Caption = 'Bill-To No. of Blanket Orders', Comment = 'FRA="Facturation - Nbre de commandes ouvertes"';
         }
-        //todo i can't find solution line 301
+        //TODO i can't find solution line 301
         // modify("Phone No.")
         // {
         //     trigger OnBeforeValidate()
@@ -29,6 +29,7 @@ tableextension 50002 Customer extends Customer //18
         field(50010; ICE; Boolean)
         {
             DataClassification = ToBeClassified;
+            Caption = 'ICE';
         }
         field(50100; Historique; Boolean)
         {
@@ -36,10 +37,12 @@ tableextension 50002 Customer extends Customer //18
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Sales Archive";
+            Caption = 'Historique';
         }
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Compl. cond. livraison';
         }
     }
     keys

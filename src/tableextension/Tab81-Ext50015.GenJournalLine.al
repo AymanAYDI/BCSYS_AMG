@@ -7,7 +7,7 @@ tableextension 50015 GenJournalLine extends "Gen. Journal Line" //81
     {
         modify("On Hold")
         {
-            Caption = 'On Hold';//TODO
+            Caption = 'On Hold', Comment = 'FRA="En attente"';
         }
 
         //Unsupported feature: Code Modification on ""VAT Prod. Posting Group"(Field 91).OnValidate".//TODO NO Modification

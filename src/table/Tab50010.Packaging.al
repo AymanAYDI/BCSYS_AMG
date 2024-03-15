@@ -2,48 +2,51 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 using Microsoft.Inventory.Item;
-using Microsoft.Sales.Setup;
-using Microsoft.Foundation.NoSeries;
-using Microsoft.Sales.Document;
-using Microsoft.Warehouse.Document;
-using Microsoft.Warehouse.History;
 table 50010 Packaging
 {
-    DrillDownPageID = 50020;
-    LookupPageID = 50020;
+    DrillDownPageID = Package;
+    LookupPageID = Package;
 
     fields
     {
         field(1; "Package No."; Code[20])
         {
             TableRelation = Package."Package No.";
+            Caption = 'Package No.';
         }
         field(2; "Line No."; Integer)
         {
+            Caption = 'Line No.';
         }
         field(5; "Shipping No."; Code[20])
         {
+            Caption = 'Shipping No.';
         }
         field(6; "Shipping Line No."; Integer)
         {
             TableRelation = "Sales Shipment Line"."Line No." where("Document No." = field("Shipping No."));
+            Caption = 'Shipping Line No.';
         }
         field(10; "Quantity"; Decimal)
         {
+            Caption = 'Quantity';
         }
         field(15; "Item No."; Code[20])
         {
             FieldClass = Normal;
+            Caption = 'Item No.';
         }
         field(20; "Net unit weight"; Decimal)
         {
             CalcFormula = lookup(Item."Net Weight" where("No." = field("Item No.")));
             FieldClass = FlowField;
+            Caption = 'Net unit weight';
         }
         field(21; "Gross Unit Weight"; Decimal)
         {
             CalcFormula = lookup(Item."Gross Weight" where("No." = field("Item No.")));
             FieldClass = FlowField;
+            Caption = 'Gross Unit Weight';
         }
     }
 
@@ -60,7 +63,7 @@ table 50010 Packaging
 
     fieldgroups
     {
-        //todo Field80 ,Field100
+        //TODO Field80 ,Field100
         // fieldgroup(DropDown; "Package No.", "Line No.", Field80, Field100)
         // {
         // }

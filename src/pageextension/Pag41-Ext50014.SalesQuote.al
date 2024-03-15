@@ -29,13 +29,15 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
         moveafter("Sell-to Contact No."; "Your Reference")
         addafter("Due Date")
         {
-            field("Délai de livraison"; rec."Délai de livraison")
+            field("Delivery time"; rec."Delivery time")
             {
                 ApplicationArea = ALL;
+                ToolTip = 'Specifies the value of the Délai de livraison field.';
             }
-            field("Durée de validité"; rec."Durée de validité")
+            field("Validity period"; rec."Validity period")
             {
                 ApplicationArea = ALL;
+                ToolTip = 'Specifies the value of the Durée de validité field.';
             }
         }
         modify("Requested Delivery Date")
@@ -47,6 +49,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             field("Compl. cond. livraison"; rec."Compl. cond. livraison")
             {
                 ApplicationArea = ALL;
+                ToolTip = 'Specifies the value of the Compl. cond. livraison field.';
             }
         }
         modify("Bill-to Name")
@@ -90,7 +93,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
         }
         addbefore(Control1901314507)
         {
-            //todo page spe
+            //TODO page spe
             // part(LPSubstitute; "Sustitutions possibles")
             // {
             //     ApplicationArea = All;
@@ -106,7 +109,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
         modify(Customer)
         {
             visible = false;
-            //todo RunPageLink cannot be customized
+            //TODO RunPageLink cannot be customized
             // RunPageLink = "No." = field("Sell-to Customer No.");
         }
         addafter(Customer)
@@ -115,7 +118,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Customer';
-                //todo global var IsCustomerOrContactNotEmpty
+                //TODO global var IsCustomerOrContactNotEmpty
                 // Enabled = IsCustomerOrContactNotEmpty;
                 Image = Customer;
                 RunObject = Page "Customer Card";
@@ -126,8 +129,8 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             }
         }
     }
-    //todo modif line 35
-    //todo modif line 1171,1179,1360,1372
+    //TODO modif line 35
+    //TODO modif line 1171,1179,1360,1372
     trigger OnOpenPage()
     begin
         GCodUserID := USERID;

@@ -1,9 +1,12 @@
 namespace BCSYS.AMGALLOIS.Basic;
+
+using BCSYS_AMG.BCSYS_AMG;
 page 50012 "Liste DGX"
 {
     CardPageID = "Fiche DGX";
     PageType = List;
     SourceTable = "DGX Header";
+    ApplicationArea = All;
 
     layout
     {
@@ -13,27 +16,35 @@ page 50012 "Liste DGX"
             {
                 field("DGX No."; rec."DGX No.")
                 {
+                    ToolTip = 'Specifies the value of the DGX No. field.';
                 }
                 field("DGX Type"; rec."DGX Type")
                 {
+                    ToolTip = 'Specifies the value of the DGX Type field.';
                 }
                 field(Recipient; rec.Recipient)
                 {
+                    ToolTip = 'Specifies the value of the Recipient field.', Comment = 'FRA="Destinataire"';
                 }
                 field("Recipient Name"; rec."Recipient Name")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Name field.';
                 }
                 field("Recipient Country EN"; rec."Recipient Country EN")
                 {
+                    ToolTip = 'Specifies the value of the Recipient Country EN field.';
                 }
                 field("Airport of departure"; rec."Airport of departure")
                 {
+                    ToolTip = 'Specifies the value of the Airport of departure field.';
                 }
                 field("Document Date "; rec."Document Date")
                 {
+                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
                 field("Delivery slip no."; rec."Delivery slip no.")
                 {
+                    ToolTip = 'Specifies the value of the Delivery slip no. field.';
                 }
             }
         }
@@ -50,14 +61,14 @@ page 50012 "Liste DGX"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-
+                ToolTip = 'Executes the Imprimer action.';
                 trigger OnAction()
                 begin
                     rec.SETFILTER("DGX No.", Rec."DGX No.");
                     if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
-                        REPORT.RUNMODAL(50017, true, false, xRec)
+                        REPORT.RUNMODAL(Report::"DGX CERFA RDLC", true, false, xRec)
                     else
-                        REPORT.RUNMODAL(50018, true, false, xRec);
+                        REPORT.RUNMODAL(Report::"DGX IATA RDLC", true, false, xRec);
                     rec.SETFILTER("DGX No.", '');
                 end;
             }

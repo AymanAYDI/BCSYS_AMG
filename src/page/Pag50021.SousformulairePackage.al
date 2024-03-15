@@ -11,6 +11,7 @@ page 50021 "Sous-formulaire Package"
     SourceTable = Package;
     SourceTableView = sorting("Package No.")
                       order(ascending);
+    ApplicationArea = All;
     layout
     {
         area(content)
@@ -22,44 +23,55 @@ page 50021 "Sous-formulaire Package"
                     DrillDownPageID = ListeColisage;
                     Editable = false;
                     Enabled = false;
+                    ToolTip = 'Specifies the value of the Package No. field.';
                 }
                 field("Shipping No."; Rec."Shipping No.")
                 {
                     TableRelation = "Sales Shipment Header"."No.";
+                    ToolTip = 'Specifies the value of the Shipping No. field.';
                 }
                 field("Type of package"; Rec."Type of package")
                 {
-
+                    ToolTip = 'Specifies the value of the Type of package field.';
                 }
                 field("Package Reference"; Rec."Package Reference")
                 {
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Package Reference field.';
                 }
                 field("Product Description"; Rec."Product Description")
                 {
+                    ToolTip = 'Specifies the value of the Product Description field.';
                 }
                 field("Length (cm)"; Rec."Length (cm)")
                 {
+                    ToolTip = 'Specifies the value of the Length (cm) field.';
                 }
                 field("Width (cm)"; Rec."Width (cm)")
                 {
+                    ToolTip = 'Specifies the value of the Width (cm) field.';
                 }
                 field("Height (cm)"; Rec."Height (cm)")
                 {
+                    ToolTip = 'Specifies the value of the Height (cm) field.';
                 }
                 field("Volume (m3)"; Rec."Volume (m3)")
                 {
+                    ToolTip = 'Specifies the value of the Volume (m3) field.';
                 }
                 field("Net Weight"; Rec."Net Weight")
                 {
+                    ToolTip = 'Specifies the value of the Net Weight field.';
                 }
                 field("Gross Weight"; Rec."Gross Weight")
                 {
+                    ToolTip = 'Specifies the value of the Gross Weight field.';
                 }
                 field("Nb of pieces"; Rec."Nb of pieces")
                 {
                     Editable = false;
                     Enabled = false;
+                    ToolTip = 'Specifies the value of the Nb of pieces field.';
                 }
             }
         }
@@ -73,18 +85,18 @@ page 50021 "Sous-formulaire Package"
             {
                 Caption = 'Visualiser les article du colis';
                 Image = CreateWarehousePick;
-
+                ToolTip = 'Executes the Visualiser les article du colis action.';
                 trigger OnAction()
                 var
-                    LRecColis: Record 50009;
-                    LRecColisages: Record 50010;
-                    LPagColisage: Page 50022;
+                    LRecColis: Record Package;
+                    LRecColisages: Record Packaging;
+                    LPagColisage: Page ListeColisage;
                 begin
                     CurrPage.SETSELECTIONFILTER(LRecColis);
 
                     if LRecColis.FINDFIRST() then begin
                         LRecColisages.SETRANGE("Package No.", LRecColis."Package No.");
-                        PAGE.RUNMODAL(50022, LRecColisages);
+                        PAGE.RUNMODAL(Page::ListeColisage, LRecColisages);
                     end;
                 end;
             }
@@ -93,7 +105,7 @@ page 50021 "Sous-formulaire Package"
 
     trigger OnDeleteRecord(): Boolean
     var
-        LRecColis: Record 50009;
+        LRecColis: Record Package;
         LIntI: Integer;
         LIntNbColis: Integer;
     begin
@@ -116,7 +128,7 @@ page 50021 "Sous-formulaire Package"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
-        LRecColis: Record 50009;
+        LRecColis: Record Package;
         LIntI: Integer;
         LIntNbColis: Integer;
     begin
@@ -139,6 +151,6 @@ page 50021 "Sous-formulaire Package"
     end;
 
     var
-        GRecColis: Record 50009;
+        GRecColis: Record Package;
 }
 

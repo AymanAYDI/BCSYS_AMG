@@ -29,7 +29,7 @@ tableextension 50005 Item extends Item //27
                 Rec."Last Date Modified Price" := TODAY;
             end;
         }
-        //todo calcformula connot be customized 
+        //TODO calcformula connot be customized 
         // modify("Planning Transfer Ship. (Qty).")
         // {
 
@@ -37,30 +37,36 @@ tableextension 50005 Item extends Item //27
         field(50000; Brand; Text[40])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Brand';
         }
         field(50010; Grade; Text[40])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Grade';
         }
         field(50020; Color; Text[40])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Color';
         }
         field(50030; Process1; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Process1';
         }
         field(50040; Process2; Text[100])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Process2';
         }
-        field(50050; Origine; Text[50])
+        field(50050; Origin; Text[50])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Origin';
         }
         field(50060; Material; Text[30])
         {
-            Caption = 'Matériel';
+            Caption = 'Material', Comment = 'FRA="Matériel"';
             DataClassification = ToBeClassified;
         }
         field(50100; Historique; Boolean)
@@ -69,10 +75,12 @@ tableextension 50005 Item extends Item //27
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Sales Archive";
+            Caption = 'Historique';
         }
         field(50110; "Type carbo"; Boolean)
         {
             DataClassification = ToBeClassified;
+            Caption = 'Type carbo';
         }
         field(50115; "Code ONU"; Code[10])
         {
@@ -81,19 +89,23 @@ tableextension 50005 Item extends Item //27
             //This property is currently not supported
             //TestTableRelation = true;
             ValidateTableRelation = true;
+            Caption = 'Code ONU';
         }
         field(50116; "UN version"; Integer)
         {
             DataClassification = ToBeClassified;
             TableRelation = "ONU table".Version where(Code = field("Code ONU"));
+            Caption = 'UN version';
         }
         field(50120; CodeAZTEC; BLOB)
         {
             DataClassification = ToBeClassified;
+            Caption = 'CodeAZTEC';
         }
         field(50121; CodeBar; Boolean)
         {
             DataClassification = ToBeClassified;
+            Caption = 'CodeBar';
         }
         field(50122; "Last Date Modified Price"; Date)
         {
@@ -102,12 +114,13 @@ tableextension 50005 Item extends Item //27
         }
 
     }
-    //todo field group line 2006
-    //todo procedure TryGetItemNoOpenCard
-    //todo procedure SetLastDateTimeFilter
+    //TODO field group line 2006
+    //TODO procedure TryGetItemNoOpenCard
+    //TODO procedure SetLastDateTimeFilter
     local procedure CalcVAT(): Decimal
     var
         VATPostingSetup: Record "VAT Posting Setup";
+        Text006: Label 'Prices including VAT cannot be calculated when %1 is %2.';
     begin
         if "Price Includes VAT" then begin
             VATPostingSetup.Get("VAT Bus. Posting Gr. (Price)", "VAT Prod. Posting Group");
@@ -125,9 +138,6 @@ tableextension 50005 Item extends Item //27
 
         exit(VATPostingSetup."VAT %" / 100);
     end;
-
-    var
-        Text006: Label 'Prices including VAT cannot be calculated when %1 is %2.';
 
 }
 

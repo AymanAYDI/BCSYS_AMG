@@ -7,9 +7,10 @@ tableextension 50001 GLEntry extends "G/L Entry" //17
 {
     fields
     {
-        field(50000; "Description longue"; Text[250])
+        field(50000; "Long description"; Text[250])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Long description';
         }
     }
     keys
@@ -26,10 +27,10 @@ tableextension 50001 GLEntry extends "G/L Entry" //17
     begin
         if "Document Type" = "Document Type"::Invoice then
             if LRecSalesInvoiceHeader.Get("Document No.") then
-                "Description longue" := LRecSalesInvoiceHeader."Sell-to Customer Name" + ' Ref: ' + LRecSalesInvoiceHeader."Your Reference" + ' ' + Description
+                "Long description" := LRecSalesInvoiceHeader."Sell-to Customer Name" + ' Ref: ' + LRecSalesInvoiceHeader."Your Reference" + ' ' + Description
             else
                 if LRecPurchaseInvoiceHeader.Get("Document No.") then
-                    "Description longue" := LRecPurchaseInvoiceHeader."Buy-from Vendor Name" + ' - Ref: ' + LRecPurchaseInvoiceHeader."Vendor Invoice No." + ' ' + Description;
+                    "Long description" := LRecPurchaseInvoiceHeader."Buy-from Vendor Name" + ' - Ref: ' + LRecPurchaseInvoiceHeader."Vendor Invoice No." + ' ' + Description;
     end;
 }
 

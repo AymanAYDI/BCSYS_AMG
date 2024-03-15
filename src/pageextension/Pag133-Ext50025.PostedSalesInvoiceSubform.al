@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.History;
+using Microsoft.Inventory.Item;
 pageextension 50025 PostedSalesInvoiceSubform extends "Posted Sales Invoice Subform" //133
 {
     layout
@@ -10,6 +11,8 @@ pageextension 50025 PostedSalesInvoiceSubform extends "Posted Sales Invoice Subf
             field("Last direct cost"; GDecLastDirectCost)
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
             }
         }
     }
@@ -22,7 +25,7 @@ pageextension 50025 PostedSalesInvoiceSubform extends "Posted Sales Invoice Subf
     end;
 
     var
-        GRecItem: Record 27;
+        GRecItem: Record Item;
         GDecLastDirectCost: Decimal;
 }
 

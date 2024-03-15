@@ -3,11 +3,13 @@ namespace BCSYS_AMG.BCSYS_AMG;
 using Microsoft.Purchases.Vendor;
 using System.Utilities;
 using Microsoft.Purchases.Payables;
+using Microsoft.Foundation.Period;
 report 50010 "CpyVendor Detail Trial Balance"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './CpyVendorDetailTrialBalance.rdlc';
     Caption = 'Vendor Detail Trial Balance';
+    ApplicationArea = All;
 
     dataset
     {
@@ -408,12 +410,14 @@ report 50010 "CpyVendor Detail Trial Balance"
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.';
+                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
                     field(ExcludeBalanceOnly; ExcludeBalanceOnly)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Exclude Vendors That Have A Balance Only';
                         MultiLine = true;
+                        ToolTip = 'Specifies the value of the Exclude Vendors That Have A Balance Only field.';
                     }
                 }
             }
@@ -447,10 +451,10 @@ report 50010 "CpyVendor Detail Trial Balance"
         Text006: Label 'Balance at %1 ';
         Text007: Label 'Balance at %1';
         Text008: Label 'Total';
-        VendLedgEntry: Record 380;
-        OriginalLedgerEntry: Record 25;
-        VendLedgEntry2: Record 380;
-        FiltreDateCalc: codeunit 358;
+        VendLedgEntry: Record "Detailed Vendor Ledg. Entry";
+        OriginalLedgerEntry: Record "Vendor Ledger Entry";
+        VendLedgEntry2: Record "Detailed Vendor Ledg. Entry";
+        FiltreDateCalc: codeunit "DateFilter-Calc";
         StartDate: Date;
         EndDate: Date;
         PreviousStartDate: Date;

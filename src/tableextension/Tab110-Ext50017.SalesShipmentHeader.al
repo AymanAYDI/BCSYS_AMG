@@ -5,10 +5,10 @@ tableextension 50017 SalesShipmentHeader extends "Sales Shipment Header" //110
 {
     fields
     {
-        //todo traduction
+        //TODO traduction
         modify("On Hold")
         {
-            Caption = 'On Hold';
+            Caption = 'On Hold', Comment = 'FRA="En attente"';
         }
         field(50000; "Packing detail"; Text[80])
         {
@@ -21,6 +21,6 @@ tableextension 50017 SalesShipmentHeader extends "Sales Shipment Header" //110
             DataClassification = ToBeClassified;
         }
     }
-    //todo Requested Delivery Date AccessByPermission
+    //TODO Requested Delivery Date AccessByPermission
 }
 

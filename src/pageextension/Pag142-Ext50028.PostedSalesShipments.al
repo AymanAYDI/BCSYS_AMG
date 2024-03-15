@@ -10,7 +10,8 @@ pageextension 50028 "PostedSalesShipments" extends "Posted Sales Shipments" //14
         {
             field("Your Reference"; rec."Your Reference")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Your Reference field.';
             }
         }
     }

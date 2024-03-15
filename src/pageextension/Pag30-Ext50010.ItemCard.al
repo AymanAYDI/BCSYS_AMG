@@ -12,6 +12,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             field("No. 2"; Rec."No. 2")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the No. 2 field.';
             }
         }
         modify(Description)
@@ -26,6 +27,8 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 DrillDown = true;
                 TableRelation = "Sales Archive"."Reference";
                 Importance = Promoted;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Historique field.';
                 trigger OnLookup(var myText: Text): Boolean
                 var
                     LRecHisto: Record "Sales Archive";
@@ -47,6 +50,8 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 Lookup = false;
                 DrillDown = true;
                 AssistEdit = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Code ONU field.';
                 trigger OnLookup(var myText: Text): Boolean
                 begin
                     CLEAR(GPageONU);
@@ -88,36 +93,43 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 ApplicationArea = All;
                 TableRelation = "ONU table".Version where(Code = field("Code ONU"));
                 Visible = false;
+                ToolTip = 'Specifies the value of the UN version field.';
             }
             field(Brand; Rec.Brand)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Brand field.';
             }
             field(Grade; Rec.Grade)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Grade field.';
             }
             field(Color; Rec.Color)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Color field.';
             }
             field(Process1; Rec.Process1)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Process1 field.';
             }
             field(Process2; Rec.Process2)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Process2 field.';
             }
-            field(Origine; Rec.Origine)
+            field(Origin; Rec.Origin)
             {
                 ApplicationArea = All;
                 Visible = false;
+                ToolTip = 'Specifies the value of the Origin field.';
             }
         }
         addafter("Item Category Code")
@@ -125,6 +137,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             field("Type carbo"; Rec."Type carbo")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Type carbo field.';
             }
         }
         addafter("Last Direct Cost")
@@ -132,11 +145,12 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             field("Last Date Modified Price"; Rec."Last Date Modified Price")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Last Date Modified Price field.';
             }
         }
         addfirst(factboxes)
         {
-            //todo page spe
+            //TODO page spe
             // part(LPSubstitute; "Sustitutions possibles")
             // {
             //     ApplicationArea = All;
@@ -156,16 +170,18 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 PromotedIsBig = true;
                 image = BarCode;
                 PromotedCategory = Process;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Etiquette action.';
                 trigger OnAction()
                 var
-                    //todo codeunit spe
+                    //TODO codeunit spe
                     //  LCUCodeBar: Codeunit 50000;
                     LRecArticle: Record Item;
                 begin
                     if not Rec.CodeBar then
                         // LCUCodeBar.AddCodeBarAztec(Rec);
                         LRecArticle.SETRANGE("No.", Rec."No.");
-                    REPORT.RUN(50015, true, true, LRecArticle);
+                    REPORT.RUN(Report::"Etiquette article", true, true, LRecArticle);
                 end;
             }
         }

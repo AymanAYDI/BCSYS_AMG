@@ -4,6 +4,7 @@ using Microsoft.Inventory.Item;
 report 50005 "MAJ PriceProfit Calculation"
 {
     ProcessingOnly = true;
+    ApplicationArea = All;
 
     dataset
     {

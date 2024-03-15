@@ -18,18 +18,20 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         {
             TableRelation = Customer;
         }
-        //todo AccessByPermission cannot be customized
+        //TODO AccessByPermission cannot be customized
         // modify("Requested Delivery Date")
         // {
         //     AccessByPermission = TableData 99000880 = R;
         // }
-        field(50000; "Délai de livraison"; Text[80])
+        field(50000; "Delivery time"; Text[80])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Delivery time', Comment = 'FRA="Délai de livraison"';
         }
-        field(50001; "Durée de validité"; Text[80])
+        field(50001; "Validity period"; Text[80])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Validity period', Comment = 'FRA="Durée de validité"';
         }
         field(50060; "Gross Weight"; Decimal)
         {
@@ -37,7 +39,6 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
                                                                  "Document No." = field("No.")));
             Caption = 'Gross Weight';
             DecimalPlaces = 0 : 5;
-            Description = 'EURIS_EDIT';
             FieldClass = FlowField;
         }
         field(50070; "Net Weight"; Decimal)
@@ -46,25 +47,25 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
                                                                "Document No." = field("No.")));
             Caption = 'Net Weight';
             DecimalPlaces = 0 : 5;
-            Description = 'EURIS_EDIT';
             FieldClass = FlowField;
         }
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
+            Caption = 'Compl. cond. livraison';
         }
     }
-    //todo Onlookup Bill-to Contact line 357
-    //todo Verifier line 639
-    //todo i can't find solution for line  702 & 712
-    //todo i can't find solution for Onlookup of "Sell-to Customer Name"
-    //todo i can't find solution for OnValidate of "Sell-to E-Mail"
-    //todo field group dropdown 2145
-    //todo verifier 2681
-    //todo line 2800
-    //todo verifier line 3948
-    //todo verifier line 3958
-    //todo verifier line 4028
-    //todo check ValidateTaxAreaCode
+    //TODO Onlookup Bill-to Contact line 357
+    //TODO Verifier line 639
+    //TODO i can't find solution for line  702 & 712
+    //TODO i can't find solution for Onlookup of "Sell-to Customer Name"
+    //TODO i can't find solution for OnValidate of "Sell-to E-Mail"
+    //TODO field group dropdown 2145
+    //TODO verifier 2681
+    //TODO line 2800
+    //TODO verifier line 3948
+    //TODO verifier line 3958
+    //TODO verifier line 4028
+    //TODO check ValidateTaxAreaCode
 }
 

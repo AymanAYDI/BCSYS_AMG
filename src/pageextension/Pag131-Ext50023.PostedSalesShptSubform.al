@@ -5,7 +5,7 @@ using BCSYS.AMGALLOIS.Basic;
 
 pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform" //131
 {
-    //todo cannot be customized
+    //TODO cannot be customized
     // InsertAllowed =false;
     // DeleteAllowed =false;
     // ModifyAllowed =true;
@@ -21,6 +21,8 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
             {
                 TableRelation = "ONU table".Code;
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Code ONU field.';
             }
         }
         modify("Variant Code")
@@ -91,11 +93,13 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
         {
             field("Gen. Bus. Posting Group"; rec."Gen. Bus. Posting Group")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
             field("Gen. Prod. Posting Group"; rec."Gen. Prod. Posting Group")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Gen. Prod. Posting Group field.';
             }
         }
         modify("Shortcut Dimension 1 Code")
@@ -114,10 +118,12 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                 DrillDown = false;
                 TableRelation = Package."Package No." where("Package No." = field("Package No."));
                 LookupPageID = Package;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Package No. field.';
                 trigger OnValidate()
                 var
-                    LRecColis: Record 50009;
-                    LRecColisage: Record 50010;
+                    LRecColis: Record Package;
+                    LRecColisage: Record Packaging;
                     LNoColis: Code[20];
                 begin
                     if (xRec."Package No." <> Rec."Package No.") and (xRec."Package No." <> '') then begin
@@ -166,12 +172,14 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                 action("Create Package")
                 {
                     Image = Item;
+                    ApplicationArea = All;
+                    ToolTip = 'Executes the Create Package action.';
                     trigger OnAction()
                     var
-                        LRecSalesShipmentLine: Record 111;
-                        LRecColis: Record 50009;
-                        LRecColis2: Record 50009;
-                        LRecColisage: Record 50010;
+                        LRecSalesShipmentLine: Record "Sales Shipment Line";
+                        LRecColis: Record Package;
+                        LRecColis2: Record Package;
+                        LRecColisage: Record Packaging;
                         LIntI: Integer;
                         LIntNbColis: Integer;
                     begin

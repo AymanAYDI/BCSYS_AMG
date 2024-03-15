@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.Document;
+using Microsoft.Inventory.Item;
 
 pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
 {
@@ -11,6 +12,8 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
             field("Fournisseur article"; Rec."Fournisseur article")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor field.';
             }
         }
         modify("Location Code")
@@ -33,13 +36,18 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
             field("Dernier cout direct"; GDecLastDirectCost)
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
             }
             field(Marge; rec.Marge)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Marge field.';
             }
             field(Marque; rec."Prepmt. VAT Amount Inv. (LCY)")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Prepmt. VAT Amount Inv. (LCY) field.';
                 trigger OnValidate()
                 begin
                     Rec.FCalculateOnMargeChange(rec."No.", rec.Marque);
@@ -89,7 +97,8 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
         {
             field(Amount; Rec.Amount)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Amount field.';
             }
         }
         modify("Line Amount")
@@ -120,8 +129,8 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
     end;
 
     var
-        GRecItem: Record 27;
+        GRecItem: Record Item;
         GDecLastDirectCost: Decimal;
 
-    //todo check line 419,445,469,660,1138
+    //TODO check line 419,445,469,660,1138
 }
