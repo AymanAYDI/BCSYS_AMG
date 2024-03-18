@@ -42,8 +42,8 @@ report 50021 "MAJ Description GL Entry"
                     else
                         if LRecPurchaseInvoiceHeader.GET(GRecGLEntry."Document No.") then
                             GRecGLEntry."Long description" := LRecPurchaseInvoiceHeader."Buy-from Vendor Name" + ' - Ref: ' + LRecPurchaseInvoiceHeader."Vendor Invoice No." + ' ' + GRecGLEntry.Description;
-                GRecGLEntry.MODIFY();
-            until GRecGLEntry.NEXT() <= 0;
+                GRecGLEntry.Modify();
+            until GRecGLEntry.Next() <= 0;
 
     end;
 

@@ -41,7 +41,7 @@ codeunit 50002 "AMG_Functions"
                     ModifyOrderAdjmt := ModifyOrderAdjmt or not InventoryAdjmtEntryOrder."Allow Online Adjustment";
                 end;
                 if ModifyOrderAdjmt then
-                    InventoryAdjmtEntryOrder.MODIFY();
+                    InventoryAdjmtEntryOrder.Modify();
             end;
         end else
             case OrderType of
@@ -79,7 +79,7 @@ codeunit 50002 "AMG_Functions"
                        ("Entry Type" <> "Entry Type"::Revaluation)
                     then
                         ValuationDate := "Valuation Date";
-                until NEXT() = 0;
+                until Next() = 0;
             exit(ValuationDate);
         end;
     end;
@@ -103,38 +103,38 @@ codeunit 50002 "AMG_Functions"
         with PurchHeader do begin
             TESTFIELD("Document Type", "Document Type"::Order);
 
-            LRecSalesLine.SETRANGE("Document Type", LRecSalesLine."Document Type"::Order);
-            LRecSalesLine.SETRANGE(Type, LRecSalesLine.Type::Item);
+            LRecSalesLine.SetRange("Document Type", LRecSalesLine."Document Type"::Order);
+            LRecSalesLine.SetRange(Type, LRecSalesLine.Type::Item);
             LRecSalesLine.SETFILTER("Outstanding Quantity", '>%1', 0);
-            LRecSalesLine.SETRANGE("Fournisseur article", PurchHeader."Buy-from Vendor No.");
+            LRecSalesLine.SetRange("Fournisseur article", PurchHeader."Buy-from Vendor No.");
             LRecSalesLine.SETFILTER("Special Order Purchase No.", '=%1', '');
-            LRecSalesLine.SETRANGE("Special Order", true);
+            LRecSalesLine.SetRange("Special Order", true);
             LPageSalesLine.SETTABLEVIEW(LRecSalesLine);
-            if (LPageSalesLine.RUNMODAL() <> ACTION::OK) then
+            if (LPageSalesLine.RunModal() <> ACTION::OK) then
                 exit;
 
             LOCKTABLE();
             if Vendor.GET("Buy-from Vendor No.") then
-                VALIDATE("Shipment Method Code", Vendor."Shipment Method Code");
+                Validate("Shipment Method Code", Vendor."Shipment Method Code");
 
             PurchLine.LOCKTABLE();
             SalesLine.LOCKTABLE();
 
-            PurchLine.SETRANGE("Document Type", PurchLine."Document Type"::Order);
-            PurchLine.SETRANGE("Document No.", "No.");
+            PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+            PurchLine.SetRange("Document No.", "No.");
             if PurchLine.FINDLAST() then
                 NextLineNo := PurchLine."Line No." + 10000
             else
                 NextLineNo := 10000;
 
-            SalesLine.RESET();
-            SalesLine.SETRANGE("Document Type", SalesLine."Document Type"::Order);
-            SalesLine.SETRANGE("Special Order", true);
+            SalesLine.Reset();
+            SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+            SalesLine.SetRange("Special Order", true);
             SalesLine.SETFILTER("Outstanding Quantity", '<>0');
-            SalesLine.SETRANGE(Type, SalesLine.Type::Item);
+            SalesLine.SetRange(Type, SalesLine.Type::Item);
             SalesLine.SETFILTER("No.", '<>%1', '');
-            SalesLine.SETRANGE("Special Order Purch. Line No.", 0);
-            SalesLine.SETRANGE(Sel, true);
+            SalesLine.SetRange("Special Order Purch. Line No.", 0);
+            SalesLine.SetRange(Sel, true);
 
             if SalesLine.FINDSET() then
                 repeat
@@ -158,20 +158,20 @@ codeunit 50002 "AMG_Functions"
                     NextLineNo := NextLineNo + 10000;
 
                     SalesLine."Unit Cost (LCY)" := PurchLine."Unit Cost (LCY)";
-                    SalesLine.VALIDATE("Unit Cost (LCY)");
+                    SalesLine.Validate("Unit Cost (LCY)");
                     SalesLine."Special Order Purchase No." := PurchLine."Document No.";
                     SalesLine."Special Order Purch. Line No." := PurchLine."Line No.";
                     SalesLine.Sel := false; // DELPHI DEB 26/10/2018 MultiSelection.
-                    SalesLine.MODIFY();
+                    SalesLine.Modify();
                     if TransferExtendedText.PurchCheckIfAnyExtText(PurchLine, true) then begin
                         TransferExtendedText.InsertPurchExtText(PurchLine);
-                        PurchLine2.SETRANGE("Document Type", "Document Type");
-                        PurchLine2.SETRANGE("Document No.", "No.");
+                        PurchLine2.SetRange("Document Type", "Document Type");
+                        PurchLine2.SetRange("Document No.", "No.");
                         if PurchLine2.FINDLAST() then
                             NextLineNo := PurchLine2."Line No.";
                         NextLineNo := NextLineNo + 10000;
                     end;
-                until SalesLine.NEXT() = 0
+                until SalesLine.Next() = 0
             else
                 if SalesHeader."No." <> '' then
                     ERROR(
@@ -179,7 +179,7 @@ codeunit 50002 "AMG_Functions"
                       SalesHeader."No.")
                 else
                     MESSAGE('Aucune ligne sélectionnée');
-            MODIFY();
+            Modify();
         end;
     end;
     //Codeunit 5804 dupliqué

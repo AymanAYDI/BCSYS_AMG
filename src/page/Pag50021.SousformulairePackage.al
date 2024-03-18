@@ -95,8 +95,8 @@ page 50021 "Sous-formulaire Package"
                     CurrPage.SETSELECTIONFILTER(LRecColis);
 
                     if LRecColis.FINDFIRST() then begin
-                        LRecColisages.SETRANGE("Package No.", LRecColis."Package No.");
-                        PAGE.RUNMODAL(Page::ListeColisage, LRecColisages);
+                        LRecColisages.SetRange("Package No.", LRecColis."Package No.");
+                        PAGE.RunModal(Page::ListeColisage, LRecColisages);
                     end;
                 end;
             }
@@ -110,20 +110,20 @@ page 50021 "Sous-formulaire Package"
         LIntNbColis: Integer;
     begin
         LIntI := 1;
-        LRecColis.RESET();
+        LRecColis.Reset();
         LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT - 1;
-        CurrPage.UPDATE(true);
+        CurrPage.Update(true);
         if LRecColis.FINDFIRST() then
             repeat
                 if LRecColis."Package No." <> Rec."Package No." then begin
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-                    LRecColis.MODIFY();
+                    LRecColis.Modify();
                     COMMIT();
                     LIntI += 1;
                 end;
-            until LRecColis.NEXT() <= 0;
-        CurrPage.UPDATE(false);
+            until LRecColis.Next() <= 0;
+        CurrPage.Update(false);
     end;
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
@@ -132,22 +132,22 @@ page 50021 "Sous-formulaire Package"
         LIntI: Integer;
         LIntNbColis: Integer;
     begin
-        CLEAR(GRecColis);
-        GRecColis.SETRANGE("Shipping No.", Rec."Shipping No.");
+        Clear(GRecColis);
+        GRecColis.SetRange("Shipping No.", Rec."Shipping No.");
         Rec."Package Reference" := FORMAT(GRecColis.COUNT + 1) + '/' + FORMAT(GRecColis.COUNT + 1);
         LIntI := 1;
-        LRecColis.RESET();
+        LRecColis.Reset();
         LRecColis.SETFILTER("Shipping No.", Rec."Shipping No.");
         LIntNbColis := LRecColis.COUNT + 1;
         if LRecColis.FINDFIRST() then
             repeat
                 if LRecColis."Package No." <> Rec."Package No." then begin
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-                    LRecColis.MODIFY();
+                    LRecColis.Modify();
                     COMMIT();
                     LIntI += 1;
                 end;
-            until LRecColis.NEXT() <= 0;
+            until LRecColis.Next() <= 0;
     end;
 
     var

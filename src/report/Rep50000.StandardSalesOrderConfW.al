@@ -508,7 +508,7 @@ report 50000 "Standard Sales - Order Conf. W"
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
                     if FirstLineHasBeenOutput then
-                        CLEAR(CompanyInfo.Picture);
+                        Clear(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
                 end;
 
@@ -516,10 +516,10 @@ report 50000 "Standard Sales - Order Conf. W"
                 begin
                     MoreLines := FINDLAST();
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                        MoreLines := NEXT(-1) <> 0;
+                        MoreLines := Next(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
-                    SETRANGE("Line No.", 0, "Line No.");
+                    SetRange("Line No.", 0, "Line No.");
                     CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
@@ -562,8 +562,8 @@ report 50000 "Standard Sales - Order Conf. W"
                             CurrReport.BREAK();
                         if not AsmInfoExistsForLine then
                             CurrReport.BREAK();
-                        SETRANGE("Document Type", AsmHeader."Document Type");
-                        SETRANGE("Document No.", AsmHeader."No.");
+                        SetRange("Document Type", AsmHeader."Document Type");
+                        SetRange("Document No.", AsmHeader."No.");
                     end;
                 }
 
@@ -833,8 +833,8 @@ report 50000 "Standard Sales - Order Conf. W"
                 SalesPost: Codeunit "Sales-Post";
             begin
                 FirstLineHasBeenOutput := false;
-                CLEAR(Line);
-                CLEAR(SalesPost);
+                Clear(Line);
+                Clear(SalesPost);
                 VATAmountLine.DELETEALL();
                 Line.DELETEALL();
                 SalesPost.GetSalesLines(Header, Line, 0);
@@ -854,7 +854,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 ShowShippingAddr := FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
-                    CLEAR(Cust);
+                    Clear(Cust);
 
                 if "Currency Code" <> '' then begin
                     CurrencyExchangeRate.FindCurrency("Posting Date", "Currency Code", 1);

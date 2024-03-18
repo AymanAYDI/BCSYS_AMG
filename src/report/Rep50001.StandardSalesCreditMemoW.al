@@ -492,7 +492,7 @@ report 50001 "Standard Sales - Credit Memo W"
 
                     trigger OnPreDataItem()
                     begin
-                        SETRANGE("Line No.", Line."Line No.");
+                        SetRange("Line No.", Line."Line No.");
                     end;
                 }
                 dataitem(AssemblyLine; "Posted Assembly Line")
@@ -520,7 +520,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     var
                         ValueEntry: Record "Value Entry";
                     begin
-                        CLEAR(AssemblyLine);
+                        Clear(AssemblyLine);
                         if not DisplayAssemblyInformation then
                             CurrReport.BREAK();
                         GetAssemblyLinesForDocument(
@@ -569,7 +569,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
                     if FirstLineHasBeenOutput then
-                        CLEAR(CompanyInfo.Picture);
+                        Clear(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
                 end;
 
@@ -577,14 +577,14 @@ report 50001 "Standard Sales - Credit Memo W"
                 begin
                     VATAmountLine.DELETEALL();
                     VATClauseLine.DELETEALL();
-                    ShipmentLine.RESET();
+                    ShipmentLine.Reset();
                     ShipmentLine.DELETEALL();
                     MoreLines := FINDLAST();
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                        MoreLines := NEXT(-1) <> 0;
+                        MoreLines := Next(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
-                    SETRANGE("Line No.", 0, "Line No.");
+                    SetRange("Line No.", 0, "Line No.");
                     CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
@@ -839,7 +839,7 @@ report 50001 "Standard Sales - Credit Memo W"
                 FormatDocumentFields(Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
-                    CLEAR(Cust);
+                    Clear(Cust);
 
                 if "Currency Code" <> '' then begin
                     CurrencyExchangeRate.FindCurrency("Posting Date", "Currency Code", 1);
@@ -1057,12 +1057,12 @@ report 50001 "Standard Sales - Credit Memo W"
 
         ShipmentLine.GetLinesForSalesCreditMemoLine(Line, Header);
 
-        ShipmentLine.RESET();
-        ShipmentLine.SETRANGE("Line No.", Line."Line No.");
+        ShipmentLine.Reset();
+        ShipmentLine.SetRange("Line No.", Line."Line No.");
         if ShipmentLine.FINDFIRST() then begin
             SalesShipmentBuffer2 := ShipmentLine;
             if not DisplayShipmentInformation then
-                if ShipmentLine.NEXT() = 0 then begin
+                if ShipmentLine.Next() = 0 then begin
                     ShipmentLine.GET(
                       SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
                     ShipmentLine.DELETE();

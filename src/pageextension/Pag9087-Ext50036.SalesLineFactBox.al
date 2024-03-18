@@ -55,9 +55,9 @@ pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
     var
         LRecPurchaseHeader: Record "Purchase Header";
     begin
-        LRecPurchaseHeader.RESET();
+        LRecPurchaseHeader.Reset();
         if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
-            LRecPurchaseHeader.SETRANGE("No.", Rec."Special Order Purchase No.");
+            LRecPurchaseHeader.SetRange("No.", Rec."Special Order Purchase No.");
             if LRecPurchaseHeader.FINDFIRST() then
                 GTxtNomFournisseur := LRecPurchaseHeader."Buy-from Vendor Name";
         end;

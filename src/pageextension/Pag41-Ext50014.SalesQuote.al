@@ -3,6 +3,7 @@ namespace BCSYS_AMG.BCSYS_AMG;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using System.Security.User;
+using BCSYS.AMGALLOIS.Basic;
 
 pageextension 50014 "SalesQuote" extends "Sales Quote" //41
 {
@@ -93,33 +94,25 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
         }
         addbefore(Control1901314507)
         {
-            //TODO page spe
-            // part(LPSubstitute; "Sustitutions possibles")
-            // {
-            //     ApplicationArea = All;
-            //     Caption = 'Substitution';
-            //      ProviderID=58;
-            //      ShowFilter =false; 
-            //     SubPageLink = "No." = field("No.");
-            // }
+            part(LPSubstitute; "Sustitutions possibles")
+            {
+                ApplicationArea = All;
+                Caption = 'Substitution';
+                Provider = SalesLines;
+                ShowFilter = false;
+                SubPageLink = "No." = field("No.");
+            }
         }
     }
     actions
     {
-        modify(Customer)
-        {
-            visible = false;
-            //TODO RunPageLink cannot be customized
-            // RunPageLink = "No." = field("Sell-to Customer No.");
-        }
         addafter(Customer)
         {
             action(Customerspe)
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Customer';
-                //TODO global var IsCustomerOrContactNotEmpty
-                // Enabled = IsCustomerOrContactNotEmpty;
+                Enabled = (Rec."Sell-to Customer No." <> '') or (Rec."Sell-to Contact No." <> '');
                 Image = Customer;
                 RunObject = Page "Customer Card";
                 RunPageLink = "No." = field("Sell-to Customer No."),
@@ -137,7 +130,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
         if GRecUserSetup.GET(GCodUserID) and (Rec."Salesperson Code" = '') then
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
         if Rec."No." <> '' then
-            Rec.MODIFY();
+            Rec.Modify();
     end;
 
     var

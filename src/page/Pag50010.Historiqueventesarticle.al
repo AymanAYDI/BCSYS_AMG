@@ -51,14 +51,14 @@ page 50010 "Historique ventes article"
                         //JOS 13/07/2023
                         if Rec.Archive <> true then begin
                             if LRecDevis.GET(LRecDevis."Document Type"::Quote, Rec."Quote No.") then
-                                PAGE.RUNMODAL(Page::"Sales Quote", LRecDevis)
+                                PAGE.RunModal(Page::"Sales Quote", LRecDevis)
                         end
                         else begin
                             if LRecDevisArchive.GET(LRecDevisArchive."Document Type"::Quote, Rec."Quote No.") then
                                 LRecDevisArchive.SETASCENDING("Version No.", false);
-                            LRecDevisArchive.SETRANGE(LRecDevisArchive."No.", Rec."Quote No.");
+                            LRecDevisArchive.SetRange(LRecDevisArchive."No.", Rec."Quote No.");
                             if LRecDevisArchive.FINDFIRST() then
-                                PAGE.RUNMODAL(Page::"Sales Quote Archive", LRecDevisArchive)
+                                PAGE.RunModal(Page::"Sales Quote Archive", LRecDevisArchive)
                         end
                     end;
 
@@ -70,14 +70,14 @@ page 50010 "Historique ventes article"
                         //JOS 16/05/2023
                         if Rec.Archive <> true then begin
                             if LRecDevis.GET(LRecDevis."Document Type"::Quote, Rec."Quote No.") then
-                                PAGE.RUNMODAL(Page::"Sales Quote", LRecDevis)
+                                PAGE.RunModal(Page::"Sales Quote", LRecDevis)
                         end
                         else begin
                             if LRecDevisArchive.GET(LRecDevisArchive."Document Type"::Quote, Rec."Quote No.") then
                                 LRecDevisArchive.SETASCENDING("Version No.", false);
-                            LRecDevisArchive.SETRANGE(LRecDevisArchive."No.", Rec."Quote No.");
+                            LRecDevisArchive.SetRange(LRecDevisArchive."No.", Rec."Quote No.");
                             if LRecDevisArchive.FINDFIRST() then
-                                PAGE.RUNMODAL(Page::"Sales Quote Archive", LRecDevisArchive)
+                                PAGE.RunModal(Page::"Sales Quote Archive", LRecDevisArchive)
                         end
                     end;
                 }
@@ -95,14 +95,14 @@ page 50010 "Historique ventes article"
                         //JOS 13/07/2023
                         if Rec.Archive <> true then begin
                             if LRecCmdeVente.GET(LRecCmdeVente."Document Type"::Order, Rec."Sales Order No.") then
-                                PAGE.RUNMODAL(Page::"Sales Order", LRecCmdeVente)
+                                PAGE.RunModal(Page::"Sales Order", LRecCmdeVente)
                         end
                         else begin
                             if LRecCmdeVenteArchive.GET(LRecCmdeVenteArchive."Document Type"::Order, Rec."Sales Order No.") then
                                 LRecCmdeVenteArchive.SETASCENDING("Version No.", false);
-                            LRecCmdeVenteArchive.SETRANGE(LRecCmdeVenteArchive."No.", Rec."Sales Order No.");
+                            LRecCmdeVenteArchive.SetRange(LRecCmdeVenteArchive."No.", Rec."Sales Order No.");
                             if LRecCmdeVenteArchive.FINDFIRST() then
-                                PAGE.RUNMODAL(Page::"Sales Order Archive", LRecCmdeVenteArchive)
+                                PAGE.RunModal(Page::"Sales Order Archive", LRecCmdeVenteArchive)
                         end
                     end;
 
@@ -114,14 +114,14 @@ page 50010 "Historique ventes article"
                         //JOS 16/05/2023
                         if Rec.Archive <> true then begin
                             if LRecCmdeVente.GET(LRecCmdeVente."Document Type"::Order, Rec."Sales Order No.") then
-                                PAGE.RUNMODAL(Page::"Sales Order", LRecCmdeVente)
+                                PAGE.RunModal(Page::"Sales Order", LRecCmdeVente)
                         end
                         else begin
                             if LRecCmdeVenteArchive.GET(LRecCmdeVenteArchive."Document Type"::Order, Rec."Sales Order No.") then
                                 LRecCmdeVenteArchive.SETASCENDING("Version No.", false);
-                            LRecCmdeVenteArchive.SETRANGE(LRecCmdeVenteArchive."No.", Rec."Sales Order No.");
+                            LRecCmdeVenteArchive.SetRange(LRecCmdeVenteArchive."No.", Rec."Sales Order No.");
                             if LRecCmdeVenteArchive.FINDFIRST() then
-                                PAGE.RUNMODAL(Page::"Sales Order Archive", LRecCmdeVenteArchive)
+                                PAGE.RunModal(Page::"Sales Order Archive", LRecCmdeVenteArchive)
                         end
                     end;
                 }
@@ -167,7 +167,7 @@ page 50010 "Historique ventes article"
                     begin
                         //JOS 13.07.2023
                         if LRecCmdeAchat.GET(LRecCmdeAchat."Document Type"::Order, Rec."Purchase Order No.") then
-                            PAGE.RUNMODAL(Page::"Purchase Order", LRecCmdeAchat);
+                            PAGE.RunModal(Page::"Purchase Order", LRecCmdeAchat);
                     end;
 
                     trigger OnLookup(var Text: Text): Boolean
@@ -176,7 +176,7 @@ page 50010 "Historique ventes article"
                     begin
                         //DELPHI AUB 01.07.2020
                         if LRecCmdeAchat.GET(LRecCmdeAchat."Document Type"::Order, Rec."Purchase Order No.") then
-                            PAGE.RUNMODAL(Page::"Purchase Order", LRecCmdeAchat);
+                            PAGE.RunModal(Page::"Purchase Order", LRecCmdeAchat);
                         //END DELPHI AUB
                     end;
                 }
@@ -190,7 +190,7 @@ page 50010 "Historique ventes article"
                     begin
                         //JOS 13.07.2023
                         if LRecFactureVente.GET(Rec."Sales Invoice No.") then
-                            PAGE.RUNMODAL(Page::"Posted Sales Invoice", LRecFactureVente);
+                            PAGE.RunModal(Page::"Posted Sales Invoice", LRecFactureVente);
                     end;
 
                     trigger OnLookup(var Text: Text): Boolean
@@ -199,7 +199,7 @@ page 50010 "Historique ventes article"
                     begin
                         //DELPHI AUB 01.07.2020
                         if LRecFactureVente.GET(Rec."Sales Invoice No.") then
-                            PAGE.RUNMODAL(Page::"Posted Sales Invoice", LRecFactureVente);
+                            PAGE.RunModal(Page::"Posted Sales Invoice", LRecFactureVente);
                         //END DELPHI AUB
                     end;
                 }

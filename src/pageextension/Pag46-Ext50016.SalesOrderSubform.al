@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Sales.Document;
+using Microsoft.Inventory.Item.Substitution;
 
 pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
 {
@@ -96,7 +97,7 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 DeltaUpdateTotals();
                 Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                 Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                Rec.MODIFY();
+                Rec.Modify();
             end;
         }
         modify("Line Discount Amount")
@@ -105,7 +106,7 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
             begin
                 Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                 Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                Rec.MODIFY();
+                Rec.Modify();
             end;
         }
         moveafter("Document No."; "Gen. Bus. Posting Group")
@@ -113,6 +114,32 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
     }
     actions
     {
+        modify(SelectItemSubstitution)
+        {
+            Visible = false;
+        }
+        addafter(SelectItemSubstitution)
+        {
+            action(SelectItemSubstitutionamg)
+            {
+                AccessByPermission = TableData "Item Substitution" = R;
+                ApplicationArea = Suite;
+                Caption = 'Select Item Substitution';
+                Image = SelectItemSubstitution;
+                ToolTip = 'Select another item that has been set up to be sold instead of the original item if it is unavailable.';
+
+                trigger OnAction()
+                begin
+                    CurrPage.SaveRecord();
+                    Rec.ShowItemSub();
+                    CurrPage.Update(true);
+                    // if (Rec.Reserve = Rec.Reserve::Always) and (Rec."No." <> xRec."No.") then begin
+                    Rec.AutoReserve();
+                    //    CurrPage.Update(false);
+                    //  end;
+                end;
+            }
+        }
         addafter(SelectMultiItems)
         {
             action(ActRemplir)
@@ -121,17 +148,17 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 ToolTip = 'Executes the ActRemplir action.';
                 trigger OnAction()
                 begin
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
+                            GRecSalesLine.Validate("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
                             if GRecSalesLine."Qty. to Ship (Base)" <> GRecSalesLine."Outstanding Qty. (Base)" then
-                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
             action(ActViderAExpedier)
@@ -144,17 +171,17 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 ToolTip = 'Executes the ActViderAExpedier action.';
                 trigger OnAction()
                 begin
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Ship", 0);
+                            GRecSalesLine.Validate("Qty. to Ship", 0);
                             if GRecSalesLine."Qty. to Ship (Base)" <> 0 then
-                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", 0);
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Ship (Base)", 0);
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
             action(ActViderAFacturer)
@@ -167,17 +194,17 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 ToolTip = 'Executes the ActViderAFacturer action.';
                 trigger OnAction()
                 begin
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Invoice", 0);
+                            GRecSalesLine.Validate("Qty. to Invoice", 0);
                             if GRecSalesLine."Qty. to Invoice (Base)" <> 0 then
-                                GRecSalesLine.VALIDATE("Qty. to Invoice (Base)", 0);
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Invoice (Base)", 0);
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
         }
@@ -185,5 +212,5 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
     var
         GRecSalesLine: Record "Sales Line";
         IsBlankNumber: Boolean;
-    //TODO i can't find solution for line 307,578,585,649,706,1011,1198,1733,1742
+    //TODO i can't find solution for line 578,585,649,706,1011,1198,1733,1742
 }

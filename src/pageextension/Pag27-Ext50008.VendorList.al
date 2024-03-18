@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Purchases.Vendor;
+using Microsoft.Purchases.Reports;
 
 pageextension 50008 "VendorList" extends "Vendor List" //27
 {
@@ -32,9 +33,8 @@ pageextension 50008 "VendorList" extends "Vendor List" //27
                 var
                     LRecVendor: Record Vendor;
                 begin
-                    LRecVendor.SETRANGE("No.", Rec."No.");
-                    //TODO report spe
-                    //  REPORT.RUNMODAL(REPORT::"Vendor Detail Trial Balance", true, true, LRecVendor);
+                    LRecVendor.SetRange("No.", Rec."No.");
+                    REPORT.RunModal(REPORT::"Vendor Detail Trial Balance FR", true, true, LRecVendor);
                 end;
             }
         }

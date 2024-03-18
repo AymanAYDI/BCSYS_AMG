@@ -318,14 +318,14 @@ report 50010 "CpyVendor Detail Trial Balance"
                             Date."Period Start" := StartDate;
                         if EndDate < Date."Period End" then
                             Date."Period End" := EndDate;
-                        SETRANGE("Posting Date", Date."Period Start", Date."Period End");
+                        SetRange("Posting Date", Date."Period Start", Date."Period End");
                     end;
                 }
 
                 trigger OnPreDataItem()
                 begin
-                    SETRANGE("Period Type", TotalBy);
-                    SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
+                    SetRange("Period Type", TotalBy);
+                    SetRange("Period Start", StartDate, CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
 
                     CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
@@ -339,8 +339,8 @@ report 50010 "CpyVendor Detail Trial Balance"
 
                 VendLedgEntry.SETCURRENTKEY(
                   "Vendor No.", "Posting Date", "Entry Type", "Initial Entry Global Dim. 1", "Initial Entry Global Dim. 2", "Currency Code");
-                VendLedgEntry.SETRANGE("Vendor No.", "No.");
-                VendLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
+                VendLedgEntry.SetRange("Vendor No.", "No.");
+                VendLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
                 VendLedgEntry.SETFILTER(
                   "Entry Type", '%1|%2|%3|%4|%5|%6|%7|%8|%9..%10',
                   VendLedgEntry."Entry Type"::"Initial Entry", VendLedgEntry."Entry Type"::"Unrealized Loss",
@@ -352,10 +352,10 @@ report 50010 "CpyVendor Detail Trial Balance"
                     repeat
                         PreviousDebitAmountLCY := PreviousDebitAmountLCY + VendLedgEntry."Debit Amount (LCY)";
                         PreviousCreditAmountLCY := PreviousCreditAmountLCY + VendLedgEntry."Credit Amount (LCY)";
-                    until VendLedgEntry.NEXT() = 0;
+                    until VendLedgEntry.Next() = 0;
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
-                VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
+                VendLedgEntry2.SetRange("Posting Date", StartDate, EndDate);
                 if ExcludeBalanceOnly then begin
                     if VendLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;

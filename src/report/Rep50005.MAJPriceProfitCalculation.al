@@ -16,8 +16,8 @@ report 50005 "MAJ PriceProfit Calculation"
 
             trigger OnAfterGetRecord()
             begin
-                VALIDATE("Price/Profit Calculation", Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit");
-                MODIFY();
+                Validate("Price/Profit Calculation", Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit");
+                Modify();
             end;
         }
     }

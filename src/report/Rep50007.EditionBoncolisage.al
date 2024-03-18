@@ -327,7 +327,7 @@ report 50007 "Edition Bon colisage"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
@@ -343,7 +343,7 @@ report 50007 "Edition Bon colisage"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
@@ -477,7 +477,7 @@ report 50007 "Edition Bon colisage"
                                     if not Continue then
                                         CurrReport.BREAK();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
@@ -493,7 +493,7 @@ report 50007 "Edition Bon colisage"
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
@@ -526,7 +526,7 @@ report 50007 "Edition Bon colisage"
                                 if Number = 1 then
                                     PostedAsmLine.FINDSET()
                                 else
-                                    PostedAsmLine.NEXT();
+                                    PostedAsmLine.Next();
 
                                 if ItemTranslation.GET(PostedAsmLine."No.",
                                      PostedAsmLine."Variant Code",
@@ -542,8 +542,8 @@ report 50007 "Edition Bon colisage"
                                 if not AsmHeaderExists then
                                     CurrReport.BREAK();
 
-                                PostedAsmLine.SETRANGE("Document No.", PostedAsmHeader."No.");
-                                SETRANGE(Number, 1, PostedAsmLine.COUNT);
+                                PostedAsmLine.SetRange("Document No.", PostedAsmHeader."No.");
+                                SetRange(Number, 1, PostedAsmLine.COUNT);
                             end;
                         }
 
@@ -555,7 +555,7 @@ report 50007 "Edition Bon colisage"
                             if not ShowCorrectionLines and Correction then
                                 CurrReport.SKIP();
 
-                            DimSetEntry2.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                            DimSetEntry2.SetRange("Dimension Set ID", "Dimension Set ID");
                             if DisplayAssemblyInformation then
                                 AsmHeaderExists := AsmToShipmentExists(PostedAsmHeader);
                             GTxtItemNo := "Sales Shipment Line"."No.";
@@ -563,17 +563,17 @@ report 50007 "Edition Bon colisage"
                                 if "Sales Shipment Line"."Item Reference No." <> '' then
                                     GTxtItemNo := "Sales Shipment Line"."Item Reference No.";
                             GRecSalesLine.SETFILTER("Document No.", "Sales Shipment Line"."Order No.");
-                            GRecSalesLine.SETRANGE("Line No.", "Sales Shipment Line"."Order Line No.");
+                            GRecSalesLine.SetRange("Line No.", "Sales Shipment Line"."Order Line No.");
                             if GRecSalesLine.FINDFIRST() then
                                 GIntQteCommandee := GRecSalesLine.Quantity
                             else begin
                                 //On regarde dans les commandes archivées si pas de commande trouvée
                                 GRecSalesHeaderArchive.SETFILTER("No.", "Sales Shipment Line"."Order No.");
                                 if GRecSalesHeaderArchive.FINDLAST() then begin
-                                    GRecSalesLineArchive.SETRANGE("Document No.", "Sales Shipment Line"."Order No.");
-                                    GRecSalesLineArchive.SETRANGE("Version No.", GRecSalesHeaderArchive."Version No.");
-                                    GRecSalesLineArchive.SETRANGE("Doc. No. Occurrence", GRecSalesHeaderArchive."Doc. No. Occurrence");
-                                    GRecSalesLineArchive.SETRANGE("Line No.", "Sales Shipment Line"."Order Line No.");
+                                    GRecSalesLineArchive.SetRange("Document No.", "Sales Shipment Line"."Order No.");
+                                    GRecSalesLineArchive.SetRange("Version No.", GRecSalesHeaderArchive."Version No.");
+                                    GRecSalesLineArchive.SetRange("Doc. No. Occurrence", GRecSalesHeaderArchive."Doc. No. Occurrence");
+                                    GRecSalesLineArchive.SetRange("Line No.", "Sales Shipment Line"."Order Line No.");
                                     if GRecSalesLineArchive.FINDFIRST() then
                                         GIntQteCommandee := GRecSalesLineArchive.Quantity;
                                 end;
@@ -623,10 +623,10 @@ report 50007 "Edition Bon colisage"
                         begin
                             MoreLines := FINDLAST();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) do
-                                MoreLines := NEXT(-1) <> 0;
+                                MoreLines := Next(-1) <> 0;
                             if not MoreLines then
                                 CurrReport.BREAK();
-                            SETRANGE("Line No.", 0, "Line No.");
+                            SetRange("Line No.", 0, "Line No.");
                         end;
                     }
                     dataitem(DimensionLoop3; Integer)
@@ -653,7 +653,7 @@ report 50007 "Edition Bon colisage"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText3);
+                            Clear(DimText3);
                             Continue := false;
                             repeat
                                 OldDimText := DimText3;
@@ -669,7 +669,7 @@ report 50007 "Edition Bon colisage"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry3.NEXT() = 0;
+                            until DimSetEntry3.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
@@ -706,17 +706,17 @@ report 50007 "Edition Bon colisage"
                         begin
                             LinNo := SalesShipmentLineResteALivrer."Line No.";
 
-                            DimSetEntry3.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                            DimSetEntry3.SetRange("Dimension Set ID", "Dimension Set ID");
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             MoreLines := FINDLAST();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) do
-                                MoreLines := NEXT(-1) <> 0;
+                                MoreLines := Next(-1) <> 0;
                             if not MoreLines then
                                 CurrReport.BREAK();
-                            SETRANGE("Line No.", 0, SalesShipmentLineResteALivrer."Line No.");
+                            SetRange("Line No.", 0, SalesShipmentLineResteALivrer."Line No.");
                         end;
                     }
                     dataitem(Total; Integer)
@@ -821,7 +821,7 @@ report 50007 "Edition Bon colisage"
                             if Number = 1 then
                                 TrackingSpecBuffer.FINDSET()
                             else
-                                TrackingSpecBuffer.NEXT();
+                                TrackingSpecBuffer.Next();
 
                             if not ShowCorrectionLines and TrackingSpecBuffer.Correction then
                                 CurrReport.SKIP();
@@ -849,7 +849,7 @@ report 50007 "Edition Bon colisage"
                             if TrackingSpecCount = 0 then
                                 CurrReport.BREAK();
                             CurrReport.NEWPAGE();
-                            SETRANGE(Number, 1, TrackingSpecCount);
+                            SetRange(Number, 1, TrackingSpecCount);
                             TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");
                         end;
@@ -886,7 +886,7 @@ report 50007 "Edition Bon colisage"
                 begin
                     NoOfLoops := 1 + ABS(NoOfCopies);
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -940,7 +940,7 @@ report 50007 "Edition Bon colisage"
                 FormatAddressFields("Sales Shipment Header");
                 FormatDocumentFields("Sales Shipment Header");
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
                 if ShipmentMethod.GET("Sales Shipment Header"."Shipment Method Code") then begin
                     if ShipmentMethod.Incoterms then
                         GTxtCondLivraisonEtendues := ShipmentMethod.Description + ' - ' + "Sales Shipment Header"."Compl. cond. livraison" + ' - Incoterms © 2010'
@@ -955,12 +955,12 @@ report 50007 "Edition Bon colisage"
                 else
                     GTxtTransporteur := "Sales Shipment Header"."Shipping Agent Code";
 
-                GRecSalesShipmentLine.SETRANGE("No.", "Sales Shipment Header"."No.");
+                GRecSalesShipmentLine.SetRange("No.", "Sales Shipment Header"."No.");
                 if GRecSalesShipmentLine.FINDFIRST() then
                     repeat
                         GDecPoidsBrut += GRecSalesShipmentLine."Gross Weight";
                         GDecPoidsnet += GRecSalesShipmentLine."Net Weight";
-                    until GRecSalesShipmentLine.NEXT() = 0;
+                    until GRecSalesShipmentLine.Next() = 0;
 
                 if GRecCountry.GET(CompanyInfo."Country/Region Code") then
                     GTxtCompanyInfoPays := GRecCountry.Name
@@ -1093,7 +1093,7 @@ report 50007 "Edition Bon colisage"
                       5, "Sales Shipment Header"."No.", 0, 0, DATABASE::Customer, "Sales Shipment Header"."Sell-to Customer No.",
                       "Sales Shipment Header"."Salesperson Code", "Sales Shipment Header"."Campaign No.",
                       "Sales Shipment Header"."Posting Description", '');
-                until "Sales Shipment Header".NEXT() = 0;
+                until "Sales Shipment Header".Next() = 0;
     end;
 
     trigger OnPreReport()

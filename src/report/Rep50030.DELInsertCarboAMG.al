@@ -41,7 +41,7 @@ report 50030 DELInsertCarboAMG
                         ToolTip = 'Specifies the value of the Item No. field.';
                         trigger OnLookup(var Text: Text): Boolean
                         begin
-                            if PAGE.RUNMODAL(PAGE::DELItemDrillDownCarbo, Item) = ACTION::LookupOK then
+                            if PAGE.RunModal(PAGE::DELItemDrillDownCarbo, Item) = ACTION::LookupOK then
                                 ItemNo := Item."No.";
                         end;
                     }

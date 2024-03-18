@@ -290,7 +290,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
@@ -305,7 +305,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
@@ -473,7 +473,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                                     if not Continue then
                                         CurrReport.BREAK();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
@@ -489,7 +489,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
@@ -497,7 +497,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                                 if not ShowInternalInfo then
                                     CurrReport.BREAK();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", "Sales Line"."Dimension Set ID");
                             end;
                         }
 
@@ -508,7 +508,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                             if Number = 1 then
                                 SalesLine.FINDFIRST()
                             else
-                                SalesLine.NEXT();
+                                SalesLine.Next();
                             "Sales Line" := SalesLine;
 
                             if not "Sales Header"."Prices Including VAT" and
@@ -521,7 +521,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
                             if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."Item Reference No." <> '') then begin
-                                LRecItem.RESET();
+                                LRecItem.Reset();
                                 LRecItem.SETFILTER("No.", "Sales Line"."No.");
                                 if LRecItem.FINDFIRST() then
                                     GTxtDescriptionLine := "Sales Line".Description + ' ' + LRecItem."Description 2";
@@ -542,11 +542,11 @@ report 50006 "Sales-Quote AMGallois ICE"
                                   (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
                             do
-                                MoreLines := SalesLine.NEXT(-1) <> 0;
+                                MoreLines := SalesLine.Next(-1) <> 0;
                             if not MoreLines then
                                 CurrReport.BREAK();
-                            SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
-                            SETRANGE(Number, 1, SalesLine.COUNT);
+                            SalesLine.SetRange("Line No.", 0, SalesLine."Line No.");
+                            SetRange(Number, 1, SalesLine.COUNT);
                             CurrReport.CREATETOTALS(SalesLine."Line Amount", SalesLine."Inv. Discount Amount");
                         end;
                     }
@@ -619,7 +619,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                         begin
                             if VATAmount = 0 then
                                 CurrReport.BREAK();
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
+                            SetRange(Number, 1, VATAmountLine.COUNT);
                             CurrReport.CREATETOTALS(
                               VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                               VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
@@ -668,7 +668,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                             then
                                 CurrReport.BREAK();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
+                            SetRange(Number, 1, VATAmountLine.COUNT);
                             CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
@@ -735,8 +735,8 @@ report 50006 "Sales-Quote AMGallois ICE"
                 var
                     SalesPost: Codeunit "Sales-Post";
                 begin
-                    CLEAR(SalesLine);
-                    CLEAR(SalesPost);
+                    Clear(SalesLine);
+                    Clear(SalesPost);
                     SalesLine.DELETEALL();
                     VATAmountLine.DELETEALL();
                     SalesPost.GetSalesLines("Sales Header", SalesLine, 0);
@@ -765,7 +765,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                 begin
                     NoOfLoops := ABS(NoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -777,7 +777,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                 FormatAddressFields("Sales Header");
                 FormatDocumentFields("Sales Header");
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if Print then begin
                     if CurrReport.USEREQUESTPAGE and ArchiveDocument or

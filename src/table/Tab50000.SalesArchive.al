@@ -156,7 +156,6 @@ table 50000 "Sales Archive"
 
         if LRecSalesLine.FINDSET(false) then
             repeat
-                //TODO field spe ,field removed
                 LRecHisto.Reset();
                 if LRecSalesHeader.Get(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
                 LRecHisto."Quote No." := LRecSalesHeader."Quote No.";
@@ -174,7 +173,7 @@ table 50000 "Sales Archive"
                 LRecHisto."Sales Line No." := LRecSalesLine."Line No.";
 
                 LRecHisto.INSERT(false);
-            until LRecSalesLine.NEXT() <= 0;
+            until LRecSalesLine.Next() <= 0;
     end;
 
     procedure DELTransfCmdFactV(DELCodCmdeVente: Code[20]; DELCodFactVente: Code[20])
@@ -211,7 +210,7 @@ table 50000 "Sales Archive"
 
                 LRecHisto.INSERT(false);
 
-            until LRecLignesFV.NEXT() <= 0;
+            until LRecLignesFV.Next() <= 0;
     end;
 
     procedure DELAddDevis(DocumentNo: Code[20]; DocumentDate: Date)
@@ -256,7 +255,7 @@ table 50000 "Sales Archive"
                 LRecHisto."Sales Line No." := LRecSalesLine."Line No.";
 
                 if LRecHisto.INSERT(false) then;
-            until LRecSalesLine.NEXT() <= 0;
+            until LRecSalesLine.Next() <= 0;
     end;
 
     procedure DELDeleteDevis(DocumentNo: Code[20])
@@ -303,7 +302,7 @@ table 50000 "Sales Archive"
                     LRecHisto.Archive := true;
                     if LRecHisto.INSERT(false) then;
                 end;
-            until LRecSalesLineArchive.NEXT() = 0;
+            until LRecSalesLineArchive.Next() = 0;
     end;
 
     procedure DELAddCmdVenteArchive(DocumentNo: Code[20]; DocumentDate: Date)
@@ -341,7 +340,7 @@ table 50000 "Sales Archive"
                     LRecHisto.Archive := true;
                     if LRecHisto.INSERT(false) then;
                 end;
-            until LRecSalesLineArchive.NEXT() = 0;
+            until LRecSalesLineArchive.Next() = 0;
     end;
 
     procedure DELSupprDevisHisto(DocumentNo: Code[20])
@@ -368,7 +367,7 @@ table 50000 "Sales Archive"
                 LRecHisto.SETFILTER(Archive, 'TRUE');
                 if LRecHisto.FINDSET(false) then
                     LRecHisto.DELETEALL();
-            until LRecSalesLine.NEXT() = 0;
+            until LRecSalesLine.Next() = 0;
     end;
 }
 

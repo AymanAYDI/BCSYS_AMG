@@ -121,7 +121,7 @@ table 50009 Package
                 if not CONFIRM('Attention : des lignes de colisage sont rattachées à ce colis, êtes-vous sûr de vouloir les supprimer ?', false) then
                     Error('Suppression annulée par l''utilisateur');
                 // supresion de la lsite colisage
-                CLEAR(GRecColisage);
+                Clear(GRecColisage);
                 GRecColisage.SetRange("Package No.", Rec."Package No.");
                 GRecColisage.DELETEALL();
                 GRecSalesShipingLine.SetRange("Document No.", Rec."Shipping No.");
@@ -173,10 +173,10 @@ table 50009 Package
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal + 1)
                 else
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal);
-                LRecColis.MODIFY();
+                LRecColis.Modify();
                 COMMIT();
                 LIntI += 1;
-            until LRecColis.NEXT() <= 0;
+            until LRecColis.Next() <= 0;
 
     end;
 }

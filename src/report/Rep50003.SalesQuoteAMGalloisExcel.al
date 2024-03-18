@@ -4,6 +4,7 @@ report 50003 "Sales - Quote AMGallois Excel"
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -249,7 +250,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
@@ -264,7 +265,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
@@ -432,7 +433,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                     if not Continue then
                                         CurrReport.BREAK();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
@@ -448,7 +449,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
@@ -456,7 +457,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                 if not ShowInternalInfo then
                                     CurrReport.BREAK();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", SalesLine."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", SalesLine."Dimension Set ID");
                             end;
                         }
 
@@ -467,7 +468,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                             if Number = 1 then
                                 SalesLine.FIND('-')
                             else
-                                SalesLine.NEXT();
+                                SalesLine.Next();
                             DataItem2844 := SalesLine;
 
                             if not "Sales Header"."Prices Including VAT" and
@@ -480,7 +481,7 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
                             if (DataItem2844.Type = DataItem2844.Type::Item) and (DataItem2844."Item Reference No." <> '') then begin
-                                LRecItem.RESET();
+                                LRecItem.Reset();
                                 LRecItem.SETFILTER("No.", DataItem2844."No.");
                                 if LRecItem.FINDFIRST() then
                                     GTxtDescriptionLine := DataItem2844.Description + ' ' + LRecItem."Description 2";
@@ -501,11 +502,11 @@ report 50003 "Sales - Quote AMGallois Excel"
                                   (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
                             do
-                                MoreLines := SalesLine.NEXT(-1) <> 0;
+                                MoreLines := SalesLine.Next(-1) <> 0;
                             if not MoreLines then
                                 CurrReport.BREAK();
-                            SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
-                            SETRANGE(Number, 1, SalesLine.COUNT);
+                            SalesLine.SetRange("Line No.", 0, SalesLine."Line No.");
+                            SetRange(Number, 1, SalesLine.COUNT);
                             CurrReport.CREATETOTALS(SalesLine."Line Amount", SalesLine."Inv. Discount Amount");
                         end;
                     }
@@ -578,7 +579,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                         begin
                             if VATAmount = 0 then
                                 CurrReport.BREAK();
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
+                            SetRange(Number, 1, VATAmountLine.COUNT);
                             CurrReport.CREATETOTALS(
                               VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                               VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
@@ -628,7 +629,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                             then
                                 CurrReport.BREAK();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
+                            SetRange(Number, 1, VATAmountLine.COUNT);
                             CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
@@ -695,8 +696,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                 var
                     SalesPost: codeunit "Sales-Post";
                 begin
-                    CLEAR(SalesLine);
-                    CLEAR(SalesPost);
+                    Clear(SalesLine);
+                    Clear(SalesPost);
                     SalesLine.DELETEALL();
                     VATAmountLine.DELETEALL();
                     SalesPost.GetSalesLines("Sales Header", SalesLine, 0);
@@ -725,7 +726,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                 begin
                     NoOfLoops := ABS(NoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -737,7 +738,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                 FormatAddressFields("Sales Header");
                 FormatDocumentFields("Sales Header");
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if Print then begin
                     if CurrReport.USEREQUESTPAGE and ArchiveDocument or
@@ -772,11 +773,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                 MARKEDONLY := true;
                 COMMIT();
                 CurrReport.LANGUAGE := GLOBALLANGUAGE;
-                //  if not FileManagement.IsWebClient then //TODO CHECK 
-                if FIND('-') and ToDo.WRITEPERMISSION then
-                    if Print and (NoOfRecords = 1) then
-                        if CONFIRM(Text007) then
-                            CreateTask();
+                //TODO ; verif possible change
             end;
 
             trigger OnPreDataItem()
@@ -801,15 +798,20 @@ report 50003 "Sales - Quote AMGallois Excel"
                     field(NoOfCopies; NoOfCopies)
                     {
                         Caption = 'No. of Copies';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the No. of Copies field.';
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
                         Caption = 'Show Internal Information';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Internal Information field.';
                     }
                     field(ArchiveDocument; ArchiveDocument)
                     {
                         Caption = 'Archive Document';
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Archive Document field.';
                         trigger OnValidate()
                         begin
                             if not ArchiveDocument then
@@ -820,7 +822,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                     {
                         Caption = 'Log Interaction';
                         Enabled = LogInteractionEnable;
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Log Interaction field.';
                         trigger OnValidate()
                         begin
                             if LogInteraction then
@@ -841,10 +844,11 @@ report 50003 "Sales - Quote AMGallois Excel"
         end;
 
         trigger OnOpenPage()
+        var
+            DocumentType: Enum "Interaction Log Entry Document Type";
         begin
             ArchiveDocument := SalesSetup."Archive Quotes and Orders";
-            LogInteraction := SegManagement.FindInteractTmplCode(1) <> '';
-
+            LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Qte.") <> '';
             LogInteractionEnable := LogInteraction;
         end;
     }
@@ -903,7 +907,7 @@ report 50003 "Sales - Quote AMGallois Excel"
         CopyText: Text[30];
         ShowShippingAddr: Boolean;
         DimText: Text[120];
-        OldDimText: Text[75];
+        OldDimText: Text[150];
         ShowInternalInfo: Boolean;
         Continue: Boolean;
         ArchiveDocument: Boolean;
@@ -923,9 +927,7 @@ report 50003 "Sales - Quote AMGallois Excel"
         Text010: Label 'Exchange rate: %1/%2';
         OutputNo: Integer;
         Print: Boolean;
-        [InDataSet]
         ArchiveDocumentEnable: Boolean;
-        [InDataSet]
         LogInteractionEnable: Boolean;
         CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.';
         CompanyInfoVATRegNoCaptionLbl: Label 'VAT Registration No.';

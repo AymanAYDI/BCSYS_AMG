@@ -26,9 +26,9 @@ pageextension 50011 ItemList extends "Item List" //31
                     LRecHisto: Record "Sales Archive";
                 begin
                     //DELPHI AUB 30.06.2020
-                    LRecHisto.SETRANGE(Reference, Rec."No.");
+                    LRecHisto.SetRange(Reference, Rec."No.");
 
-                    PAGE.RUNMODAL(PAGE::"Historique ventes article", LRecHisto);
+                    PAGE.RunModal(PAGE::"Historique ventes article", LRecHisto);
                     //END DELPHI AUB
                 end;
             }
@@ -61,7 +61,7 @@ pageextension 50011 ItemList extends "Item List" //31
         IF ClientTypeManagement.GetCurrentClientType = CLIENTTYPE::Phone THEN
           FilterPageID := PAGE::"Filter Items by Att. Phone";
 
-        CloseAction := PAGE.RUNMODAL(FilterPageID,TempFilterItemAttributesBuffer);
+        CloseAction := PAGE.RunModal(FilterPageID,TempFilterItemAttributesBuffer);
         IF (ClientTypeManagement.GetCurrentClientType <> CLIENTTYPE::Phone) AND (CloseAction <> ACTION::LookupOK) THEN
           EXIT;
 
@@ -69,7 +69,7 @@ pageextension 50011 ItemList extends "Item List" //31
           ClearAttributesFilter;
           EXIT;
         END;
-        TempItemFilteredFromAttributes.RESET;
+        TempItemFilteredFromAttributes.Reset;
         TempItemFilteredFromAttributes.DELETEALL;
         ItemAttributeManagement.FindItemsByAttributes(TempFilterItemAttributesBuffer,TempItemFilteredFromAttributes);
         FilterText := ItemAttributeManagement.GetItemNoFilterText(TempItemFilteredFromAttributes,ParameterCount);
@@ -81,7 +81,7 @@ pageextension 50011 ItemList extends "Item List" //31
         END ELSE BEGIN
           RunOnTempRec := TRUE;
           CLEARMARKS;
-          RESET;
+          Reset;
         END;
         */
         //end;
@@ -124,14 +124,14 @@ pageextension 50011 ItemList extends "Item List" //31
     trigger OnAfterGetRecord()
     //>>>> ORIGINAL CODE:
     begin
-        Rec.VALIDATE("Unit Price");  //TODO Verif
+        Rec.Validate("Unit Price");  //TODO Verif
     end;
     //>>>> MODIFIED CODE:
     //begin
     /*
     EnableControls;
-    VALIDATE("Unit Price");
-    //MODIFY;
+    Validate("Unit Price");
+    //Modify;
     */
     //end;
 }

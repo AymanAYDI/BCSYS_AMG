@@ -64,18 +64,18 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 ToolTip = 'Executes the Remplir Qté à recevoir action.';
                 trigger OnAction()
                 begin
-                    GRecPurchLine.RESET();
-                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
-                    GRecPurchLine.SETRANGE(Type, Rec.Type::Item);
+                    GRecPurchLine.Reset();
+                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
+                    GRecPurchLine.SetRange(Type, Rec.Type::Item);
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.VALIDATE("Qty. to Receive", GRecPurchLine."Outstanding Quantity");
+                            GRecPurchLine.Validate("Qty. to Receive", GRecPurchLine."Outstanding Quantity");
                             if GRecPurchLine."Qty. to Receive (Base)" <> GRecPurchLine."Outstanding Qty. (Base)" then
-                                GRecPurchLine.VALIDATE("Qty. to Receive (Base)", GRecPurchLine."Outstanding Qty. (Base)");
-                            GRecPurchLine.MODIFY();
-                        until GRecPurchLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecPurchLine.Validate("Qty. to Receive (Base)", GRecPurchLine."Outstanding Qty. (Base)");
+                            GRecPurchLine.Modify();
+                        until GRecPurchLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
             action(ActVider)
@@ -89,17 +89,17 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 ToolTip = 'Executes the Vider Qté à recevoir action.';
                 trigger OnAction()
                 begin
-                    GRecPurchLine.RESET();
-                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecPurchLine.Reset();
+                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.VALIDATE("Qty. to Receive", 0);
+                            GRecPurchLine.Validate("Qty. to Receive", 0);
                             if GRecPurchLine."Qty. to Receive (Base)" <> 0 then
-                                GRecPurchLine.VALIDATE("Qty. to Receive (Base)", 0);
-                            GRecPurchLine.MODIFY();
-                        until GRecPurchLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecPurchLine.Validate("Qty. to Receive (Base)", 0);
+                            GRecPurchLine.Modify();
+                        until GRecPurchLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
             action(ActViderAFacturer)
@@ -113,17 +113,17 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
                 ToolTip = 'Executes the Vider Qté à facturer action.';
                 trigger OnAction()
                 begin
-                    GRecPurchLine.RESET();
-                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecPurchLine.Reset();
+                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.VALIDATE("Qty. to Invoice", 0);
+                            GRecPurchLine.Validate("Qty. to Invoice", 0);
                             if GRecPurchLine."Qty. to Invoice (Base)" <> 0 then
-                                GRecPurchLine.VALIDATE("Qty. to Invoice (Base)", 0);
-                            GRecPurchLine.MODIFY();
-                        until GRecPurchLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecPurchLine.Validate("Qty. to Invoice (Base)", 0);
+                            GRecPurchLine.Modify();
+                        until GRecPurchLine.Next() = 0;
+                    CurrPage.Update(true);
                 end;
             }
         }

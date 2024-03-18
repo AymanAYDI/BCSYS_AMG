@@ -575,8 +575,8 @@ report 50004 "Standard Purchase - Order W"
                 var
                     TempPrepmtPurchLine: Record "Purchase Line" temporary;
                 begin
-                    CLEAR(TempPurchLine);
-                    CLEAR(PurchPost);
+                    Clear(TempPurchLine);
+                    Clear(PurchPost);
                     TempPurchLine.DELETEALL();
                     TempVATAmountLine.DELETEALL();
                     PurchPost.GetPurchLines("Purchase Header", TempPurchLine, 0);
@@ -650,7 +650,7 @@ report 50004 "Standard Purchase - Order W"
                 begin
                     if VATAmount = 0 then
                         CurrReport.BREAK();
-                    SETRANGE(Number, 1, TempVATAmountLine.COUNT);
+                    SetRange(Number, 1, TempVATAmountLine.COUNT);
                     CurrReport.CREATETOTALS(
                       TempVATAmountLine."Line Amount", TempVATAmountLine."Inv. Disc. Base Amount",
                       TempVATAmountLine."Invoice Discount Amount", TempVATAmountLine."VAT Base", TempVATAmountLine."VAT Amount");
@@ -693,7 +693,7 @@ report 50004 "Standard Purchase - Order W"
                     then
                         CurrReport.BREAK();
 
-                    SETRANGE(Number, 1, TempVATAmountLine.COUNT);
+                    SetRange(Number, 1, TempVATAmountLine.COUNT);
 
                     if GLSetup."LCY Code" = '' then
                         VALSpecLCYHeader := VATAmountSpecificationLbl + LocalCurrentyLbl
@@ -764,7 +764,7 @@ report 50004 "Standard Purchase - Order W"
                         if not TempPrepaymentInvLineBuffer.FINDFIRST() then
                             CurrReport.BREAK();
                     end else
-                        if TempPrepaymentInvLineBuffer.NEXT() = 0 then
+                        if TempPrepaymentInvLineBuffer.Next() = 0 then
                             CurrReport.BREAK();
 
                     if "Purchase Header"."Prices Including VAT" then
@@ -809,7 +809,7 @@ report 50004 "Standard Purchase - Order W"
 
                 trigger OnPreDataItem()
                 begin
-                    SETRANGE(Number, 1, TempPrepmtVATAmountLine.COUNT);
+                    SetRange(Number, 1, TempPrepmtVATAmountLine.COUNT);
                 end;
             }
             dataitem(LetterText; Integer)

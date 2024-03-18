@@ -33,16 +33,16 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 var
                     LRecHisto: Record "Sales Archive";
                 begin
-                    LRecHisto.SETRANGE("Reference", Rec."No.");
-                    PAGE.RUNMODAL(Page::"Historique ventes article", LRecHisto);
+                    LRecHisto.SetRange("Reference", Rec."No.");
+                    PAGE.RunModal(Page::"Historique ventes article", LRecHisto);
                 end;
 
                 trigger OnDrillDown()
                 var
                     LRecHisto: Record "Sales Archive";
                 begin
-                    LRecHisto.SETRANGE("Reference", Rec."No.");
-                    PAGE.RUNMODAL(Page::"Historique ventes article", LRecHisto);
+                    LRecHisto.SetRange("Reference", Rec."No.");
+                    PAGE.RunModal(Page::"Historique ventes article", LRecHisto);
                 end;
             }
             field("Code ONU"; Rec."Code ONU")
@@ -54,10 +54,10 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 ToolTip = 'Specifies the value of the Code ONU field.';
                 trigger OnLookup(var myText: Text): Boolean
                 begin
-                    CLEAR(GPageONU);
-                    GPageONU.SETRECORD(GRecONU);
-                    GPageONU.RUNMODAL();
-                    GPageONU.GETRECORD(GRecONU);
+                    Clear(GPageONU);
+                    GPageONU.SetRecord(GRecONU);
+                    GPageONU.RunModal();
+                    GPageONU.GetRecord(GRecONU);
                     if GRecONU.Code <> '' then begin
                         Rec."Code ONU" := GRecONU.Code;
                         Rec."UN version" := GRecONU.Version;
@@ -66,10 +66,10 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
 
                 trigger OnDrillDown()
                 begin
-                    CLEAR(GPageONU);
-                    GPageONU.SETRECORD(GRecONU);
-                    GPageONU.RUNMODAL();
-                    GPageONU.GETRECORD(GRecONU);
+                    Clear(GPageONU);
+                    GPageONU.SetRecord(GRecONU);
+                    GPageONU.RunModal();
+                    GPageONU.GetRecord(GRecONU);
                     if GRecONU.Code <> '' then begin
                         Rec."Code ONU" := GRecONU.Code;
                         Rec."UN version" := GRecONU.Version;
@@ -78,10 +78,10 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
 
                 trigger OnAssistEdit()
                 begin
-                    CLEAR(GPageONU);
-                    GPageONU.SETRECORD(GRecONU);
-                    GPageONU.RUNMODAL();
-                    GPageONU.GETRECORD(GRecONU);
+                    Clear(GPageONU);
+                    GPageONU.SetRecord(GRecONU);
+                    GPageONU.RunModal();
+                    GPageONU.GetRecord(GRecONU);
                     if GRecONU.Code <> '' then begin
                         Rec."Code ONU" := GRecONU.Code;
                         Rec."UN version" := GRecONU.Version;
@@ -150,13 +150,12 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
         }
         addfirst(factboxes)
         {
-            //TODO page spe
-            // part(LPSubstitute; "Sustitutions possibles")
-            // {
-            //     ApplicationArea = All;
-            //     Caption = 'Substitution';
-            //     SubPageLink = "No." = field("No.");
-            // }
+            part(LPSubstitute; "Sustitutions possibles")
+            {
+                ApplicationArea = All;
+                Caption = 'Substitution';
+                SubPageLink = "No." = field("No.");
+            }
         }
     }
     actions
@@ -174,13 +173,12 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 ToolTip = 'Executes the Etiquette action.';
                 trigger OnAction()
                 var
-                    //TODO codeunit spe
-                    //  LCUCodeBar: Codeunit 50000;
                     LRecArticle: Record Item;
+                    LCUCodeBar: Codeunit 50000;
                 begin
                     if not Rec.CodeBar then
-                        // LCUCodeBar.AddCodeBarAztec(Rec);
-                        LRecArticle.SETRANGE("No.", Rec."No.");
+                        LCUCodeBar.AddCodeBarAztec(Rec);
+                    LRecArticle.SetRange("No.", Rec."No.");
                     REPORT.RUN(Report::"Etiquette article", true, true, LRecArticle);
                 end;
             }
@@ -192,7 +190,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
     }
     trigger OnAfterGetRecord()
     begin
-        Rec.VALIDATE("Unit Price");
+        Rec.Validate("Unit Price");
         if (Rec."Code ONU" <> '') and (Rec."UN version" >= 0) then
             GRecONU.GET(Rec."Code ONU", Rec."UN version");
     end;

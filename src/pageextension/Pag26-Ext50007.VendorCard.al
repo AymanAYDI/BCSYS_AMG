@@ -1,6 +1,7 @@
 namespace BCSYS_AMG.BCSYS_AMG;
 
 using Microsoft.Purchases.Vendor;
+using Microsoft.Purchases.Reports;
 
 pageextension 50007 "VendorCard" extends "Vendor Card" //26
 {
@@ -25,8 +26,7 @@ pageextension 50007 "VendorCard" extends "Vendor Card" //26
 
                 trigger OnAction()
                 begin
-                    //TODO report spe
-                    // RunReport(REPORT::"Vendor Detail Trial Balance");
+                    RunReport(REPORT::"Vendor Detail Trial Balance FR");
                 end;
             }
         }

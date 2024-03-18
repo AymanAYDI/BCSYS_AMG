@@ -103,7 +103,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 begin
                     //DELPHI AUB 23.04.2021
                     Rec.SETFILTER("No.", Rec."No.");
-                    REPORT.RUNMODAL(Report::"Etiquette Packaging", true, false, Rec)
+                    REPORT.RunModal(Report::"Etiquette Packaging", true, false, Rec)
                 end;
             }
         }

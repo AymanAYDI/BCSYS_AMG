@@ -112,7 +112,7 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
         }
         addafter("ShortcutDimCode[8]")
         {
-            field("N° Package"; rec."Package No.")
+            field("Package No."; rec."Package No.")
             {
                 Lookup = true;
                 DrillDown = false;
@@ -127,21 +127,21 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                     LNoColis: Code[20];
                 begin
                     if (xRec."Package No." <> Rec."Package No.") and (xRec."Package No." <> '') then begin
-                        LRecColisage.SETRANGE("Shipping No.", Rec."Document No.");
-                        LRecColisage.SETRANGE("Shipping Line No.", Rec."Line No.");
+                        LRecColisage.SetRange("Shipping No.", Rec."Document No.");
+                        LRecColisage.SetRange("Shipping Line No.", Rec."Line No.");
                         if LRecColisage.FINDFIRST() then begin
                             LNoColis := LRecColisage."Package No.";
                             LRecColisage.DELETE(true);
-                            CLEAR(LRecColis);
+                            Clear(LRecColis);
                             if LRecColis.GET(LNoColis) then begin
                                 LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LNoColis);
-                                LRecColis.MODIFY();
+                                LRecColis.Modify();
                             end;
                         end;
                     end;
 
                     if Rec."Package No." <> '' then begin
-                        CLEAR(LRecColisage);
+                        Clear(LRecColisage);
                         LRecColisage.INIT();
                         LRecColisage."Package No." := Rec."Package No.";
                         LRecColisage."Line No." := LRecColisage.NextLineNo(Rec."Package No.");
@@ -150,14 +150,14 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                         LRecColisage."Item No." := Rec."No.";
                         LRecColisage.Quantity := Rec.Quantity;
                         LRecColisage.INSERT(true);
-                        CLEAR(LRecColis);
+                        Clear(LRecColis);
                         if LRecColis.GET(Rec."Package No.") then begin
                             LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
-                            LRecColis.MODIFY();
+                            LRecColis.Modify();
                         end;
                     end;
 
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
                 end;
             }
         }
@@ -203,22 +203,22 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                                 LRecColisage.INSERT(true);
 
                                 LRecSalesShipmentLine."Package No." := LRecColis."Package No.";
-                                LRecSalesShipmentLine.MODIFY();
+                                LRecSalesShipmentLine.Modify();
 
                                 LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
-                                LRecColis.MODIFY();
+                                LRecColis.Modify();
                                 COMMIT();
                                 LIntI := 1;
-                                LRecColis2.RESET();
+                                LRecColis2.Reset();
                                 LRecColis2.SETFILTER("Shipping No.", LRecColis."Shipping No.");
                                 LIntNbColis := LRecColis2.COUNT;
                                 if LRecColis2.FINDFIRST() then
                                     repeat
                                         LRecColis2."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-                                        LRecColis2.MODIFY();
+                                        LRecColis2.Modify();
                                         COMMIT();
                                         LIntI += 1;
-                                    until LRecColis2.NEXT() <= 0;
+                                    until LRecColis2.Next() <= 0;
                             end;
                     end;
                 }
