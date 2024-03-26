@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Vendor;
 using System.Utilities;
@@ -7,7 +7,7 @@ using Microsoft.Foundation.Period;
 report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './GdLivreFournEcrNonLettr1.rdlc';
+    RDLCLayout = './report/RDL/GdLivreFournEcrNonLettr1.rdlc';
     Caption = 'Vendor Detail Trial Balance';
     ApplicationArea = All;
 
@@ -39,7 +39,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
             column(PrintedByCaption; STRSUBSTNO(Text003, ''))
             {
             }
-            column(ExcludeBalanceOnly; ExcludeBalanceOnly)
+            column(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
             {
             }
             column(Vendor_TABLECAPTION__________Filter; Vendor.TABLECAPTION + ': ' + Filter)
@@ -147,7 +147,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
             column(Grand_TotalCaption; Grand_TotalCaptionLbl)
             {
             }
-            column(AffichageEcrituresOuvertes; ShowOnlyUnappliedWritings)
+            column(AffichageEcrituresOuvertes; BoolShowOnlyUnappliedWritings)
             {
             }
             column(PreviousDebitAmountLCY_Open; PreviousDebitAmountLCY_Open)
@@ -346,7 +346,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                         CreditPeriodAmount := CreditPeriodAmount + "Credit Amount (LCY)";
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if ShowOnlyUnappliedWritings then begin
+                        if BoolShowOnlyUnappliedWritings then begin
                             GRecVendLedgEntry.RESET();
                             if GRecVendLedgEntry.GET("Vendor Ledger Entry No.") then begin
                                 GRecVendLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
@@ -380,7 +380,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 
                     trigger OnPreDataItem()
                     begin
-                        if DocNumSort then
+                        if BoolDocNumSort then
                             SETCURRENTKEY("Vendor No.", "Document No.", "Posting Date");
                         if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
@@ -394,9 +394,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
+                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -451,7 +449,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
                 VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if ExcludeBalanceOnly then begin
+                if BoolExcludeBalanceOnly then begin
                     if VendLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
@@ -499,7 +497,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 // FIN MHR
 
 
-                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPreDataItem()
@@ -536,13 +534,13 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(DocNumSort; DocNumSort)
+                    field(DocNumSort; BoolDocNumSort)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.';
                         ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
-                    field(ExcludeBalanceOnly; ExcludeBalanceOnly)
+                    field(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Exclude Vendors That Have A Balance Only';
@@ -550,7 +548,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                         Visible = false;
                         ToolTip = 'Specifies the value of the Exclude Vendors That Have A Balance Only field.';
                     }
-                    field(ShowOnlyUnappliedWritings; ShowOnlyUnappliedWritings)
+                    field(ShowOnlyUnappliedWritings; BoolShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings';
                         ApplicationArea = All;
@@ -577,7 +575,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
     trigger OnPreReport()
     begin
         Filter := Vendor.GETFILTERS;
-        if ShowOnlyUnappliedWritings then
+        if BoolShowOnlyUnappliedWritings then
             GTxtDocumentTitle := 'Grand Livre Fourn.:  écritures non lettrées'
         else
             GTxtDocumentTitle := 'Grand Livre Fourn. Classique';
@@ -589,10 +587,10 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
         VendLedgEntry2: Record "Detailed Vendor Ledg. Entry";
         VendLedgEntry: Record "Detailed Vendor Ledg. Entry";
         FiltreDateCalc: codeunit "DateFilter-Calc";
-        DocNumSort: Boolean;
-        ExcludeBalanceOnly: Boolean;
+        BoolDocNumSort: Boolean;
+        BoolExcludeBalanceOnly: Boolean;
         GBooOpen: Boolean;
-        ShowOnlyUnappliedWritings: Boolean;
+        BoolShowOnlyUnappliedWritings: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
@@ -631,15 +629,15 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
         Posting_DateCaptionLbl: Label 'Posting Date';
         Previous_pageCaptionLbl: Label 'Previous page';
         Source_CodeCaptionLbl: Label 'Source Code';
-        Text001: Label 'You must fill in the %1 field.';
+        Text001: Label 'You must fill in the %1 field.', Comment = '%1="Date Filter"';
         Text002: Label 'You must specify a Starting Date.';
-        Text003: Label 'Printed by %1';
-        Text004: Label 'Fiscal Year Start Date : %1';
-        Text005: Label 'Page %1';
-        Text006: Label 'Balance at %1 ';
-        Text007: Label 'Balance at %1';
+        Text003: Label 'Printed by %1', Comment = '%1=USERID';
+        Text004: Label 'Fiscal Year Start Date : %1', Comment = '%1=PreviousStartDate';
+        Text005: Label 'Page %1', Comment = '%1=PAGENO';
+        Text006: Label 'Balance at %1 ', Comment = '%1=PreviousEndDate';
+        Text007: Label 'Balance at %1', Comment = '%1=EndDate';
         Text008: Label 'Total';
-        Text009: Label 'Solde Non-lettré au %1';
+        Text009: Label 'Balance Unrecognized at %1', Comment = '%1=PreviousEndDate';
         This_report_also_includes_vendors_that_only_have_balances_CaptionLbl: Label 'This report also includes vendors that only have balances.';
         Total_Date_RangeCaptionLbl: Label 'Total Date Range';
         To_be_continuedCaptionLbl: Label 'To be continued';

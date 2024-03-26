@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Document;
 using System.Utilities;
@@ -21,7 +21,7 @@ using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.Company;
 report 50004 "Standard Purchase - Order W"
 {
-    RDLCLayout = './StandardPurchaseOrderW.rdlc';
+    RDLCLayout = './report/RDL/StandardPurchaseOrderW.rdlc';
     WordLayout = './StandardPurchaseOrderW.docx';
     Caption = 'Purchase - Order';
     DefaultLayout = Word;
@@ -651,9 +651,6 @@ report 50004 "Standard Purchase - Order W"
                     if VATAmount = 0 then
                         CurrReport.BREAK();
                     SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                    CurrReport.CREATETOTALS(
-                      TempVATAmountLine."Line Amount", TempVATAmountLine."Inv. Disc. Base Amount",
-                      TempVATAmountLine."Invoice Discount Amount", TempVATAmountLine."VAT Base", TempVATAmountLine."VAT Amount");
                 end;
             }
             dataitem(VATCounterLCY; Integer)
@@ -830,16 +827,16 @@ report 50004 "Standard Purchase - Order W"
             trigger OnAfterGetRecord()
             begin
                 TotalAmount := 0;
-                CurrReport.LANGUAGE := Language.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := CULanguage.GetLanguageID("Language Code");
 
                 FormatAddressFields("Purchase Header");
                 FormatDocumentFields("Purchase Header");
 
                 if not CurrReport.PREVIEW then begin
-                    if ArchiveDocument then
-                        ArchiveManagement.StorePurchDocument("Purchase Header", LogInteraction);
+                    if BoolArchiveDocument then
+                        ArchiveManagement.StorePurchDocument("Purchase Header", BoolLogInteraction);
 
-                    if LogInteraction then
+                    if BoolLogInteraction then
                         SegManagement.LogDocument(
                           13, "No.", 0, 0, DATABASE::Vendor, "Buy-from Vendor No.",
                           "Purchaser Code", '', "Posting Description", '');
@@ -859,13 +856,13 @@ report 50004 "Standard Purchase - Order W"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(ArchiveDocument; ArchiveDocument)
+                    field(ArchiveDocument; BoolArchiveDocument)
                     {
                         ApplicationArea = Suite;
                         Caption = 'Archive Document';
                         ToolTip = 'Specifies whether to archive the order.';
                     }
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         ApplicationArea = Suite;
                         Caption = 'Log Interaction';
@@ -887,8 +884,8 @@ report 50004 "Standard Purchase - Order W"
 
         trigger OnOpenPage()
         begin
-            ArchiveDocument := PurchSetup."Archive Orders";
-            LogInteractionEnable := LogInteraction;
+            BoolArchiveDocument := PurchSetup."Archive Orders";
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -928,12 +925,12 @@ report 50004 "Standard Purchase - Order W"
         ArchiveManagement: Codeunit ArchiveManagement;
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        Language: Codeunit Language;
+        CULanguage: Codeunit Language;
         PurchPost: Codeunit "Purch.-Post";
         PurchasePostPrepayments: Codeunit "Purchase-Post Prepayments";
         SegManagement: Codeunit SegManagement;
-        ArchiveDocument: Boolean;
-        LogInteraction: Boolean;
+        BoolArchiveDocument: Boolean;
+        BoolLogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         PrepmtLineAmount: Decimal;
         PrepmtTotalAmountInclVAT: Decimal;
@@ -1030,7 +1027,7 @@ report 50004 "Standard Purchase - Order W"
 
     procedure InitializeRequest(LogInteractionParam: Boolean)
     begin
-        LogInteraction := LogInteractionParam;
+        BoolLogInteraction := LogInteractionParam;
     end;
 
     local procedure FormatAddressFields(var PurchaseHeader: Record "Purchase Header")
@@ -1059,7 +1056,7 @@ report 50004 "Standard Purchase - Order W"
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Purch. Ord.") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Purch. Ord.") <> '';
     end;
 }
 

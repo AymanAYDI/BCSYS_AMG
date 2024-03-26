@@ -8,7 +8,7 @@ tableextension 50017 SalesShipmentHeader extends "Sales Shipment Header" //110
         //TODO traduction
         modify("On Hold")
         {
-            Caption = 'On Hold', Comment = 'FRA="En attente"';
+            Caption = 'On Hold', Comment = 'On Hold';
         }
         field(50000; "Packing detail"; Text[80])
         {

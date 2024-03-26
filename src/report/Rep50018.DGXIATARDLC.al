@@ -1,11 +1,13 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using System.Utilities;
 using BCSYS.AMGALLOIS.Basic;
 using System.Globalization;
+using Microsoft.Finance.Dimension;
+using Microsoft.Utilities;
 report 50018 "DGX IATA RDLC"
 {
-    RDLCLayout = './DGXIATARDLC.rdlc';
+    RDLCLayout = './report/RDL/DGXIATARDLC.rdlc';
     DefaultLayout = RDLC;
     EnableExternalImages = true;
     PreviewMode = PrintLayout;
@@ -240,27 +242,24 @@ report 50018 "DGX IATA RDLC"
 
     trigger OnInitReport()
     begin
-        CurrReport.LANGUAGE := CDULanguage.GetLanguageID('ENU');
+        CurrReport.LANGUAGE := CDULanguage.GetLanguageIdOrDefault('ENU');
     end;
 
     var
-        DimSetEntry1: Record "480";
-        FormatDocument: Codeunit "368";
+        DimSetEntry1: Record "Dimension Set Entry";
+        FormatDocument: Codeunit "Format Document";
         CDULanguage: codeunit Language;
         Continue: Boolean;
         MoreLines: Boolean;
         LinNo: Integer;
         NoOfCopies: Integer;
         NoOfLoops: Integer;
+        OutputNo: Integer;
+        CTxtAirport: Label 'ROISSY';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
+        GTxtSousClasse: Text[50];
         CopyText: Text[30];
         DimText: Text[120];
-        DimText1: Text[120];
-        OldDimText: Text[150];
-        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        CTxtAirport: Label 'ROISSY';
-        GTxtPackingInstr: Text[20];
-        GRecLanguage: Record "8";
-        GTxtSousClasse: Text[20];
-        OutputNo: Integer;
+        OldDimText: Text[120];
 }
 

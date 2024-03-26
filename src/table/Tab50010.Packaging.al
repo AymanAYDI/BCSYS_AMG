@@ -78,7 +78,7 @@ table 50010 Packaging
             Return := LRecColisage."Line No." + 1;
     end;
 
-    procedure FCalcPoidsNetColis(PColisNo: Code[10]) Return: Decimal
+    procedure FCalcPoidsNetColis(PColisNo: Code[20]) Return: Decimal
     var
         LRecColissage: Record Packaging;
         LDecPoidsNet: Decimal;

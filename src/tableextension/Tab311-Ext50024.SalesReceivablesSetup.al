@@ -23,19 +23,19 @@ tableextension 50024 SalesReceivablesSetup extends "Sales & Receivables Setup" /
         {
             DataClassification = ToBeClassified;
             TableRelation = "Item Category".Code;
-            Caption = 'Category Code Carbo', Comment = 'FRA="Code catégorie Carbo"';
+            Caption = 'Category Code Carbo', Comment = 'Category Code Carbo';
         }
         field(50010; "Package Serie No."; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
-            Caption = 'Package Serie No.', Comment = 'FRA="Souche N° colis"';
+            Caption = 'Package Serie No.', Comment = 'Package Serie No.';
         }
         field(50020; "DGX Serie No."; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
-            Caption = 'DGX Serie No.', Comment = 'FRA="Souche N° DGX"';
+            Caption = 'DGX Serie No.', Comment = 'DGX Serie No.';
         }
     }
 }

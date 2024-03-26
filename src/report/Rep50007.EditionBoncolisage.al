@@ -26,7 +26,7 @@ using Microsoft.CRM.Interaction;
 report 50007 "Edition Bon colisage"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './EditionBoncolisage.rdlc';
+    RDLCLayout = './report/RDL/EditionBoncolisage.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
     ApplicationArea = All;
@@ -348,7 +348,7 @@ report 50007 "Edition Bon colisage"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowInternalInfo then
+                            if not BoolShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -366,7 +366,7 @@ report 50007 "Edition Bon colisage"
                         column(Description2_SalesShptLine; "Description 2")
                         {
                         }
-                        column(ShowInternalInfo; ShowInternalInfo)
+                        column(ShowInternalInfo; BoolShowInternalInfo)
                         {
                         }
                         column(ShowCorrectionLines; ShowCorrectionLines)
@@ -498,7 +498,7 @@ report 50007 "Edition Bon colisage"
 
                             trigger OnPreDataItem()
                             begin
-                                if not ShowInternalInfo then
+                                if not BoolShowInternalInfo then
                                     CurrReport.BREAK();
                             end;
                         }
@@ -610,10 +610,10 @@ report 50007 "Edition Bon colisage"
 
                         trigger OnPostDataItem()
                         begin
-                            if ShowLotSN then begin
+                            if BoolShowLotSN then begin
                                 ItemTrackingDocMgt.SetRetrieveAsmItemTracking(true);
                                 TrackingSpecCount :=
-                                  ItemTrackingDocMgt.RetrieveDocumentItemTracking(TrackingSpecBuffer,
+                                  ItemTrackingDocMgt.RetrieveDocumentItemTracking(TempTrackingSpecBuffer,
                                     "Sales Shipment Header"."No.", DATABASE::"Sales Shipment Header", 0);
                                 ItemTrackingDocMgt.SetRetrieveAsmItemTracking(false);
                             end;
@@ -674,7 +674,7 @@ report 50007 "Edition Bon colisage"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowInternalInfo then
+                            if not BoolShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -771,19 +771,19 @@ report 50007 "Edition Bon colisage"
                     dataitem(ItemTrackingLine; Integer)
                     {
                         DataItemTableView = sorting(Number);
-                        column(TrackingSpecBufferNo; TrackingSpecBuffer."Item No.")
+                        column(TrackingSpecBufferNo; TempTrackingSpecBuffer."Item No.")
                         {
                         }
-                        column(TrackingSpecBufferDesc; TrackingSpecBuffer.Description)
+                        column(TrackingSpecBufferDesc; TempTrackingSpecBuffer.Description)
                         {
                         }
-                        column(TrackingSpecBufferLotNo; TrackingSpecBuffer."Lot No.")
+                        column(TrackingSpecBufferLotNo; TempTrackingSpecBuffer."Lot No.")
                         {
                         }
-                        column(TrackingSpecBufferSerNo; TrackingSpecBuffer."Serial No.")
+                        column(TrackingSpecBufferSerNo; TempTrackingSpecBuffer."Serial No.")
                         {
                         }
-                        column(TrackingSpecBufferQty; TrackingSpecBuffer."Quantity (Base)")
+                        column(TrackingSpecBufferQty; TempTrackingSpecBuffer."Quantity (Base)")
                         {
                         }
                         column(ShowTotal; ShowTotal)
@@ -819,29 +819,29 @@ report 50007 "Edition Bon colisage"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then
-                                TrackingSpecBuffer.FINDSET()
+                                TempTrackingSpecBuffer.FINDSET()
                             else
-                                TrackingSpecBuffer.NEXT();
+                                TempTrackingSpecBuffer.NEXT();
 
-                            if not ShowCorrectionLines and TrackingSpecBuffer.Correction then
+                            if not ShowCorrectionLines and TempTrackingSpecBuffer.Correction then
                                 CurrReport.SKIP();
-                            if TrackingSpecBuffer.Correction then
-                                TrackingSpecBuffer."Quantity (Base)" := -TrackingSpecBuffer."Quantity (Base)";
+                            if TempTrackingSpecBuffer.Correction then
+                                TempTrackingSpecBuffer."Quantity (Base)" := -TempTrackingSpecBuffer."Quantity (Base)";
 
                             ShowTotal := false;
-                            if ItemTrackingAppendix.IsStartNewGroup(TrackingSpecBuffer) then
+                            if ItemTrackingAppendix.IsStartNewGroup(TempTrackingSpecBuffer) then
                                 ShowTotal := true;
 
                             ShowGroup := false;
-                            if (TrackingSpecBuffer."Source Ref. No." <> OldRefNo) or
-                               (TrackingSpecBuffer."Item No." <> OldNo)
+                            if (TempTrackingSpecBuffer."Source Ref. No." <> OldRefNo) or
+                               (TempTrackingSpecBuffer."Item No." <> OldNo)
                             then begin
-                                OldRefNo := TrackingSpecBuffer."Source Ref. No.";
-                                OldNo := TrackingSpecBuffer."Item No.";
+                                OldRefNo := TempTrackingSpecBuffer."Source Ref. No.";
+                                OldNo := TempTrackingSpecBuffer."Item No.";
                                 TotalQty := 0;
                             end else
                                 ShowGroup := true;
-                            TotalQty += TrackingSpecBuffer."Quantity (Base)";
+                            TotalQty += TempTrackingSpecBuffer."Quantity (Base)";
                         end;
 
                         trigger OnPreDataItem()
@@ -850,7 +850,7 @@ report 50007 "Edition Bon colisage"
                                 CurrReport.BREAK();
                             CurrReport.NEWPAGE();
                             SETRANGE(Number, 1, TrackingSpecCount);
-                            TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
+                            TempTrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");
                         end;
                     }
@@ -858,7 +858,7 @@ report 50007 "Edition Bon colisage"
                     trigger OnPreDataItem()
                     begin
                         // Item Tracking:
-                        if ShowLotSN then begin
+                        if BoolShowLotSN then begin
                             TrackingSpecCount := 0;
                             OldRefNo := 0;
                             ShowGroup := false;
@@ -884,7 +884,7 @@ report 50007 "Edition Bon colisage"
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := 1 + ABS(NoOfCopies);
+                    NoOfLoops := 1 + ABS(IntNoOfCopies);
                     CopyText := '';
                     SETRANGE(Number, 1, NoOfLoops);
                     OutputNo := 1;
@@ -1014,19 +1014,19 @@ report 50007 "Edition Bon colisage"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(NoOfCopies; NoOfCopies)
+                    field(NoOfCopies; IntNoOfCopies)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'No. of Copies';
                         ToolTip = 'Specifies how many copies of the document to print.';
                     }
-                    field(ShowInternalInfo; ShowInternalInfo)
+                    field(ShowInternalInfo; BoolShowInternalInfo)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Internal Information';
                         ToolTip = 'Specifies if the document shows internal information.';
                     }
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Log Interaction';
@@ -1039,7 +1039,7 @@ report 50007 "Edition Bon colisage"
                         Caption = 'Show Correction Lines';
                         ToolTip = 'Specifies if the correction lines of an undoing of quantity posting will be shown on the report.';
                     }
-                    field(ShowLotSN; ShowLotSN)
+                    field(ShowLotSN; BoolShowLotSN)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Serial/Lot Number Appendix';
@@ -1067,7 +1067,7 @@ report 50007 "Edition Bon colisage"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -1086,7 +1086,7 @@ report 50007 "Edition Bon colisage"
 
     trigger OnPostReport()
     begin
-        if LogInteraction and not IsReportInPreviewMode() then
+        if BoolLogInteraction and not IsReportInPreviewMode() then
             if "Sales Shipment Header".FINDSET() then
                 repeat
                     SegManagement.LogDocument(
@@ -1127,7 +1127,7 @@ report 50007 "Edition Bon colisage"
         GRecSalesShipmentLine: Record "Sales Shipment Line";
         ShipmentMethod: Record "Shipment Method";
         GrecTransporteur: Record "Shipping Agent";
-        TrackingSpecBuffer: Record "Tracking Specification" temporary;
+        TempTrackingSpecBuffer: Record "Tracking Specification" temporary;
         ItemTrackingAppendix: report "Item Tracking Appendix";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
@@ -1135,25 +1135,25 @@ report 50007 "Edition Bon colisage"
         CDULanguage: codeunit Language;
         SegManagement: Codeunit SegManagement;
         AsmHeaderExists: Boolean;
+        BoolLogInteraction: Boolean;
+        BoolShowInternalInfo: Boolean;
+        BoolShowLotSN: Boolean;
         Continue: Boolean;
         DisplayAssemblyInformation: Boolean;
-        LogInteraction: Boolean;
 
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowCorrectionLines: Boolean;
         ShowCustAddr: Boolean;
         ShowGroup: Boolean;
-        ShowInternalInfo: Boolean;
-        ShowLotSN: Boolean;
         ShowTotal: Boolean;
         OldNo: Code[20];
         GDecPoidsBrut: Decimal;
         GDecPoidsnet: Decimal;
         GIntQteCommandee: Decimal;
         TotalQty: Decimal;
+        IntNoOfCopies: Integer;
         LinNo: Integer;
-        NoOfCopies: Integer;
         NoOfLoops: Integer;
         OldRefNo: Integer;
         OutputNo: Integer;
@@ -1194,8 +1194,13 @@ report 50007 "Edition Bon colisage"
         TextPackingDetaile: Label 'Packing details';
         TextPoids: Label 'Gross Weight';
         VATRegNoCaptionLbl: Label 'VAT Reg. No.';
+        CompanyAddr: array[8] of Text;
+        CustAddr: array[8] of Text;
+        GTxtColisREF: Text;
         GTxtCondLivraisonEtendues: Text;
         GTxtItemNo: Text;
+        GTxtUnClasse: Text;
+        ShipToAddr: array[8] of Text;
         GTxtNomenclatureArticle: Text[20];
         SalesPersonText: Text[20];
         CopyText: Text[30];
@@ -1203,34 +1208,29 @@ report 50007 "Edition Bon colisage"
         GTxtCompanyInfoPays: Text[50];
         GTxtDocumentNo: Text[50];
         GTxtNumTVAClient: Text[60];
-        OldDimText: Text[150];
         GTxtCompanyVAT_ICE: Text[80];
         GTxtTransporteur: Text[80];
         ReferenceText: Text[80];
-        CompanyAddr: array[8] of Text;
-        CustAddr: array[8] of Text;
-        GTxtColisREF: Text;
-        GTxtUnClasse: Text;
-        ShipToAddr: array[8] of Text;
         DimText: Text[120];
         DimText3: Text[120];
         GTxtPayementsTerm: Text[150];
+        OldDimText: Text[150];
         GTxtOrigineCE: Text[250];
 
     procedure InitLogInteraction()
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
     end;
 
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean; NewShowCorrectionLines: Boolean; NewShowLotSN: Boolean; DisplayAsmInfo: Boolean)
     begin
-        NoOfCopies := NewNoOfCopies;
-        ShowInternalInfo := NewShowInternalInfo;
-        LogInteraction := NewLogInteraction;
+        IntNoOfCopies := NewNoOfCopies;
+        BoolShowInternalInfo := NewShowInternalInfo;
+        BoolLogInteraction := NewLogInteraction;
         ShowCorrectionLines := NewShowCorrectionLines;
-        ShowLotSN := NewShowLotSN;
+        BoolShowLotSN := NewShowLotSN;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 

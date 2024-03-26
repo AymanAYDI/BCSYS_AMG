@@ -13,7 +13,7 @@ tableextension 50032 ConfigTemplateLine extends "Config. Template Line" //8619
             var
                 ConfigTemplateHeader: Record "Config. Template Header";
                 ConfigTemplateHeader2: Record "Config. Template Header";
-                Text002: Label 'The template %1 does not relate to table %2.';
+                Text002: Label 'The template %1 does not relate to table %2.', Comment = '%1=Code %2="Table ID"';
             begin
                 if ConfigTemplateHeader.GET("Template Code") then
                     if ConfigTemplateHeader2.GET("Data Template Code") then

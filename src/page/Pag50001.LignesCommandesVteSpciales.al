@@ -115,7 +115,7 @@ page 50001 "Lignes Commandes Vte Spéciales"
                     Editable = false;
                     ToolTip = 'Specifies the value of the Promised Delivery Date field.';
                 }
-                field("Fournisseur article"; rec."Fournisseur article")
+                field("Item supplier"; rec."Item supplier")
                 {
                     Editable = false;
                     ToolTip = 'Specifies the value of the Vendor field.';

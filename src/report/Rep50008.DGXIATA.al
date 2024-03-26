@@ -6,7 +6,7 @@ using Microsoft.Utilities;
 using System.Globalization;
 report 50008 "DGX IATA"
 {
-    RDLCLayout = './DGXIATA.rdlc';
+    RDLCLayout = './report/RDL/DGXIATA.rdlc';
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
@@ -181,7 +181,7 @@ report 50008 "DGX IATA"
 
                     trigger OnPreDataItem()
                     begin
-                        MoreLines := FIND('+');
+                        MoreLines := FINDLAST();
                         while MoreLines and (ItemNo = '') do
                             MoreLines := NEXT(-1) <> 0;
                         if not MoreLines then
@@ -237,19 +237,19 @@ report 50008 "DGX IATA"
     end;
 
     var
+        DimSetEntry1: Record "Dimension Set Entry";
+        FormatDocument: Codeunit "Format Document";
+        CDULanguage: codeunit Language;
+        Continue: Boolean;
         MoreLines: Boolean;
+        LinNo: Integer;
         NoOfCopies: Integer;
-        OutputNo: Integer;
         NoOfLoops: Integer;
+        OutputNo: Integer;
+        CTxtAirport: Label 'ROISSY';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
         CopyText: Text[30];
         DimText: Text[120];
-        FormatDocument: Codeunit "Format Document";
-        DimSetEntry1: Record "Dimension Set Entry";
-        Continue: Boolean;
         OldDimText: Text[150];
-        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        LinNo: Integer;
-        CTxtAirport: Label 'ROISSY';
-        CDULanguage: codeunit Language;
 }
 

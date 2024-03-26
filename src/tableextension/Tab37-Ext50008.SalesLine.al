@@ -67,7 +67,7 @@ tableextension 50008 SalesLine extends "Sales Line" //37
             Caption = '% Marge';
             DataClassification = ToBeClassified;
         }
-        field(50010; "Fournisseur article"; Code[20])
+        field(50010; "Item supplier"; Code[20])
         {
             CalcFormula = lookup(Item."Vendor No." where("No." = field("No.")));
             Caption = 'Vendor';

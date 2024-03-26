@@ -23,9 +23,10 @@ using Microsoft.CRM.Segment;
 using Microsoft.Foundation.UOM;
 using Microsoft.CRM.Contact;
 using Microsoft.CRM.Interaction;
+using Microsoft.Finance.Currency;
 report 50001 "Standard Sales - Credit Memo W"
 {
-    RDLCLayout = './StandardSalesCreditMemoW.rdlc';
+    RDLCLayout = './report/RDL/StandardSalesCreditMemoW.rdlc';
     WordLayout = './StandardSalesCreditMemoW.docx';
     Caption = 'Sales - Credit Memo';
     DefaultLayout = Word;
@@ -585,7 +586,6 @@ report 50001 "Standard Sales - Credit Memo W"
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
@@ -687,11 +687,6 @@ report 50001 "Standard Sales - Credit Memo W"
 
                 trigger OnPreDataItem()
                 begin
-                    CurrReport.CREATETOTALS(
-                      "Line Amount", "Inv. Disc. Base Amount",
-                      "Invoice Discount Amount", "VAT Base", "VAT Amount",
-                      VATBaseLCY, VATAmountLCY);
-
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
                 end;
@@ -828,7 +823,7 @@ report 50001 "Standard Sales - Credit Memo W"
 
             trigger OnAfterGetRecord()
             var
-                CurrencyExchangeRate: Record "330";
+                CurrencyExchangeRate: Record "Currency Exchange Rate";
             begin
                 if not CurrReport.PREVIEW then
                     CODEUNIT.RUN(CODEUNIT::"Sales Cr. Memo-Printed", Header);
@@ -848,7 +843,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     ExchangeRateText := STRSUBSTNO(ExchangeRateTxt, CalculatedExchRate, CurrencyExchangeRate."Exchange Rate Amount");
                 end;
 
-                if LogInteraction and not CurrReport.PREVIEW then
+                if BoolLogInteraction and not CurrReport.PREVIEW then
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
                           6, "No.", 0, 0, DATABASE::Contact, "Bill-to Contact No.", "Salesperson Code",
@@ -884,7 +879,7 @@ report 50001 "Standard Sales - Credit Memo W"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Log Interaction';
@@ -897,7 +892,7 @@ report 50001 "Standard Sales - Credit Memo W"
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
-                    field(DisplayShipmentInformation; DisplayShipmentInformation)
+                    field(DisplayShipmentInformation; BoolDisplayShipmentInformation)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Shipments';
@@ -919,7 +914,7 @@ report 50001 "Standard Sales - Credit Memo W"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -1005,7 +1000,7 @@ report 50001 "Standard Sales - Credit Memo W"
         MoreLines: Boolean;
         CopyText: Text[30];
         ShowShippingAddr: Boolean;
-        LogInteraction: Boolean;
+        BoolLogInteraction: Boolean;
         SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1';
         TotalSubTotal: Decimal;
         TotalAmount: Decimal;
@@ -1016,7 +1011,7 @@ report 50001 "Standard Sales - Credit Memo W"
         TransHeaderAmount: Decimal;
         LogInteractionEnable: Boolean;
         DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
+        BoolDisplayShipmentInformation: Boolean;
         CompanyLogoPosition: Integer;
         FirstLineHasBeenOutput: Boolean;
         CalculatedExchRate: Decimal;
@@ -1039,7 +1034,7 @@ report 50001 "Standard Sales - Credit Memo W"
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Cr. Memo") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Cr. Memo") <> '';
     end;
 
     local procedure FindPostedShipmentDate(): Date
@@ -1061,7 +1056,7 @@ report 50001 "Standard Sales - Credit Memo W"
         ShipmentLine.SETRANGE("Line No.", Line."Line No.");
         if ShipmentLine.FINDFIRST() then begin
             SalesShipmentBuffer2 := ShipmentLine;
-            if not DisplayShipmentInformation then
+            if not BoolDisplayShipmentInformation then
                 if ShipmentLine.NEXT() = 0 then begin
                     ShipmentLine.GET(
                       SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
@@ -1086,7 +1081,7 @@ report 50001 "Standard Sales - Credit Memo W"
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
-        LogInteraction := NewLogInteraction;
+        BoolLogInteraction := NewLogInteraction;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 

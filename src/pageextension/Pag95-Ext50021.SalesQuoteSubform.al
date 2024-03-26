@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Item;
@@ -9,7 +9,7 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
     {
         addbefore("Variant Code")
         {
-            field("Fournisseur article"; Rec."Fournisseur article")
+            field("Item supplier"; Rec."Item supplier")
             {
                 Editable = false;
                 ApplicationArea = All;

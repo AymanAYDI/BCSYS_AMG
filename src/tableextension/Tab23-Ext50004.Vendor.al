@@ -10,11 +10,11 @@ tableextension 50004 Vendor extends Vendor //23
     {
         modify("No. of Blanket Orders")
         {
-            Caption = 'No. of Blanket Orders', Comment = 'FRA="Nbre de commandes ouvertes"';
+            Caption = 'No. of Blanket Orders', Comment = 'No. of Blanket Orders';
         }
         modify("Pay-to No. of Blanket Orders")
         {
-            Caption = 'Pay-to No. of Blanket Orders', Comment = 'FRA="Paiement - Nbre de commandes ouvertes"';
+            Caption = 'Pay-to No. of Blanket Orders', Comment = 'Pay-to No. of Blanket Orders';
         }
         modify("E-Mail")
         {
@@ -45,7 +45,7 @@ tableextension 50004 Vendor extends Vendor //23
             CalcFormula = count("Vendor Ledger Entry" where("Vendor No." = field("No."),
                                                              Open = const(true)));
             FieldClass = FlowField;
-            Caption = 'No. of unlettered entries', Comment = 'FRA="Nb écritures non lettrées"';
+            Caption = 'No. of unlettered entries', Comment = 'No. of unlettered entries';
         }
     }
     //TODO verifier Ondelete

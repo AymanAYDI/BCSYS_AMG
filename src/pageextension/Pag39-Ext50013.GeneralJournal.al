@@ -8,7 +8,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
 
         //Unsupported feature: Code Modification on "Control 39.OnLookup".
 
-        //trigger OnLookup(var Text: Text): Boolean
+        //trigger OnLookup(var Text: Text): Boolean //TODO
         //>>>> ORIGINAL CODE:
         //begin
         /*
@@ -32,10 +32,9 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         //Unsupported feature: Property Deletion (ClosingDates) on ""<CurrentPostingDate>"(Control 117)".
 
 
-
         //Unsupported feature: Code Modification on "Control 80.OnAssistEdit".
 
-        //trigger OnAssistEdit()
+        //trigger OnAssistEdit() //TODO whut is this ? 
         //>>>> ORIGINAL CODE:
         //begin
         /*
@@ -50,134 +49,12 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         ShowDeferralSchedule;
         */
         //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode3(Control 134).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(3,ShortcutDimCode[3]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,3);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(3,ShortcutDimCode[3]);
-        */
-        //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode4(Control 133).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(4,ShortcutDimCode[4]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,4);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(4,ShortcutDimCode[4]);
-        */
-        //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode5(Control 128).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(5,ShortcutDimCode[5]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,5);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(5,ShortcutDimCode[5]);
-        */
-        //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode6(Control 121).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(6,ShortcutDimCode[6]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,6);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(6,ShortcutDimCode[6]);
-        */
-        //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode7(Control 63).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(7,ShortcutDimCode[7]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,7);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(7,ShortcutDimCode[7]);
-        */
-        //end;
-
-
-        //Unsupported feature: Code Modification on "ShortcutDimCode8(Control 61).OnValidate".
-
-        //trigger OnValidate()
-        //Parameters and return type have not been exported.
-        //>>>> ORIGINAL CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(8,ShortcutDimCode[8]);
-
-        OnAfterValidateShortcutDimCode(Rec,ShortcutDimCode,8);
-        */
-        //end;
-        //>>>> MODIFIED CODE:
-        //begin
-        /*
-        ValidateShortcutDimCode(8,ShortcutDimCode[8]);
-        */
-        //end;
     }
     actions
     {
-
-
         //Unsupported feature: Code Modification on ""G/L Accounts Opening balance "(Action 102).OnAction".
 
-        //trigger OnAction()
+        //trigger OnAction() //TODO no can do 
         //Parameters and return type have not been exported.
         //>>>> ORIGINAL CODE:
         //begin
@@ -206,7 +83,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
 
         //Unsupported feature: Code Modification on ""Customers Opening balance"(Action 104).OnAction".
 
-        //trigger OnAction()
+        //trigger OnAction()//TODO no can do 
         //Parameters and return type have not been exported.
         //>>>> ORIGINAL CODE:
         //begin
@@ -233,7 +110,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
 
         //Unsupported feature: Code Modification on ""Vendors Opening balance"(Action 106).OnAction".
 
-        //trigger OnAction()
+        //trigger OnAction()//TODO no can do 
         //Parameters and return type have not been exported.
         //>>>> ORIGINAL CODE:
         //begin
@@ -264,7 +141,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
 
     //Unsupported feature: Code Modification on "OnAfterGetRecord".
 
-    //trigger OnAfterGetRecord()
+    //trigger OnAfterGetRecord() //TODO no can do 
     //>>>> ORIGINAL CODE:
     //begin
     /*
@@ -283,64 +160,6 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
     */
     //end;
 
-
-    //Unsupported feature: Code Insertion (VariableCollection) on "OnOpenPage".
-
-    //trigger (Variable: LTextFilter)()
-    //Parameters and return type have not been exported.
-    //begin
-    /*
-    */
-    //end;
-
-
-    //Unsupported feature: Code Modification on "OnOpenPage".
-
-    //trigger OnOpenPage()
-    //>>>> ORIGINAL CODE:
-    //begin
-    /*
-    IsSaasExcelAddinEnabled := ServerConfigSettingHandler.GetIsSaasExcelAddinEnabled;
-    IF ClientTypeManagement.GetCurrentClientType = CLIENTTYPE::ODataV4 THEN
-      EXIT;
-
-    BalAccName := '';
-    SetControlVisibility;
-    SetDimensionVisibility;
-    IF IsOpenedFromBatch THEN BEGIN
-      CurrentJnlBatchName := "Journal Batch Name";
-      GenJnlManagement.OpenJnl(CurrentJnlBatchName,Rec);
-      SetControlAppearanceFromBatch;
-      SetDataForSimpleModeOnOpen;
-      EXIT;
-    END;
-    GenJnlManagement.TemplateSelection(PAGE::"General Journal",0,FALSE,Rec,JnlSelected);
-    IF NOT JnlSelected THEN
-      ERROR('');
-
-    LastGenJnlBatch := GenJnlManagement.GetLastViewedJournalBatchName(PAGE::"General Journal");
-    IF LastGenJnlBatch <> '' THEN
-      CurrentJnlBatchName := LastGenJnlBatch;
-    GenJnlManagement.OpenJnl(CurrentJnlBatchName,Rec);
-    SetControlAppearanceFromBatch;
-
-    IsSaaS := PermissionManager.SoftwareAsAService;
-    SetDataForSimpleModeOnOpen;
-    */
-    //end;
-    //>>>> MODIFIED CODE:
-    //begin
-    /*
-    #1..14
-    //DELPHI AUB
-    IF Rec."Journal Template Name" = '' THEN BEGIN
-    #15..17
-    END;
-    //END DELPHI AUB
-
-    #18..26
-    */
-    //end;
 
 
     //Unsupported feature: Code Modification on "SetDataForSimpleModeOnBatchChange(PROCEDURE 1106)".

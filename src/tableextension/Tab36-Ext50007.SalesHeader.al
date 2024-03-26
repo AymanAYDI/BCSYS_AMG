@@ -12,7 +12,7 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         }
         modify("On Hold")
         {
-            Caption = 'On Hold', Comment = 'FRA="En attente"';
+            Caption = 'On Hold', Comment = 'On Hold';
         }
         modify("Sell-to Customer Name")
         {
@@ -26,12 +26,12 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         field(50000; "Delivery time"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Delivery time', Comment = 'FRA="Délai de livraison"';
+            Caption = 'Delivery time', Comment = 'Delivery time';
         }
         field(50001; "Validity period"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Validity period', Comment = 'FRA="Durée de validité"';
+            Caption = 'Validity period', Comment = 'Validity period';
         }
         field(50060; "Gross Weight"; Decimal)
         {
@@ -52,7 +52,7 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison';
+            Caption = 'Compl. cond. livraison'; //TODO Translation 
         }
     }
     //TODO Onlookup Bill-to Contact line 357

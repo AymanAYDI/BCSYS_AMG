@@ -28,7 +28,7 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
         {
             Caption = 'Outstanding Qty';
         }
-        field(50010; "Package No."; Code[10])
+        field(50010; "Package No."; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = Package."Package No." where("Shipping No." = field("Document No."));

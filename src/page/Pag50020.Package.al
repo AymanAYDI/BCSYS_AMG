@@ -65,11 +65,11 @@ page 50020 Package
         {
             action(ActCreerColis)
             {
-                Caption = 'Créer Package';
+                Caption = 'Create Package';
                 Image = Item;
                 Promoted = true;
                 PromotedIsBig = true;
-                ToolTip = 'Executes the Créer Package action.';
+                ToolTip = 'Execute the Create Package action.';
                 trigger OnAction()
                 begin
                     Package.INIT();

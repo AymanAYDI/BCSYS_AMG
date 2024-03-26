@@ -17,7 +17,7 @@ tableextension 50009 PurchaseHeader extends "Purchase Header" //38
         //TODO Onlookup Buy-from Contact
         modify("On Hold")
         {
-            Caption = 'On Hold', Comment = 'FRA="En attente"';
+            Caption = 'On Hold', Comment = 'On Hold';
         }
         modify("Buy-from Vendor Name")
         {

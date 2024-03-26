@@ -1,6 +1,5 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
-using BCSYS_AMG.BCSYS_AMG;
 page 50012 "Liste DGX"
 {
     CardPageID = "Fiche DGX";

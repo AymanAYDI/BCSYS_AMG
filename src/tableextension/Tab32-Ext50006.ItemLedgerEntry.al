@@ -9,7 +9,7 @@ tableextension 50006 ItemLedgerEntry extends "Item Ledger Entry" //32
     {
         modify("Derived from Blanket Order")
         {
-            Caption = 'Derived from Blanket Order', comment = 'FRA="Issue de commande ouverte"';
+            Caption = 'Derived from Blanket Order', comment = 'Derived from Blanket Order';
         }
         field(50000; "Customer Name"; Text[100])
         {

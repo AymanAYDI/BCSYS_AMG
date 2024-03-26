@@ -1,7 +1,7 @@
 report 50041 "Gd Livre Client Ecr.Non Lettr1"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './GdLivreClientEcrNonLettr1.rdlc';
+    RDLCLayout = './report/RDL/GdLivreClientEcrNonLettr1.rdlc';
     Caption = 'Customer Detail Trial Balance';
     ApplicationArea = All;
 
@@ -33,7 +33,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
             column(PrintedByCaption; STRSUBSTNO(Text003, ''))
             {
             }
-            column(ExcludeBalanceOnly; ExcludeBalanceOnly)
+            column(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
             {
             }
             column(Customer_TABLECAPTION__________Filter; Customer.TABLECAPTION + ': ' + Filter)
@@ -144,7 +144,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
             column(Grand_TotalCaption; Grand_TotalCaptionLbl)
             {
             }
-            column(AffichageEcrituresOuvertes; ShowOnlyUnappliedWritings)
+            column(AffichageEcrituresOuvertes; BoolShowOnlyUnappliedWritings)
             {
             }
             column(PreviousDebitAmountLCY_Open; PreviousDebitAmountLCY_Open)
@@ -340,7 +340,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                         CreditPeriodAmount := CreditPeriodAmount + "Credit Amount (LCY)";
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if ShowOnlyUnappliedWritings then begin
+                        if BoolShowOnlyUnappliedWritings then begin
                             GRecCustLedgEntry.RESET();
                             if GRecCustLedgEntry.GET("Cust. Ledger Entry No.") then begin
                                 GRecCustLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
@@ -375,7 +375,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
 
                     trigger OnPreDataItem()
                     begin
-                        if DocNumSort then
+                        if BoolDocNumSort then
                             SETCURRENTKEY("Customer No.", "Document No.", "Posting Date");
                         if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
@@ -394,9 +394,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Cust. Ledg. Entry"."Debit Amount (LCY)", "Detailed Cust. Ledg. Entry"."Credit Amount (LCY)");
+                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -453,7 +451,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
 
                 CustLedgEntry2.COPYFILTERS(CustLedgEntry);
                 CustLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if ExcludeBalanceOnly then begin
+                if BoolExcludeBalanceOnly then begin
                     if CustLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
@@ -501,7 +499,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                     until GRecCustLedgEntry.NEXT() = 0;
                 // FIN MHR
 
-                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPreDataItem()
@@ -538,13 +536,13 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(DocNumSort; DocNumSort)
+                    field(DocNumSort; BoolDocNumSort)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.';
                         ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
-                    field(ExcludeBalanceOnly; ExcludeBalanceOnly)
+                    field(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Exclude Customers That Have a Balance Only';
@@ -552,7 +550,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
                         Visible = false;
                         ToolTip = 'Specifies the value of the Exclude Customers That Have a Balance Only field.';
                     }
-                    field(ShowOnlyUnappliedWritings; ShowOnlyUnappliedWritings)
+                    field(ShowOnlyUnappliedWritings; BoolShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings';
                         ApplicationArea = All;
@@ -580,7 +578,7 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
     begin
         Filter := Customer.GETFILTERS;
         //DELPHI AUB 29.07.2019
-        if ShowOnlyUnappliedWritings then
+        if BoolShowOnlyUnappliedWritings then
             GTxtDocumentTitle := 'Grand Livre Client:  écritures non lettrées'
         else
             GTxtDocumentTitle := 'Grand Livre Client Classique';
@@ -589,15 +587,14 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
 
     var
         GRecCustLedgEntry: Record "Cust. Ledger Entry";
-        GRecCustLedgEntry2: Record "Cust. Ledger Entry";
         OriginalLedgerEntry: Record "Cust. Ledger Entry";
         CustLedgEntry: Record "Detailed Cust. Ledg. Entry";
         CustLedgEntry2: Record "Detailed Cust. Ledg. Entry";
         FiltreDateCalc: Codeunit "DateFilter-Calc";
-        DocNumSort: Boolean;
-        ExcludeBalanceOnly: Boolean;
+        BoolDocNumSort: Boolean;
+        BoolExcludeBalanceOnly: Boolean;
+        BoolShowOnlyUnappliedWritings: Boolean;
         GBooOpen: Boolean;
-        ShowOnlyUnappliedWritings: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
@@ -634,22 +631,22 @@ report 50041 "Gd Livre Client Ecr.Non Lettr1"
         Posting_DateCaptionLbl: Label 'Posting Date';
         Previous_pageCaptionLbl: Label 'Previous page';
         Source_CodeCaptionLbl: Label 'Source Code';
-        Text001: Label 'You must fill in the %1 field.';
+        Text001: Label 'You must fill in the %1 field.', Comment = '%1="Date Filter"';
         Text002: Label 'You must specify a Starting Date.';
-        Text003: Label 'Printed by %1';
-        Text004: Label 'Fiscal Year Start Date : %1';
-        Text005: Label 'Page %1';
-        Text006: Label 'Balance at %1 ';
-        Text007: Label 'Balance at %1';
+        Text003: Label 'Printed by %1', Comment = '%1=USERID';
+        Text004: Label 'Fiscal Year Start Date : %1', Comment = '%1=PreviousStartDate';
+        Text005: Label 'Page %1', Comment = '%1=PAGENO';
+        Text006: Label 'Balance at %1 ', Comment = '%1=PreviousEndDate';
+        Text007: Label 'Balance at %1', Comment = '%1=EndDate';
         Text008: Label 'Total';
-        Text009: Label 'Solde Non-lettré au %1';
+        Text009: Label 'Balance Unrecognized at %1', Comment = '%1=PreviousEndDate';
         This_report_also_includes_customers_that_only_have_balances_CaptionLbl: Label 'This report also includes customers that only have balances.';
         Title_Open: Label 'Affiche les écritures Clients non lettrées';
         To_be_continuedCaptionLbl: Label 'To be continued';
         Total_Date_RangeCaptionLbl: Label 'Total Date Range';
         TotalBy: Option Date,Week,Month,Quarter,Year;
         "Filter": Text;
-        TextDate: Text;
+        TextDate: Text[30]; //TODO Verif was (TextDate: Text;)
         GTxtDocumentTitle: Text[80];
 }
 

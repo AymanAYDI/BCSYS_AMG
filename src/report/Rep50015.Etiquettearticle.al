@@ -1,10 +1,10 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item;
 report 50015 "Etiquette article"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './Etiquettearticle.rdlc';
+    RDLCLayout = './report/RDL/Etiquettearticle.rdlc';
     ApplicationArea = All;
 
     dataset

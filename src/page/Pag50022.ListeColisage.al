@@ -3,7 +3,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Inventory.Item;
 page 50022 ListeColisage
 {
-    Caption = 'Liste des articles du colisage';
+    Caption = 'List of packing items';
     DelayedInsert = false;
     DeleteAllowed = false;
     Editable = false;

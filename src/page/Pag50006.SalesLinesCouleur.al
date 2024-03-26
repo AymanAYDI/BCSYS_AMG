@@ -41,7 +41,7 @@ page 50006 "Sales Lines Couleur"
                 field("Qty. to Ship"; rec."Qty. to Ship")
                 {
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Qty. to Ship field.';
+                    ToolTip = 'Specifies the value of the Qty to Ship field.';
                 }
                 field("Quantity Shipped"; rec."Quantity Shipped")
                 {
@@ -50,10 +50,10 @@ page 50006 "Sales Lines Couleur"
                 }
                 field("Qty received"; GDecQtyReceived)
                 {
-                    Caption = 'Qté reçue du Fourn.';
+                    Caption = 'Qty received from Supplier';
                     DecimalPlaces = 0 : 1;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Qté reçue du Fourn. field.';
+                    ToolTip = 'Specifies the value of the Qty received from the Supplier field.';
                 }
                 field("Qty In Stock"; GDecStock)
                 {
@@ -72,7 +72,7 @@ page 50006 "Sales Lines Couleur"
                     Visible = false;
                     ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
                 }
-                field("Fournisseur article"; rec."Fournisseur article")
+                field("Item supplier"; rec."Item supplier")
                 {
                     Caption = 'Fourn.';
                     StyleExpr = GTxtStyleText;
@@ -169,13 +169,13 @@ page 50006 "Sales Lines Couleur"
                 else begin
                     // If no result, search in Purch. Invoice Lines
                     LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
-                    if LRecPurchInvHeader.FINDFIRST() then
+                    if LRecPurchInvHeader.FindSet() then
                         repeat
                             LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
                             LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
                             LRecPurchInvLine.SETRANGE("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
-                            if LRecPurchInvLine.FINDFIRST() then
+                            if LRecPurchInvLine.FindSet() then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
                                 until LRecPurchInvLine.NEXT() = 0;

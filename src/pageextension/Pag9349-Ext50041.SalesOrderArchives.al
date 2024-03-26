@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Archive;
 pageextension 50041 SalesOrderArchives extends "Sales Order Archives" //9349

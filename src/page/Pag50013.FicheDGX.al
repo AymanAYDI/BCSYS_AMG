@@ -2,7 +2,6 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 using Microsoft.Inventory.Item;
-using BCSYS_AMG.BCSYS_AMG;
 page 50013 "Fiche DGX"
 {
     PageType = Card;
@@ -130,14 +129,14 @@ page 50013 "Fiche DGX"
                                         LRecDGXLines."Package No." := LRecShipLines."Package No.";
                                         LRecDGXLines."Unit of measure" := LRecShipLines."Unit of Measure";
                                         if LRecDGXHeader.GET(Rec."DGX No.") then
-                                            if LRecDGXHeader."DGX Type" = LRecDGXHeader."DGX Type"::"Aerien cargo" then
-                                                LRecDGXLines."Packing Inst" := LRecONU."Packing instr cargo"
-                                            else
-                                                if LRecDGXHeader."DGX Type" = LRecDGXHeader."DGX Type"::"Aerien passager" then
-                                                    LRecDGXLines."Packing Inst" := LRecONU."Packing instr passager"
+                                            case LRecDGXHeader."DGX Type" of
+                                                LRecDGXHeader."DGX Type"::"Aerien cargo":
+                                                    LRecDGXLines."Packing Inst" := LRecONU."Packing instr cargo";
+                                                LRecDGXHeader."DGX Type"::"Aerien passager":
+                                                    LRecDGXLines."Packing Inst" := LRecONU."Packing instr passager";
                                                 else
                                                     LRecDGXLines."Packing Inst" := '';
-
+                                            end;//TODO VErif 
                                         //DELPHI AUB récupération du poids net du colis
                                         if LRecColis.GET(LRecShipLines."Package No.") then begin
                                             LRecDGXLines."Net mass (kg)" := LRecColis."Net Weight";

@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Vendor;
@@ -132,7 +132,7 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
     trigger OnOpenPage()
     var
         LRecUserSetup: Record "User Setup";
-        LCodUserID: Code[20];
+        LCodUserID: Code[50];
     begin
         Rec."Posting Date" := 0D;
         LCodUserID := USERID();

@@ -6,10 +6,10 @@ table 50008 NatureColisage
 
     fields
     {
-        field(1; No; Code[10])
+        field(1; No; Code[20])
         {
             DataClassification = ToBeClassified;
-            Caption = 'No';
+            Caption = 'No.';
         }
         field(5; Intituler; Text[60])
         {

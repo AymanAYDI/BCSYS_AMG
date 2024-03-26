@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using System.Utilities;
@@ -26,7 +26,7 @@ using Microsoft.Sales.Posting;
 
 report 50006 "Sales-Quote AMGallois ICE"
 {
-    RDLCLayout = './SalesQuoteAMGalloisICE.rdlc';
+    RDLCLayout = './report/RDL/SalesQuoteAMGalloisICE.rdlc';
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
@@ -310,7 +310,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowInternalInfo then
+                            if not BoolShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -332,7 +332,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                         column(Desc_SalesLine; GTxtDescriptionLine)
                         {
                         }
-                        column(LineAmt_SalesLine; SalesLine."Line Amount")
+                        column(LineAmt_SalesLine; TempSalesLine."Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
@@ -375,7 +375,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                         column(AllowInvoiceDisYesNo; FORMAT("Sales Line"."Allow Invoice Disc."))
                         {
                         }
-                        column(InvDiscountAmount_SalesLine; -SalesLine."Inv. Discount Amount")
+                        column(InvDiscountAmount_SalesLine; -TempSalesLine."Inv. Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
@@ -383,12 +383,12 @@ report 50006 "Sales-Quote AMGallois ICE"
                         column(TotalText; TotalText)
                         {
                         }
-                        column(DiscountAmt_SalesLine; SalesLine."Line Amount" - SalesLine."Inv. Discount Amount")
+                        column(DiscountAmt_SalesLine; TempSalesLine."Line Amount" - TempSalesLine."Inv. Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VATAmtLineVATAmtTxt; VATAmountLine.VATAmountText())
+                        column(VATAmtLineVATAmtTxt; TempVATAmountLine.VATAmountText())
                         {
                         }
                         column(TotalExclVATText; TotalExclVATText)
@@ -447,7 +447,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                         column(UnitofMeasure_SalesLineCaption; "Sales Line".FIELDCAPTION("Unit of Measure"))
                         {
                         }
-                        column(Crossreference_SalesLine; SalesLine."Item Reference No.")
+                        column(Crossreference_SalesLine; TempSalesLine."Item Reference No.")
                         {
                         }
                         dataitem(DimensionLoop2; integer)
@@ -494,7 +494,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                             trigger OnPreDataItem()
                             begin
-                                if not ShowInternalInfo then
+                                if not BoolShowInternalInfo then
                                     CurrReport.BREAK();
 
                                 DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
@@ -506,17 +506,17 @@ report 50006 "Sales-Quote AMGallois ICE"
                             LRecItem: Record Item;
                         begin
                             if Number = 1 then
-                                SalesLine.FINDFIRST()
+                                TempSalesLine.FINDFIRST()
                             else
-                                SalesLine.NEXT();
-                            "Sales Line" := SalesLine;
+                                TempSalesLine.NEXT();
+                            "Sales Line" := TempSalesLine;
 
                             if not "Sales Header"."Prices Including VAT" and
-                               (SalesLine."VAT Calculation Type" = SalesLine."VAT Calculation Type"::"Full VAT")
+                               (TempSalesLine."VAT Calculation Type" = TempSalesLine."VAT Calculation Type"::"Full VAT")
                             then
-                                SalesLine."Line Amount" := 0;
+                                TempSalesLine."Line Amount" := 0;
 
-                            if (SalesLine.Type = SalesLine.Type::"G/L Account") and (not ShowInternalInfo) then
+                            if (TempSalesLine.Type = TempSalesLine.Type::"G/L Account") and (not BoolShowInternalInfo) then
                                 "Sales Line"."No." := '';
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
@@ -532,57 +532,56 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                         trigger OnPostDataItem()
                         begin
-                            SalesLine.DELETEALL();
+                            TempSalesLine.DELETEALL();
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := SalesLine.FINDLAST();
-                            while MoreLines and (SalesLine.Description = '') and (SalesLine."Description 2" = '') and
-                                  (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
-                                  (SalesLine.Amount = 0)
+                            MoreLines := TempSalesLine.FINDLAST();
+                            while MoreLines and (TempSalesLine.Description = '') and (TempSalesLine."Description 2" = '') and
+                                  (TempSalesLine."No." = '') and (TempSalesLine.Quantity = 0) and
+                                  (TempSalesLine.Amount = 0)
                             do
-                                MoreLines := SalesLine.NEXT(-1) <> 0;
+                                MoreLines := TempSalesLine.NEXT(-1) <> 0;
                             if not MoreLines then
                                 CurrReport.BREAK();
-                            SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
-                            SETRANGE(Number, 1, SalesLine.COUNT);
-                            CurrReport.CREATETOTALS(SalesLine."Line Amount", SalesLine."Inv. Discount Amount");
+                            TempSalesLine.SETRANGE("Line No.", 0, TempSalesLine."Line No.");
+                            SETRANGE(Number, 1, TempSalesLine.COUNT);
                         end;
                     }
                     dataitem(VATCounter; integer)
                     {
                         DataItemTableView = sorting(Number);
-                        column(VATBase_VATAmtLine; VATAmountLine."VAT Base")
+                        column(VATBase_VATAmtLine; TempVATAmountLine."VAT Base")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VATAmt_VATAmtLine; VATAmountLine."VAT Amount")
+                        column(VATAmt_VATAmtLine; TempVATAmountLine."VAT Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(LineAmount_VATAmtLine; VATAmountLine."Line Amount")
+                        column(LineAmount_VATAmtLine; TempVATAmountLine."Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(InvDiscBaseAmt_VATAmtLine; VATAmountLine."Inv. Disc. Base Amount")
+                        column(InvDiscBaseAmt_VATAmtLine; TempVATAmountLine."Inv. Disc. Base Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(InvoiceDiscAmt_VATAmtLine; VATAmountLine."Invoice Discount Amount")
+                        column(InvoiceDiscAmt_VATAmtLine; TempVATAmountLine."Invoice Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VAT_VATAmtLine; VATAmountLine."VAT %")
+                        column(VAT_VATAmtLine; TempVATAmountLine."VAT %")
                         {
                             DecimalPlaces = 0 : 5;
                         }
-                        column(VATIdentifier_VATAmtLine; VATAmountLine."VAT Identifier")
+                        column(VATIdentifier_VATAmtLine; TempVATAmountLine."VAT Identifier")
                         {
                         }
                         column(VATAmountLineVATCaption; VATAmountLineVATCaptionLbl)
@@ -612,17 +611,14 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                         trigger OnAfterGetRecord()
                         begin
-                            VATAmountLine.GetLine(Number);
+                            TempVATAmountLine.GetLine(Number);
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             if VATAmount = 0 then
                                 CurrReport.BREAK();
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(
-                              VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
-                              VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
+                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
                         end;
                     }
                     dataitem(VATCounterLCY; integer)
@@ -642,21 +638,21 @@ report 50006 "Sales-Quote AMGallois ICE"
                         {
                             AutoFormatType = 1;
                         }
-                        column(VATCtrl_VATAmtLine; VATAmountLine."VAT %")
+                        column(VATCtrl_VATAmtLine; TempVATAmountLine."VAT %")
                         {
                         }
-                        column(VATIdentifierCtrl_VATAmtLine; VATAmountLine."VAT Identifier")
+                        column(VATIdentifierCtrl_VATAmtLine; TempVATAmountLine."VAT Identifier")
                         {
                         }
 
                         trigger OnAfterGetRecord()
                         begin
-                            VATAmountLine.GetLine(Number);
+                            TempVATAmountLine.GetLine(Number);
                             VALVATBaseLCY :=
-                              VATAmountLine.GetBaseLCY(
+                              TempVATAmountLine.GetBaseLCY(
                                 "Sales Header"."Posting Date", "Sales Header"."Currency Code", "Sales Header"."Currency Factor");
                             VALVATAmountLCY :=
-                              VATAmountLine.GetAmountLCY(
+                              TempVATAmountLine.GetAmountLCY(
                                 "Sales Header"."Posting Date", "Sales Header"."Currency Code", "Sales Header"."Currency Factor");
                         end;
 
@@ -664,12 +660,11 @@ report 50006 "Sales-Quote AMGallois ICE"
                         begin
                             if (not GLSetup."Print VAT specification in LCY") or
                                ("Sales Header"."Currency Code" = '') or
-                               (VATAmountLine.GetTotalVATAmount() = 0)
+                               (TempVATAmountLine.GetTotalVATAmount() = 0)
                             then
                                 CurrReport.BREAK();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
+                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
 
                             if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text008 + Text009
@@ -735,24 +730,23 @@ report 50006 "Sales-Quote AMGallois ICE"
                 var
                     SalesPost: Codeunit "Sales-Post";
                 begin
-                    CLEAR(SalesLine);
+                    CLEAR(TempSalesLine);
                     CLEAR(SalesPost);
-                    SalesLine.DELETEALL();
-                    VATAmountLine.DELETEALL();
-                    SalesPost.GetSalesLines("Sales Header", SalesLine, 0);
-                    SalesLine.CalcVATAmountLines(0, "Sales Header", SalesLine, VATAmountLine);
-                    SalesLine.UpdateVATOnLines(0, "Sales Header", SalesLine, VATAmountLine);
-                    VATAmount := VATAmountLine.GetTotalVATAmount();
-                    VATBaseAmount := VATAmountLine.GetTotalVATBase();
+                    TempSalesLine.DELETEALL();
+                    TempVATAmountLine.DELETEALL();
+                    SalesPost.GetSalesLines("Sales Header", TempSalesLine, 0);
+                    TempSalesLine.CalcVATAmountLines(0, "Sales Header", TempSalesLine, TempVATAmountLine);
+                    TempSalesLine.UpdateVATOnLines(0, "Sales Header", TempSalesLine, TempVATAmountLine);
+                    VATAmount := TempVATAmountLine.GetTotalVATAmount();
+                    VATBaseAmount := TempVATAmountLine.GetTotalVATBase();
                     VATDiscountAmount :=
-                      VATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
-                    TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT();
+                      TempVATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
+                    TotalAmountInclVAT := TempVATAmountLine.GetTotalAmountInclVAT();
 
                     if Number > 1 then begin
                         CopyText := FormatDocument.GetCOPYText();
                         OutputNo += 1;
                     end;
-                    CurrReport.PAGENO := 1;
                 end;
 
                 trigger OnPostDataItem()
@@ -763,7 +757,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + 1;
+                    NoOfLoops := ABS(IntNoOfCopies) + 1;
                     CopyText := '';
                     SETRANGE(Number, 1, NoOfLoops);
                     OutputNo := 1;
@@ -772,7 +766,7 @@ report 50006 "Sales-Quote AMGallois ICE"
 
             trigger OnAfterGetRecord()
             begin
-                CurrReport.LANGUAGE := Language.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := CULanguage.GetLanguageID("Language Code");
 
                 FormatAddressFields("Sales Header");
                 FormatDocumentFields("Sales Header");
@@ -780,12 +774,12 @@ report 50006 "Sales-Quote AMGallois ICE"
                 DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
 
                 if Print then begin
-                    if CurrReport.USEREQUESTPAGE and ArchiveDocument or
+                    if CurrReport.USEREQUESTPAGE and BoolArchiveDocument or
                        not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders"
                     then
-                        ArchiveManagement.StoreSalesDocument("Sales Header", LogInteraction);
+                        ArchiveManagement.StoreSalesDocument("Sales Header", BoolLogInteraction);
 
-                    if LogInteraction then begin
+                    if BoolLogInteraction then begin
                         CALCFIELDS("No. of Archived Versions");
                         if "Bill-to Contact No." <> '' then
                             SegManagement.LogDocument(
@@ -821,8 +815,8 @@ report 50006 "Sales-Quote AMGallois ICE"
             begin
                 MARKEDONLY := true;
                 COMMIT();
-                CurrReport.Language := Language.GetLanguageIdOrDefault("Language Code");
-                CurrReport.FormatRegion := Language.GetFormatRegionOrDefault("Format Region");
+                CurrReport.Language := CULanguage.GetLanguageIdOrDefault("Language Code");
+                CurrReport.FormatRegion := CULanguage.GetFormatRegionOrDefault("Format Region");
                 FormatAddr.SetLanguageCode("Language Code");
 
             end;
@@ -846,30 +840,30 @@ report 50006 "Sales-Quote AMGallois ICE"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(NoOfCopies; NoOfCopies)
+                    field(NoOfCopies; IntNoOfCopies)
                     {
                         Caption = 'No. of Copies';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the No. of Copies field.';
                     }
-                    field(ShowInternalInfo; ShowInternalInfo)
+                    field(ShowInternalInfo; BoolShowInternalInfo)
                     {
                         Caption = 'Show Internal Information';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Show Internal Information field.';
                     }
-                    field(ArchiveDocument; ArchiveDocument)
+                    field(ArchiveDocument; BoolArchiveDocument)
                     {
                         Caption = 'Archive Document';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Archive Document field.';
                         trigger OnValidate()
                         begin
-                            if not ArchiveDocument then
-                                LogInteraction := false;
+                            if not BoolArchiveDocument then
+                                BoolLogInteraction := false;
                         end;
                     }
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         Caption = 'Log Interaction';
                         Enabled = LogInteractionEnable;
@@ -877,8 +871,8 @@ report 50006 "Sales-Quote AMGallois ICE"
                         ToolTip = 'Specifies the value of the Log Interaction field.';
                         trigger OnValidate()
                         begin
-                            if LogInteraction then
-                                ArchiveDocument := ArchiveDocumentEnable;
+                            if BoolLogInteraction then
+                                BoolArchiveDocument := ArchiveDocumentEnable;
                         end;
                     }
                 }
@@ -898,10 +892,10 @@ report 50006 "Sales-Quote AMGallois ICE"
         var
             DocumentType: Enum "Interaction Log Entry Document Type";
         begin
-            ArchiveDocument := SalesSetup."Archive Orders";
-            LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Qte.") <> '';
+            BoolArchiveDocument := SalesSetup."Archive Orders";
+            BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Qte.") <> '';
 
-            LogInteractionEnable := LogInteraction;
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -934,25 +928,25 @@ report 50006 "Sales-Quote AMGallois ICE"
         PaymentTerms: Record "Payment Terms";
         RespCenter: Record "Responsibility Center";
         SalesSetup: Record "Sales & Receivables Setup";
-        SalesLine: Record "Sales Line" temporary;
+        TempSalesLine: Record "Sales Line" temporary;
         SalesPurchPerson: Record "Salesperson/Purchaser";
         ShipmentMethod: Record "Shipment Method";
-        VATAmountLine: Record "VAT Amount Line" temporary;
+        TempVATAmountLine: Record "VAT Amount Line" temporary;
         ArchiveManagement: Codeunit ArchiveManagement;
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        Language: Codeunit Language;
+        CULanguage: Codeunit Language;
         SegManagement: Codeunit SegManagement;
-        ArchiveDocument: Boolean;
+        BoolArchiveDocument: Boolean;
 
         ArchiveDocumentEnable: Boolean;
         Continue: Boolean;
-        LogInteraction: Boolean;
+        BoolLogInteraction: Boolean;
 
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         Print: Boolean;
-        ShowInternalInfo: Boolean;
+        BoolShowInternalInfo: Boolean;
         ShowShippingAddr: Boolean;
         TotalAmountInclVAT: Decimal;
         VALVATAmountLCY: Decimal;
@@ -960,7 +954,7 @@ report 50006 "Sales-Quote AMGallois ICE"
         VATAmount: Decimal;
         VATBaseAmount: Decimal;
         VATDiscountAmount: Decimal;
-        NoOfCopies: Integer;
+        IntNoOfCopies: Integer;
         NoOfLoops: Integer;
         NoOfRecords: Integer;
         OutputNo: Integer;
@@ -991,7 +985,6 @@ report 50006 "Sales-Quote AMGallois ICE"
         SubtotalCaptionLbl: Label 'Subtotal';
         Text004: Label 'Quote %1';
         Text005: Label 'Page %1';
-        Text007: Label 'Do you want to create a follow-up to-do?';
         Text008: Label 'VAT Amount Specification in ';
         Text009: Label 'Local Currency';
         Text010: Label 'Exchange rate: %1/%2';
@@ -1013,22 +1006,22 @@ report 50006 "Sales-Quote AMGallois ICE"
         TotalText: Text[50];
         VALExchRate: Text[50];
         GTxtNumTVAClient: Text[60];
-        OldDimText: Text[150];
         GTxtCompanyVAT_ICE: Text[80];
         ReferenceText: Text[80];
         VALSpecLCYHeader: Text[80];
         VATNoText: Text[80];
         DimText: Text[150];
+        OldDimText: Text[150];
         GTxtDescriptionLine: Text[250];
         GTxtOrigineCE: Text[250];
 
 
     procedure InitializeRequest(NoOfCopiesFrom: Integer; ShowInternalInfoFrom: Boolean; ArchiveDocumentFrom: Boolean; LogInteractionFrom: Boolean; PrintFrom: Boolean)
     begin
-        NoOfCopies := NoOfCopiesFrom;
-        ShowInternalInfo := ShowInternalInfoFrom;
-        ArchiveDocument := ArchiveDocumentFrom;
-        LogInteraction := LogInteractionFrom;
+        IntNoOfCopies := NoOfCopiesFrom;
+        BoolShowInternalInfo := ShowInternalInfoFrom;
+        BoolArchiveDocument := ArchiveDocumentFrom;
+        BoolLogInteraction := LogInteractionFrom;
         Print := PrintFrom;
     end;
 

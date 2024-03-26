@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
@@ -142,5 +142,5 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
 
     var
         GRecUserSetup: Record "User Setup";
-        GCodUserID: Code[20];
+        GCodUserID: Code[50];
 }

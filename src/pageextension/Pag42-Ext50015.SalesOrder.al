@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
@@ -101,14 +101,13 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
         addbefore(ApprovalFactBox)
         {
-            //TODO page spe 
-            // part(Substitution; 50002)
-            // {
-            //     ApplicationArea = Basic, Suite;
-            //     Provider = SalesLines;
-            //     SubPageLink = "No." = field("No.");
-            //     ShowFilter = false;
-            // }
+            part(Substitution; "Sustitutions possibles")
+            {
+                ApplicationArea = Basic, Suite;
+                Provider = SalesLines;
+                SubPageLink = "No." = field("No.");
+                ShowFilter = false;
+            }
         }
     }
     actions
@@ -140,12 +139,12 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
     }
     var
         GRecUserSetup: Record "User Setup";
-        GCodUserID: Code[20];
+        GCodUserID: Code[50];
 
     trigger OnOpenPage()
     begin
         Rec."Posting Date" := 0D;
-        GCodUserID := USERID;
+        GCodUserID := USERID();
         if GRecUserSetup.GET(GCodUserID) and (Rec."Salesperson Code" = '') then
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
         if Rec."No." <> '' then Rec.MODIFY();

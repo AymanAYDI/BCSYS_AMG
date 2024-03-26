@@ -32,7 +32,7 @@ using System.Environment;
 using Microsoft.CRM.Interaction;
 report 50002 "Standard Sales - Invoice word"
 {
-    RDLCLayout = './StandardSalesInvoiceword.rdlc';
+    RDLCLayout = './report/RDL/StandardSalesInvoiceword.rdlc';
     WordLayout = './StandardSalesInvoiceword.docx';
     Caption = 'Sales - Invoice';
     DefaultLayout = Word;
@@ -154,7 +154,7 @@ report 50002 "Standard Sales - Invoice word"
             column(CompanyLegalStatement; GetLegalStatement())
             {
             }
-            column(DisplayAdditionalFeeNote; DisplayAdditionalFeeNote)
+            column(DisplayAdditionalFeeNote; BoolDisplayAdditionalFeeNote)
             {
             }
             column(CustomerAddress1; CustAddr[1])
@@ -569,7 +569,7 @@ report 50002 "Standard Sales - Invoice word"
                         ValueEntry: Record "Value Entry";
                     begin
                         CLEAR(AssemblyLine);
-                        if not DisplayAssemblyInformation then
+                        if not BoolDisplayAssemblyInformation then
                             CurrReport.BREAK();
                         GetAssemblyLinesForDocument(
                           AssemblyLine, ValueEntry."Document Type"::"Sales Invoice", Line."Document No.", Line."Line No.");
@@ -657,7 +657,6 @@ report 50002 "Standard Sales - Invoice word"
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
@@ -785,11 +784,6 @@ report 50002 "Standard Sales - Invoice word"
 
                 trigger OnPreDataItem()
                 begin
-                    CurrReport.CREATETOTALS(
-                      "Line Amount", "Inv. Disc. Base Amount",
-                      "Invoice Discount Amount", "VAT Base", "VAT Amount",
-                      VATBaseLCY, VATAmountLCY);
-
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
                 end;
@@ -865,7 +859,7 @@ report 50002 "Standard Sales - Invoice word"
 
                 trigger OnAfterGetRecord()
                 begin
-                    if not DisplayAdditionalFeeNote then
+                    if not BoolDisplayAdditionalFeeNote then
                         CurrReport.BREAK();
 
                     if Number = 1 then begin
@@ -1040,7 +1034,7 @@ report 50002 "Standard Sales - Invoice word"
 
                 GetLineFeeNoteOnReportHist("No.");
 
-                if LogInteraction and not CurrReport.PREVIEW then
+                if BoolLogInteraction and not CurrReport.PREVIEW then
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
                           4, "No.", 0, 0, DATABASE::Contact, "Bill-to Contact No.", "Salesperson Code",
@@ -1078,26 +1072,26 @@ report 50002 "Standard Sales - Invoice word"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Log Interaction';
                         Enabled = LogInteractionEnable;
                         ToolTip = 'Specifies that interactions with the contact are logged.';
                     }
-                    field(DisplayAsmInformation; DisplayAssemblyInformation)
+                    field(DisplayAsmInformation; BoolDisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
-                    field(DisplayShipmentInformation; DisplayShipmentInformation)
+                    field(DisplayShipmentInformation; BoolDisplayShipmentInformation)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Shipments';
                         ToolTip = 'Specifies that shipments are shown on the document.';
                     }
-                    field(DisplayAdditionalFeeNote; DisplayAdditionalFeeNote)
+                    field(DisplayAdditionalFeeNote; BoolDisplayAdditionalFeeNote)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Additional Fee Note';
@@ -1119,7 +1113,7 @@ report 50002 "Standard Sales - Invoice word"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -1147,122 +1141,122 @@ report 50002 "Standard Sales - Invoice word"
     end;
 
     var
-        SalesInvoiceNoLbl: Label 'Sales - Invoice %1';
-        SalespersonLbl: Label 'Sales person';
+        CompanyInfo: Record "Company Information";
+        Cust: Record Customer;
+        GLSetup: Record "General Ledger Setup";
+        TempLineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist." temporary;
+        PaymentMethod: Record "Payment Method";
+        PaymentTerms: Record "Payment Terms";
+        RespCenter: Record "Responsibility Center";
+        SalesSetup: Record "Sales & Receivables Setup";
+        SalespersonPurchaser: Record "Salesperson/Purchaser";
+        ShipmentMethod: Record "Shipment Method";
+        VATClause: Record "VAT Clause";
+        FormatAddr: Codeunit "Format Address";
+        FormatDocument: Codeunit "Format Document";
+        CDULanguage: codeunit Language;
+        SegManagement: Codeunit SegManagement;
+        BoolDisplayAdditionalFeeNote: Boolean;
+        BoolDisplayAssemblyInformation: Boolean;
+        BoolDisplayShipmentInformation: Boolean;
+        FirstLineHasBeenOutput: Boolean;
+        BoolLogInteraction: Boolean;
+        LogInteractionEnable: Boolean;
+        MoreLines: Boolean;
+        ShowShippingAddr: Boolean;
+        ShowWorkDescription: Boolean;
+        JobNo: Code[20];
+        JobTaskNo: Code[20];
+        PostedShipmentDate: Date;
+        CalculatedExchRate: Decimal;
+        PrevLineAmount: Decimal;
+        TotalAmount: Decimal;
+        TotalAmountExclInclVATValue: Decimal;
+        TotalAmountInclVAT: Decimal;
+        TotalAmountVAT: Decimal;
+        TotalInvDiscAmount: Decimal;
+        TotalPaymentDiscOnVAT: Decimal;
+        TotalSubTotal: Decimal;
+        TotalVATAmountLCY: Decimal;
+        TotalVATBaseLCY: Decimal;
+        TransHeaderAmount: Decimal;
+        VATAmountLCY: Decimal;
+        VATBaseLCY: Decimal;
+        WorkDescriptionInstream: InStream;
+        CompanyLogoPosition: Integer;
+        BodyLbl: Label 'Thank you for your business. Your invoice is attached to this message.';
+        ClosingLbl: Label 'Sincerely';
         CompanyInfoBankAccNoLbl: Label 'Account No.';
         CompanyInfoBankNameLbl: Label 'Bank';
         CompanyInfoGiroNoLbl: Label 'Giro No.';
         CompanyInfoPhoneNoLbl: Label 'Phone No.';
         CopyLbl: Label 'Copy';
         EMailLbl: Label 'Email';
+        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
+        GreetingLbl: Label 'Hello';
         HomePageLbl: Label 'Home Page';
         InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount';
         InvDiscountAmtLbl: Label 'Invoice Discount';
         InvNoLbl: Label 'Invoice No.';
+        JobNoLbl2: Label 'Job No.';
+        JobTaskDescLbl: Label 'Job Task Description';
+        JobTaskNoLbl2: Label 'Job Task No.';
         LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT';
         LocalCurrencyLbl: Label 'Local Currency';
+        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
         PageLbl: Label 'Page';
-        PaymentTermsDescLbl: Label 'Payment Terms';
         PaymentMethodDescLbl: Label 'Payment Method';
+        PaymentTermsDescLbl: Label 'Payment Terms';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1 Discount Due Date %2 = value of Payment Discount % ';
         PostedShipmentDateLbl: Label 'Shipment Date';
         SalesInvLineDiscLbl: Label 'Discount %';
         SalesInvoiceLbl: Label 'Invoice';
+        SalesInvoiceNoLbl: Label 'Sales - Invoice %1';
+        SalespersonLbl: Label 'Sales person';
+        SalespersonLbl2: Label 'Salesperson';
+        SalesPrepInvoiceNoLbl: Label 'Sales - Prepayment Invoice %1';
         ShipmentLbl: Label 'Shipment';
         ShiptoAddrLbl: Label 'Ship-to Address';
         ShptMethodDescLbl: Label 'Shipment Method';
         SubtotalLbl: Label 'Subtotal';
         TotalLbl: Label 'Total';
-        VATAmtSpecificationLbl: Label 'VAT Amount Specification';
-        VATAmtLbl: Label 'VAT Amount';
         VATAmountLCYLbl: Label 'VAT Amount (LCY)';
+        VATAmtLbl: Label 'VAT Amount';
+        VATAmtSpecificationLbl: Label 'VAT Amount Specification';
         VATBaseLbl: Label 'VAT Base';
         VATBaseLCYLbl: Label 'VAT Base (LCY)';
         VATClausesLbl: Label 'VAT Clause';
         VATIdentifierLbl: Label 'VAT Identifier';
         VATPercentageLbl: Label 'VAT %';
-        GLSetup: Record "General Ledger Setup";
-        ShipmentMethod: Record "Shipment Method";
-        PaymentTerms: Record "Payment Terms";
-        PaymentMethod: Record "Payment Method";
-        SalespersonPurchaser: Record "Salesperson/Purchaser";
-        CompanyInfo: Record "Company Information";
-        SalesSetup: Record "Sales & Receivables Setup";
-        Cust: Record Customer;
-        RespCenter: Record "Responsibility Center";
-        CDULanguage: codeunit Language;
-        VATClause: Record "VAT Clause";
-        TempLineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist." temporary;
-        FormatAddr: Codeunit "Format Address";
-        FormatDocument: Codeunit "Format Document";
-        SegManagement: Codeunit SegManagement;
-        JobNo: Code[20];
-        JobTaskNo: Code[20];
-        PostedShipmentDate: Date;
-        WorkDescriptionLine: Text;
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
-        SalesPersonText: Text[30];
-        TotalText: Text[50];
-        TotalExclVATText: Text[50];
-        TotalInclVATText: Text[50];
-        LineDiscountPctText: Text;
-        PmtDiscText: Text;
+        ExchangeRateText: Text;
         JobNoLbl: Text;
         JobTaskNoLbl: Text;
+        LineDiscountPctText: Text;
+        PmtDiscText: Text;
         TotalAmountExclInclVATTextValue: Text;
-        MoreLines: Boolean;
-        ShowWorkDescription: Boolean;
+        WorkDescriptionLine: Text;
         CopyText: Text[30];
-        ShowShippingAddr: Boolean;
-        LogInteraction: Boolean;
-        SalesPrepInvoiceNoLbl: Label 'Sales - Prepayment Invoice %1';
-        TotalSubTotal: Decimal;
-        TotalAmount: Decimal;
-        TotalAmountInclVAT: Decimal;
-        TotalAmountVAT: Decimal;
-        TotalInvDiscAmount: Decimal;
-        TotalPaymentDiscOnVAT: Decimal;
-        TransHeaderAmount: Decimal;
-        LogInteractionEnable: Boolean;
-        DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
-        CompanyLogoPosition: Integer;
-        FirstLineHasBeenOutput: Boolean;
-        CalculatedExchRate: Decimal;
-        ExchangeRateText: Text;
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
-        VATBaseLCY: Decimal;
-        VATAmountLCY: Decimal;
-        TotalVATBaseLCY: Decimal;
-        TotalVATAmountLCY: Decimal;
-        PrevLineAmount: Decimal;
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
-        TotalAmountExclInclVATValue: Decimal;
-        DisplayAdditionalFeeNote: Boolean;
-        GreetingLbl: Label 'Hello';
-        ClosingLbl: Label 'Sincerely';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1 Discount Due Date %2 = value of Payment Discount % ';
-        BodyLbl: Label 'Thank you for your business. Your invoice is attached to this message.';
-        SalespersonLbl2: Label 'Salesperson';
-        JobNoLbl2: Label 'Job No.';
-        JobTaskNoLbl2: Label 'Job Task No.';
+        SalesPersonText: Text[30];
+        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[50];
         JobTaskDescription: Text[50];
-        JobTaskDescLbl: Label 'Job Task Description';
-        WorkDescriptionInstream: InStream;
+        ShipToAddr: array[8] of Text[50];
+        TotalExclVATText: Text[50];
+        TotalInclVATText: Text[50];
+        TotalText: Text[50];
 
     local procedure InitLogInteraction()
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Inv.") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Inv.") <> '';
 
     end;
 
     local procedure FindPostedShipmentDate(): Date
     var
-        SalesShipmentHeader: Record "Sales Shipment Header";
         SalesShipmentBuffer2: Record "Sales Shipment Buffer";
+        SalesShipmentHeader: Record "Sales Shipment Header";
     begin
         if Line."Shipment No." <> '' then
             if SalesShipmentHeader.GET(Line."Shipment No.") then
@@ -1277,7 +1271,7 @@ report 50002 "Standard Sales - Invoice word"
         ShipmentLine.SETRANGE("Line No.", Line."Line No.");
         if ShipmentLine.FIND('-') then begin
             SalesShipmentBuffer2 := ShipmentLine;
-            if not DisplayShipmentInformation then
+            if not BoolDisplayShipmentInformation then
                 if ShipmentLine.NEXT() = 0 then begin
                     ShipmentLine.GET(
                       SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
@@ -1302,8 +1296,8 @@ report 50002 "Standard Sales - Invoice word"
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
-        LogInteraction := NewLogInteraction;
-        DisplayAssemblyInformation := DisplayAsmInfo;
+        BoolLogInteraction := NewLogInteraction;
+        BoolDisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
     local procedure GetUOMText(UOMCode: Code[10]): Text
@@ -1334,9 +1328,9 @@ report 50002 "Standard Sales - Invoice word"
 
     local procedure GetLineFeeNoteOnReportHist(SalesInvoiceHeaderNo: Code[20])
     var
-        LineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist.";
         CustLedgerEntry: Record "Cust. Ledger Entry";
         Customer: Record Customer;
+        LineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist.";
     begin
         TempLineFeeNoteOnReportHist.DELETEALL();
         CustLedgerEntry.SETRANGE("Document Type", CustLedgerEntry."Document Type"::Invoice);
@@ -1434,12 +1428,12 @@ report 50002 "Standard Sales - Invoice word"
         end;
     end;
 
-    local procedure GetJobTaskDescription(JobNo: Code[20]; JobTaskNo: Code[20]): Text
+    local procedure GetJobTaskDescription(Job_No: Code[20]; Job_TaskNo: Code[20]): Text
     var
         JobTask: Record "Job Task";
     begin
-        JobTask.SETRANGE("Job No.", JobNo);
-        JobTask.SETRANGE("Job Task No.", JobTaskNo);
+        JobTask.SETRANGE("Job No.", Job_No);
+        JobTask.SETRANGE("Job Task No.", Job_TaskNo);
         if JobTask.FINDFIRST() then
             exit(JobTask.Description);
 
@@ -1462,4 +1456,3 @@ report 50002 "Standard Sales - Invoice word"
             Return := '';
     end;
 }
-

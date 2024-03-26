@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 pageextension 50029 PostedSalesInvoices extends "Posted Sales Invoices" //143

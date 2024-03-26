@@ -16,8 +16,8 @@ tableextension 50025 PurchasesPayablesSetup extends "Purchases & Payables Setup"
         field(50000; "Purchase Invoice Start Date"; Date)
         {
             DataClassification = ToBeClassified;
-            Description = 'Limite inférieure de date de comptabilisation pour affichage des factures achats';
-            Caption = 'Purchase Invoice Start Date', Comment = 'FRA="Date début factures achats"';
+            Description = 'Lower accounting date limit for displaying purchase invoices';
+            Caption = 'Purchase Invoice Start Date', Comment = 'Purchase Invoice Start Date';
         }
     }
 }

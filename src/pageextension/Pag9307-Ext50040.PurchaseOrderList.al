@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Document;
 pageextension 50040 PurchaseOrderList extends "Purchase Order List" //9307

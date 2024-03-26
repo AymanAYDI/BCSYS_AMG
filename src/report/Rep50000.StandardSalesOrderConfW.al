@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using System.Utilities;
@@ -26,7 +26,7 @@ using Microsoft.Foundation.Address;
 using Microsoft.CRM.Segment;
 report 50000 "Standard Sales - Order Conf. W"
 {
-    RDLCLayout = './StandardSalesOrderConfW.rdlc';
+    RDLCLayout = './report/RDL/StandardSalesOrderConfW.rdlc';
     WordLayout = './StandardSalesOrderConfW.docx';
     Caption = 'Sales - Confirmation';
     DefaultLayout = Word;
@@ -520,7 +520,6 @@ report 50000 "Standard Sales - Order Conf. W"
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
@@ -681,11 +680,6 @@ report 50000 "Standard Sales - Order Conf. W"
 
                 trigger OnPreDataItem()
                 begin
-                    // CurrReport.CREATETOTALS(
-                    //   "Line Amount", "Inv. Disc. Base Amount",
-                    //   "Invoice Discount Amount", "VAT Base", "VAT Amount",
-                    //   VATBaseLCY, VATAmountLCY);
-
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
 
@@ -844,7 +838,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 if not CurrReport.PREVIEW then
                     CODEUNIT.RUN(CODEUNIT::"Sales-Printed", Header);
 
-                CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
+                CurrReport.LANGUAGE := CULanguage.GetLanguageIdOrDefault("Language Code");
 
                 CALCFIELDS("Work Description");
                 ShowWorkDescription := "Work Description".HASVALUE;
@@ -866,12 +860,12 @@ report 50000 "Standard Sales - Order Conf. W"
                 FormatDocumentFields(Header);
 
                 if not CurrReport.PREVIEW and
-                   (CurrReport.USEREQUESTPAGE and ArchiveDocument or
+                   (CurrReport.USEREQUESTPAGE and BoolArchiveDocument or
                     not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders")
                 then
-                    ArchiveManagement.StoreSalesDocument(Header, LogInteraction);
+                    ArchiveManagement.StoreSalesDocument(Header, BoolLogInteraction);
 
-                if LogInteraction and not CurrReport.PREVIEW then begin
+                if BoolLogInteraction and not CurrReport.PREVIEW then begin
                     CALCFIELDS("No. of Archived Versions");
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
@@ -906,7 +900,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 group(Options)
                 {
                     Caption = 'Options';
-                    field(LogInteraction; LogInteraction)
+                    field(LogInteraction; BoolLogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Log Interaction';
@@ -919,7 +913,7 @@ report 50000 "Standard Sales - Order Conf. W"
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Show Assembly Components field.';
                     }
-                    field(ArchiveDocument; ArchiveDocument)
+                    field(ArchiveDocument; BoolArchiveDocument)
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Archive Document';
@@ -927,8 +921,8 @@ report 50000 "Standard Sales - Order Conf. W"
 
                         trigger OnValidate()
                         begin
-                            if not ArchiveDocument then
-                                LogInteraction := false;
+                            if not BoolArchiveDocument then
+                                BoolLogInteraction := false;
                         end;
                     }
                 }
@@ -947,8 +941,8 @@ report 50000 "Standard Sales - Order Conf. W"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
-            ArchiveDocument := SalesSetup."Archive Orders";
+            LogInteractionEnable := BoolLogInteraction;
+            BoolArchiveDocument := SalesSetup."Archive Orders";
         end;
     }
 
@@ -989,15 +983,13 @@ report 50000 "Standard Sales - Order Conf. W"
         VATClause: Record "VAT Clause";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        Language: Codeunit Language;
+        CULanguage: Codeunit Language;
         SegManagement: Codeunit SegManagement;
-        //TempBlobWorkDescription: Record TempBlob;
-        TempBlobWorkDescription: Codeunit "Temp Blob";
-        ArchiveDocument: Boolean;
+        BoolArchiveDocument: Boolean;
         AsmInfoExistsForLine: Boolean;
         DisplayAssemblyInformation: Boolean;
         FirstLineHasBeenOutput: Boolean;
-        LogInteraction: Boolean;
+        BoolLogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowShippingAddr: Boolean;
@@ -1038,7 +1030,7 @@ report 50000 "Standard Sales - Order Conf. W"
         PageLbl: Label 'Page';
         PaymentMethodDescLbl: Label 'Payment Method';
         PaymentTermsDescLbl: Label 'Payment Terms';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1 Discount Due Date %2 = value of Payment Discount % ';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% Payment Discount %', Comment = '%1=Discount Due Date , %2=value of Payment Discount %';
         PostedShipmentDateLbl: Label 'Shipment Date';
         SalesConfirmationLbl: Label 'Order Confirmation';
         SalesInvLineDiscLbl: Label 'Discount %';
@@ -1064,7 +1056,6 @@ report 50000 "Standard Sales - Order Conf. W"
         SalesPersonText: Text[30];
         CompanyAddr: array[8] of Text[50];
         CustAddr: array[8] of Text[50];
-        GTxtBankIBAN: Text[50];
         ShipToAddr: array[8] of Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
@@ -1074,7 +1065,7 @@ report 50000 "Standard Sales - Order Conf. W"
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Ord. Cnfrmn.") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Ord. Cnfrmn.") <> '';
     end;
 
     local procedure DocumentCaption(): Text[250]
@@ -1085,7 +1076,7 @@ report 50000 "Standard Sales - Order Conf. W"
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
-        LogInteraction := NewLogInteraction;
+        BoolLogInteraction := NewLogInteraction;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
@@ -1100,7 +1091,7 @@ report 50000 "Standard Sales - Order Conf. W"
         end;
     end;
 
-    local procedure GetUOMText(UOMCode: Code[10]): Text[10]
+    local procedure GetUOMText(UOMCode: Code[20]): Text
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin

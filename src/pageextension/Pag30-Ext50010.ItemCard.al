@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item;
 using BCSYS.AMGALLOIS.Basic;
@@ -21,7 +21,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
         }
         addafter("Description 2")
         {
-            field(Historique; Rec.Historique)
+            field(Historique; Rec.History)
             {
                 Lookup = true;
                 DrillDown = true;
@@ -150,13 +150,12 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
         }
         addfirst(factboxes)
         {
-            //TODO page spe
-            // part(LPSubstitute; "Sustitutions possibles")
-            // {
-            //     ApplicationArea = All;
-            //     Caption = 'Substitution';
-            //     SubPageLink = "No." = field("No.");
-            // }
+            part(LPSubstitute; "Sustitutions possibles")
+            {
+                ApplicationArea = All;
+                Caption = 'Substitution';
+                SubPageLink = "No." = field("No.");
+            }
         }
     }
     actions

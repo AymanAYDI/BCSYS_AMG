@@ -1,33 +1,12 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
-using BCSYS_AMG.BCSYS_AMG;
 pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
 {
     PromotedActionCategories = 'New,Process,Report,Print/Send,Shipment';
 
-    //Unsupported feature: Property Insertion (Permissions) on ""Posted Sales Shipment"(Page 130)".
-
-
-    //Unsupported feature: Property Insertion (ModifyAllowed) on ""Posted Sales Shipment"(Page 130)".
-
-
-    //Unsupported feature: Property Insertion (RefreshOnActivate) on ""Posted Sales Shipment"(Page 130)".
-
     layout
     {
-
-        //Unsupported feature: Property Insertion (UpdatePropagation) on "SalesShipmLines(Control 46)".
-
-
-        //Unsupported feature: Property Deletion (Editable) on "Control 62".
-
-
-        //Unsupported feature: Property Deletion (Editable) on "Control 93".
-
-
-        //Unsupported feature: Property Deletion (Editable) on "Control 72".
-
         addafter("Document Date")
         {
             field("Your Reference"; Rec."Your Reference")

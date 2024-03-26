@@ -18,13 +18,13 @@ tableextension 50022 RequisitionLine extends "Requisition Line" //246
         field(50000; "Customer Name"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
-            Caption = 'Customer Name', Comment = 'FRA="Nom du client"';
+            Caption = 'Customer Name', Comment = 'Customer Name';
             FieldClass = FlowField;
         }
         field(50001; "Supplier Name"; Text[100])
         {
             CalcFormula = lookup(Vendor.Name where("No." = field("Vendor No.")));
-            Caption = 'Supplier name', Comment = 'FRA"Nom du fournisseur"';
+            Caption = 'Supplier name', Comment = 'Supplier name';
             FieldClass = FlowField;
         }
     }

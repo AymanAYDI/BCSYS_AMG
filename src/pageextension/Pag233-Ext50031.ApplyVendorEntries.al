@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Payables;
 pageextension 50031 ApplyVendorEntries extends "Apply Vendor Entries" //233

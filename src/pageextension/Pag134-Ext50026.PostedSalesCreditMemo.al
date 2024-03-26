@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 pageextension 50026 PostedSalesCreditMemo extends "Posted Sales Credit Memo" //134

@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Customer;
 using BCSYS.AMGALLOIS.Basic;
@@ -44,7 +44,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
             action("Historique Ventes")
             {
                 ApplicationArea = ALL;
-                Caption = 'Historique Ventes';
+                Caption = 'Sales History';
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = ListPage;
@@ -52,7 +52,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
                 RunPageLink = "Customer No." = field("No.");
                 RunPageView = sorting("Sales Document Date", "Quote No.", "Sales Order No.", "Sales Invoice No.", "Sales Line No.")
                                   order(descending);
-                ToolTip = 'Executes the Historique Ventes action.';
+                ToolTip = 'Executes the Sales History action.';
             }
         }
     }

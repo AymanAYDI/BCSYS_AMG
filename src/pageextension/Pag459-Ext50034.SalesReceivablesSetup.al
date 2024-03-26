@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Setup;
 
@@ -11,22 +11,22 @@ pageextension 50034 "SalesReceivablesSetup" extends "Sales & Receivables Setup" 
         {
             group(CARBOGLACE)
             {
-                // field("Category Code Carbo"; rec."Category Code Carbo")
-                // {
+                field("Category Code Carbo"; rec."Category Code Carbo")
+                {
 
-                // }
+                }
             }
         }
         addafter("Direct Debit Mandate Nos.")
         {
-            // field("Package Serie No."; rec."Package Serie No.")
-            // {
-            //     Caption = 'N° colis';
-            // }
-            // field("DGX Serie No."; rec."DGX Serie No.")
-            // {
-            //     Caption = 'N° DGX';
-            // }
+            field("Package Serie No."; rec."Package Serie No.")
+            {
+                Caption = 'package No.';
+            }
+            field("DGX Serie No."; rec."DGX Serie No.")
+            {
+                Caption = 'DGX No.';
+            }
         }
         moveafter("Logo Position on Documents"; "Freight G/L Acc. No.")
     }

@@ -22,12 +22,12 @@ pageextension 50000 CompanyInformation extends "Company Information" //1
             group(Factor)
             {
                 Caption = 'Factor';
-                field("Nom Factor"; rec."Nom Factor")
+                field("Nom Factor"; rec."Name Factor")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Nom Factor field.';
                 }
-                field("Téléphone Factor"; rec."Téléphone Factor")
+                field("Téléphone Factor"; rec."phone Factor")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Téléphone Factor field.';
@@ -37,7 +37,7 @@ pageextension 50000 CompanyInformation extends "Company Information" //1
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the EMail Factor field.';
                 }
-                field("Banque Factor"; rec."Banque Factor")
+                field("Banque Factor"; rec."Bank Factor")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Banque Factor field.';

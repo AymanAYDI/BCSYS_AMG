@@ -10,17 +10,17 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
 
         field(50010; "No. EORI"; Text[25])
         {
-            Caption = 'N° EORI';
+            Caption = 'No. EORI';
             DataClassification = ToBeClassified;
         }
-        field(50011; "Nom Factor"; Text[100])
+        field(50011; "Name Factor"; Text[100])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Nom Factor';
+            Caption = 'Name Factor';
         }
-        field(50012; "Téléphone Factor"; Text[20])
+        field(50012; "phone Factor"; Text[20])
         {
-            Caption = 'Téléphone Factor';
+            Caption = 'phone Factor';
             DataClassification = ToBeClassified;
         }
         field(50013; "EMail Factor"; Text[100])
@@ -28,9 +28,9 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
             Caption = 'EMail Factor';
             DataClassification = ToBeClassified;
         }
-        field(50014; "Banque Factor"; Text[100])
+        field(50014; "Bank Factor"; Text[100])
         {
-            Caption = 'Banque Factor';
+            Caption = 'Bank Factor';
             DataClassification = ToBeClassified;
         }
         field(50015; "RIB Factor"; Text[80])
@@ -113,7 +113,6 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
         EVALUATE(I, IBANCode);
         if (I mod Modulus97) <> 1 then
             IBANError(OriginalIBANCode);
-
     end;
 
     procedure ExtConvertIBAN(var IBANCode: Code[100])
@@ -192,25 +191,19 @@ tableextension 50014 CompanyInformation extends "Company Information" //79
                 'Z':
                     Letter2 := '35';
             end;
-            if LetterPlace = 1 then
-                IBANCode := Letter2 + COPYSTR(IBANCode, 2)
-            else begin
-                if LetterPlace = STRLEN(IBANCode) then
-                    IBANCode := COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2
+            case LetterPlace of
+                1:
+                    IBANCode := Letter2 + COPYSTR(IBANCode, 2);
+                STRLEN(IBANCode):
+                    IBANCode := COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2;
                 else
-                    IBANCode :=
-                      COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2 + COPYSTR(IBANCode, LetterPlace + 1);
+                    IBANCode := COPYSTR(IBANCode, 1, LetterPlace - 1) + Letter2 + COPYSTR(IBANCode, LetterPlace + 1);
             end;
             exit(true);
         end;
         if (Letter >= '0') and (Letter <= '9') then
             exit(false);
-
         IBANError(IBANCode);
-
     end;
-
-    //Unsupported feature: Deletion (VariableCollection) on "ConvertLetter(PROCEDURE 5).LetterCharInt(Variable 1004)".
-
 }
 

@@ -2,7 +2,6 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
-using BCSYS_AMG.BCSYS_AMG;
 using Microsoft.Sales.Archive;
 page 50010 "Historique ventes article"
 {

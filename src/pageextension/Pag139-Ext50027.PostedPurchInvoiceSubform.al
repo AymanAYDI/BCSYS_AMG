@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.History;
 pageextension 50027 PostedPurchInvoiceSubform extends "Posted Purch. Invoice Subform" //139

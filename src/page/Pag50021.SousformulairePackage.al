@@ -3,7 +3,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Sales.History;
 page 50021 "Sous-formulaire Package"
 {
-    Caption = 'Expéditions - Package';
+    Caption = 'Expeditions - Package';
     PageType = ListPart;
     RefreshOnActivate = false;
     SaveValues = true;

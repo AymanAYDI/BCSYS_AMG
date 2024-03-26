@@ -1,15 +1,14 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using System.Utilities;
 using BCSYS.AMGALLOIS.Basic;
 using System.Globalization;
-using Microsoft.Inventory.Item;
 using Microsoft.Sales.History;
 using Microsoft.Finance.Dimension;
 using Microsoft.Utilities;
 report 50017 "DGX CERFA RDLC"
 {
-    RDLCLayout = './DGXCERFARDLC.rdlc';
+    RDLCLayout = './report/RDL/DGXCERFARDLC.rdlc';
     DefaultLayout = RDLC;
     ApplicationArea = All;
 
@@ -87,7 +86,6 @@ report 50017 "DGX CERFA RDLC"
                     column(HeaderDimensionsCaption; HeaderDimensionsCaptionLbl)
                     {
                     }
-
                     trigger OnAfterGetRecord()
                     var
                         Text01: Label '%1 - %2', Comment = '%1 = DimSetEntry1."Dimension Code",%2 = DimSetEntry1."Dimension Value Code"';
@@ -99,7 +97,6 @@ report 50017 "DGX CERFA RDLC"
                         end else
                             if not Continue then
                                 CurrReport.BREAK();
-
                         CLEAR(DimText);
                         Continue := false;
                         repeat
@@ -197,7 +194,6 @@ report 50017 "DGX CERFA RDLC"
                         {
                         }
                     }
-
                     trigger OnAfterGetRecord()
                     begin
                         LinNo := LineNo;
@@ -231,7 +227,6 @@ report 50017 "DGX CERFA RDLC"
                         GCodUN := "DGX Lines".UN;
                     end;
                 }
-
                 trigger OnAfterGetRecord()
                 begin
                     "DGX Header".CALCFIELDS("Total Gross Mass");
@@ -240,7 +235,6 @@ report 50017 "DGX CERFA RDLC"
                         GTxtRefClient := GRecShipHeader."Your Reference";
                 end;
             }
-
             trigger OnAfterGetRecord()
             begin
                 if Number > 1 then begin
@@ -261,7 +255,6 @@ report 50017 "DGX CERFA RDLC"
             end;
         }
     }
-
     requestpage
     {
         SaveValues = true;
@@ -281,28 +274,24 @@ report 50017 "DGX CERFA RDLC"
                 }
             }
         }
-
         actions
         {
         }
     }
-
     labels
     {
     }
-
     trigger OnInitReport()
     begin
         SYSTEM.GLOBALLANGUAGE(1033);
         GDecMasseBruteTotale := 0;
-        CurrReport.LANGUAGE := GRecLanguage.GetLanguageID('ENU');
+        CurrReport.LANGUAGE := GRecLanguage.GetLanguageIdOrDefault('ENU');
         GCodUN := '';
         GIntPageNo := 0;
     end;
 
     var
         DimSetEntry1: Record "Dimension Set Entry";
-        GRecItem: Record Item;
         GRecShipHeader: Record "Sales Shipment Header";
         FormatDocument: Codeunit "Format Document";
         GRecLanguage: Codeunit Language;
@@ -317,13 +306,11 @@ report 50017 "DGX CERFA RDLC"
         OutputNo: Integer;
         CTxtAirport: Label 'ROISSY';
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        GTxtPackingInstr: Text[20];
         CopyText: Text[30];
         GTxtSousClasse: Text[50];
-        OldDimText: Text[150];
+        OldDimText: Text[120];
         GTxtRefClient: Text[100];
         DimText: Text[120];
-        DimText1: Text[120];
         GTxtFlashPoint: Text[150];
         GTxtLimitedQty: Text[150];
 }

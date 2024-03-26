@@ -118,8 +118,8 @@ table 50009 Package
         if GRecColis.FINDLAST() then begin
             GRecColisage.SetRange("Package No.", Rec."Package No.");
             if GRecColisage.FINDFIRST() then begin
-                if not CONFIRM('Attention : des lignes de colisage sont rattachées à ce colis, êtes-vous sûr de vouloir les supprimer ?', false) then
-                    Error('Suppression annulée par l''utilisateur');
+                if not CONFIRM('Warning: packing lines are attached to this package, are you sure you want to delete them?', false) then
+                    Error('Deletion canceled by user');
                 // supresion de la lsite colisage
                 CLEAR(GRecColisage);
                 GRecColisage.SetRange("Package No.", Rec."Package No.");
@@ -131,7 +131,7 @@ table 50009 Package
             end;
         end
         else
-            Error('Aucun colis pour cette expédition');
+            Error('No packages for this shipment');
 
     end;
 

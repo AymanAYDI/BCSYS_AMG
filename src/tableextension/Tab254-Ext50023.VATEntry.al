@@ -12,35 +12,35 @@ tableextension 50023 VATEntry extends "VAT Entry" //254
             CalcFormula = lookup(Vendor.Name where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
-            Caption = 'Supplier Name', Comment = 'FRA="Nom Fournisseur"';
+            Caption = 'Supplier Name', Comment = 'Supplier Name';
         }
         field(50001; Adress; Text[100])
         {
             CalcFormula = lookup(Vendor.Address where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
-            Caption = 'Adress', Comment = 'FRA="Adresse"';
+            Caption = 'Adress', Comment = 'Adress';
         }
         field(50002; "Postal code"; Code[20])
         {
             CalcFormula = lookup(Vendor."Post Code" where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
-            Caption = 'Postal code', Comment = 'FRA="Code postal"';
+            Caption = 'Postal code', Comment = 'Postal code';
         }
         field(50003; City; Text[30])
         {
             CalcFormula = lookup(Vendor.City where("No." = field("Bill-to/Pay-to No.")));
             Editable = false;
             FieldClass = FlowField;
-            Caption = 'City', Comment = 'FRA="Ville"';
+            Caption = 'City', Comment = 'City';
         }
         field(50004; "Supp Invoice No."; Code[35])
         {
             CalcFormula = lookup("Purch. Inv. Header"."Vendor Invoice No." where("No." = field("Document No.")));
             Editable = false;
             FieldClass = FlowField;
-            Caption = 'Supp Invoice No.', Comment = 'FRA="N° Facture Fourn"';
+            Caption = 'Supp Invoice No.', Comment = 'Supplied Invoice No.';
         }
     }
 

@@ -2,41 +2,40 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 using System.Utilities;
-using BCSYS.AMGALLOIS.Basic;
-using Microsoft.Sales.Customer;
-using System.Globalization;
 using Microsoft.Inventory.Item;
-using Microsoft.CRM.Team;
-using Microsoft.Sales.Document;
-using Microsoft.Foundation.Company;
-using Microsoft.Sales.Setup;
 using Microsoft.Finance.Dimension;
+using Microsoft.Foundation.Address;
+using Microsoft.Inventory.Reports;
+using Microsoft.Sales.Customer;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Foundation.Shipping;
+using Microsoft.Sales.Document;
+using Microsoft.Sales.Archive;
+using System.Globalization;
+using Microsoft.Inventory.Location;
 using Microsoft.Assembly.History;
 using Microsoft.Inventory.Tracking;
-using Microsoft.Inventory.Location;
-using Microsoft.Inventory.Reports;
-using Microsoft.Foundation.Shipping;
-using Microsoft.Sales.Archive;
-using Microsoft.Foundation.Address;
+using Microsoft.Sales.Setup;
+using Microsoft.Foundation.Company;
+using Microsoft.CRM.Team;
 using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
-using Microsoft.Foundation.PaymentTerms;
 using System.EMail;
 using Microsoft.Foundation.UOM;
 using Microsoft.CRM.Interaction;
-report 50016 "Etiquette Packaging"
+report 50043 "Sales-Shipment" //208 duplicate
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/EtiquetteColisage.rdlc';
+    RDLCLayout = './report/RDL/SalesShipment.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
-    ApplicationArea = All;
+
     dataset
     {
         dataitem("Sales Shipment Header"; "Sales Shipment Header")
         {
             DataItemTableView = sorting("No.");
-            RequestFilterFields = "No.";
+            RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
             RequestFilterHeading = 'Posted Sales Shipment';
             column(No_SalesShptHeader; "No.")
             {
@@ -69,6 +68,9 @@ report 50016 "Etiquette Packaging"
                     column(SalesShptCopyText; GTxtSalesShptCopyText)
                     {
                     }
+                    column(ShipToAddr1; ShipToAddr[1])
+                    {
+                    }
                     column(CompanyAddr1; CompanyAddr[1])
                     {
                     }
@@ -78,13 +80,25 @@ report 50016 "Etiquette Packaging"
                     column(CompanyAddr2; CompanyAddr[2])
                     {
                     }
+                    column(ShipToAddr3; ShipToAddr[3])
+                    {
+                    }
                     column(CompanyAddr3; CompanyAddr[3])
+                    {
+                    }
+                    column(ShipToAddr4; ShipToAddr[4])
                     {
                     }
                     column(CompanyAddr4; CompanyAddr[4])
                     {
                     }
+                    column(ShipToAddr5; ShipToAddr[5])
+                    {
+                    }
                     column(CompanyInfoPhoneNo; CompanyInfo."Phone No.")
+                    {
+                    }
+                    column(ShipToAddr6; ShipToAddr[6])
                     {
                     }
                     column(CompanyInfoHomePage; CompanyInfo."Home Page")
@@ -133,6 +147,9 @@ report 50016 "Etiquette Packaging"
                     {
                     }
                     column(ReferenceText; ReferenceText)
+                    {
+                    }
+                    column(YourRef_SalesShptHeader; "Sales Shipment Header"."Your Reference")
                     {
                     }
                     column(ShipToAddr7; ShipToAddr[7])
@@ -190,6 +207,9 @@ report 50016 "Etiquette Packaging"
                     {
                     }
                     column(OrderNoCaption_SalesShptHeader; 'Our Document No.')
+                    {
+                    }
+                    column(OrderNo_SalesShptHeader; "Sales Shipment Header"."Order No.")
                     {
                     }
                     column(ExternalDocumentNoCaption_SalesShptHeader; 'Purchase Order No.')
@@ -296,8 +316,8 @@ report 50016 "Etiquette Packaging"
 
                         trigger OnAfterGetRecord()
                         var
-                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
+                            Text001: Label '%1 - %2', Comment = '%1="Dimension Code" %2="Dimension Value Code"';
+                            Text002: Label '%1; %2 - %3', Comment = '%1=DimText %2="Dimension Code" %3="Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
@@ -311,11 +331,11 @@ report 50016 "Etiquette Packaging"
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := STRSUBSTNO(Text001, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
                                       STRSUBSTNO(
-                                        Text02, DimText,
+                                        Text002, DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                                 if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
@@ -327,7 +347,7 @@ report 50016 "Etiquette Packaging"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowInternalInfo then
+                            if not BoolShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -335,15 +355,14 @@ report 50016 "Etiquette Packaging"
                     {
                         DataItemLink = "Document No." = field("No.");
                         DataItemLinkReference = "Sales Shipment Header";
-                        DataItemTableView = sorting("Document No.", "Line No.")
-                                            where(Quantity = filter(> 0));
+                        DataItemTableView = sorting("Document No.", "Line No.");
                         column(Description_SalesShptLine; Description)
                         {
                         }
                         column(Description2_SalesShptLine; "Description 2")
                         {
                         }
-                        column(ShowInternalInfo; ShowInternalInfo)
+                        column(ShowInternalInfo; BoolShowInternalInfo)
                         {
                         }
                         column(ShowCorrectionLines; ShowCorrectionLines)
@@ -385,7 +404,7 @@ report 50016 "Etiquette Packaging"
                         column(No_SalesShptLineCaption; FIELDCAPTION("No."))
                         {
                         }
-                        column(OutstandingQty_SalesShpline; "Sales Shipment Line"."Outstandin Qty report")
+                        column(OutstandingQty_SalesShpline; "Sales Shipment Line"."Outstanding Qty")
                         {
                             DecimalPlaces = 0 : 3;
                         }
@@ -416,15 +435,6 @@ report 50016 "Etiquette Packaging"
                         column(NomenclatureArticle; GTxtNomenclatureArticle)
                         {
                         }
-                        column(SalesLine_NoColis; "Sales Shipment Line"."Package No.")
-                        {
-                        }
-                        column(SalesLine_NoColisCaption; GTxtColisCaption)
-                        {
-                        }
-                        column(GTxtColisRef; GTxtColisREF)
-                        {
-                        }
                         dataitem(DimensionLoop2; Integer)
                         {
                             DataItemTableView = sorting(Number)
@@ -438,8 +448,8 @@ report 50016 "Etiquette Packaging"
 
                             trigger OnAfterGetRecord()
                             var
-                                Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                                Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
+                                Text001: Label '%1 - %2', Comment = '%1="Dimension Code" %2="Dimension Value Code"';
+                                Text002: Label '%1; %2 - %3', Comment = '%1=DimText %2="Dimension Code" %3="Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
                                     if not DimSetEntry2.FINDSET() then
@@ -453,11 +463,11 @@ report 50016 "Etiquette Packaging"
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO(Text01, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := STRSUBSTNO(Text001, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
                                           STRSUBSTNO(
-                                            Text02, DimText,
+                                            Text002, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
                                     if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
@@ -469,7 +479,7 @@ report 50016 "Etiquette Packaging"
 
                             trigger OnPreDataItem()
                             begin
-                                if not ShowInternalInfo then
+                                if not BoolShowInternalInfo then
                                     CurrReport.BREAK();
                             end;
                         }
@@ -484,7 +494,6 @@ report 50016 "Etiquette Packaging"
                             }
                             column(PostedAsmLineQuantity; PostedAsmLine.Quantity)
                             {
-                                DecimalPlaces = 0 : 5;
                             }
                             column(PostedAsmLineUOMCode; GetUnitOfMeasureDescr(PostedAsmLine."Unit of Measure Code"))
                             {
@@ -553,22 +562,11 @@ report 50016 "Etiquette Packaging"
                             end;
 
                             //END DELPHI AUB 03.10.2019
-
-                            //DEB DELPHI XAV Package 24/03/21
-                            if "Sales Shipment Line"."Package No." <> '' then begin
-                                GTxtColisCaption := 'Package : ';
-                                LRecColis.GET("Sales Shipment Line"."Package No.");
-                                GTxtColisREF := LRecColis."Package Reference" + ' ' + LRecColis."Type of package";
-                            end
-                            else begin
-                                GTxtColisREF := '';
-                                GTxtColisCaption := '';
-                            end;
                         end;
 
                         trigger OnPostDataItem()
                         begin
-                            if ShowLotSN then begin
+                            if BoolShowLotSN then begin
                                 ItemTrackingDocMgt.SetRetrieveAsmItemTracking(true);
                                 TrackingSpecCount :=
                                   ItemTrackingDocMgt.RetrieveDocumentItemTracking(TempTrackingSpecBuffer,
@@ -601,8 +599,8 @@ report 50016 "Etiquette Packaging"
 
                         trigger OnAfterGetRecord()
                         var
-                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
+                            Text001: Label '%1 - %2', Comment = '%1="Dimension Code" %2="Dimension Value Code"';
+                            Text002: Label '%1; %2 - %3', Comment = '%1=DimText %2="Dimension Code" %3="Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry3.FINDSET() then
@@ -616,11 +614,11 @@ report 50016 "Etiquette Packaging"
                             repeat
                                 OldDimText := DimText3;
                                 if DimText3 = '' then
-                                    DimText3 := STRSUBSTNO(Text01, DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
+                                    DimText3 := STRSUBSTNO(Text001, DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code")
                                 else
                                     DimText3 :=
                                       STRSUBSTNO(
-                                        Text02, DimText3,
+                                        Text002, DimText3,
                                         DimSetEntry3."Dimension Code", DimSetEntry3."Dimension Value Code");
                                 if STRLEN(DimText3) > MAXSTRLEN(OldDimText) then begin
                                     DimText3 := OldDimText;
@@ -632,7 +630,7 @@ report 50016 "Etiquette Packaging"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowInternalInfo then
+                            if not BoolShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -641,7 +639,7 @@ report 50016 "Etiquette Packaging"
                         DataItemLink = "Document No." = field("No.");
                         DataItemLinkReference = "Sales Shipment Header";
                         DataItemTableView = sorting("Document No.", "Line No.")
-                                            where("Outstandin Qty report" = filter(> 0));
+                                            where("Outstanding Qty" = filter(> 0));
                         column(No_SalesShiptLine2; SalesShipmentLineResteALivrer."No.")
                         {
                         }
@@ -650,10 +648,6 @@ report 50016 "Etiquette Packaging"
                         }
                         column(UOM_SalesShiptLine2; SalesShipmentLineResteALivrer."Unit of Measure")
                         {
-                        }
-                        column(QteRestanteCalculee_SSL2; SalesShipmentLineResteALivrer."Outstandin Qty report")
-                        {
-                            DecimalPlaces = 0 : 3;
                         }
                         column(QteRestante_SalesShiptLine2; SalesShipmentLineResteALivrer."Outstanding Qty")
                         {
@@ -816,7 +810,7 @@ report 50016 "Etiquette Packaging"
                     trigger OnPreDataItem()
                     begin
                         // Item Tracking:
-                        if ShowLotSN then begin
+                        if BoolShowLotSN then begin
                             TrackingSpecCount := 0;
                             OldRefNo := 0;
                             ShowGroup := false;
@@ -837,96 +831,23 @@ report 50016 "Etiquette Packaging"
                 trigger OnPostDataItem()
                 begin
                     if not IsReportInPreviewMode() then
-                        codeunit.RUN(codeunit::"Sales Shpt.-Printed", "Sales Shipment Header");
+                        CODEUNIT.RUN(CODEUNIT::"Sales Shpt.-Printed", "Sales Shipment Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := 1 + ABS(NoOfCopies);
+                    NoOfLoops := 1 + ABS(IntNoOfCopies);
                     CopyText := '';
                     SETRANGE(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
-            dataitem(Package; Package)
-            {
-                DataItemLink = "Shipping No." = field("No.");
-                column(Colis_No; Package."Package No.")
-                {
-                }
-                column(Colis_Longueur_Cm; ZeroIsBlanckDecimal(Package."Length (cm)"))
-                {
-                }
-                column(Colis_Largeur_Cm; ZeroIsBlanckDecimal(Package."Width (cm)"))
-                {
-                }
-                column(Colis_Hauteur_Cm; ZeroIsBlanckDecimal(Package."Height (cm)"))
-                {
-                }
-                column(Colis_Volume_M3; Package."Volume (m3)")
-                {
-                }
-                column(Colis_PoidsNet; ZeroIsBlanckDecimal(Package."Net Weight"))
-                {
-                }
-                column(Colis_PoidsBrut; ZeroIsBlanckDecimal(Package."Gross Weight"))
-                {
-                }
-                column(Colis_NbarticleColis; ZeroIsBlanckInteger(Package."Nb of pieces"))
-                {
-                }
-                column(Colis_Nature; Package."Type of package")
-                {
-                }
-                column(Colis_Designation; Package."Product Description")
-                {
-                }
-                column(Colis_Reference; Package."Package Reference")
-                {
-                }
-                column(OrderNo_SalesShptHeader; "Sales Shipment Header"."Order No.")
-                {
-                }
-                column(ShipToAddr1; ShipToAddr[1])
-                {
-                }
-                column(ShipToAddr3; ShipToAddr[3])
-                {
-                }
-                column(ShipToAddr4; ShipToAddr[4])
-                {
-                }
-                column(ShipToAddr5; ShipToAddr[5])
-                {
-                }
-                column(ShipToAddr6; ShipToAddr[6])
-                {
-                }
-                column(YourRef_SalesShptHeader; "Sales Shipment Header"."Your Reference")
-                {
-                }
-
-                trigger OnAfterGetRecord()
-                begin
-                    Package.CALCFIELDS("Nb of pieces");
-                end;
-            }
 
             trigger OnAfterGetRecord()
-            var
-                LRecPays: Record "Country/Region";
             begin
-                CurrReport.LANGUAGE := CDULanguage.GetLanguageIdOrDefault("Language Code");
+                CurrReport.LANGUAGE := CULanguage.GetLanguageIdOrDefault("Language Code");
 
-                //FormatAddressFields("Sales Shipment Header");
-
-                //DELPHI AUB 12.10.2021
-                ShipToAddr[1] := "Sales Shipment Header"."Ship-to Name";
-                ShipToAddr[3] := "Sales Shipment Header"."Ship-to Address" + ' ' + "Sales Shipment Header"."Ship-to Address 2";
-                ShipToAddr[4] := "Sales Shipment Header"."Ship-to Post Code" + ' ' + "Sales Shipment Header"."Ship-to City";
-                ShipToAddr[5] := ' ';
-                if LRecPays.GET("Sales Shipment Header"."Sell-to Country/Region Code") then ShipToAddr[5] := LRecPays."County Name";
-                //END DELPHI AUB
+                FormatAddressFields("Sales Shipment Header");
                 FormatDocumentFields("Sales Shipment Header");
 
                 DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
@@ -986,11 +907,6 @@ report 50016 "Etiquette Packaging"
 
                 //FIN DELPHI XAV
             end;
-
-            trigger OnPostDataItem()
-            begin
-                OnAfterPostDataItem("Sales Shipment Header");
-            end;
         }
     }
 
@@ -1000,15 +916,65 @@ report 50016 "Etiquette Packaging"
 
         layout
         {
+            area(content)
+            {
+                group(Options)
+                {
+                    Caption = 'Options';
+                    field(NoOfCopies; IntNoOfCopies)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'No. of Copies';
+                        ToolTip = 'Specifies how many copies of the document to print.';
+                    }
+                    field(ShowInternalInfo; BoolShowInternalInfo)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Show Internal Information';
+                        ToolTip = 'Specifies if the document shows internal information.';
+                    }
+                    field(LogInteraction; BoolLogInteraction)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Log Interaction';
+                        Enabled = LogInteractionEnable;
+                        ToolTip = 'Specifies if you want to record the reports that you print as interactions.';
+                    }
+                    field("Show Correction Lines"; ShowCorrectionLines)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Show Correction Lines';
+                        ToolTip = 'Specifies if the correction lines of an undoing of quantity posting will be shown on the report.';
+                    }
+                    field(ShowLotSN; BoolShowLotSN)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Show Serial/Lot Number Appendix';
+                        ToolTip = 'Specifies if you want to print an appendix to the sales shipment report showing the lot and serial numbers in the shipment.';
+                    }
+                    field(DisplayAsmInfo; DisplayAssemblyInformation)
+                    {
+                        ApplicationArea = Assembly;
+                        Caption = 'Show Assembly Components';
+                        ToolTip = 'Specifies if you want the report to include information about components that were used in linked assembly orders that supplied the item(s) being sold.';
+                    }
+                }
+            }
         }
 
         actions
         {
         }
+
+        trigger OnInit()
+        begin
+            LogInteractionEnable := true;
+        end;
+
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
+            LogInteractionEnable := BoolLogInteraction;
         end;
     }
 
@@ -1021,13 +987,11 @@ report 50016 "Etiquette Packaging"
         CompanyInfo.GET();
         SalesSetup.GET();
         FormatDocument.SetLogoPosition(SalesSetup."Logo Position on Documents", CompanyInfo1, CompanyInfo2, CompanyInfo3);
-
-        OnAfterInitReport();
     end;
 
     trigger OnPostReport()
     begin
-        if LogInteraction and not IsReportInPreviewMode() then
+        if BoolLogInteraction and not IsReportInPreviewMode() then
             if "Sales Shipment Header".FINDSET() then
                 repeat
                     SegManagement.LogDocument(
@@ -1054,7 +1018,6 @@ report 50016 "Etiquette Packaging"
         DimSetEntry1: Record "Dimension Set Entry";
         DimSetEntry2: Record "Dimension Set Entry";
         DimSetEntry3: Record "Dimension Set Entry";
-        LRecColis: Record Package;
         PaymentTerms: Record "Payment Terms";
         PostedAsmHeader: Record "Posted Assembly Header";
         PostedAsmLine: Record "Posted Assembly Line";
@@ -1068,25 +1031,23 @@ report 50016 "Etiquette Packaging"
         ShipmentMethod: Record "Shipment Method";
         GrecTransporteur: Record "Shipping Agent";
         TempTrackingSpecBuffer: Record "Tracking Specification" temporary;
-        ItemTrackingAppendix: report "Item Tracking Appendix";
+        ItemTrackingAppendix: Report "Item Tracking Appendix";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
         ItemTrackingDocMgt: Codeunit "Item Tracking Doc. Management";
-
-        CDULanguage: codeunit Language;
+        CULanguage: Codeunit Language;
         SegManagement: Codeunit SegManagement;
         AsmHeaderExists: Boolean;
         Continue: Boolean;
         DisplayAssemblyInformation: Boolean;
-        LogInteraction: Boolean;
-
+        BoolLogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowCorrectionLines: Boolean;
         ShowCustAddr: Boolean;
         ShowGroup: Boolean;
-        ShowInternalInfo: Boolean;
-        ShowLotSN: Boolean;
+        BoolShowInternalInfo: Boolean;
+        BoolShowLotSN: Boolean;
         ShowTotal: Boolean;
         OldNo: Code[20];
         GDecPoidsBrut: Decimal;
@@ -1094,7 +1055,7 @@ report 50016 "Etiquette Packaging"
         GIntQteCommandee: Decimal;
         TotalQty: Decimal;
         LinNo: Integer;
-        NoOfCopies: Integer;
+        IntNoOfCopies: Integer;
         NoOfLoops: Integer;
         OldRefNo: Integer;
         OutputNo: Integer;
@@ -1111,11 +1072,11 @@ report 50016 "Etiquette Packaging"
         GTxtCompanyBankSWIFT: Label 'SWIFT';
         GTxtCompanyFaxNo: Label 'Fax.';
         GTxtCompanyVAT: Label 'VAT Id. Num.';
-        GTxtItemNoLbl: Label 'Item No.';
-        GTxtQteCommandeeLbl: Label 'Qty ordered';
-        GTxtQteExpedieeLbl: Label 'Qty shipped';
-        GTxtQteRestante: Label 'Remaining quantity';
-        GTxtResteALivrerLbl: Label 'Remains to deliver';
+        GTxtItemNoLbl: Label 'N° article';
+        GTxtQteCommandeeLbl: Label 'Qté commandée';
+        GTxtQteExpedieeLbl: Label 'Qté expédiée';
+        GTxtQteRestante: Label 'Qté restante';
+        GTxtResteALivrerLbl: Label 'Reste à livrer';
         GTxtSalesShptCopyText: Label 'Shipment';
         GTxtYourRef_Lbl: Label 'Your Reference';
         HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
@@ -1135,48 +1096,46 @@ report 50016 "Etiquette Packaging"
         TextPackingDetaile: Label 'Packing details';
         TextPoids: Label 'Gross Weight';
         VATRegNoCaptionLbl: Label 'VAT Reg. No.';
-        GTxtCondLivraisonEtendues: Text;
-        ShipToAddr: array[8] of Text;
-        GTxtItemNo: Text;//[20];
+        GTxtCondLivraisonEtendues: Text;//[150];
+        GTxtItemNo: Text[20];
         GTxtNomenclatureArticle: Text[20];
+        SalesPersonText: Text[20];
         CopyText: Text[30];
-        GTxtColisCaption: Text[50];
         GTxtCompanyInfoPays: Text[50];
         GTxtDocumentNo: Text[50];
-        SalesPersonText: Text[50];
         GTxtNumTVAClient: Text[60];
+        OldDimText: Text[75];
         GTxtCompanyVAT_ICE: Text[80];
         GTxtTransporteur: Text[80];
         ReferenceText: Text[80];
         CompanyAddr: array[8] of Text[100];
         CustAddr: array[8] of Text[100];
-        GTxtColisREF: Text[100];
-        DimText: Text[120];
-        DimText3: Text[120];
+        ShipToAddr: array[8] of Text[100];
+        DimText: Text[75];
+        DimText3: Text[75];
         GTxtPayementsTerm: Text[150];
-        OldDimText: Text[120];
         GTxtOrigineCE: Text[250];
 
     procedure InitLogInteraction()
     var
         DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
+        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Shpt. Note") <> '';
     end;
 
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean; NewShowCorrectionLines: Boolean; NewShowLotSN: Boolean; DisplayAsmInfo: Boolean)
     begin
-        NoOfCopies := NewNoOfCopies;
-        ShowInternalInfo := NewShowInternalInfo;
-        LogInteraction := NewLogInteraction;
+        IntNoOfCopies := NewNoOfCopies;
+        BoolShowInternalInfo := NewShowInternalInfo;
+        BoolLogInteraction := NewLogInteraction;
         ShowCorrectionLines := NewShowCorrectionLines;
-        ShowLotSN := NewShowLotSN;
+        BoolShowLotSN := NewShowLotSN;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
     local procedure IsReportInPreviewMode(): Boolean
     var
-        MailManagement: codeunit "Mail Management";
+        MailManagement: Codeunit "Mail Management";
     begin
         exit(CurrReport.PREVIEW or MailManagement.IsHandlingGetEmailBody());
     end;
@@ -1196,7 +1155,7 @@ report 50016 "Etiquette Packaging"
         end;
     end;
 
-    local procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text
+    local procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text[10]
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin
@@ -1210,30 +1169,5 @@ report 50016 "Etiquette Packaging"
         exit(PADSTR('', 2, ' '));
     end;
 
-    [IntegrationEvent(true, true)]
-    local procedure OnAfterInitReport()
-    begin
-    end;
-
-    [IntegrationEvent(true, true)]
-    local procedure OnAfterPostDataItem(var SalesShipmentHeader: Record "Sales Shipment Header")
-    begin
-    end;
-
-    local procedure ZeroIsBlanckDecimal(Decimale: Decimal) Return: Text[150]
-    begin
-        if Decimale <> 0 then
-            Return := FORMAT(Decimale, 10, '<Standard Format,0>')
-        else
-            Return := '';
-    end;
-
-    local procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[150]
-    begin
-        if Integer <> 0 then
-            Return := FORMAT(Integer)
-        else
-            Return := '';
-    end;
 }
 

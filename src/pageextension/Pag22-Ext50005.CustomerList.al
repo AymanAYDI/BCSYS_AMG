@@ -14,18 +14,18 @@ pageextension 50005 CustomerList extends "Customer List" //22
     {
         addafter(Name)
         {
-            field(Historique; Rec.Historique)
+            field(History; Rec.History)
             {
                 TableRelation = "Sales Archive"."Customer No.";
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Historique field.';
+                ToolTip = 'Specifies the value of the History field.';
                 trigger OnLookup(var Text: Text): Boolean
                 var
-                    Historique: Record "Sales Archive";
+                    History: Record "Sales Archive";
                 begin
                     //DELPHI AUB 30.06.2020
-                    Historique.SETRANGE("Customer No.", Rec."No.");
-                    PAGE.RUNMODAL(PAGE::"Historique ventes article", Historique);
+                    History.SETRANGE("Customer No.", Rec."No.");
+                    PAGE.RUNMODAL(PAGE::"Historique ventes article", History);
                     //END DELPHI AUB
                 end;
             }

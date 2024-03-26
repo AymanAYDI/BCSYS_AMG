@@ -8,7 +8,7 @@ table 50012 "ONU table"
 
     fields
     {
-        field(10; "Code"; Code[10])
+        field(10; "Code"; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'Code';

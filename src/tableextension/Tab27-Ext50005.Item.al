@@ -66,16 +66,16 @@ tableextension 50005 Item extends Item //27
         }
         field(50060; Material; Text[30])
         {
-            Caption = 'Material', Comment = 'FRA="Matériel"';
+            Caption = 'Material', Comment = 'Material';
             DataClassification = ToBeClassified;
         }
-        field(50100; Historique; Boolean)
+        field(50100; History; Boolean)
         {
             CalcFormula = exist("Sales Archive" where(Reference = field("No.")));
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Sales Archive";
-            Caption = 'Historique';
+            Caption = 'History';
         }
         field(50110; "Type carbo"; Boolean)
         {

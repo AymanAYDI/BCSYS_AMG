@@ -1,4 +1,4 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Document;
 
@@ -55,13 +55,13 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
         {
             action(ActRemplir)
             {
-                Caption = 'Remplir Qté à recevoir';
+                Caption = 'Fill in Qty to receive';
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = AutofillQtyToHandle;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the Remplir Qté à recevoir action.';
+                ToolTip = 'Execute the Fill Qty to Receive action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();
@@ -80,13 +80,13 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
             }
             action(ActVider)
             {
-                Caption = 'Vider Qté à recevoir';
+                Caption = 'Empty Qty to receive';
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the Vider Qté à recevoir action.';
+                ToolTip = 'Execute the Empty Qty to Receive action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();
@@ -104,13 +104,13 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
             }
             action(ActViderAFacturer)
             {
-                Caption = 'Vider Qté à facturer';
+                Caption = 'Empty Qty to invoice';
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the Vider Qté à facturer action.';
+                ToolTip = 'Execute the Empty Qty to Invoice action.';
                 trigger OnAction()
                 begin
                     GRecPurchLine.RESET();

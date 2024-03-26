@@ -2,7 +2,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Inventory.Item;
 page 50030 DELItemDrillDownCarbo
 {
-    Caption = 'Choix de l''emballage Carbo';
+    Caption = 'Choice of Carbo packaging';
     PageType = List;
     SourceTable = Item;
     SourceTableView = sorting("No.")

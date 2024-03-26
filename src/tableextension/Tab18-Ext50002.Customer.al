@@ -31,18 +31,18 @@ tableextension 50002 Customer extends Customer //18
             DataClassification = ToBeClassified;
             Caption = 'ICE';
         }
-        field(50100; Historique; Boolean)
+        field(50100; History; Boolean)
         {
             CalcFormula = exist("Sales Archive" where("Customer No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Sales Archive";
-            Caption = 'Historique';
+            Caption = 'History';
         }
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison';
+            Caption = 'Compl. cond. livraison'; //TODO translation
         }
     }
     keys

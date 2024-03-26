@@ -118,7 +118,7 @@ page 50007 "Sales Order Subform Color"
                         NoOnAfterValidate();
                     end;
                 }
-                field("Fournisseur article"; Rec."Fournisseur article")
+                field("Item supplier"; Rec."Item supplier")
                 {
                     ToolTip = 'Specifies the value of the Vendor field.';
                 }
@@ -286,10 +286,10 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Qty received"; GDecQtyReceived)
                 {
-                    Caption = 'Qté Reçue du Fourn.';
+                    Caption = 'Qty Received from Supplier';
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Qté Reçue du Fourn. field.';
+                    ToolTip = 'Specifies the value of the Qty Received from the Supplier field.';
                 }
                 field("Qty In Stock"; GDecStock)
                 {
@@ -982,12 +982,12 @@ page 50007 "Sales Order Subform Color"
             }
             action(ActRemplir)
             {
-                Caption = 'Remplir Qté';
+                Caption = 'Fill Qty';
                 Image = AutofillQtyToHandle;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Executes the Remplir Qté action.';
+                ToolTip = 'Execute the Fill Qty action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
@@ -1007,12 +1007,12 @@ page 50007 "Sales Order Subform Color"
             }
             action(ActViderAExpedier)
             {
-                Caption = 'Vider Qté à expédier';
+                Caption = 'Empty Qty to ship';
                 Image = DeleteQtyToHandle;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Executes the Vider Qté à expédier action.';
+                ToolTip = 'Executes the Empty Qty to Ship action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
@@ -1032,12 +1032,12 @@ page 50007 "Sales Order Subform Color"
             }
             action(ActViderAFacturer)
             {
-                Caption = 'Vider Qté à facturer';
+                Caption = 'Empty Qty to invoice';
                 Image = DeleteQtyToHandle;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Executes the Vider Qté à facturer action.';
+                ToolTip = 'Execute the Empty Qty to Invoice action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
@@ -1577,13 +1577,13 @@ page 50007 "Sales Order Subform Color"
 
     trigger OnInit()
     var
-        ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
+        ApplicationAreaMgmtFacade2: Codeunit "Application Area Mgmt. Facade";
     begin
         SalesSetup.GET();
         InventorySetup.GET();
         Currency.InitRoundingPrecision();
         TempOptionLookupBuffer.FillLookupBuffer(Enum::"Option Lookup Type"::Sales);
-        IsFoundation := ApplicationAreaMgmtFacade.IsFoundationEnabled();
+        IsFoundation := ApplicationAreaMgmtFacade2.IsFoundationEnabled();
     end;
 
     trigger OnModifyRecord(): Boolean
@@ -1666,15 +1666,15 @@ page 50007 "Sales Order Subform Color"
 
     local procedure ValidateInvoiceDiscountAmount()
     var
-        SalesHeader: Record "Sales Header";
+        SalesHeader2: Record "Sales Header";
         ConfirmManagement: Codeunit "Confirm Management";
     begin
-        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
-        if SalesHeader.InvoicedLineExists() then
+        SalesHeader2.Get(Rec."Document Type", Rec."Document No.");
+        if SalesHeader2.InvoicedLineExists() then
             if not ConfirmManagement.GetResponseOrDefault(UpdateInvDiscountQst, true) then
                 exit;
 
-        SalesCalcDiscountByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, SalesHeader);
+        SalesCalcDiscountByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, SalesHeader2);
         DocumentTotals.SalesDocTotalsNotUpToDate();
         CurrPage.Update(false);
     end;
@@ -1779,15 +1779,15 @@ page 50007 "Sales Order Subform Color"
 
     procedure OrderPromisingLine()
     var
-        OrderPromisingLine: Record "Order Promising Line" temporary;
+        TempOrderPromisingLine: Record "Order Promising Line" temporary;
         OrderPromisingLines: Page "Order Promising Lines";
     begin
-        OrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
-        OrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
-        OrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
+        TempOrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
+        TempOrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
+        TempOrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
 
-        OrderPromisingLines.SetSource(OrderPromisingLine."Source Type"::Sales);
-        OrderPromisingLines.SETTABLEVIEW(OrderPromisingLine);
+        OrderPromisingLines.SetSource(TempOrderPromisingLine."Source Type"::Sales);
+        OrderPromisingLines.SETTABLEVIEW(TempOrderPromisingLine);
         OrderPromisingLines.RUNMODAL();
     end;
 
@@ -1893,11 +1893,11 @@ page 50007 "Sales Order Subform Color"
 
     procedure ShowDocumentLineTracking()
     var
-        DocumentLineTracking: Page "Document Line Tracking";
+        DocLineTracking: Page "Document Line Tracking";
     begin
-        CLEAR(DocumentLineTracking);
-        DocumentLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocumentLineTracking.RUNMODAL();
+        CLEAR(DocLineTracking);
+        DocLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        DocLineTracking.RUNMODAL();
     end;
 
     local procedure SetLocationCodeMandatory()

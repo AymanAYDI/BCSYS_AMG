@@ -9,19 +9,19 @@ table 50007 "DGX Lines"
         field(1; LineNo; Integer)
         {
             DataClassification = ToBeClassified;
-            Caption = 'LineNo';
+            Caption = 'Line No.';
         }
         field(10; DGXNo; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "DGX Header"."DGX No.";
-            Caption = 'DGXNo';
+            Caption = 'DGX No.';
         }
         field(20; ItemNo; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = Item."No.";
-            Caption = 'ItemNo';
+            Caption = 'Item No.';
         }
         field(30; UN; Code[10])
         {

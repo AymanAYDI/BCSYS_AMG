@@ -18,13 +18,13 @@ table 50006 "DGX Header"
         field(2; "DGX Type"; Option)
         {
             DataClassification = ToBeClassified;
-            OptionCaption = 'Multimodal,Aérien cargo,Aérien passager';
+            OptionCaption = 'Multimodal, Air cargo, Air passenger';
             OptionMembers = "Multi-modal","Aerien cargo","Aerien passager";
             Caption = 'DGX Type';
         }
         field(10; Recipient; Code[20])
         {
-            Caption = 'Recipient', Comment = 'FRA="Destinataire"';
+            Caption = 'Recipient', Comment = 'Recipient';
             DataClassification = ToBeClassified;
             TableRelation = Customer."No.";
         }

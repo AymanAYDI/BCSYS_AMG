@@ -2,7 +2,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 page 50015 "Liste ONU"
 {
     ApplicationArea = All;
-    Caption = 'Liste ONU';
+    Caption = 'Liste ONU'; //UN List
     PageType = List;
     SourceTable = "ONU table";
     SourceTableView = sorting(Code, Version)

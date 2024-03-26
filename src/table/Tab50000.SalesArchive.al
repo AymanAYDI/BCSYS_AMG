@@ -17,85 +17,85 @@ table 50000 "Sales Archive"
     {
         field(1; "Customer No."; Code[20])
         {
-            Caption = 'Customer No.', Comment = 'FRA="Customer No."';
+            Caption = 'Customer No.', Comment = 'Customer No.';
             DataClassification = ToBeClassified;
             TableRelation = Customer."No.";
         }
         field(2; "Customer Name"; Text[100])
         {
-            Caption = 'Customer Name', Comment = 'FRA="Customer Name"';
+            Caption = 'Customer Name', Comment = 'Customer Name';
             CalcFormula = lookup(Customer.Name where("No." = field("Customer No.")));
             FieldClass = FlowField;
         }
         field(10; "Sales Document Date"; Date)
         {
-            Caption = 'Sales Document Date', Comment = 'FRA="Sales Document Date"';
+            Caption = 'Sales Document Date', Comment = 'Sales Document Date';
             DataClassification = ToBeClassified;
         }
         field(11; "Quote No."; Code[20])
         {
-            Caption = 'Quote No.', Comment = 'FRA="N° devis"';
+            Caption = 'Quote No.', Comment = 'Quote No.';
             DataClassification = ToBeClassified;
             TableRelation = "Sales Header"."No.";
         }
         field(12; "Sales Order No."; Code[20])
         {
-            Caption = 'Sales Order No.', Comment = 'FRA="N° commande vente"';
+            Caption = 'Sales Order No.', Comment = 'Sales Order No.';
             DataClassification = ToBeClassified;
             TableRelation = "Sales Header"."No.";
         }
         field(13; "Sales Invoice No."; Code[20])
         {
-            Caption = 'Sales Invoice No.', Comment = 'FRA="N° facture vente"';
+            Caption = 'Sales Invoice No.', Comment = 'Sales Invoice No.';
             DataClassification = ToBeClassified;
             Editable = false;
             TableRelation = "Sales Invoice Header"."No.";
         }
         field(20; "Reference"; Code[20])
         {
-            Caption = 'Reference', Comment = 'FRA="Reference"';
+            Caption = 'Reference', Comment = 'Reference';
             DataClassification = ToBeClassified;
             TableRelation = Item."No.";
         }
         field(21; Description; Text[100])
         {
-            Caption = 'Description', Comment = 'FRA="Description"';
+            Caption = 'Description', Comment = 'Description';
             DataClassification = ToBeClassified;
         }
         field(22; "External Reference"; Code[50])
         {
-            Caption = 'External Reference', Comment = 'FRA="Reference externe"';
+            Caption = 'External Reference', Comment = 'External Reference';
             DataClassification = ToBeClassified;
         }
         field(30; "Quantity"; Decimal)
         {
-            Caption = 'Quantity', Comment = 'FRA="Quantity"';
+            Caption = 'Quantity', Comment = 'Quantity';
             DataClassification = ToBeClassified;
         }
         field(31; "Sales Amount"; Decimal)
         {
-            Caption = 'Sales Amount', Comment = 'FRA="Prix de vente"';
+            Caption = 'Sales Amount', Comment = 'Sales Amount';
             DataClassification = ToBeClassified;
         }
         field(32; "% Discount"; Decimal)
         {
-            Caption = '% Discount', Comment = 'FRA="% de remise"';
+            Caption = '% Discount', Comment = '% Discount';
             DataClassification = ToBeClassified;
         }
         field(40; "Purchase Order No."; Code[20])
         {
-            Caption = 'Purchase Order No.', Comment = 'FRA="N° commande achat"';
+            Caption = 'Purchase Order No.', Comment = 'Purchase Order No.';
             DataClassification = ToBeClassified;
             TableRelation = "Purchase Header"."No.";
         }
         field(50; "Sales Line No."; Integer)
         {
-            Caption = 'Sales Line No.', Comment = 'FRA="N° ligne vente"';
+            Caption = 'Sales Line No.', Comment = 'Sales Line No.';
             DataClassification = ToBeClassified;
         }
         field(68; Inventory; Decimal)
         {
-            Caption = 'Inventory', Comment = 'FRA="Stock"';
+            Caption = 'Inventory', Comment = 'Inventory';
             CalcFormula = sum("Item Ledger Entry".Quantity where("Item No." = field(Reference)));
             DecimalPlaces = 0 : 5;
             Editable = false;
@@ -103,7 +103,7 @@ table 50000 "Sales Archive"
         }
         field(69; Archive; Boolean)
         {
-            Caption = 'Archive', Comment = 'FRA="Archive"';
+            Caption = 'Archive', Comment = 'Archive';
             DataClassification = ToBeClassified;
             InitValue = false;
         }

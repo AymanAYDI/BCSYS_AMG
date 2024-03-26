@@ -7,7 +7,7 @@ tableextension 50020 SalesCrMemoHeader extends "Sales Cr.Memo Header" //114
     {
         modify("On Hold")
         {
-            Caption = 'On Hold', Comment = 'FRA="En attente"';
+            Caption = 'On Hold', Comment = 'On Hold';
         }
         field(50000; "Compl. cond. livraison"; Text[80])
         {

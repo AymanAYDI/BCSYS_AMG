@@ -7,7 +7,7 @@ using Microsoft.Finance.Dimension;
 using Microsoft.Utilities;
 report 50009 "DGX CERFA"
 {
-    RDLCLayout = './DGXCERFA.rdlc';
+    RDLCLayout = './report/RDL/DGXCERFA.rdlc';
     DefaultLayout = RDLC;
     ApplicationArea = All;
 
@@ -210,7 +210,7 @@ report 50009 "DGX CERFA"
 
                     trigger OnPreDataItem()
                     begin
-                        MoreLines := FIND('+');
+                        MoreLines := FINDLAST();
                         while MoreLines and (ItemNo = '') do
                             MoreLines := NEXT(-1) <> 0;
                         if not MoreLines then
@@ -287,33 +287,33 @@ report 50009 "DGX CERFA"
     begin
         SYSTEM.GLOBALLANGUAGE(1033);
         GDecMasseBruteTotale := 0;
-        CurrReport.LANGUAGE := CDULanguage.GetLanguageID('ENU');
+        CurrReport.LANGUAGE := CDULanguage.GetLanguageIdOrDefault('ENU');
         GCodUN := '';
         GIntPageNo := 0;
     end;
 
     var
-        NoOfLoops: Integer;
-        NoOfCopies: Integer;
-        CopyText: Text[30];
-        DimText: Text[120];
-        LinNo: Integer;
-        OutputNo: Integer;
-        FormatDocument: Codeunit "Format Document";
         DimSetEntry1: Record "Dimension Set Entry";
+        GRecShipHeader: Record "Sales Shipment Header";
+        FormatDocument: Codeunit "Format Document";
+        CDULanguage: codeunit Language;
         Continue: Boolean;
-        OldDimText: Text[150];
         MoreLines: Boolean;
-        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        CTxtAirport: Label 'ROISSY';
+        GCodUN: Code[10];
         GDecMasseBruteTotale: Decimal;
+        GIntPageNo: Integer;
+        LinNo: Integer;
+        NoOfCopies: Integer;
+        NoOfLoops: Integer;
+        OutputNo: Integer;
+        CTxtAirport: Label 'ROISSY';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
+        CopyText: Text[30];
+        GTxtSousClasse: Text[50];
+        GTxtRefClient: Text[100];
+        DimText: Text[120];
         GTxtFlashPoint: Text[150];
         GTxtLimitedQty: Text[150];
-        GTxtSousClasse: Text[50];
-        CDULanguage: codeunit Language;
-        GRecShipHeader: Record "Sales Shipment Header";
-        GTxtRefClient: Text[100];
-        GCodUN: Code[10];
-        GIntPageNo: Integer;
+        OldDimText: Text[150];
 }
 
