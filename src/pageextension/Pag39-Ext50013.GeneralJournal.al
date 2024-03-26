@@ -17,7 +17,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         SetControlAppearanceFromBatch;
         // Set simple view when batch is changed
         SetDataForSimpleModeOnBatchChange;
-        CurrPage.UPDATE(FALSE);
+        CurrPage.Update(FALSE);
         */
         //end;
         //>>>> MODIFIED CODE:
@@ -59,10 +59,10 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         //>>>> ORIGINAL CODE:
         //begin
         /*
-        GLAccount.SETRANGE("Account Type",GLAccount."Account Type"::Posting);
-        GLAccount.SETRANGE("Income/Balance",GLAccount."Income/Balance"::"Balance Sheet");
-        GLAccount.SETRANGE("Direct Posting",TRUE);
-        GLAccount.SETRANGE(Blocked,FALSE);
+        GLAccount.SetRange("Account Type",GLAccount."Account Type"::Posting);
+        GLAccount.SetRange("Income/Balance",GLAccount."Income/Balance"::"Balance Sheet");
+        GLAccount.SetRange("Direct Posting",TRUE);
+        GLAccount.SetRange(Blocked,FALSE);
         CreateGLAccJournalLines.SETTABLEVIEW(GLAccount);
         CreateGLAccJournalLines.InitializeRequest(DocumentTypes,TODAY,"Journal Template Name","Journal Batch Name",'');
         CreateGLAccJournalLines.USEREQUESTPAGE(FALSE);
@@ -88,7 +88,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         //>>>> ORIGINAL CODE:
         //begin
         /*
-        Customer.SETRANGE(Blocked,Customer.Blocked::" ");
+        Customer.SetRange(Blocked,Customer.Blocked::" ");
         CreateCustomerJournalLines.SETTABLEVIEW(Customer);
         CreateCustomerJournalLines.InitializeRequest(DocumentTypes,TODAY,TODAY);
         CreateCustomerJournalLines.InitializeRequestTemplate("Journal Template Name","Journal Batch Name",'');
@@ -115,7 +115,7 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         //>>>> ORIGINAL CODE:
         //begin
         /*
-        Vendor.SETRANGE(Blocked,Vendor.Blocked::" ");
+        Vendor.SetRange(Blocked,Vendor.Blocked::" ");
         CreateVendorJournalLines.SETTABLEVIEW(Vendor);
         CreateVendorJournalLines.InitializeRequest(DocumentTypes,TODAY,TODAY);
         CreateVendorJournalLines.InitializeRequestTemplate("Journal Template Name","Journal Batch Name",'');
@@ -172,9 +172,9 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
     GenJnlManagement.SetLastViewedJournalBatchName(PAGE::"General Journal",CurrentJnlBatchName);
     // Need to set up simple page mode properties on batch change
     IF IsSimplePage THEN BEGIN
-      GenJournalLine.RESET;
-      GenJournalLine.SETRANGE("Journal Template Name","Journal Template Name");
-      GenJournalLine.SETRANGE("Journal Batch Name",CurrentJnlBatchName);
+      GenJournalLine.Reset;
+      GenJournalLine.SetRange("Journal Template Name","Journal Template Name");
+      GenJournalLine.SetRange("Journal Batch Name",CurrentJnlBatchName);
       IsChangingDocNo := FALSE;
       IF GenJournalLine.FINDFIRST THEN
         SetDataForSimpleMode(GenJournalLine);
@@ -209,15 +209,15 @@ pageextension 50013 GeneralJournal extends "General Journal" //39
         "Document No." := CurrentDocNo;
         // Clear out credit / debit for empty page since these
         // might have been set if suggest balance amount is checked on the batch
-        VALIDATE("Credit Amount",0);
-        VALIDATE("Debit Amount",0);
+        Validate("Credit Amount",0);
+        Validate("Debit Amount",0);
       END
     ELSE
       "Document No." := CurrentDocNo;
 
     "Currency Code" := CurrentCurrencyCode;
     IF CurrentPostingDate <> 0D THEN
-      VALIDATE("Posting Date",CurrentPostingDate);
+      Validate("Posting Date",CurrentPostingDate);
     */
     //end;
     //>>>> MODIFIED CODE:

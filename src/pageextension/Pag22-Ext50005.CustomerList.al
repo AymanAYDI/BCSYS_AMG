@@ -1,7 +1,3 @@
-// Welcome to your new AL extension.
-// Remember that object names and IDs should be unique across all extensions.
-// AL snippets start with t*, like tpageext - give them a try and happy coding!
-
 namespace DefaultPublisher.BCSYS_AMG;
 
 using Microsoft.Sales.Customer;
@@ -24,8 +20,8 @@ pageextension 50005 CustomerList extends "Customer List" //22
                     History: Record "Sales Archive";
                 begin
                     //DELPHI AUB 30.06.2020
-                    History.SETRANGE("Customer No.", Rec."No.");
-                    PAGE.RUNMODAL(PAGE::"Historique ventes article", History);
+                    Historique.SETRANGE("Customer No.", Rec."No.");
+                    PAGE.RUNMODAL(PAGE::"Historique ventes article", Historique);
                     //END DELPHI AUB
                 end;
             }
@@ -92,17 +88,11 @@ pageextension 50005 CustomerList extends "Customer List" //22
                 var
                     Customer: Record Customer;
                 begin
-                    //DELPHI AUB 19.05.2020
-                    Customer.SETRANGE("No.", Rec."No.");
-                    REPORT.RUNMODAL(REPORT::"Customer Detail Trial Balance", true, true, Customer);
-                    //END DELPHI AUB
+                    Customer.SetRange("No.", Rec."No.");
+                    REPORT.RunModal(REPORT::"Customer Detail Trial Balance", true, true, Customer);
                 end;
             }
         }
     }
-    // trigger OnOpenPage();
-    // begin
-    //     Message('App published: Hello world');
-    // end;
 
 }

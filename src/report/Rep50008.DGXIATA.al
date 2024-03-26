@@ -95,7 +95,7 @@ report 50008 "DGX IATA"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
@@ -111,7 +111,7 @@ report 50008 "DGX IATA"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
                     }
                 }
@@ -183,10 +183,10 @@ report 50008 "DGX IATA"
                     begin
                         MoreLines := FINDLAST();
                         while MoreLines and (ItemNo = '') do
-                            MoreLines := NEXT(-1) <> 0;
+                            MoreLines := Next(-1) <> 0;
                         if not MoreLines then
                             CurrReport.BREAK();
-                        SETRANGE(LineNo, 0, "DGX Lines".LineNo);
+                        SetRange(LineNo, 0, "DGX Lines".LineNo);
                     end;
                 }
             }
@@ -204,7 +204,7 @@ report 50008 "DGX IATA"
             begin
                 NoOfLoops := "DGX Header".COUNT * (ABS(NoOfCopies) + 1); //1 + ABS(NoOfCopies);
                 CopyText := '';
-                SETRANGE(Number, 1, NoOfLoops);
+                SetRange(Number, 1, NoOfLoops);
 
                 OutputNo := 1;
             end;

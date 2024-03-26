@@ -14,7 +14,7 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
             trigger OnAfterValidate()
             begin
                 Rec."Requested Receipt Date" := Rec."Document Date";
-                Rec.VALIDATE("Requested Receipt Date");
+                Rec.Validate("Requested Receipt Date");
             end;
         }
         addafter("Due Date")
@@ -139,9 +139,9 @@ pageextension 50018 "PurchaseOrder" extends "Purchase Order" //50
         if LRecUserSetup.GET(LCodUserID) and (Rec."Purchaser Code" = '') then
             Rec."Purchaser Code" := LRecUserSetup."Salespers./Purch. Code";
         if Rec."No." <> '' then
-            Rec.MODIFY();
+            Rec.Modify();
         if Rec."No." <> '' then
-            Rec.MODIFY();
+            Rec.Modify();
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)

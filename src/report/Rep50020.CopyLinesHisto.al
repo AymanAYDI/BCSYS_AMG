@@ -52,20 +52,20 @@ report 50020 CopyLinesHisto
     begin
         //DEV MLA
         // Insert Devis Histo
-        LRecSalesLine.RESET();
+        LRecSalesLine.Reset();
         LRecSalesLine.SETFILTER(Type, 'Item');
         LRecSalesLine.SETFILTER(Quantity, '>0');
         LRecSalesLine.SETFILTER("Document Type", 'Quote');
         if LRecSalesLine.FindSet() then
             repeat
                 if LRecSalesHeader.GET(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
-                CLEAR(LRecHisto);
-                LRecHisto.RESET();
-                LRecHisto.SETRANGE("Reference", LRecSalesLine."No.");
-                LRecHisto.SETRANGE("Customer No.", LRecSalesLine."Sell-to Customer No.");
+                Clear(LRecHisto);
+                LRecHisto.Reset();
+                LRecHisto.SetRange("Reference", LRecSalesLine."No.");
+                LRecHisto.SetRange("Customer No.", LRecSalesLine."Sell-to Customer No.");
                 if not LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
-                    CLEAR(LRecHisto);
+                    LRecHisto.Reset();
+                    Clear(LRecHisto);
                     LRecHisto."Customer No." := LRecSalesLine."Sell-to Customer No.";
                     LRecHisto."Customer Name" := LRecSalesLine."Customer Name";
                     LRecHisto."Sales Document Date" := LRecSalesHeader."Document Date";
@@ -80,30 +80,30 @@ report 50020 CopyLinesHisto
                     LRecHisto."Sales Line No." := LRecSalesLine."Line No.";
                     LRecHisto.INSERT(false);
                 end
-            until LRecSalesLine.NEXT() = 0;
+            until LRecSalesLine.Next() = 0;
 
 
         //Insert commande Histo
-        LRecSalesLine.RESET();
+        LRecSalesLine.Reset();
         LRecSalesLine.SETFILTER(Type, 'Item');
         LRecSalesLine.SETFILTER(Quantity, '>0');
         LRecSalesLine.SETFILTER("Document Type", 'Order');
         if LRecSalesLine.FindSet() then
             repeat
                 if LRecSalesHeader.GET(LRecSalesLine."Document Type", LRecSalesLine."Document No.") then;
-                CLEAR(LRecHisto);
-                LRecHisto.RESET();
-                LRecHisto.SETRANGE("Reference", LRecSalesLine."No.");
-                LRecHisto.SETRANGE("Customer No.", LRecSalesLine."Sell-to Customer No.");
-                LRecHisto.SETRANGE("Quote No.", LRecSalesHeader."Quote No.");
+                Clear(LRecHisto);
+                LRecHisto.Reset();
+                LRecHisto.SetRange("Reference", LRecSalesLine."No.");
+                LRecHisto.SetRange("Customer No.", LRecSalesLine."Sell-to Customer No.");
+                LRecHisto.SetRange("Quote No.", LRecSalesHeader."Quote No.");
                 if LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
+                    LRecHisto.Reset();
                     LRecHisto."Sales Order No." := LRecSalesLine."Document No.";
-                    LRecHisto.MODIFY();
+                    LRecHisto.Modify();
                 end;
                 if not LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
-                    CLEAR(LRecHisto);
+                    LRecHisto.Reset();
+                    Clear(LRecHisto);
                     LRecHisto."Customer No." := LRecSalesLine."Sell-to Customer No.";
                     LRecHisto."Customer Name" := LRecSalesLine."Customer Name";
                     LRecHisto."Sales Document Date" := LRecSalesHeader."Document Date";
@@ -119,7 +119,7 @@ report 50020 CopyLinesHisto
                     LRecHisto."Sales Line No." := LRecSalesLine."Line No.";
                     LRecHisto.INSERT(false);
                 end;
-            until LRecSalesLine.NEXT() = 0;
+            until LRecSalesLine.Next() = 0;
     end;
 
     local procedure DelphiCopySalesInvoiceLinesHisto()
@@ -129,25 +129,25 @@ report 50020 CopyLinesHisto
         LRecSalesInvoiceLine: Record "Sales Invoice Line";
     begin
 
-        LRecSalesInvoiceLine.RESET();
+        LRecSalesInvoiceLine.Reset();
         LRecSalesInvoiceLine.SETFILTER(Type, 'Item');
         LRecSalesInvoiceLine.SETFILTER(Quantity, '>0');
         if LRecSalesInvoiceLine.FindSet() then
             repeat
                 if LRecSalesInvoiceHeader.GET(LRecSalesInvoiceLine."Document No.") then;
-                CLEAR(LRecHisto);
-                LRecHisto.RESET();
-                LRecHisto.SETRANGE("Sales Order No.", LRecSalesInvoiceLine."Document No.");
-                LRecHisto.SETRANGE("Customer No.", LRecSalesInvoiceLine."Bill-to Customer No.");
-                LRecHisto.SETRANGE("Reference", LRecSalesInvoiceLine."No.");
+                Clear(LRecHisto);
+                LRecHisto.Reset();
+                LRecHisto.SetRange("Sales Order No.", LRecSalesInvoiceLine."Document No.");
+                LRecHisto.SetRange("Customer No.", LRecSalesInvoiceLine."Bill-to Customer No.");
+                LRecHisto.SetRange("Reference", LRecSalesInvoiceLine."No.");
                 if LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
+                    LRecHisto.Reset();
                     LRecHisto."Sales Invoice No." := LRecSalesInvoiceLine."Document No.";
-                    LRecHisto.MODIFY()
+                    LRecHisto.Modify()
                 end;
                 if not LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
-                    CLEAR(LRecHisto);
+                    LRecHisto.Reset();
+                    Clear(LRecHisto);
                     LRecHisto."Customer No." := LRecSalesInvoiceLine."Sell-to Customer No.";
                     LRecHisto."Sales Document Date" := LRecSalesInvoiceLine."Posting Date";
                     LRecHisto."Quote No." := LRecSalesInvoiceHeader."Quote No.";
@@ -163,19 +163,19 @@ report 50020 CopyLinesHisto
                     LRecHisto."Sales Line No." := LRecSalesInvoiceLine."Line No.";
                     LRecHisto.INSERT(false);
                 end;
-            until LRecSalesInvoiceLine.NEXT() = 0;
+            until LRecSalesInvoiceLine.Next() = 0;
     end;
 
     local procedure DelphiDeleteLineArchive()
     var
         LRecHisto: Record "Sales Archive";
     begin
-        LRecHisto.RESET();
+        LRecHisto.Reset();
         LRecHisto.SETFILTER(Archive, 'TRUE');
         if LRecHisto.FindSet() then
             repeat
                 if LRecHisto.FINDFIRST() then
-                    LRecHisto.RESET();
+                    LRecHisto.Reset();
                 LRecHisto.SETFILTER(Archive, 'TRUE');
 
                 LRecHisto.DELETEALL();
@@ -189,7 +189,7 @@ report 50020 CopyLinesHisto
         LRecSalesLineArchive: Record "Sales Line Archive";
     begin
         //DEVIS VENTE ARCHVE
-        LRecSalesLineArchive.RESET();
+        LRecSalesLineArchive.Reset();
         LRecSalesLineArchive.SETCURRENTKEY("Document Type", "Document No.", "Version No.", "Doc. No. Occurrence", "Line No.");
         LRecSalesLineArchive.SETASCENDING("Version No.", false);
         LRecSalesLineArchive.SETFILTER(Type, 'Item');
@@ -198,13 +198,13 @@ report 50020 CopyLinesHisto
         if LRecSalesLineArchive.FindSet() then
             repeat
                 if LRecSalesHeaderArchive.GET(LRecSalesLineArchive."Document Type", LRecSalesLineArchive."Document No.", LRecSalesLineArchive."Doc. No. Occurrence", LRecSalesLineArchive."Version No.") then;
-                LRecHisto.RESET();
-                LRecHisto.SETRANGE("Reference", LRecSalesLineArchive."No.");
-                LRecHisto.SETRANGE("Customer No.", LRecSalesLineArchive."Sell-to Customer No.");
+                LRecHisto.Reset();
+                LRecHisto.SetRange("Reference", LRecSalesLineArchive."No.");
+                LRecHisto.SetRange("Customer No.", LRecSalesLineArchive."Sell-to Customer No.");
                 LRecHisto.SETFILTER("Quote No.", LRecSalesLineArchive."Document No.");
                 if not LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
-                    CLEAR(LRecHisto);
+                    LRecHisto.Reset();
+                    Clear(LRecHisto);
                     LRecHisto."Customer No." := LRecSalesLineArchive."Sell-to Customer No.";
                     LRecHisto."Sales Document Date" := LRecSalesHeaderArchive."Document Date";
                     LRecHisto."Quote No." := LRecSalesLineArchive."Document No.";
@@ -219,9 +219,9 @@ report 50020 CopyLinesHisto
                     LRecHisto.Archive := true;
                     LRecHisto.INSERT(false);
                 end;
-            until LRecSalesLineArchive.NEXT() = 0;
+            until LRecSalesLineArchive.Next() = 0;
         //COMMANDE VENTE ARCHVE
-        LRecSalesLineArchive.RESET();
+        LRecSalesLineArchive.Reset();
         LRecSalesLineArchive.SETCURRENTKEY("Document Type", "Document No.", "Version No.", "Doc. No. Occurrence", "Line No.");
         LRecSalesLineArchive.SETASCENDING("Version No.", false);
         LRecSalesLineArchive.SETFILTER(Type, 'Item');
@@ -230,25 +230,25 @@ report 50020 CopyLinesHisto
         if LRecSalesLineArchive.FindSet() then
             repeat
                 if LRecSalesHeaderArchive.GET(LRecSalesLineArchive."Document Type", LRecSalesLineArchive."Document No.", LRecSalesLineArchive."Doc. No. Occurrence", LRecSalesLineArchive."Version No.") then;
-                CLEAR(LRecHisto);
-                LRecHisto.RESET();
-                LRecHisto.SETRANGE("Reference", LRecSalesLineArchive."No.");
-                LRecHisto.SETRANGE("Customer No.", LRecSalesLineArchive."Sell-to Customer No.");
-                //LRecHisto.SETRANGE("Quote No.", LRecSalesHeaderArchive."Sales Quote No.");
-                //LRecHisto.SETRANGE("Sales Line No.", LRecSalesLineArchive."Line No.");
-                LRecHisto.SETRANGE(Quantity, LRecSalesLineArchive.Quantity);
+                Clear(LRecHisto);
+                LRecHisto.Reset();
+                LRecHisto.SetRange("Reference", LRecSalesLineArchive."No.");
+                LRecHisto.SetRange("Customer No.", LRecSalesLineArchive."Sell-to Customer No.");
+                //LRecHisto.SetRange("Quote No.", LRecSalesHeaderArchive."Sales Quote No.");
+                //LRecHisto.SetRange("Sales Line No.", LRecSalesLineArchive."Line No.");
+                LRecHisto.SetRange(Quantity, LRecSalesLineArchive.Quantity);
                 //LRecHisto.SETFILTER(Archive, 'True');
                 if LRecHisto.FINDFIRST() then
                     if LRecHisto."Quote No." = LRecSalesHeaderArchive."Sales Quote No." then
                         if LRecHisto.Archive = true then begin
-                            LRecHisto.RESET();
+                            LRecHisto.Reset();
                             LRecHisto."Sales Order No." := LRecSalesLineArchive."Document No.";
-                            if LRecHisto.MODIFY() then;
+                            if LRecHisto.Modify() then;
                         end;
 
                 if not LRecHisto.FINDFIRST() then begin
-                    LRecHisto.RESET();
-                    CLEAR(LRecHisto);
+                    LRecHisto.Reset();
+                    Clear(LRecHisto);
                     LRecHisto."Customer No." := LRecSalesLineArchive."Sell-to Customer No.";
                     LRecHisto."Sales Document Date" := LRecSalesHeaderArchive."Document Date";
                     LRecHisto."Quote No." := LRecSalesHeaderArchive."Sales Quote No.";
@@ -264,7 +264,7 @@ report 50020 CopyLinesHisto
                     LRecHisto.Archive := true;
                     if LRecHisto.INSERT(false) then;
                 end;
-            until LRecSalesLineArchive.NEXT() = 0;
+            until LRecSalesLineArchive.Next() = 0;
     end;
 }
 

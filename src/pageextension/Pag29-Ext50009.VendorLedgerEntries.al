@@ -27,9 +27,9 @@ pageextension 50009 VendorLedgerEntries extends "Vendor Ledger Entries" //29
     //>>>> MODIFIED CODE:
     //begin
     /*
-    GenJournalTemplate.RESET;
-    GenJournalTemplate.SETRANGE(Type,GenJournalTemplate.Type::Payments);
-    GenJournalTemplate.SETRANGE(Recurring,FALSE);
+    GenJournalTemplate.Reset;
+    GenJournalTemplate.SetRange(Type,GenJournalTemplate.Type::Payments);
+    GenJournalTemplate.SetRange(Recurring,FALSE);
     IF GenJournalTemplate.FINDFIRST THEN
       JournalTemplateName := GenJournalTemplate.Name;
 

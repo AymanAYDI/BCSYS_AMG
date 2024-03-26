@@ -14,7 +14,6 @@ tableextension 50019 SalesInvoiceHeader extends "Sales Invoice Header" //112
             DataClassification = ToBeClassified;
             Caption = 'Compl. cond. livraison';
         }
-        //TODO delete field Payment Reference ,Reversed
     }
 }
 

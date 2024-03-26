@@ -89,7 +89,7 @@ table 50010 Packaging
             repeat
                 LRecColissage.CALCFIELDS("Net unit weight");
                 LDecPoidsNet += (LRecColissage."Net unit weight" * LRecColissage.Quantity);
-            until LRecColissage.NEXT() = 0
+            until LRecColissage.Next() = 0
         else
             LDecPoidsNet := 0;
         Return := LDecPoidsNet;

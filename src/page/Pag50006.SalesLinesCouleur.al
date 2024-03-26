@@ -155,40 +155,40 @@ page 50006 "Sales Lines Couleur"
         GDecQtyReceived := 0;
         GDecStock := 0;
         if Rec.Type = Rec.Type::Item then begin
-            GRecItem.RESET();
+            GRecItem.Reset();
             if GRecItem.GET(Rec."No.") then begin
                 GRecItem.CALCFIELDS(Inventory);
                 GDecStock := GRecItem.Inventory;
             end;
-            LRecPurchaseLine.RESET();
+            LRecPurchaseLine.Reset();
             if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
-                LRecPurchaseLine.SETRANGE("Document No.", Rec."Special Order Purchase No.");
-                LRecPurchaseLine.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
+                LRecPurchaseLine.SetRange("Document No.", Rec."Special Order Purchase No.");
+                LRecPurchaseLine.SetRange("Line No.", Rec."Special Order Purch. Line No.");
                 if LRecPurchaseLine.FINDFIRST() then
                     GDecQtyReceived := LRecPurchaseLine."Quantity Received"
                 else begin
                     // If no result, search in Purch. Invoice Lines
                     LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
-                    if LRecPurchInvHeader.FindSet() then
+                    if LRecPurchInvHeader.FINDFIRST() then
                         repeat
-                            LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
-                            LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
-                            LRecPurchInvLine.SETRANGE("No.", Rec."No.");
+                            LRecPurchInvLine.SetRange("Document No.", LRecPurchInvHeader."No.");
+                            LRecPurchInvLine.SetRange(Type, Rec.Type::Item);
+                            LRecPurchInvLine.SetRange("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
                             if LRecPurchInvLine.FindSet() then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
-                                until LRecPurchInvLine.NEXT() = 0;
-                        until LRecPurchInvHeader.NEXT() = 0
+                                until LRecPurchInvLine.Next() = 0;
+                        until LRecPurchInvHeader.Next() = 0
                     else begin
-                        LRecPurchHeaderArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                        LRecPurchHeaderArchive.SETRANGE("No.", Rec."Special Order Purchase No.");
+                        LRecPurchHeaderArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                        LRecPurchHeaderArchive.SetRange("No.", Rec."Special Order Purchase No.");
                         if LRecPurchHeaderArchive.FINDLAST() then begin
-                            LRecPurchLineArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                            LRecPurchLineArchive.SETRANGE("Document No.", LRecPurchHeaderArchive."No.");
-                            LRecPurchLineArchive.SETRANGE("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
-                            LRecPurchLineArchive.SETRANGE("Version No.", LRecPurchHeaderArchive."Version No.");
-                            LRecPurchLineArchive.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
+                            LRecPurchLineArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                            LRecPurchLineArchive.SetRange("Document No.", LRecPurchHeaderArchive."No.");
+                            LRecPurchLineArchive.SetRange("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
+                            LRecPurchLineArchive.SetRange("Version No.", LRecPurchHeaderArchive."Version No.");
+                            LRecPurchLineArchive.SetRange("Line No.", Rec."Special Order Purch. Line No.");
                             if LRecPurchLineArchive.FINDFIRST() then
                                 GDecQtyReceived += LRecPurchLineArchive."Quantity Received";
                         end;
@@ -212,7 +212,7 @@ page 50006 "Sales Lines Couleur"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        CLEAR(ShortcutDimCode);
+        Clear(ShortcutDimCode);
     end;
 
     var

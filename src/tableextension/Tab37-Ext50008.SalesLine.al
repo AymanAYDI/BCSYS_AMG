@@ -119,10 +119,10 @@ tableextension 50008 SalesLine extends "Sales Line" //37
                 LDecUnitCost := LRecItem."Unit Cost" * "Quantity (Base)";
             if "Line Discount %" <> 0 then begin
                 "Unit Price" := ((LDecUnitCost / Quantity) / (1 - (Marque / 100))) * (1 + ("Line Discount %" / 100));
-                VALIDATE("Unit Price");
+                Validate("Unit Price");
             end else begin
                 "Unit Price" := (LDecUnitCost / Quantity) / (1 - (Marque / 100));
-                VALIDATE("Unit Price");
+                Validate("Unit Price");
             end;
 
             Marge := Amount - (Quantity * "Unit Cost");
@@ -141,9 +141,9 @@ tableextension 50008 SalesLine extends "Sales Line" //37
                 LDecUnitCost := LRecItem."Unit Cost" * "Quantity (Base)";
             if "Line Discount %" <> 0 then begin
                 "Unit Price" := (LDecUnitCost / Quantity) / (1 - (Marque / 100));
-                VALIDATE("Unit Price");
+                Validate("Unit Price");
             end else
-                VALIDATE("Unit Price");
+                Validate("Unit Price");
             Marge := Amount - (Quantity * "Unit Cost");
         end;
     end;
@@ -179,15 +179,15 @@ tableextension 50008 SalesLine extends "Sales Line" //37
             LRecSalesLinetoInsert."Document No." := DELRecSalesHeader."No.";
             LRecSalesLinetoInsert."Document Type" := DELRecSalesHeader."Document Type";
 
-            LRecSalesLinetoInsert.VALIDATE(Type, LRecSalesLinetoInsert.Type::Item);
-            LRecSalesLinetoInsert.VALIDATE("No.", LRecItem."No.");
-            LRecSalesLinetoInsert.VALIDATE(Description, LRecItem.Description);
-            LRecSalesLinetoInsert.VALIDATE(Quantity, DELDecQty);
-            LRecSalesLinetoInsert.VALIDATE("Unit Price", LRecItem."Unit Price");
+            LRecSalesLinetoInsert.Validate(Type, LRecSalesLinetoInsert.Type::Item);
+            LRecSalesLinetoInsert.Validate("No.", LRecItem."No.");
+            LRecSalesLinetoInsert.Validate(Description, LRecItem.Description);
+            LRecSalesLinetoInsert.Validate(Quantity, DELDecQty);
+            LRecSalesLinetoInsert.Validate("Unit Price", LRecItem."Unit Price");
             LRecSalesLinetoInsert.Marge := FCalculeMarge(LRecItem."No.", DELDecQty, LRecItem."Unit Price");
             LRecSalesLinetoInsert.Marque := FCalculeMarque(LRecSalesLinetoInsert.Marge, LRecItem."Unit Price");
-            // LRecSalesLinetoInsert.VALIDATE("VAT Bus. Posting Group",LRecItem.VAT);
-            LRecSalesLinetoInsert.VALIDATE("VAT Prod. Posting Group", LRecItem."VAT Prod. Posting Group");
+            // LRecSalesLinetoInsert.Validate("VAT Bus. Posting Group",LRecItem.VAT);
+            LRecSalesLinetoInsert.Validate("VAT Prod. Posting Group", LRecItem."VAT Prod. Posting Group");
             LRecSalesLinetoInsert."Location Code" := 'AMGALLOIS';
             LRecSalesLinetoInsert.INSERT();
             COMMIT();

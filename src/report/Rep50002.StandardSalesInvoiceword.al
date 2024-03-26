@@ -541,7 +541,7 @@ report 50002 "Standard Sales - Invoice word"
 
                     trigger OnPreDataItem()
                     begin
-                        SETRANGE("Line No.", Line."Line No.");
+                        SetRange("Line No.", Line."Line No.");
                     end;
                 }
                 dataitem(AssemblyLine; "Posted Assembly Line")
@@ -628,7 +628,7 @@ report 50002 "Standard Sales - Invoice word"
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
                     if FirstLineHasBeenOutput then
-                        CLEAR(CompanyInfo.Picture);
+                        Clear(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
 
                     if JobTaskNo <> '' then begin
@@ -649,14 +649,15 @@ report 50002 "Standard Sales - Invoice word"
                 begin
                     VATAmountLine.DELETEALL();
                     VATClauseLine.DELETEALL();
-                    ShipmentLine.RESET();
+                    ShipmentLine.Reset();
                     ShipmentLine.DELETEALL();
                     MoreLines := FIND('+');
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                        MoreLines := NEXT(-1) <> 0;
+                        MoreLines := Next(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
+                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
@@ -866,7 +867,7 @@ report 50002 "Standard Sales - Invoice word"
                         if not TempLineFeeNoteOnReportHist.FINDSET() then
                             CurrReport.BREAK()
                     end else
-                        if TempLineFeeNoteOnReportHist.NEXT() = 0 then
+                        if TempLineFeeNoteOnReportHist.Next() = 0 then
                             CurrReport.BREAK();
                 end;
             }
@@ -1023,7 +1024,7 @@ report 50002 "Standard Sales - Invoice word"
                 FormatDocumentFields(Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
-                    CLEAR(Cust);
+                    Clear(Cust);
 
                 if "Currency Code" <> '' then begin
                     CurrencyExchangeRate.FindCurrency("Posting Date", "Currency Code", 1);
@@ -1267,8 +1268,8 @@ report 50002 "Standard Sales - Invoice word"
 
         ShipmentLine.GetLinesForSalesInvoiceLine(Line, Header);
 
-        ShipmentLine.RESET();
-        ShipmentLine.SETRANGE("Line No.", Line."Line No.");
+        ShipmentLine.Reset();
+        ShipmentLine.SetRange("Line No.", Line."Line No.");
         if ShipmentLine.FIND('-') then begin
             SalesShipmentBuffer2 := ShipmentLine;
             if not BoolDisplayShipmentInformation then
@@ -1333,30 +1334,30 @@ report 50002 "Standard Sales - Invoice word"
         LineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist.";
     begin
         TempLineFeeNoteOnReportHist.DELETEALL();
-        CustLedgerEntry.SETRANGE("Document Type", CustLedgerEntry."Document Type"::Invoice);
-        CustLedgerEntry.SETRANGE("Document No.", SalesInvoiceHeaderNo);
+        CustLedgerEntry.SetRange("Document Type", CustLedgerEntry."Document Type"::Invoice);
+        CustLedgerEntry.SetRange("Document No.", SalesInvoiceHeaderNo);
         if not CustLedgerEntry.FINDFIRST() then
             exit;
 
         if not Customer.GET(CustLedgerEntry."Customer No.") then
             exit;
 
-        LineFeeNoteOnReportHist.SETRANGE("Cust. Ledger Entry No", CustLedgerEntry."Entry No.");
-        LineFeeNoteOnReportHist.SETRANGE("Language Code", Customer."Language Code");
+        LineFeeNoteOnReportHist.SetRange("Cust. Ledger Entry No", CustLedgerEntry."Entry No.");
+        LineFeeNoteOnReportHist.SetRange("Language Code", Customer."Language Code");
         if LineFeeNoteOnReportHist.FINDSET() then
             repeat
                 TempLineFeeNoteOnReportHist.INIT();
                 TempLineFeeNoteOnReportHist.COPY(LineFeeNoteOnReportHist);
                 TempLineFeeNoteOnReportHist.INSERT();
-            until LineFeeNoteOnReportHist.NEXT() = 0
+            until LineFeeNoteOnReportHist.Next() = 0
         else begin
-            LineFeeNoteOnReportHist.SETRANGE("Language Code", CDULanguage.GetUserLanguageCode());
+            LineFeeNoteOnReportHist.SetRange("Language Code", CDULanguage.GetUserLanguageCode());
             if LineFeeNoteOnReportHist.FINDSET() then
                 repeat
                     TempLineFeeNoteOnReportHist.INIT();
                     TempLineFeeNoteOnReportHist.COPY(LineFeeNoteOnReportHist);
                     TempLineFeeNoteOnReportHist.INSERT();
-                until LineFeeNoteOnReportHist.NEXT() = 0;
+                until LineFeeNoteOnReportHist.Next() = 0;
         end;
     end;
 
@@ -1398,7 +1399,7 @@ report 50002 "Standard Sales - Invoice word"
         KeyIndex: Integer;
     begin
         if Value <> '' then begin
-            CLEAR(NameValueBuffer);
+            Clear(NameValueBuffer);
             if NameValueBuffer.FINDLAST() then
                 KeyIndex := NameValueBuffer.ID + 1;
 
@@ -1432,8 +1433,8 @@ report 50002 "Standard Sales - Invoice word"
     var
         JobTask: Record "Job Task";
     begin
-        JobTask.SETRANGE("Job No.", Job_No);
-        JobTask.SETRANGE("Job Task No.", Job_TaskNo);
+        JobTask.SETRANGE("Job No.", JobNo);
+        JobTask.SETRANGE("Job Task No.", JobTaskNo);
         if JobTask.FINDFIRST() then
             exit(JobTask.Description);
 

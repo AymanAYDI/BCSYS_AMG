@@ -92,7 +92,7 @@ page 50007 "Sales Order Subform Color"
                         UpdateTypeText();
                         DeltaUpdateTotals();
                         //DELPHI AUB 22.03.2021 AMG.CARBO
-                        CurrPage.UPDATE(true);
+                        CurrPage.Update(true);
                         //END DELPHI AUB
                     end;
                 }
@@ -280,7 +280,7 @@ page 50007 "Sales Order Subform Color"
                         //DEB DELPHI XAV
                         Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                         Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //MODIFY;
+                        //Modify;
                         //FIN DELPHI XAV
                     end;
                 }
@@ -337,7 +337,7 @@ page 50007 "Sales Order Subform Color"
                         //DELPHI AUB 25.07.2019
                         Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                         Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //Rec.MODIFY; //AUB 29.05.2020
+                        //Rec.Modify; //AUB 29.05.2020
                     end;
                 }
                 field("Unit of Measure"; Rec."Unit of Measure")
@@ -380,7 +380,7 @@ page 50007 "Sales Order Subform Color"
                         //DEB DELPHI XAV
                         Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                         Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //Rec.MODIFY; //AUB 29.05.2020
+                        //Rec.Modify; //AUB 29.05.2020
                     end;
                 }
                 field("Line Amount"; Rec."Line Amount")
@@ -438,7 +438,7 @@ page 50007 "Sales Order Subform Color"
                         //DEB DELPHI XAV
                         Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                         Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        Rec.MODIFY();
+                        Rec.Modify();
                     end;
                 }
                 field("Line Discount Amount"; Rec."Line Discount Amount")
@@ -453,7 +453,7 @@ page 50007 "Sales Order Subform Color"
                         //DEB DELPHI XAV
                         Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
                         Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        Rec.MODIFY();
+                        Rec.Modify();
                     end;
                 }
                 field("Prepayment %"; Rec."Prepayment %")
@@ -511,7 +511,7 @@ page 50007 "Sales Order Subform Color"
                     begin
                         if Rec."Qty. to Asm. to Order (Base)" <> 0 then begin
                             CurrPage.SAVERECORD();
-                            CurrPage.UPDATE(false);
+                            CurrPage.Update(false);
                         end;
                     end;
                 }
@@ -580,7 +580,7 @@ page 50007 "Sales Order Subform Color"
                     begin
                         CurrPage.SAVERECORD();
                         Rec.ShowItemChargeAssgnt();
-                        CurrPage.UPDATE(false);
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Requested Delivery Date"; Rec."Requested Delivery Date")
@@ -991,17 +991,17 @@ page 50007 "Sales Order Subform Color"
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
+                            GRecSalesLine.Validate("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
                             if GRecSalesLine."Qty. to Ship (Base)" <> GRecSalesLine."Outstanding Qty. (Base)" then
-                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                     //END DELPHI AUB 08/10/2019
                 end;
             }
@@ -1016,17 +1016,17 @@ page 50007 "Sales Order Subform Color"
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Ship", 0);
+                            GRecSalesLine.Validate("Qty. to Ship", 0);
                             if GRecSalesLine."Qty. to Ship (Base)" <> 0 then
-                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", 0);
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Ship (Base)", 0);
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                     //END DELPHI AUB 24/09/2019
                 end;
             }
@@ -1041,17 +1041,17 @@ page 50007 "Sales Order Subform Color"
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.RESET();
-                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecSalesLine.Reset();
+                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
                     if GRecSalesLine.FindSet() then
                         repeat
-                            GRecSalesLine.VALIDATE("Qty. to Invoice", 0);
+                            GRecSalesLine.Validate("Qty. to Invoice", 0);
                             if GRecSalesLine."Qty. to Invoice (Base)" <> 0 then
-                                GRecSalesLine.VALIDATE("Qty. to Invoice (Base)", 0);
-                            GRecSalesLine.MODIFY();
-                        until GRecSalesLine.NEXT() = 0;
-                    CurrPage.UPDATE(true);
+                                GRecSalesLine.Validate("Qty. to Invoice (Base)", 0);
+                            GRecSalesLine.Modify();
+                        until GRecSalesLine.Next() = 0;
+                    CurrPage.Update(true);
                     //END DELPHI AUB 24/09/2019
                 end;
             }
@@ -1265,7 +1265,7 @@ page 50007 "Sales Order Subform Color"
                         begin
                             CurrPage.SAVERECORD();
                             Rec.ShowItemSub();
-                            CurrPage.UPDATE(true);
+                            CurrPage.Update(true);
                             Rec.AutoReserve();
                         end;
                     }
@@ -1336,7 +1336,7 @@ page 50007 "Sales Order Subform Color"
                         begin
                             RecRef.GETTABLE(Rec);
                             DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                            DocumentAttachmentDetails.RUNMODAL();
+                            DocumentAttachmentDetails.RunModal();
                         end;
                     }
                     group("Assemble to Order")
@@ -1462,7 +1462,7 @@ page 50007 "Sales Order Subform Color"
                         BlanketSalesOrder: Page "Blanket Sales Order";
                     begin
                         Rec.TESTFIELD("Blanket Order No.");
-                        SalesHeader.SETRANGE("No.", Rec."Blanket Order No.");
+                        SalesHeader.SetRange("No.", Rec."Blanket Order No.");
                         if not SalesHeader.ISEMPTY then begin
                             BlanketSalesOrder.SETTABLEVIEW(SalesHeader);
                             BlanketSalesOrder.EDITABLE := false;
@@ -1501,41 +1501,41 @@ page 50007 "Sales Order Subform Color"
         GDecStock := 0;
         GDecLastDirectCost := 0;
         if Rec.Type = Rec.Type::Item then begin
-            LRecItem.RESET();
+            LRecItem.Reset();
             if LRecItem.GET(Rec."No.") then begin
                 LRecItem.CALCFIELDS(Inventory);
                 GDecStock := LRecItem.Inventory;
                 GDecLastDirectCost := LRecItem."Last Direct Cost";
             end;
-            LRecPurchaseLine.RESET();
+            LRecPurchaseLine.Reset();
             if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
-                LRecPurchaseLine.SETRANGE("Document No.", Rec."Special Order Purchase No.");
-                LRecPurchaseLine.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
+                LRecPurchaseLine.SetRange("Document No.", Rec."Special Order Purchase No.");
+                LRecPurchaseLine.SetRange("Line No.", Rec."Special Order Purch. Line No.");
                 if LRecPurchaseLine.FINDFIRST() then
                     GDecQtyReceived := LRecPurchaseLine."Quantity Received"
                 else begin
                     // If no result, search in Purch. Invoice Lines
-                    LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
+                    LRecPurchInvHeader.SetRange("Order No.", Rec."Special Order Purchase No.");
                     if LRecPurchInvHeader.FINDSET() then
                         repeat
-                            LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
-                            LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
-                            LRecPurchInvLine.SETRANGE("No.", Rec."No.");
+                            LRecPurchInvLine.SetRange("Document No.", LRecPurchInvHeader."No.");
+                            LRecPurchInvLine.SetRange(Type, Rec.Type::Item);
+                            LRecPurchInvLine.SetRange("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
                             if LRecPurchInvLine.FINDSET() then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
-                                until LRecPurchInvLine.NEXT() = 0;
-                        until LRecPurchInvHeader.NEXT() = 0
+                                until LRecPurchInvLine.Next() = 0;
+                        until LRecPurchInvHeader.Next() = 0
                     else begin
-                        LRecPurchHeaderArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                        LRecPurchHeaderArchive.SETRANGE("No.", Rec."Special Order Purchase No.");
+                        LRecPurchHeaderArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                        LRecPurchHeaderArchive.SetRange("No.", Rec."Special Order Purchase No.");
                         if LRecPurchHeaderArchive.FINDLAST() then begin
-                            LRecPurchLineArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                            LRecPurchLineArchive.SETRANGE("Document No.", LRecPurchHeaderArchive."No.");
-                            LRecPurchLineArchive.SETRANGE("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
-                            LRecPurchLineArchive.SETRANGE("Version No.", LRecPurchHeaderArchive."Version No.");
-                            LRecPurchLineArchive.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
+                            LRecPurchLineArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                            LRecPurchLineArchive.SetRange("Document No.", LRecPurchHeaderArchive."No.");
+                            LRecPurchLineArchive.SetRange("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
+                            LRecPurchLineArchive.SetRange("Version No.", LRecPurchHeaderArchive."Version No.");
+                            LRecPurchLineArchive.SetRange("Line No.", Rec."Special Order Purch. Line No.");
                             if LRecPurchLineArchive.FINDFIRST() then
                                 GDecQtyReceived += LRecPurchLineArchive."Quantity Received";
                         end;
@@ -1599,7 +1599,7 @@ page 50007 "Sales Order Subform Color"
         if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
             if xRec."Document No." = '' then
                 Rec.Type := Rec.Type::Item;
-        CLEAR(ShortcutDimCode);
+        Clear(ShortcutDimCode);
         UpdateTypeText();
     end;
 
@@ -1701,7 +1701,7 @@ page 50007 "Sales Order Subform Color"
         PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Purchase Order No.");
-        PurchHeader.SETRANGE("No.", Rec."Purchase Order No.");
+        PurchHeader.SetRange("No.", Rec."Purchase Order No.");
         PurchOrder.SETTABLEVIEW(PurchHeader);
         PurchOrder.EDITABLE := false;
         PurchOrder.RUN();
@@ -1714,13 +1714,13 @@ page 50007 "Sales Order Subform Color"
         PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Special Order Purchase No.");
-        PurchHeader.SETRANGE("No.", Rec."Special Order Purchase No.");
+        PurchHeader.SetRange("No.", Rec."Special Order Purchase No.");
         if not PurchHeader.ISEMPTY then begin
             PurchOrder.SETTABLEVIEW(PurchHeader);
             PurchOrder.EDITABLE := false;
             PurchOrder.RUN();
         end else begin
-            PurchRcptHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
+            PurchRcptHeader.SetRange("Order No.", Rec."Special Order Purchase No.");
             if PurchRcptHeader.COUNT = 1 then
                 PAGE.RUN(PAGE::"Posted Purchase Receipt", PurchRcptHeader)
             else
@@ -1750,7 +1750,7 @@ page 50007 "Sales Order Subform Color"
         TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetSalesLine(Rec);
-        TrackingForm.RUNMODAL();
+        TrackingForm.RunModal();
     end;
 
     procedure ItemChargeAssgnt()
@@ -1760,20 +1760,20 @@ page 50007 "Sales Order Subform Color"
 
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
-        CurrPage.UPDATE(SetSaveRecord);
+        CurrPage.Update(SetSaveRecord);
     end;
 
     procedure ShowPrices()
     begin
         SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        CLEAR(SalesPriceCalcMgt);
+        Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLinePrice(SalesHeader, Rec);
     end;
 
     procedure ShowLineDisc()
     begin
         SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        CLEAR(SalesPriceCalcMgt);
+        Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLineLineDisc(SalesHeader, Rec);
     end;
 
@@ -1782,12 +1782,12 @@ page 50007 "Sales Order Subform Color"
         TempOrderPromisingLine: Record "Order Promising Line" temporary;
         OrderPromisingLines: Page "Order Promising Lines";
     begin
-        TempOrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
-        TempOrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
-        TempOrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
+        OrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
+        OrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
+        OrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
 
-        OrderPromisingLines.SetSource(TempOrderPromisingLine."Source Type"::Sales);
-        OrderPromisingLines.SETTABLEVIEW(TempOrderPromisingLine);
+        OrderPromisingLines.SetSource(OrderPromisingLine."Source Type"::Sales);
+        OrderPromisingLines.SETTABLEVIEW(OrderPromisingLine);
         OrderPromisingLines.RUNMODAL();
     end;
 
@@ -1805,7 +1805,7 @@ page 50007 "Sales Order Subform Color"
             CurrPage.SAVERECORD();
             if (Rec."Outstanding Qty. (Base)" <> 0) and (Rec."No." <> xRec."No.") then begin
                 Rec.AutoReserve();
-                CurrPage.UPDATE(false);
+                CurrPage.Update(false);
             end;
         end;
     end;
@@ -1825,7 +1825,7 @@ page 50007 "Sales Order Subform Color"
         then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -1856,7 +1856,7 @@ page 50007 "Sales Order Subform Color"
         CurrPage.SAVERECORD();
         if Rec.Reserve = Rec.Reserve::Always then
             Rec.AutoReserve();
-        CurrPage.UPDATE(true);
+        CurrPage.Update(true);
     end;
 
     local procedure UnitofMeasureCodeOnAfterValida()
@@ -1865,7 +1865,7 @@ page 50007 "Sales Order Subform Color"
         if Rec.Reserve = Rec.Reserve::Always then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -1877,9 +1877,9 @@ page 50007 "Sales Order Subform Color"
         then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end else
-            CurrPage.UPDATE(true);
+            CurrPage.Update(true);
     end;
 
     local procedure SaveAndAutoAsmToOrder()
@@ -1887,7 +1887,7 @@ page 50007 "Sales Order Subform Color"
         if (Rec.Type = Rec.Type::Item) and rec.IsAsmToOrderRequired() then begin
             CurrPage.SAVERECORD();
             Rec.AutoAsmToOrder();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -1895,9 +1895,9 @@ page 50007 "Sales Order Subform Color"
     var
         DocLineTracking: Page "Document Line Tracking";
     begin
-        CLEAR(DocLineTracking);
-        DocLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocLineTracking.RUNMODAL();
+        CLEAR(DocumentLineTracking);
+        DocumentLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        DocumentLineTracking.RUNMODAL();
     end;
 
     local procedure SetLocationCodeMandatory()
@@ -1965,7 +1965,7 @@ page 50007 "Sales Order Subform Color"
         DimMgt.UseShortcutDims(
           DimVisible1, DimVisible2, DimVisible3, DimVisible4, DimVisible5, DimVisible6, DimVisible7, DimVisible8);
 
-        CLEAR(DimMgt);
+        Clear(DimMgt);
     end;
 
     [IntegrationEvent(false, false)]

@@ -95,7 +95,7 @@ report 50009 "DGX CERFA"
                             if not Continue then
                                 CurrReport.BREAK();
 
-                        CLEAR(DimText);
+                        Clear(DimText);
                         Continue := false;
                         repeat
                             OldDimText := DimText;
@@ -111,7 +111,7 @@ report 50009 "DGX CERFA"
                                 Continue := true;
                                 exit;
                             end;
-                        until DimSetEntry1.NEXT() = 0;
+                        until DimSetEntry1.Next() = 0;
                     end;
                 }
                 dataitem("DGX Lines"; "DGX Lines")
@@ -212,10 +212,10 @@ report 50009 "DGX CERFA"
                     begin
                         MoreLines := FINDLAST();
                         while MoreLines and (ItemNo = '') do
-                            MoreLines := NEXT(-1) <> 0;
+                            MoreLines := Next(-1) <> 0;
                         if not MoreLines then
                             CurrReport.BREAK();
-                        SETRANGE(LineNo, 0, "DGX Lines".LineNo);
+                        SetRange(LineNo, 0, "DGX Lines".LineNo);
 
 
                         if (GCodUN <> '') and ("DGX Lines".UN <> GCodUN) then
@@ -247,7 +247,7 @@ report 50009 "DGX CERFA"
             begin
                 NoOfLoops := "DGX Header".COUNT * (ABS(NoOfCopies) + 1); //1 + ABS(NoOfCopies);
                 CopyText := '';
-                SETRANGE(Number, 1, NoOfLoops);
+                SetRange(Number, 1, NoOfLoops);
 
                 OutputNo := 1;
             end;

@@ -122,8 +122,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Customer';
-                //TODO check this line 179
-                // Enabled = IsCustomerOrContactNotEmpty;
+                Enabled = (Rec."Sell-to Customer No." <> '') or (Rec."Sell-to Contact No." <> '');
                 Image = Customer;
                 RunObject = Page "Customer Card";
                 RunPageLink = "No." = field("Sell-to Customer No.");
@@ -147,7 +146,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         GCodUserID := USERID();
         if GRecUserSetup.GET(GCodUserID) and (Rec."Salesperson Code" = '') then
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
-        if Rec."No." <> '' then Rec.MODIFY();
+        if Rec."No." <> '' then Rec.Modify();
     end;
     //TODO i can't find solution for line 38
     //TODO check line 1318

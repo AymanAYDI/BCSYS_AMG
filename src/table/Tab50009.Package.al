@@ -121,7 +121,7 @@ table 50009 Package
                 if not CONFIRM('Warning: packing lines are attached to this package, are you sure you want to delete them?', false) then
                     Error('Deletion canceled by user');
                 // supresion de la lsite colisage
-                CLEAR(GRecColisage);
+                Clear(GRecColisage);
                 GRecColisage.SetRange("Package No.", Rec."Package No.");
                 GRecColisage.DELETEALL();
                 GRecSalesShipingLine.SetRange("Document No.", Rec."Shipping No.");
@@ -173,10 +173,10 @@ table 50009 Package
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal + 1)
                 else
                     LRecColis."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNoFinal);
-                LRecColis.MODIFY();
+                LRecColis.Modify();
                 COMMIT();
                 LIntI += 1;
-            until LRecColis.NEXT() <= 0;
+            until LRecColis.Next() <= 0;
 
     end;
 }

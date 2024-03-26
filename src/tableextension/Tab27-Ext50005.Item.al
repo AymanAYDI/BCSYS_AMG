@@ -25,7 +25,7 @@ tableextension 50005 Item extends Item //27
         {
             trigger OnBeforeValidate()
             begin
-                VALIDATE("Price/Profit Calculation");
+                Validate("Price/Profit Calculation");
                 Rec."Last Date Modified Price" := TODAY;
             end;
         }

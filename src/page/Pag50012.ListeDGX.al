@@ -65,9 +65,9 @@ page 50012 "Liste DGX"
                 begin
                     rec.SETFILTER("DGX No.", Rec."DGX No.");
                     if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
-                        REPORT.RUNMODAL(Report::"DGX CERFA RDLC", true, false, xRec)
+                        REPORT.RunModal(Report::"DGX CERFA RDLC", true, false, xRec)
                     else
-                        REPORT.RUNMODAL(Report::"DGX IATA RDLC", true, false, xRec);
+                        REPORT.RunModal(Report::"DGX IATA RDLC", true, false, xRec);
                     rec.SETFILTER("DGX No.", '');
                 end;
             }
@@ -79,7 +79,7 @@ page 50012 "Liste DGX"
         GTxtBonLivraison := Rec.GETFILTER("Delivery slip no.");
         if rec.GETFILTER("Delivery slip no.") <> '' then begin
             rec."Delivery slip no." := GTxtBonLivraison;
-            rec.VALIDATE("Delivery slip no.");
+            rec.Validate("Delivery slip no.");
         end;
     end;
 

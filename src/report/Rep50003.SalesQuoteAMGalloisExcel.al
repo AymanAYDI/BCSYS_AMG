@@ -4,6 +4,7 @@ report 50003 "Sales - Quote AMGallois Excel"
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -249,7 +250,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
@@ -264,7 +265,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
@@ -432,7 +433,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                     if not Continue then
                                         CurrReport.BREAK();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
@@ -448,7 +449,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
@@ -480,7 +481,7 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
                             if (DataItem2844.Type = DataItem2844.Type::Item) and (DataItem2844."Item Reference No." <> '') then begin
-                                LRecItem.RESET();
+                                LRecItem.Reset();
                                 LRecItem.SETFILTER("No.", DataItem2844."No.");
                                 if LRecItem.FINDFIRST() then
                                     GTxtDescriptionLine := DataItem2844.Description + ' ' + LRecItem."Description 2";
@@ -578,6 +579,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                             if VATAmount = 0 then
                                 CurrReport.BREAK();
                             SETRANGE(Number, 1, TempVATAmountLine.COUNT);
+
                         end;
                     }
                     dataitem(VATCounterLCY; Integer)
@@ -719,7 +721,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                 begin
                     NoOfLoops := ABS(IntNoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -731,7 +733,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                 FormatAddressFields("Sales Header");
                 FormatDocumentFields("Sales Header");
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if Print then begin
                     if CurrReport.USEREQUESTPAGE and BoolArchiveDocument or
@@ -791,15 +793,20 @@ report 50003 "Sales - Quote AMGallois Excel"
                     field(NoOfCopies; IntNoOfCopies)
                     {
                         Caption = 'No. of Copies';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the No. of Copies field.';
                     }
                     field(ShowInternalInfo; BoolShowInternalInfo)
                     {
                         Caption = 'Show Internal Information';
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Show Internal Information field.';
                     }
                     field(ArchiveDocument; BoolArchiveDocument)
                     {
                         Caption = 'Archive Document';
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Archive Document field.';
                         trigger OnValidate()
                         begin
                             if not BoolArchiveDocument then
@@ -810,7 +817,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                     {
                         Caption = 'Log Interaction';
                         Enabled = LogInteractionEnable;
-
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the Log Interaction field.';
                         trigger OnValidate()
                         begin
                             if BoolLogInteraction then
@@ -887,9 +895,7 @@ report 50003 "Sales - Quote AMGallois Excel"
         Print: Boolean;
         BoolShowInternalInfo: Boolean;
         ShowShippingAddr: Boolean;
-        TotalAmountInclVAT: Decimal;
-        VALVATAmountLCY: Decimal;
-        VALVATBaseLCY: Decimal;
+
         VATAmount: Decimal;
         VATBaseAmount: Decimal;
         VATDiscountAmount: Decimal;
@@ -897,12 +903,7 @@ report 50003 "Sales - Quote AMGallois Excel"
         NoOfLoops: Integer;
         NoOfRecords: Integer;
         OutputNo: Integer;
-        AmountCaptionLbl: Label 'Amount';
-        CompanyInfoBankAccountNoCaptionLbl: Label 'Account No.';
-        CompanyInfoBankNameCaptionLbl: Label 'Bank';
-        CompanyInfoEmailCaptionLbl: Label 'Email';
-        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.';
-        CompanyInfoHomePageCaptionLbl: Label 'Home Page';
+
         CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.';
         CompanyInfoVATRegNoCaptionLbl: Label 'VAT Registration No.';
         DocumentDateCaptionLbl: Label 'Document Date';
