@@ -1782,12 +1782,12 @@ page 50007 "Sales Order Subform Color"
         TempOrderPromisingLine: Record "Order Promising Line" temporary;
         OrderPromisingLines: Page "Order Promising Lines";
     begin
-        OrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
-        OrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
-        OrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
+        TempOrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
+        TempOrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
+        TempOrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
 
-        OrderPromisingLines.SetSource(OrderPromisingLine."Source Type"::Sales);
-        OrderPromisingLines.SETTABLEVIEW(OrderPromisingLine);
+        OrderPromisingLines.SetSource(TempOrderPromisingLine."Source Type"::Sales);
+        OrderPromisingLines.SETTABLEVIEW(TempOrderPromisingLine);
         OrderPromisingLines.RUNMODAL();
     end;
 
@@ -1895,9 +1895,9 @@ page 50007 "Sales Order Subform Color"
     var
         DocLineTracking: Page "Document Line Tracking";
     begin
-        CLEAR(DocumentLineTracking);
-        DocumentLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocumentLineTracking.RUNMODAL();
+        CLEAR(DocLineTracking);
+        DocLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        DocLineTracking.RUNMODAL();
     end;
 
     local procedure SetLocationCodeMandatory()

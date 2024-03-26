@@ -20,8 +20,8 @@ pageextension 50005 CustomerList extends "Customer List" //22
                     History: Record "Sales Archive";
                 begin
                     //DELPHI AUB 30.06.2020
-                    Historique.SETRANGE("Customer No.", Rec."No.");
-                    PAGE.RUNMODAL(PAGE::"Historique ventes article", Historique);
+                    History.SETRANGE("Customer No.", Rec."No.");
+                    PAGE.RUNMODAL(PAGE::"Historique ventes article", History);
                     //END DELPHI AUB
                 end;
             }

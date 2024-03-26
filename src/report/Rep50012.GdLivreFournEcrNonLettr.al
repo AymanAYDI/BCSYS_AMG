@@ -346,7 +346,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                         CreditPeriodAmount := CreditPeriodAmount + "Credit Amount (LCY)";
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if ShowOnlyUnappliedWritings then begin
+                        if BoolShowOnlyUnappliedWritings then begin
                             GRecVendLedgEntry.RESET();
                             if GRecVendLedgEntry.GET("Vendor Ledger Entry No.") then begin
                                 GRecVendLedgEntry.SetRange("Date Filter", StartDate, EndDate);
@@ -393,7 +393,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
 
                     CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
                 end;
@@ -450,7 +450,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
                 VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if ExcludeBalanceOnly then begin
+                if BoolExcludeBalanceOnly then begin
                     if VendLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;

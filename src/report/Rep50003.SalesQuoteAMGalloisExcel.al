@@ -895,7 +895,9 @@ report 50003 "Sales - Quote AMGallois Excel"
         Print: Boolean;
         BoolShowInternalInfo: Boolean;
         ShowShippingAddr: Boolean;
-
+        TotalAmountInclVAT: Decimal;
+        VALVATAmountLCY: Decimal;
+        VALVATBaseLCY: Decimal;
         VATAmount: Decimal;
         VATBaseAmount: Decimal;
         VATDiscountAmount: Decimal;
@@ -903,7 +905,12 @@ report 50003 "Sales - Quote AMGallois Excel"
         NoOfLoops: Integer;
         NoOfRecords: Integer;
         OutputNo: Integer;
-
+        AmountCaptionLbl: Label 'Amount';
+        CompanyInfoBankAccountNoCaptionLbl: Label 'Account No.';
+        CompanyInfoBankNameCaptionLbl: Label 'Bank';
+        CompanyInfoEmailCaptionLbl: Label 'Email';
+        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.';
+        CompanyInfoHomePageCaptionLbl: Label 'Home Page';
         CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.';
         CompanyInfoVATRegNoCaptionLbl: Label 'VAT Registration No.';
         DocumentDateCaptionLbl: Label 'Document Date';

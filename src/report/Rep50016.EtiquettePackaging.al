@@ -779,7 +779,7 @@ report 50016 "Etiquette Packaging"
                             if Number = 1 then
                                 TempTrackingSpecBuffer.FINDSET()
                             else
-                                TrackingSpecBuffer.NEXT();
+                                TempTrackingSpecBuffer.NEXT();
 
                             if not ShowCorrectionLines and TempTrackingSpecBuffer.Correction then
                                 CurrReport.SKIP();
@@ -808,7 +808,7 @@ report 50016 "Etiquette Packaging"
                                 CurrReport.BREAK();
                             CurrReport.NEWPAGE();
                             SETRANGE(Number, 1, TrackingSpecCount);
-                            TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
+                            TempTrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");
                         end;
                     }

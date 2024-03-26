@@ -1057,7 +1057,7 @@ report 50001 "Standard Sales - Credit Memo W"
         ShipmentLine.SetRange("Line No.", Line."Line No.");
         if ShipmentLine.FINDFIRST() then begin
             SalesShipmentBuffer2 := ShipmentLine;
-            if not DisplayShipmentInformation then
+            if not BoolDisplayShipmentInformation then
                 if ShipmentLine.NEXT() = 0 then begin
                     ShipmentLine.GET(
                       SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");

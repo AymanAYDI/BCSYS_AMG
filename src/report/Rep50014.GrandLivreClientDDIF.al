@@ -366,7 +366,7 @@ report 50014 "Grand Livre Client DDIF"
 
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if ShowOnlyUnappliedWritings then begin
+                        if BoolShowOnlyUnappliedWritings then begin
                             GRecCustLedgEntry.RESET();
                             if GRecCustLedgEntry.GET("Cust. Ledger Entry No.") then begin
                                 GRecCustLedgEntry.SetRange("Date Filter", StartDate, EndDate);
@@ -417,7 +417,7 @@ report 50014 "Grand Livre Client DDIF"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
 
                     CurrReport.CREATETOTALS("Detailed Cust. Ledg. Entry"."Debit Amount (LCY)", "Detailed Cust. Ledg. Entry"."Credit Amount (LCY)");
                 end;
@@ -479,7 +479,7 @@ report 50014 "Grand Livre Client DDIF"
 
                 CustLedgEntry2.COPYFILTERS(CustLedgEntry);
                 CustLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if ExcludeBalanceOnly then begin
+                if BoolExcludeBalanceOnly then begin
                     if CustLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
