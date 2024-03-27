@@ -7,7 +7,7 @@ using Microsoft.Finance.Dimension;
 using Microsoft.Utilities;
 report 50009 "DGX CERFA"
 {
-    RDLCLayout = './report/RDL/DGXCERFA.rdlc';
+    RDLCLayout = './src/report/RDL/DGXCERFA.rdlc';
     DefaultLayout = RDLC;
     ApplicationArea = All;
 

@@ -27,7 +27,7 @@ using Microsoft.CRM.Interaction;
 report 50016 "Etiquette Packaging"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/EtiquetteColisage.rdlc';
+    RDLCLayout = './src/report/RDL/EtiquetteColisage.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
     ApplicationArea = All;

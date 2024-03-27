@@ -6,7 +6,7 @@ using Microsoft.Utilities;
 using System.Globalization;
 report 50008 "DGX IATA"
 {
-    RDLCLayout = './report/RDL/DGXIATA.rdlc';
+    RDLCLayout = './src/report/RDL/DGXIATA.rdlc';
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;

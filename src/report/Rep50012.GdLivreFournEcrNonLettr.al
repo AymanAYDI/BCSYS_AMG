@@ -7,7 +7,7 @@ using Microsoft.Foundation.Period;
 report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/GdLivreFournEcrNonLettr.rdlc';
+    RDLCLayout = './src/report/RDL/GdLivreFournEcrNonLettr.rdlc';
     Caption = 'Vendor Detail Trial Balance';
     ApplicationArea = All;
 
@@ -394,8 +394,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
                 end;
             }
 

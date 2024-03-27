@@ -21,7 +21,7 @@ using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.Company;
 report 50004 "Standard Purchase - Order W"
 {
-    RDLCLayout = './report/RDL/StandardPurchaseOrderW.rdlc';
+    RDLCLayout = './src/report/RDL/StandardPurchaseOrderW.rdlc';
     WordLayout = './StandardPurchaseOrderW.docx';
     Caption = 'Purchase - Order';
     DefaultLayout = Word;
@@ -651,9 +651,6 @@ report 50004 "Standard Purchase - Order W"
                     if VATAmount = 0 then
                         CurrReport.BREAK();
                     SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                    CurrReport.CREATETOTALS(
-                      TempVATAmountLine."Line Amount", TempVATAmountLine."Inv. Disc. Base Amount",
-                      TempVATAmountLine."Invoice Discount Amount", TempVATAmountLine."VAT Base", TempVATAmountLine."VAT Amount");
                 end;
             }
             dataitem(VATCounterLCY; Integer)

@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="NoDGX_DGXHeader">
+          <DataField>NoDGX_DGXHeader</DataField>
+        </Field>
+        <Field Name="TypeDGX_DGXHeader">
+          <DataField>TypeDGX_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinataire_DGXHeader">
+          <DataField>Destinataire_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinatairenom_DGXHeader">
+          <DataField>Destinatairenom_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinataireadresse1_DGXHeader">
+          <DataField>Destinataireadresse1_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinataireadresse2_DGXHeader">
+          <DataField>Destinataireadresse2_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinatairecodepostal_DGXHeader">
+          <DataField>Destinatairecodepostal_DGXHeader</DataField>
+        </Field>
+        <Field Name="Destinataireville_DGXHeader">
+          <DataField>Destinataireville_DGXHeader</DataField>
+        </Field>
+        <Field Name="DestinatairepaysEN_DGXHeader">
+          <DataField>DestinatairepaysEN_DGXHeader</DataField>
+        </Field>
+        <Field Name="Typedetransport_DGXHeader">
+          <DataField>Typedetransport_DGXHeader</DataField>
+        </Field>
+        <Field Name="Aéroportdedépart_DGXHeader">
+          <DataField>Aéroportdedépart_DGXHeader</DataField>
+        </Field>
+        <Field Name="Radioactif_DGXHeader">
+          <DataField>Radioactif_DGXHeader</DataField>
+        </Field>
+        <Field Name="Datedocument_DGXHeader">
+          <DataField>Datedocument_DGXHeader</DataField>
+        </Field>
+        <Field Name="NoBonLivraison_DGXHeader">
+          <DataField>NoBonLivraison_DGXHeader</DataField>
+        </Field>
+        <Field Name="OutputNo">
+          <DataField>OutputNo</DataField>
+        </Field>
+        <Field Name="DimText">
+          <DataField>DimText</DataField>
+        </Field>
+        <Field Name="HeaderDimensionsCaption">
+          <DataField>HeaderDimensionsCaption</DataField>
+        </Field>
+        <Field Name="LineNo_DGXLines">
+          <DataField>LineNo_DGXLines</DataField>
+        </Field>
+        <Field Name="DGXNo_DGXLines">
+          <DataField>DGXNo_DGXLines</DataField>
+        </Field>
+        <Field Name="ItemNo_DGXLines">
+          <DataField>ItemNo_DGXLines</DataField>
+        </Field>
+        <Field Name="UN_DGXLines">
+          <DataField>UN_DGXLines</DataField>
+        </Field>
+        <Field Name="Description_DGXLines">
+          <DataField>Description_DGXLines</DataField>
+        </Field>
+        <Field Name="Classe_DGXLines">
+          <DataField>Classe_DGXLines</DataField>
+        </Field>
+        <Field Name="SousClasse_DGXLines">
+          <DataField>SousClasse_DGXLines</DataField>
+        </Field>
+        <Field Name="GroupeEmballage_DGXLines">
+          <DataField>GroupeEmballage_DGXLines</DataField>
+        </Field>
+        <Field Name="Qty_DGXLines">
+          <DataField>Qty_DGXLines</DataField>
+        </Field>
+        <Field Name="Qty_DGXLinesFormat">
+          <DataField>Qty_DGXLinesFormat</DataField>
+        </Field>
+        <Field Name="TypeofPacking_DGXLines">
+          <DataField>TypeofPacking_DGXLines</DataField>
+        </Field>
+        <Field Name="Pointéclair_DGXLines">
+          <DataField>Pointéclair_DGXLines</DataField>
+        </Field>
+        <Field Name="Pointéclair_DGXLinesFormat">
+          <DataField>Pointéclair_DGXLinesFormat</DataField>
+        </Field>
+        <Field Name="Limitedqty_DGXLines">
+          <DataField>Limitedqty_DGXLines</DataField>
+        </Field>
+        <Field Name="Limitedqty_DGXLinesFormat">
+          <DataField>Limitedqty_DGXLinesFormat</DataField>
+        </Field>
+        <Field Name="Massebrutekg_DGXLines">
+          <DataField>Massebrutekg_DGXLines</DataField>
+        </Field>
+        <Field Name="Massebrutekg_DGXLinesFormat">
+          <DataField>Massebrutekg_DGXLinesFormat</DataField>
+        </Field>
+        <Field Name="Massenettekg_DGXLines">
+          <DataField>Massenettekg_DGXLines</DataField>
+        </Field>
+        <Field Name="Massenettekg_DGXLinesFormat">
+          <DataField>Massenettekg_DGXLinesFormat</DataField>
+        </Field>
+        <Field Name="LinNo">
+          <DataField>LinNo</DataField>
+        </Field>
+        <Field Name="Airport">
+          <DataField>Airport</DataField>
+        </Field>
+        <Field Name="PackingInstr">
+          <DataField>PackingInstr</DataField>
+        </Field>
+        <Field Name="Unitédemesure_DGXLines">
+          <DataField>Unitédemesure_DGXLines</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

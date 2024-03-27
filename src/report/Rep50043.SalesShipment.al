@@ -26,7 +26,7 @@ using Microsoft.CRM.Interaction;
 report 50043 "Sales-Shipment" //208 duplicate
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/SalesShipment.rdlc';
+    RDLCLayout = './src/report/RDL/SalesShipment.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
 

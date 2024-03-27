@@ -111,7 +111,7 @@ page 50013 "Fiche DGX"
                         LRecShipLines.SETFILTER("Code ONU", '<>%1', '');
 
 
-                        IF LRecShipLines.FIND('-') THEN
+                        IF LRecShipLines.findset() THEN
                             REPEAT
                                 LRecDGXLines.Reset();
                                 LRecDGXLines.LineNo := LIntLineNo;

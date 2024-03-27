@@ -26,7 +26,7 @@ using Microsoft.Sales.Posting;
 
 report 50006 "Sales-Quote AMGallois ICE"
 {
-    RDLCLayout = './report/RDL/SalesQuoteAMGalloisICE.rdlc';
+    RDLCLayout = './src/report/RDL/SalesQuoteAMGalloisICE.rdlc';
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
@@ -619,9 +619,6 @@ report 50006 "Sales-Quote AMGallois ICE"
                             if VATAmount = 0 then
                                 CurrReport.BREAK();
                             SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(
-                              TempVATAmountLine."Line Amount", TempVATAmountLine."Inv. Disc. Base Amount",
-                              TempVATAmountLine."Invoice Discount Amount", TempVATAmountLine."VAT Base", TempVATAmountLine."VAT Amount");
                         end;
                     }
                     dataitem(VATCounterLCY; integer)
@@ -668,7 +665,6 @@ report 50006 "Sales-Quote AMGallois ICE"
                                 CurrReport.BREAK();
 
                             SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text008 + Text009

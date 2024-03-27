@@ -7,7 +7,7 @@ using Microsoft.Foundation.Period;
 report 50010 "CpyVendor Detail Trial Balance"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/CpyVendorDetailTrialBalance.rdlc';
+    RDLCLayout = './src/report/RDL/CpyVendorDetailTrialBalance.rdlc';
     Caption = 'Vendor Detail Trial Balance';
     ApplicationArea = All;
 
@@ -327,8 +327,6 @@ report 50010 "CpyVendor Detail Trial Balance"
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
                 end;
             }
 

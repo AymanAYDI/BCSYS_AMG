@@ -1,6 +1,6 @@
 report 50003 "Sales - Quote AMGallois Excel"
 {
-    RDLCLayout = './report/RDL/SalesQuoteAMGalloisExcel.rdlc';
+    RDLCLayout = './src/report/RDL/SalesQuoteAMGalloisExcel.rdlc';
     Caption = 'Sales - Quote';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;

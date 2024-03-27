@@ -34,8 +34,7 @@ pageextension 50008 "VendorList" extends "Vendor List" //27
                     LRecVendor: Record Vendor;
                 begin
                     LRecVendor.SETRANGE("No.", Rec."No.");
-                    //TODO report spe
-                    //  REPORT.RUNMODAL(REPORT::"Vendor Detail Trial Balance", true, true, LRecVendor);
+                    REPORT.RUNMODAL(REPORT::"Vendor Detail Trial Balance FR", true, true, LRecVendor);
                 end;
             }
         }

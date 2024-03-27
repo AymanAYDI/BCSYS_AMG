@@ -26,7 +26,7 @@ using Microsoft.Foundation.Address;
 using Microsoft.CRM.Segment;
 report 50000 "Standard Sales - Order Conf. W"
 {
-    RDLCLayout = './report/RDL/StandardSalesOrderConfW.rdlc';
+    RDLCLayout = './src/report/RDL/StandardSalesOrderConfW.rdlc';
     WordLayout = './StandardSalesOrderConfW.docx';
     Caption = 'Sales - Confirmation';
     DefaultLayout = Word;
@@ -520,7 +520,6 @@ report 50000 "Standard Sales - Order Conf. W"
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;

@@ -26,7 +26,7 @@ using Microsoft.CRM.Interaction;
 report 50007 "Edition Bon colisage"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/EditionBoncolisage.rdlc';
+    RDLCLayout = './src/report/RDL/EditionBoncolisage.rdlc';
     Caption = 'Sales - Shipment';
     PreviewMode = PrintLayout;
     ApplicationArea = All;

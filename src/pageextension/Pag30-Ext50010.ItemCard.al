@@ -174,11 +174,11 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 trigger OnAction()
                 var
                     LRecArticle: Record Item;
-                    LCUCodeBar: Codeunit 50000;
+                // LCUCodeBar: Codeunit 50000;
                 begin
                     if not Rec.CodeBar then
-                        LCUCodeBar.AddCodeBarAztec(Rec);
-                    LRecArticle.SetRange("No.", Rec."No.");
+                        //     LCUCodeBar.AddCodeBarAztec(Rec);//TODO 
+                        LRecArticle.SetRange("No.", Rec."No.");
                     REPORT.RUN(Report::"Etiquette article", true, true, LRecArticle);
                 end;
             }

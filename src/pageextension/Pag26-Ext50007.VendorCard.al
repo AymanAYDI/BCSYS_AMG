@@ -26,8 +26,7 @@ pageextension 50007 "VendorCard" extends "Vendor Card" //26
 
                 trigger OnAction()
                 begin
-                    //TODO report spe
-                    // RunReport(REPORT::"Vendor Detail Trial Balance");
+                    RunReport(REPORT::"Vendor Detail Trial Balance FR");
                 end;
             }
         }

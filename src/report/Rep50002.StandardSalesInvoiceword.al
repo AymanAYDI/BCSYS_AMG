@@ -32,7 +32,7 @@ using System.Environment;
 using Microsoft.CRM.Interaction;
 report 50002 "Standard Sales - Invoice word"
 {
-    RDLCLayout = './report/RDL/StandardSalesInvoiceword.rdlc';
+    RDLCLayout = './src/report/RDL/StandardSalesInvoiceword.rdlc';
     WordLayout = './StandardSalesInvoiceword.docx';
     Caption = 'Sales - Invoice';
     DefaultLayout = Word;
@@ -651,13 +651,12 @@ report 50002 "Standard Sales - Invoice word"
                     VATClauseLine.DELETEALL();
                     ShipmentLine.Reset();
                     ShipmentLine.DELETEALL();
-                    MoreLines := FIND('+');
+                    MoreLines := findlast();
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                         MoreLines := Next(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
@@ -1270,7 +1269,7 @@ report 50002 "Standard Sales - Invoice word"
 
         ShipmentLine.Reset();
         ShipmentLine.SetRange("Line No.", Line."Line No.");
-        if ShipmentLine.FIND('-') then begin
+        if ShipmentLine.findfirst() then begin
             SalesShipmentBuffer2 := ShipmentLine;
             if not BoolDisplayShipmentInformation then
                 if ShipmentLine.NEXT() = 0 then begin
@@ -1429,7 +1428,7 @@ report 50002 "Standard Sales - Invoice word"
         end;
     end;
 
-    local procedure GetJobTaskDescription(Job_No: Code[20]; Job_TaskNo: Code[20]): Text
+    local procedure GetJobTaskDescription(JobNo: Code[20]; JobTaskNo: Code[20]): Text
     var
         JobTask: Record "Job Task";
     begin

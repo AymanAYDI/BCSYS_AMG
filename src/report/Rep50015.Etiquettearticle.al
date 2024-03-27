@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 report 50015 "Etiquette article"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/Etiquettearticle.rdlc';
+    RDLCLayout = './src/report/RDL/Etiquettearticle.rdlc';
     ApplicationArea = All;
 
     dataset

@@ -26,7 +26,7 @@ using Microsoft.CRM.Interaction;
 using Microsoft.Finance.Currency;
 report 50001 "Standard Sales - Credit Memo W"
 {
-    RDLCLayout = './report/RDL/StandardSalesCreditMemoW.rdlc';
+    RDLCLayout = './src/report/RDL/StandardSalesCreditMemoW.rdlc';
     WordLayout = './StandardSalesCreditMemoW.docx';
     Caption = 'Sales - Credit Memo';
     DefaultLayout = Word;
@@ -586,7 +586,6 @@ report 50001 "Standard Sales - Credit Memo W"
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
-                    CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;

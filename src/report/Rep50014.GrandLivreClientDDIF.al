@@ -7,7 +7,7 @@ using Microsoft.Foundation.Period;
 report 50014 "Grand Livre Client DDIF"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/GrandLivreClientDDIF.rdlc';
+    RDLCLayout = './src/report/RDL/GrandLivreClientDDIF.rdlc';
     Caption = 'Customer Detail Trial Balance';
     ApplicationArea = All;
 
@@ -418,8 +418,6 @@ report 50014 "Grand Livre Client DDIF"
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Cust. Ledg. Entry"."Debit Amount (LCY)", "Detailed Cust. Ledg. Entry"."Credit Amount (LCY)");
                 end;
             }
 

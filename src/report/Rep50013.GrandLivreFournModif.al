@@ -7,7 +7,7 @@ using Microsoft.Foundation.Period;
 report 50013 "Grand Livre Fourn. Modif."
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './report/RDL/GrandLivreFournModif.rdlc';
+    RDLCLayout = './src/report/RDL/GrandLivreFournModif.rdlc';
     Caption = 'Vendor Detail Trial Balance';
     ApplicationArea = All;
 
@@ -418,8 +418,6 @@ report 50013 "Grand Livre Fourn. Modif."
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
-
-                    CurrReport.CREATETOTALS("Detailed Vendor Ledg. Entry"."Debit Amount (LCY)", "Detailed Vendor Ledg. Entry"."Credit Amount (LCY)");
                 end;
             }
 

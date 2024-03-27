@@ -7,7 +7,7 @@ using Microsoft.Finance.Dimension;
 using Microsoft.Utilities;
 report 50018 "DGX IATA RDLC"
 {
-    RDLCLayout = './report/RDL/DGXIATARDLC.rdlc';
+    RDLCLayout = './src/report/RDL/DGXIATARDLC.rdlc';
     DefaultLayout = RDLC;
     EnableExternalImages = true;
     PreviewMode = PrintLayout;
