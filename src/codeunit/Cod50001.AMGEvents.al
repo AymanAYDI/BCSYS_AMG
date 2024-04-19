@@ -340,13 +340,12 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnCreateSalesLineOnBeforeValidateQuantity', '', false, false)]
     local procedure OnCreateSalesLineOnBeforeValidateQuantity(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary; var ShouldValidateQuantity: Boolean)
     begin
-        //TODO field spe 
         if ShouldValidateQuantity then begin
             SalesLine.Validate(Quantity, TempSalesLine.Quantity);
             SalesLine.Validate("Qty. to Assemble to Order", TempSalesLine."Qty. to Assemble to Order");
-            // SalesLine.Marge := TempSalesLine.Marge;
+            SalesLine.Marge := TempSalesLine.Marge;
             SalesLine."Line Discount %" := TempSalesLine."Line Discount %";
-            //   SalesLine.Validate(Marque, TempSalesLine.Marque);
+            SalesLine.Validate(Marque, TempSalesLine.Marque);
             ShouldValidateQuantity := false;
         end;
     end;
@@ -430,6 +429,9 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnBeforeValidateDescription', '', false, false)]
     local procedure OnBeforeValidateDescription(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; CurrentFieldNo: Integer; var InHandled: Boolean);
     var
+        //***********
+        EnvInfoProxy: codeunit "Env. Info Proxy";
+        //***********
         Item: Record Item;
         ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
         FindRecordMgt: Codeunit "Find Record Management";
@@ -461,8 +463,9 @@ codeunit 50001 "AMG_Events"
                     // if (SalesLine."No." <> '') and (not DescriptionIsNo) and (SalesLine.Description <> '') then begin
                     //     Item.SetRange(Description, SalesLine.Description);
                     //     //TODO IsInvAppId removed
-                    //     if Item.FINDFIRST then
+                    //     if Item.FINDFIRST() then
                     //         Confirmed := IdentityManagement.IsInvAppId
+                    //         //Confirmed := EnvInfoProxy.IsInvoicing()//TODO possible replacement
                     //     else begin
                     //         Item.SETFILTER(Description, '''@' + CONVERTSTR(SalesLine.Description, '''', '?') + '''');
                     //         if not Item.FINDFIRST then
@@ -476,7 +479,7 @@ codeunit 50001 "AMG_Events"
                     //         if not IdentityManagement.IsInvAppId then
                     //             Confirmed := CONFIRM(AnotherItemWithSameDescrQst, false, Item."No.", Item.Description);
                     //     if IdentityManagement.IsInvAppId or Confirmed then
-                    //         SalesLine.VALIDATE("No.", Item."No.");
+                    //         SalesLine.Validate("No.", Item."No.");
                     //     exit;
                     // end;
 
@@ -678,7 +681,7 @@ codeunit 50001 "AMG_Events"
             PurchLine.SetRange("Document No.", PurchaseHeader."No.");
             PurchLine.SetFilter("Direct Unit Cost", '<>%1', 0);
             PurchLine.SetFilter("VAT %", '<>%1', 0);
-            if PurchLine.Find('-') then begin
+            if PurchLine.findfirst() then begin
                 RecalculatePrice :=
                   ConfirmManagement.GetResponseOrDefault(
                     StrSubstNo(
@@ -802,12 +805,11 @@ codeunit 50001 "AMG_Events"
               ReportSelections.Usage::"P.Order", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
               PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."))
         else
-            //TODO type spe
-            // if Selected = 2 Then
-            //     DocumentSendingProfile.SendVendorRecords(
-            //       ReportSelections.Usage::"P.OrderVAT", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
-            //       PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."));
-            IsHandled := true;
+            if Selected = 2 Then
+                DocumentSendingProfile.SendVendorRecords(
+                  ReportSelections.Usage::"P.OrderVAT", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
+                  PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."));
+        IsHandled := true;
     end;
     //Record 38 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforePrintRecords', '', false, false)]
@@ -824,11 +826,10 @@ codeunit 50001 "AMG_Events"
             DocumentSendingProfile.TrySendToPrinterVendor(
               DummyReportSelections.Usage::"P.Order", PurchaseHeader, PurchaseHeader.FieldNo("Buy-from Vendor No."), ShowRequestForm)
         else
-            //TODO type spe
-            // if Selected = 2 Then
-            //     DocumentSendingProfile.TrySendToPrinterVendor(
-            //      DummyReportSelections.Usage::"P.OrderVAT",
-            //      PurchaseHeader, PurchaseHeader.FIELDNO("Buy-from Vendor No."), ShowRequestForm);
+            if Selected = 2 Then
+                DocumentSendingProfile.TrySendToPrinterVendor(
+                 DummyReportSelections.Usage::"P.OrderVAT",
+                 PurchaseHeader, PurchaseHeader.FIELDNO("Buy-from Vendor No."), ShowRequestForm);
         IsHandled := true;
     end;
     //Record 38 
@@ -1028,9 +1029,9 @@ codeunit 50001 "AMG_Events"
         end;
         //TODO check i change GetCustEmailAddress by GetEmailAddressForCust
         // r‚cup‚ration de l'adresse mail du contact indiqu‚ dans l'entˆte du document CV/Devis, CA, FV
-        GRecSalesHeader.RESET();
-        GRecSalesHeader.SETRANGE("No.", DocumentNo);
-        GRecSalesInvoiceHeader.RESET();
+        GRecSalesHeader.Reset();
+        GRecSalesHeader.SetRange("No.", DocumentNo);
+        GRecSalesInvoiceHeader.Reset();
 
         if GRecSalesHeader.FINDFIRST() then begin
             if (GRecContact.GET(GRecSalesHeader."Sell-to Contact No.")) and (GRecContact."E-Mail" <> '') then
@@ -1250,7 +1251,7 @@ codeunit 50001 "AMG_Events"
                     ModifyOrderAdjmt := ModifyOrderAdjmt or not InventoryAdjmtEntryOrder."Allow Online Adjustment";
                 end;
                 if ModifyOrderAdjmt then
-                    InventoryAdjmtEntryOrder.MODIFY();
+                    InventoryAdjmtEntryOrder.Modify();
             end;
         end else
             case OrderType of
@@ -1366,7 +1367,7 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CustCont-Update", 'OnAfterOnModify', '', false, false)]
     local procedure OnAfterOnModify(var Contact: Record Contact; var OldContact: Record Contact; var Customer: Record Customer)
     begin
-        Contact.VALIDATE("Mobile Phone No.", Customer."Mobile Phone No.");
+        Contact.Validate("Mobile Phone No.", Customer."Mobile Phone No.");
         Contact.Modify(true);
         Customer.Get(Customer."No."); //TODO check line 54
     end;
@@ -1438,10 +1439,10 @@ codeunit 50001 "AMG_Events"
         SourceCodeSetup: Record "Source Code Setup";
     begin
         if GenJournalLine."Source Code" = SourceCodeSetup."Trans. Bank Rec. to Gen. Jnl." then begin
-            if GenJournalLine.Description = '' then GenJournalLine.VALIDATE(Description, '');
+            if GenJournalLine.Description = '' then GenJournalLine.Validate(Description, '');
         end
         else
-            GenJournalLine.VALIDATE(Description, '');
+            GenJournalLine.Validate(Description, '');
     end;
 
     //Record 81
@@ -1533,7 +1534,7 @@ codeunit 50001 "AMG_Events"
         Item.Validate("Base Unit of Measure", NonstockItem."Unit of Measure");
         Item."Unit Price" := NonstockItem."Unit Price";
         Item."Unit Cost" := NonstockItem."Negotiated Cost";
-        Item.VALIDATE("Last Direct Cost", NonstockItem."Negotiated Cost");
+        Item.Validate("Last Direct Cost", NonstockItem."Negotiated Cost");
         if Item."Costing Method" = Item."Costing Method"::Standard then
             Item."Standard Cost" := NonstockItem."Negotiated Cost";
         Item."Automatic Ext. Texts" := false;
@@ -1548,5 +1549,18 @@ codeunit 50001 "AMG_Events"
         ItemTemplMgt.InsertDimensions(Item."No.", NonstockItem."Item Templ. Code", Database::Item, Database::"Item Templ.");
         Item.Get(NonstockItem."Item No.");
 
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reporting Triggers", 'SubstituteReport', '', false, false)]
+    local procedure SubstituteReport(ReportId: Integer; RunMode: Option Normal,ParametersOnly,Execute,Print,SaveAs,RunModal; RequestPageXml: Text; RecordRef: RecordRef; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Sales - Shipment" then
+            NewReportId := Report::"Sales-Shipment";
+        if ReportId = Report::"Standard Sales - Draft Invoice" then
+            NewReportId := Report::"StandardSalesDraftInvoice";
+        if ReportId = Report::"Standard Sales - Quote" then
+            NewReportId := Report::"StandardSalesQuote";
+        if ReportId = Report::"Standard Sales - Invoice" then
+            NewReportId := Report::"Standard Sales-Invoice";
     end;
 }

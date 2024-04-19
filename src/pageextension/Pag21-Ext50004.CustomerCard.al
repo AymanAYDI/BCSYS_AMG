@@ -33,7 +33,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
             field("Compl. cond. livraison"; Rec."Compl. cond. livraison")
             {
                 ApplicationArea = Basic, Suite;
-                ToolTip = 'Specifies the value of the Compl. cond. livraison field.';
+                ToolTip = 'Specifies the value of the Additional terms of delivery field.';
             }
         }
     }

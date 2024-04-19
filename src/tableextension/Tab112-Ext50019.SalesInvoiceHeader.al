@@ -12,7 +12,7 @@ tableextension 50019 SalesInvoiceHeader extends "Sales Invoice Header" //112
         field(50000; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison';
+            Caption = 'Additional terms of delivery';
         }
     }
 }

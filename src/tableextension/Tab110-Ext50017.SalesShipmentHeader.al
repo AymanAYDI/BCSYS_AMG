@@ -20,7 +20,11 @@ tableextension 50017 SalesShipmentHeader extends "Sales Shipment Header" //110
             Caption = 'Additional terms of delivery';
             DataClassification = ToBeClassified;
         }
+        //     modify("Requested Delivery Date")
+        //     {
+        //         AccessByPermission = TableData 99000880 = R;
+        //     }
+        // }
+        //TODO Requested Delivery Date AccessByPermission
     }
-    //TODO Requested Delivery Date AccessByPermission
 }
-

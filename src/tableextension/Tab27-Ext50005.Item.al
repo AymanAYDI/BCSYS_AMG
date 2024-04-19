@@ -114,9 +114,14 @@ tableextension 50005 Item extends Item //27
         }
 
     }
-    //TODO field group line 2006
-    //TODO procedure TryGetItemNoOpenCard
-    //TODO procedure SetLastDateTimeFilter
+    fieldgroups
+    {
+        addlast(DropDown; "No.", Description, "Base Unit of Measure", "Unit Price", "Vendor No.", "Shelf No.", "Description 2", "Unit Cost", "Purch. Unit of Measure")
+        {
+        }
+    }
+    //TODO procedure TryGetItemNoOpenCard --> Possibly not needed
+    //TODO procedure SetLastDateTimeFilter --> Possibly not nneded
     local procedure CalcVAT(): Decimal
     var
         VATPostingSetup: Record "VAT Posting Setup";

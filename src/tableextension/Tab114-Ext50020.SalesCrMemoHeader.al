@@ -12,7 +12,7 @@ tableextension 50020 SalesCrMemoHeader extends "Sales Cr.Memo Header" //114
         field(50000; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison';
+            Caption = 'Additional terms of delivery';
         }
     }
 }

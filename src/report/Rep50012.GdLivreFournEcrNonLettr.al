@@ -10,6 +10,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
     RDLCLayout = './src/report/RDL/GdLivreFournEcrNonLettr.rdlc';
     Caption = 'Vendor Detail Trial Balance';
     ApplicationArea = All;
+    UsageCategory = ReportsAndAnalysis;
 
     dataset
     {

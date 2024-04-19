@@ -10,6 +10,7 @@ report 50011 "Gd Livre Client Ecr.Non Lettr."
     RDLCLayout = './src/report/RDL/GdLivreClientEcrNonLettr.rdlc';
     Caption = 'Customer Detail Trial Balance';
     ApplicationArea = All;
+    UsageCategory = ReportsAndAnalysis;
 
     dataset
     {

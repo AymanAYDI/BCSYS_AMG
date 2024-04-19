@@ -34,6 +34,7 @@ page 50005 "Liste Commandes Ventes Couleur"
     DataCaptionFields = "Sell-to Customer No.";
     Editable = false;
     PageType = List;
+    UsageCategory = Lists;
     PromotedActionCategories = 'New,Process,Report,Request Approval,Order';
     RefreshOnActivate = true;
     SourceTable = "Sales Header";

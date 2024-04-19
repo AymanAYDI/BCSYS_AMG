@@ -52,7 +52,7 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison'; //TODO Translation 
+            Caption = 'Additional terms of delivery';
         }
     }
     //TODO Onlookup Bill-to Contact line 357

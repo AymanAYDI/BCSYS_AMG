@@ -42,7 +42,7 @@ tableextension 50002 Customer extends Customer //18
         field(51010; "Compl. cond. livraison"; Text[80])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Compl. cond. livraison'; //TODO translation
+            Caption = 'Additional terms of delivery'; //TODO translation
         }
     }
     keys

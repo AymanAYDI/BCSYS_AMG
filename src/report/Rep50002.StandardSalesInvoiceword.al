@@ -1207,7 +1207,7 @@ report 50002 "Standard Sales - Invoice word"
         PageLbl: Label 'Page';
         PaymentMethodDescLbl: Label 'Payment Method';
         PaymentTermsDescLbl: Label 'Payment Terms';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1 Discount Due Date %2 = value of Payment Discount % ';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = '%1= Discount Due Date %2= value of Payment Discount % ';
         PostedShipmentDateLbl: Label 'Shipment Date';
         SalesInvLineDiscLbl: Label 'Discount %';
         SalesInvoiceLbl: Label 'Invoice';
@@ -1428,12 +1428,12 @@ report 50002 "Standard Sales - Invoice word"
         end;
     end;
 
-    local procedure GetJobTaskDescription(JobNo: Code[20]; JobTaskNo: Code[20]): Text
+    local procedure GetJobTaskDescription(Job_No: Code[20]; JobTask_No: Code[20]): Text[50]
     var
         JobTask: Record "Job Task";
     begin
-        JobTask.SETRANGE("Job No.", JobNo);
-        JobTask.SETRANGE("Job Task No.", JobTaskNo);
+        JobTask.SETRANGE("Job No.", Job_No);
+        JobTask.SETRANGE("Job Task No.", JobTask_No);
         if JobTask.FINDFIRST() then
             exit(JobTask.Description);
 

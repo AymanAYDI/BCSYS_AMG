@@ -50,7 +50,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             field("Compl. cond. livraison"; rec."Compl. cond. livraison")
             {
                 ApplicationArea = ALL;
-                ToolTip = 'Specifies the value of the Compl. cond. livraison field.';
+                ToolTip = 'Specifies the value of the Additional terms of delivery field.';
             }
         }
         modify("Bill-to Name")
