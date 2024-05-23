@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="en-US" original="Please update this value">
+    <body>
+      <group id="body">
+        <trans-unit id="TableExtension 3071285892 - Change 1541011875 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-Mail</source>
+          <target>E-Mail</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change E-Mail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 4036436394 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Next To-do Date</source>
+          <target>Next To-do Date</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change Next Task Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 3085066043 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>To-do Status Filter</source>
+          <target>To-do Status Filter</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change Task Status Filter - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 3690072609 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Closed To-do Filter</source>
+          <target>Closed To-do Filter</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change Closed Task Filter - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 1817630779 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>To-do Entry Exists</source>
+          <target>To-do Entry Exists</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change Task Entry Exists - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 551736105 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search E-Mail</source>
+          <target>Search E-Mail</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change Search E-Mail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3071285892 - Change 3429784581 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-Mail 2</source>
+          <target>E-Mail 2</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50002 - Change E-Mail 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2433589275 - Change 1541011875 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-Mail</source>
+          <target>E-Mail</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50003 - Change E-Mail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 520499424 - Change 979138732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of Blanket Orders</source>
+          <target>No. of Blanket Orders</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50006 - Change No. of Blanket Orders - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 520499424 - Change 3722913007 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bill-To No. of Blanket Orders</source>
+          <target>Bill-To No. of Blanket Orders</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50006 - Change Bill-To No. of Blanket Orders - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 520499424 - Field 352546477 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Mobile Phone No.</source>
+          <target>Mobile Phone No.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50006 - Field Mobile Phone No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3540073486 - Change 926489874 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>On Hold</source>
+          <target>On Hold</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50008 - Change On Hold - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2902376869 - Change 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Description</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50009 - Change Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 843724293 - Change 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Description</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50010 - Change Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1481420910 - Change 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Description</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50011 - Change Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3863298355 - Change 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Description</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50012 - Change Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 206027676 - Change 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Description</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50013 - Change Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3225601738 - Change 3195617127 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post Code+City,City+Post Code,City+County+Post Code,Blank Line+Post Code+City,Post Code+City/County,County/Post Code+City</source>
+          <target>Post Code+City,City+Post Code,City+County+Post Code,Blank Line+Post Code+City,Post Code+City/County,County/Post Code+City</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension tableextension50015 - Change Address Format - Property OptionCaption</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

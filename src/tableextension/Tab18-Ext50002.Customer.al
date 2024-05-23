@@ -4,6 +4,8 @@ using Microsoft.Sales.Customer;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Sales.Setup;
 using Microsoft.Sales.Document;
+using Microsoft.CRM.BusinessRelation;
+using Microsoft.Finance.Dimension;
 tableextension 50002 Customer extends Customer //18
 {
     fields
@@ -49,11 +51,14 @@ tableextension 50002 Customer extends Customer //18
     {
 
     }
-    //TODO verifier line 32
     trigger OnAfterInsert()
     var
         SalesSetup: Record "Sales & Receivables Setup";
         NoSeriesMgt: Codeunit NoSeriesManagement;
+        UpdateContFromCust: Codeunit "CustCont-Update";
+        DimMgt: Codeunit DimensionManagement;
+        InsertFromContact: Boolean;
+        InsertFromTemplate: Boolean;
     begin
         if "No." = '' then begin
             SalesSetup.Get();
@@ -63,16 +68,17 @@ tableextension 50002 Customer extends Customer //18
 
         if "Invoice Disc. Code" = '' then
             "Invoice Disc. Code" := "No.";
-
-        // if (not (InsertFromContact or (InsertFromTemplate and (Contact <> '')) or IsTemporary)) or ForceUpdateContact then
-        //     UpdateContFromCust.OnInsert(Rec);
+        InsertFromContact := GetInsertFromContact();
+        InsertFromTemplate := GetInsertFromTemplate();
+        if (not (InsertFromContact or (InsertFromTemplate and (Contact <> '')) or IsTemporary)) then
+            UpdateContFromCust.OnInsert(Rec);
 
         if "Salesperson Code" = '' then
             SetDefaultSalesperson();
 
-        // DimMgt.UpdateDefaultDim(
-        //   DATABASE::Customer, "No.",
-        //   "Global Dimension 1 Code", "Global Dimension 2 Code");
+        DimMgt.UpdateDefaultDim(
+          DATABASE::Customer, "No.",
+          "Global Dimension 1 Code", "Global Dimension 2 Code");
 
         UpdateReferencedIds();
         SetLastModifiedDateTime();

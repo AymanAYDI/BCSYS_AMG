@@ -1,7 +1,6 @@
 codeunit 50001 "AMG_Events"
 {
     //Record 18 
-    //TODO verifier line 32
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeInsert', '', false, false)]
     local procedure OnBeforeInsert(var Customer: Record Customer; var IsHandled: Boolean)
     begin
@@ -50,36 +49,7 @@ codeunit 50001 "AMG_Events"
         DimMgt.SaveDefaultDim(DATABASE::Customer, Customer."No.", FieldNumber, ShortcutDimCode);
         Customer.Modify();
     end;
-    //TODO verifier line 1626,1650
-    //Record 18 
-    [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeCheckBlockedCust', '', false, false)]
-    local procedure OnBeforeCheckBlockedCust(Customer: Record Customer; Source: Option Journal,Document; DocType: Option; Shipment: Boolean; Transaction: Boolean; var IsHandled: Boolean)
-    begin
-        IsHandled := false;
-    end;
-    //TODO check for line 1740 possibly not needed
-    //Record 18 
-    [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeGetTotalAmountLCYCommon', '', false, false)]
-    local procedure OnBeforeGetTotalAmountLCYCommon(var Customer: Record Customer; var AdditionalAmountLCY: Decimal; var IsHandled: Boolean)
-    var
-        [SecurityFiltering(SecurityFilter::Filtered)]
-        SalesLine: Record "Sales Line";
-        [SecurityFiltering(SecurityFilter::Filtered)]
-        ServiceLine: Record "Service Line";
-        SalesOutstandingAmountFromShipment: Decimal;
-        ServOutstandingAmountFromShipment: Decimal;
-        InvoicedPrepmtAmountLCY: Decimal;
-        RetRcdNotInvAmountLCY: Decimal;
-    begin
-        SalesOutstandingAmountFromShipment := SalesLine.OutstandingInvoiceAmountFromShipment(Customer."No.");
-        ServOutstandingAmountFromShipment := ServiceLine.OutstandingInvoiceAmountFromShipment(Customer."No.");
-        InvoicedPrepmtAmountLCY := Customer.GetInvoicedPrepmtAmountLCY();
-        RetRcdNotInvAmountLCY := Customer.GetReturnRcdNotInvAmountLCY();
-        AdditionalAmountLCY := Customer."Balance (LCY)" + Customer."Outstanding Orders (LCY)" + Customer."Shipped Not Invoiced (LCY)" + Customer."Outstanding Invoices (LCY)" +
-        Customer."Outstanding Serv. Orders (LCY)" + Customer."Serv Shipped Not Invoiced(LCY)" + Customer."Outstanding Serv.Invoices(LCY)" -
-        SalesOutstandingAmountFromShipment - ServOutstandingAmountFromShipment - InvoicedPrepmtAmountLCY - RetRcdNotInvAmountLCY;
-        IsHandled := true;
-    end;
+
     //Record 18 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeIsContactUpdateNeeded', '', false, false)]
     local procedure OnBeforeIsContactUpdateNeeded(Customer: Record Customer; xCustomer: Record Customer; var UpdateNeeded: Boolean; ForceUpdateContact: Boolean)
@@ -179,31 +149,7 @@ codeunit 50001 "AMG_Events"
             Item.UpdateItemCategoryId();
         end;
     end;
-    //Record 27 //TODO verifier line 2215
-    [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterValidateShortcutDimCode', '', false, false)]
-    local procedure OnAfterValidateShortcutDimCode(var Item: Record Item; xItem: Record Item; FieldNumber: Integer; var ShortcutDimCode: Code[20])
-    var
-        DimMgt: Codeunit DimensionManagement;
-    begin
-        if Item.IsTemporary then begin
-            DimMgt.ValidateDimValueCode(FieldNumber, ShortcutDimCode);
-            DimMgt.SaveDefaultDim(DATABASE::Item, Item."No.", FieldNumber, ShortcutDimCode);
-            Item.Modify();
-        end;
-    end;
     //Record 36
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeUpdateShipToCodeFromCust', '', false, false)]
-    local procedure OnBeforeUpdateShipToCodeFromCust(var SalesHeader: Record "Sales Header"; var Customer: Record Customer; var IsHandled: Boolean)
-    begin
-        IsHandled := true;
-    end;
-    //Record 36 //TODO verifier line 192
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnValidateSellToCustomerNoOnBeforeUpdateSellToCont', '', false, false)]
-    local procedure OnValidateSellToCustomerNoOnBeforeUpdateSellToCont(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; SellToCustomer: Record Customer; var SkipSellToContact: Boolean)
-    begin
-        SalesHeader.Validate("Ship-to Code", SellToCustomer."Ship-to Code");
-    end;
-    //Record 36 //TODO verifier
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeCheckShipmentInfo', '', false, false)]
     local procedure OnBeforeCheckShipmentInfo(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; BillTo: Boolean; var IsHandled: Boolean)
     begin
@@ -236,7 +182,7 @@ codeunit 50001 "AMG_Events"
     begin
         IsHandled := true;
     end;
-    //Record 36 //TODO verifier 1 et 2
+    //Record 36
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnInitRecordOnBeforeAssignShipmentDate', '', false, false)]
     local procedure OnInitRecordOnBeforeAssignShipmentDate(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     begin
@@ -248,7 +194,7 @@ codeunit 50001 "AMG_Events"
             SalesHeader."Order Date" := WorkDate();
         IsHandled := true;
     end;
-    //Record 36 //TODO verifier 1 et 2
+    //Record 36
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnInitRecordOnBeforeAssignOrderDate', '', false, false)]
     local procedure OnInitRecordOnBeforeAssignOrderDate(var SalesHeader: Record "Sales Header"; var NewOrderDate: Date)
     begin
@@ -1075,22 +1021,6 @@ codeunit 50001 "AMG_Events"
         if LDelphiReportId = '1304' then
             LDelphiText := REPORT.RUNREQUESTPAGE(ReportID);
     end;
-    //TODO verify modif for quantities to skip standard code 1461....
-    //Record 83 
-    [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCalcBaseQty', '', false, false)]
-    local procedure OnAfterCalcBaseQty(var ItemJournalLine: Record "Item Journal Line"; xItemJournalLine: Record "Item Journal Line"; FromFieldName: Text; var Result: Decimal)
-    begin
-        case FromFieldName of
-            'Quantity':
-                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine.Quantity);
-            'Invoiced Quantity':
-                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Invoiced Quantity");
-            'Output Quantity':
-                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Output Quantity");
-            'Scrap Quantity':
-                Result := ItemJournalLine.CalcBaseQty(ItemJournalLine."Scrap Quantity");
-        end;
-    end;
     //Record 246 
     [EventSubscriber(ObjectType::Table, Database::"Requisition Line", 'OnBeforeInitRecordForOrderPlanning', '', false, false)]
     local procedure OnBeforeInitRecordForOrderPlanning(var RequisitionLine: Record "Requisition Line"; var IsHandled: Boolean)
@@ -1361,7 +1291,6 @@ codeunit 50001 "AMG_Events"
             SearchFieldNo[3] := Item.FIELDNO("No. 2");
         end;
     end;
-    //TODO codeunit 260 line 363
     //TODO codeunit 703 line 118 not needed
     //Codeunit 5056
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"CustCont-Update", 'OnAfterOnModify', '', false, false)]
@@ -1407,31 +1336,6 @@ codeunit 50001 "AMG_Events"
             end;
         end;
     end;
-
-    //Record 79 //TODO Can't skip Standard Code
-    [EventSubscriber(ObjectType::Table, Database::"Company Information", 'OnBeforeCheckIBAN', '', false, false)]
-    local procedure OnBeforeCheckIBAN(IBANCode: Code[100])
-    var
-        CompanyInformation: Record "Company Information";
-        OriginalIBANCode: Code[100];
-        Modulus97: Integer;
-        I: Integer;
-    begin
-        if IBANCode = '' then
-            exit;
-        IBANCode := DELCHR(IBANCode);
-        Modulus97 := 97;
-        if (STRLEN(IBANCode) <= 5) or (STRLEN(IBANCode) > 34) then
-            CompanyInformation.IBANError(OriginalIBANCode);
-        CompanyInformation.ExtConvertIBAN(IBANCode);
-        while STRLEN(IBANCode) > 6 do
-            IBANCode := CompanyInformation.CalcModulus(COPYSTR(IBANCode, 1, 6), Modulus97) + COPYSTR(IBANCode, 7);
-        EVALUATE(I, IBANCode);
-        if (I mod Modulus97) <> 1 then
-            CompanyInformation.IBANError(OriginalIBANCode);
-        //IBANCode := '';
-    end;
-
     //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnValidateAccountTypeOnBeforeCheckKeepDescription', '', false, false)]
     local procedure OnValidateAccountTypeOnBeforeCheckKeepDescription(var GenJournalLine: Record "Gen. Journal Line"; var xGenJournalLine: Record "Gen. Journal Line"; CurrentFieldNo: Integer)
