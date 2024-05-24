@@ -7,35 +7,20 @@ tableextension 50024 SalesReceivablesSetup extends "Sales & Receivables Setup" /
 {
     fields
     {
-        modify("Blanket Order Nos.")
+        field(50000; "Code catégorie Carbo"; Code[20])
         {
-            Caption = 'Blanket Order Nos.';
-        }
-        modify("Archive Blanket Orders")
-        {
-            Caption = 'Archive Blanket Orders';
-        }
-        modify("Freight G/L Acc. No.")
-        {
-            Caption = 'Freight G/L Acc. No.';
-        }
-        field(50000; "Category Code Carbo"; Code[20])
-        {
-            DataClassification = ToBeClassified;
             TableRelation = "Item Category".Code;
-            Caption = 'Category Code Carbo', Comment = 'Category Code Carbo';
+            Caption = 'Code categorie Carbo', Comment = 'FRA="Code catégorie Carbo"';
         }
-        field(50010; "Package Serie No."; Code[20])
+        field(50010; "Souche No. colis"; Code[20])
         {
-            DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
-            Caption = 'Package Serie No.', Comment = 'Package Serie No.';
+            Caption = 'Souche N° colis', Comment = 'FRA="Souche N° colis"';
         }
-        field(50020; "DGX Serie No."; Code[20])
+        field(50020; "Souche No. DGX"; Code[20])
         {
-            DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
-            Caption = 'DGX Serie No.', Comment = 'DGX Serie No.';
+            Caption = 'Souche N° DGX', Comment = 'FRA="Souche N° DGX"';
         }
     }
 }

@@ -6,15 +6,10 @@ tableextension 50003 CustLedgerEntry extends "Cust. Ledger Entry" //21
 {
     fields
     {
-        modify("On Hold")
-        {
-            Caption = 'On Hold', comment = 'On Hold';
-        }
-
         field(50000; "Nom Client"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Customer No.")));
-            Caption = 'Customer Name';
+            Caption = 'Nom Client', Comment = 'FRA="Nom Client"';
             FieldClass = FlowField;
             TableRelation = Customer.Name;
         }

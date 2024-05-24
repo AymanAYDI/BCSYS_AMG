@@ -9,18 +9,10 @@ tableextension 50001 GLEntry extends "G/L Entry" //17
     {
         field(50000; "Long description"; Text[250])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Long description';
         }
     }
-    keys
-    {
-        key(key50000; "Document No.", "Posting Date")
-        {
-
-        }
-    }
-    trigger OnAfterInsert()
+    trigger OnBeforeInsert()
     var
         LRecPurchaseInvoiceHeader: Record "Purch. Inv. Header";
         LRecSalesInvoiceHeader: Record "Sales Invoice Header";

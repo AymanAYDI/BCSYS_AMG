@@ -1,7 +1,7 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Foundation.Reporting;
-tableextension 50013 ReportSelections extends "Report Selections" //77
+tableextension 50013 ReportSelections extends "Report Selections" //77 //TODOD : TO MERGE
 {
     //TODO GetEmailBodyInPdf not used
     // procedure GetEmailBodyInPdf(var ServerEmailBodyFilePath: Text[250]; ReportUsage: Integer; RecordVariant: Variant; CustNo: Code[20]; var CustEmailAddress: Text[250]): Boolean

@@ -5,19 +5,9 @@ tableextension 50025 PurchasesPayablesSetup extends "Purchases & Payables Setup"
 {
     fields
     {
-        modify("Blanket Order Nos.")
+        field(50000; "Date debut factures achats"; Date)
         {
-            Caption = 'Blanket Order Nos.';
-        }
-        modify("Archive Blanket Orders")
-        {
-            Caption = 'Archive Blanket Orders';
-        }
-        field(50000; "Purchase Invoice Start Date"; Date)
-        {
-            DataClassification = ToBeClassified;
-            Description = 'Lower accounting date limit for displaying purchase invoices';
-            Caption = 'Purchase Invoice Start Date', Comment = 'Purchase Invoice Start Date';
+            Caption = 'Date début factures achats', Comment = 'FRA="Date début factures achats"';
         }
     }
 }

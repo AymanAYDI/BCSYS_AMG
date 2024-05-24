@@ -23,51 +23,39 @@ tableextension 50005 Item extends Item //27
         }
         modify("Last Direct Cost")
         {
-            trigger OnBeforeValidate()
+            trigger OnAfterValidate()
             begin
                 Validate("Price/Profit Calculation");
                 Rec."Last Date Modified Price" := TODAY;
             end;
         }
-        //TODO calcformula connot be customized 
-        // modify("Planning Transfer Ship. (Qty).")
-        // {
-
-        // }
         field(50000; Brand; Text[40])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Brand';
         }
         field(50010; Grade; Text[40])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Grade';
         }
         field(50020; Color; Text[40])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Color';
         }
         field(50030; Process1; Text[100])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Process1';
         }
         field(50040; Process2; Text[100])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Process2';
         }
         field(50050; Origin; Text[50])
         {
-            DataClassification = ToBeClassified;
             Caption = 'Origin';
         }
         field(50060; Material; Text[30])
         {
-            Caption = 'Material', Comment = 'Material';
-            DataClassification = ToBeClassified;
+            Caption = 'Material', Comment = 'FRA="Matérial"';
         }
         field(50100; History; Boolean)
         {
@@ -79,53 +67,43 @@ tableextension 50005 Item extends Item //27
         }
         field(50110; "Type carbo"; Boolean)
         {
-            DataClassification = ToBeClassified;
             Caption = 'Type carbo';
         }
         field(50115; "Code ONU"; Code[10])
         {
-            DataClassification = ToBeClassified;
             TableRelation = "ONU table";
-            //This property is currently not supported
-            //TestTableRelation = true;
             ValidateTableRelation = true;
             Caption = 'Code ONU';
         }
         field(50116; "UN version"; Integer)
         {
-            DataClassification = ToBeClassified;
             TableRelation = "ONU table".Version where(Code = field("Code ONU"));
             Caption = 'UN version';
         }
         field(50120; CodeAZTEC; BLOB)
         {
-            DataClassification = ToBeClassified;
             Caption = 'CodeAZTEC';
         }
         field(50121; CodeBar; Boolean)
         {
-            DataClassification = ToBeClassified;
             Caption = 'CodeBar';
         }
         field(50122; "Last Date Modified Price"; Date)
         {
-            Caption = 'Last Date Modified Price';
-            DataClassification = ToBeClassified;
+            Caption = 'Last Date Modified Price', Comment = 'FRA="Dernière date de modification du prix"';
         }
 
     }
     fieldgroups
     {
-        addlast(DropDown; "No.", Description, "Base Unit of Measure", "Unit Price", "Vendor No.", "Shelf No.", "Description 2", "Unit Cost", "Purch. Unit of Measure")
+        addlast(DropDown; "Vendor No.", "Shelf No.", "Description 2", "Unit Cost", "Purch. Unit of Measure")
         {
         }
     }
-    //TODO procedure TryGetItemNoOpenCard --> Possibly not needed
-    //TODO procedure SetLastDateTimeFilter --> Possibly not nneded
     local procedure CalcVAT(): Decimal
     var
         VATPostingSetup: Record "VAT Posting Setup";
-        Text006: Label 'Prices including VAT cannot be calculated when %1 is %2.';
+        Text006: Label 'Prices including VAT cannot be calculated when %1 is %2.', Comment = 'FRA="Les prix TTC ne peuvent pas être calculés quand %1 est identique à %2."';
     begin
         if "Price Includes VAT" then begin
             VATPostingSetup.Get("VAT Bus. Posting Gr. (Price)", "VAT Prod. Posting Group");

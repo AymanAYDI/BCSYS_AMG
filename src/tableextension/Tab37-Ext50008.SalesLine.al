@@ -8,81 +8,47 @@ using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Customer;
 using System.IO;
-tableextension 50008 SalesLine extends "Sales Line" //37
+tableextension 50008 SalesLine extends "Sales Line" //37 //TODOD : TO MERGE
 {
     fields
     {
-        modify("No.")
-        {
-            TableRelation = if (Type = const(" ")) "Standard Text"
-            else
-            if (Type = const("G/L Account"),
-                "System-Created Entry" = const(false)) "G/L Account" where("Direct Posting" = const(true),
-                                                                                          "Account Type" = const(Posting),
-                                                                                          Blocked = const(false))
-            else
-            if (Type = const("G/L Account"),
-               "System-Created Entry" = const(true)) "G/L Account"
-            else
-            if (Type = const(Resource)) Resource
-            else
-            if (Type = const("Fixed Asset")) "Fixed Asset"
-            else
-            if (Type = const("Charge (Item)")) "Item Charge"
-            else
-            if (Type = const(Item)) Item where(Blocked = const(false), "Sales Blocked" = const(false));
-        }
-        modify(Description)
-        {
-            TableRelation = if (Type = const("G/L Account"),
-                                "System-Created Entry" = const(false)) "G/L Account".Name where("Direct Posting" = const(true),
-                                                                                          "Account Type" = const(Posting),
-                                                                                          Blocked = const(false))
-            else
-            if (Type = const("G/L Account"), "System-Created Entry" = const(true)) "G/L Account".Name
-            else
-            if (Type = const(Item)) Item.Description where(Blocked = const(false), "Sales Blocked" = const(false))
-            else
-            if (Type = const(Resource)) Resource.Name
-            else
-            if (Type = const("Fixed Asset")) "Fixed Asset".Description
-            else
-            if (Type = const("Charge (Item)")) "Item Charge".Description;
-        }
-        modify("Blanket Order No.")
-        {
-            Caption = 'Blanket Order No.';
-        }
-        modify("Blanket Order Line No.")
-        {
-            Caption = 'Blanket Order Line No.';
-        }
         field(50001; Marge; Decimal)
         {
             Caption = 'Marge';
             DataClassification = ToBeClassified;
+            Description = 'AMG';
         }
         field(50002; Marque; Decimal)
         {
             Caption = '% Marge';
             DataClassification = ToBeClassified;
+            Description = 'AMG';
+
+            trigger OnValidate()
+            begin
+                //>>> BC6 NC 18042024 AMG-6 Delete Code From page and add it to Table
+                FCalculateOnMargeChange();
+            end;
         }
-        field(50010; "Item supplier"; Code[20])
+        field(50010; "Fournisseur article"; Code[20])
         {
-            CalcFormula = lookup(Item."Vendor No." where("No." = field("No.")));
+            CalcFormula = Lookup(Item."Vendor No." WHERE("No." = FIELD("No.")));
             Caption = 'Vendor';
+            Description = 'AMG,EVO34';
             FieldClass = FlowField;
         }
-        field(50020; "Customer Name"; Text[100])
+        field(50020; "Nom Client"; Text[100])
         {
-            CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
+            CalcFormula = Lookup(Customer.Name WHERE("No." = FIELD("Sell-to Customer No.")));
             Caption = 'Customer Name';
+            Description = 'AMG';
             FieldClass = FlowField;
         }
         field(50030; Sel; Boolean)
         {
             Caption = 'Sel';
             DataClassification = ToBeClassified;
+            Description = 'AMG';
         }
     }
     procedure FCalculeMarge("Item No": Code[20]; Quantiter: Decimal; "Prix Vente Remiser": Decimal) Marge: Decimal

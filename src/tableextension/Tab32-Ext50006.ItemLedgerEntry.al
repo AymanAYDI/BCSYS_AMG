@@ -7,14 +7,10 @@ tableextension 50006 ItemLedgerEntry extends "Item Ledger Entry" //32
 {
     fields
     {
-        modify("Derived from Blanket Order")
-        {
-            Caption = 'Derived from Blanket Order', comment = 'Derived from Blanket Order';
-        }
         field(50000; "Customer Name"; Text[100])
         {
             CalcFormula = lookup(Customer.Name where("No." = field("Source No.")));
-            Caption = 'Customer Name';
+            Caption = 'Customer Name', Comment = 'FRA="Nom Client"';
             Editable = false;
             Enabled = true;
             FieldClass = FlowField;
@@ -23,7 +19,7 @@ tableextension 50006 ItemLedgerEntry extends "Item Ledger Entry" //32
         field(50001; "Vendor Name"; Text[100])
         {
             CalcFormula = lookup(Vendor.Name where("No." = field("Source No.")));
-            Caption = 'Vendor Name';
+            Caption = 'Vendor Name', Comment = 'FRA="Nom Fournisseur"';
             FieldClass = FlowField;
             TableRelation = if ("Source Type" = const(Vendor)) Vendor;
         }

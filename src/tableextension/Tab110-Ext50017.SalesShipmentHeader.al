@@ -5,26 +5,13 @@ tableextension 50017 SalesShipmentHeader extends "Sales Shipment Header" //110
 {
     fields
     {
-        //TODO traduction
-        modify("On Hold")
-        {
-            Caption = 'On Hold', Comment = 'On Hold';
-        }
         field(50000; "Packing detail"; Text[80])
         {
-            Caption = 'Packing details';
-            DataClassification = ToBeClassified;
+            Caption = 'Packing details', Comment = 'FRA="Détails d''emballage"';
         }
-        field(50001; "Compl. cond. livraison"; Text[80])
+        field(51010; "Compl. cond. livraison"; Text[80])
         {
-            Caption = 'Additional terms of delivery';
-            DataClassification = ToBeClassified;
+            Caption = 'Additional terms of delivery', Comment = 'FRA="Conditions de livraison sup."';
         }
-        //     modify("Requested Delivery Date")
-        //     {
-        //         AccessByPermission = TableData 99000880 = R;
-        //     }
-        // }
-        //TODO Requested Delivery Date AccessByPermission
     }
 }

@@ -1,121 +1,106 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Customer;
-using Microsoft.Sales.History;
-using Microsoft.Foundation.Address;
 using Microsoft.Sales.Setup;
 using Microsoft.Foundation.NoSeries;
+using Microsoft.Foundation.Address;
+using Microsoft.Sales.History;
 table 50006 "DGX Header"
 {
 
     fields
     {
-        field(1; "DGX No."; Code[20])
+        field(1; "No DGX"; Code[20])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'DGX No.';
+            Caption = 'No DGX';
         }
-        field(2; "DGX Type"; Option)
+        field(2; "Type DGX"; Enum "Type DGX")
         {
-            DataClassification = ToBeClassified;
-            OptionCaption = 'Multimodal, Air cargo, Air passenger';
-            OptionMembers = "Multi-modal","Aerien cargo","Aerien passager";
-            Caption = 'DGX Type';
+            Caption = 'Type DGX';
         }
-        field(10; Recipient; Code[20])
+        field(10; Destinataire; Code[20])
         {
-            Caption = 'Recipient', Comment = 'Recipient';
-            DataClassification = ToBeClassified;
             TableRelation = Customer."No.";
+            Caption = 'Destinataire';
         }
-        field(11; "Recipient Name"; Text[100])
+        field(11; "Destinataire nom"; Text[100])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient Name';
+            Caption = 'Destinataire nom';
         }
-        field(12; "Recipient Adress 1"; Text[100])
+        field(12; "Destinataire adresse 1"; Text[100])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient Adress 1';
+            Caption = 'Destinataire adresse 1';
         }
-        field(13; "Recipient Adress 2"; Text[50])
+        field(13; "Destinataire adresse 2"; Text[50])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient Adress 2';
+            Caption = 'Destinataire adresse 2';
         }
-        field(14; "Recipient Post Code"; Code[20])
+        field(14; "Destinataire code postal"; Code[20])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient Post Code';
+            Caption = 'Destinataire code postal';
         }
-        field(15; "Recipient City"; Text[50])
+        field(15; "Destinataire ville"; Text[50])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient City';
+            Caption = 'Destinataire ville';
         }
-        field(16; "Recipient Country EN"; Text[50])
+        field(16; "Destinataire pays EN"; Text[50])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Recipient Country EN';
+            Caption = 'Destinataire pays EN';
         }
-        field(20; "Type of transport"; Option)
+        field(20; "Type de transport"; Option)
         {
-            DataClassification = ToBeClassified;
             OptionMembers = cargo,passager;
-            Caption = 'Type of transport';
+            Caption = 'Type de transport';
         }
-        field(30; "Airport of departure"; Text[250])
+        field(30; "Aeroport de depart"; Text[250])
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Airport of departure';
+            Caption = 'Aéroport de départ';
         }
-        field(40; Radioactive; Boolean)
+        field(40; Radioactif; Boolean)
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Radioactive';
+            Caption = 'Radioactif';
         }
-        field(50; "Document Date"; Date)
+        field(50; "Date document"; Date)
         {
-            DataClassification = ToBeClassified;
-            Caption = 'Document Date';
+            Caption = 'Date document';
         }
-        field(60; "Delivery slip no."; Code[20])
+        field(60; "No Bon Livraison"; Code[20])
         {
-            DataClassification = ToBeClassified;
             TableRelation = "Sales Shipment Header"."No.";
-            Caption = 'Delivery slip no.';
+            Caption = 'No Bon Livraison';
+
             trigger OnValidate()
             var
-                LRecPays: Record "Country/Region";
                 LRecBLHeader: Record "Sales Shipment Header";
+                LRecPays: Record "Country/Region";
             begin
-                if LRecBLHeader.Get("Delivery slip no.") then begin
-                    Recipient := LRecBLHeader."Sell-to Customer No.";
-                    "Recipient Adress 1" := LRecBLHeader."Ship-to Address";
-                    "Recipient Adress 2" := LRecBLHeader."Ship-to Address 2";
-                    "Recipient Post Code" := LRecBLHeader."Ship-to Post Code";
-                    "Recipient Name" := LRecBLHeader."Ship-to Name";
-                    "Recipient City" := LRecBLHeader."Ship-to City";
-                    "Document Date" := LRecBLHeader."Document Date";
-                    if LRecPays.Get(LRecBLHeader."Sell-to Country/Region Code") then "Recipient Country EN" := LRecPays."County Name";
+                if LRecBLHeader.GET("No Bon Livraison") then begin
+                    Destinataire := LRecBLHeader."Sell-to Customer No.";
+                    "Destinataire adresse 1" := LRecBLHeader."Ship-to Address";
+                    "Destinataire adresse 2" := LRecBLHeader."Ship-to Address 2";
+                    "Destinataire code postal" := LRecBLHeader."Ship-to Post Code";
+                    "Destinataire nom" := LRecBLHeader."Ship-to Name";
+                    "Destinataire ville" := LRecBLHeader."Ship-to City";
+                    "Date document" := LRecBLHeader."Document Date";
+                    if LRecPays.GET(LRecBLHeader."Sell-to Country/Region Code") then "Destinataire pays EN" := LRecPays."County Name";
                 end;
             end;
         }
-        field(70; "Total Gross Mass"; Decimal)
+        field(70; "Masse brute totale"; Decimal)
         {
-            CalcFormula = sum("DGX Lines"."Gross Mass (kg)" where(DGXNo = field("DGX No.")));
+            CalcFormula = sum("DGX Lines"."Masse brute (kg)" where(DGXNo = field("No DGX")));
             FieldClass = FlowField;
-            Caption = 'Total Gross Mass';
+            Caption = 'Masse brute totale';
         }
     }
 
     keys
     {
-        key(Key1; "DGX No.")
+        key(Key1; "No DGX")
         {
             Clustered = true;
         }
-        key(Key2; "Delivery slip no.")
+        key(Key2; "No Bon Livraison")
         {
         }
     }
@@ -126,9 +111,10 @@ table 50006 "DGX Header"
 
     trigger OnInsert()
     begin
-        if "DGX No." = '' then
-            ParamVente.Get();
-        "DGX No." := GestionNoSouche.DoGetNextNo(ParamVente."DGX Serie No.", TODAY, true, false);
+        if "No DGX" = '' then begin
+            ParamVente.GET();
+            "No DGX" := GestionNoSouche.DoGetNextNo(ParamVente."Souche No. DGX", TODAY, true, false);
+        end;
     end;
 
     var

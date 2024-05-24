@@ -1,5 +1,166 @@
 codeunit 50001 "AMG_Events"
 {
+    //Record 36
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnBeforeCheckShipmentInfo, '', false, false)]
+    local procedure OnBeforeCheckShipmentInfo(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; BillTo: Boolean; var IsHandled: Boolean)
+    begin
+        if BillTo then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnBeforeCheckNoAndShowConfirm, '', false, false)]
+    local procedure OnBeforeCheckNoAndShowConfirm(SalesHeader: Record "Sales Header"; var SalesShptHeader: Record "Sales Shipment Header"; var SalesInvHeader: Record "Sales Invoice Header"; var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; var ReturnRcptHeader: Record "Return Receipt Header"; var SalesInvHeaderPrePmt: Record "Sales Invoice Header"; var SalesCrMemoHeaderPrePmt: Record "Sales Cr.Memo Header"; SourceCode: Record "Source Code"; var Result: Boolean; var IsHandled: Boolean)
+    var
+        LRecHist: Record "Sales Archive";
+        ConfirmManagement: Codeunit "Confirm Management";
+        Text009: Label 'Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche expédition. Une expédition vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+        Text012: Label 'Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures enregistrées. Une facture enregistrée vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+        Text014: Label 'Deleting this document will cause a gap in the number series for posted credit memos. An empty posted credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche d''avoirs enregistrés. Un avoir enregistré vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+        Text030: Label 'Deleting this document will cause a gap in the number series for return receipts. An empty return receipt %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche des réceptions retour. Une réception retour vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+        Text056: Label 'Deleting this document will cause a gap in the number series for prepayment invoices. An empty prepayment invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures d''acompte. Une facture d''acompte vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+        Text057: Label 'Deleting this document will cause a gap in the number series for prepayment credit memos. An empty prepayment credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche des avoirs acompte. Un avoir acompte vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
+    begin
+        if SalesShptHeader."No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text009, SalesShptHeader."No."), true) then
+                exit;
+        if SalesInvHeader."No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text012, SalesInvHeader."No."), true) then
+                exit;
+        if SalesCrMemoHeader."No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text014, SalesCrMemoHeader."No."), true) then
+                exit;
+        if ReturnRcptHeader."No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text030, ReturnRcptHeader."No."), true) then
+                exit;
+        if SalesHeader."Prepayment No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text056, SalesInvHeaderPrepmt."No."), true) then
+                exit;
+        if SalesHeader."Prepmt. Cr. Memo No." <> '' then
+            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text057, SalesCrMemoHeaderPrepmt."No."), true) then
+                exit;
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Quote then
+            LRecHist.DELDeleteDevis(SalesHeader."No.")
+        else
+            if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
+                LRecHist.DELDeleteCmdVente(SalesHeader."No.");
+        Result := true;
+        IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnCreateSalesLineOnBeforeValidateQuantity, '', false, false)]
+    local procedure OnCreateSalesLineOnBeforeValidateQuantity(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary; var ShouldValidateQuantity: Boolean)
+    begin
+        if ShouldValidateQuantity then begin
+            SalesLine.Validate(Quantity, TempSalesLine.Quantity);
+            SalesLine.Validate("Qty. to Assemble to Order", TempSalesLine."Qty. to Assemble to Order");
+            SalesLine.Marge := TempSalesLine.Marge;
+            SalesLine."Line Discount %" := TempSalesLine."Line Discount %";
+            SalesLine.Validate(Marque, TempSalesLine.Marque);
+            ShouldValidateQuantity := false;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnCreateSalesLineOnBeforeSetDropShipment, '', false, false)]
+    local procedure OnCreateSalesLineOnBeforeSetDropShipment(var SalesLine: Record "Sales Line"; TempSalesLine: Record "Sales Line" temporary; var IsHandled: Boolean)
+    begin
+        if SalesLine."Bill-to Customer No." <> TempSalesLine."Bill-to Customer No." then begin
+            SalesLine."Purchasing Code" := TempSalesLine."Purchasing Code";
+            SalesLine."Special Order Purchase No." := TempSalesLine."Special Order Purchase No.";
+            SalesLine."Special Order Purch. Line No." := TempSalesLine."Special Order Purch. Line No.";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterCopySellToCustomerAddressFieldsFromCustomer, '', false, false)]
+    local procedure OnAfterCopySellToCustomerAddressFieldsFromCustomer(var SalesHeader: Record "Sales Header"; SellToCustomer: Record Customer; CurrentFieldNo: Integer; var SkipBillToContact: Boolean; var SkipSellToContact: Boolean)
+    begin
+        SalesHeader."Compl. cond. livraison" := SellToCustomer."Compl. cond. livraison";
+    end;
+
+    //Record 38 
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnBeforeSendRecords, '', false, false)]
+    local procedure OnBeforeSendRecords(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    var
+        DocumentSendingProfile: Record "Document Sending Profile";
+        ReportSelections: Record "Report Selections";
+        Selected: Integer;
+        DocTxt: Text[150];
+        TextSTR: Label 'Commande achat,Commande achat avec attestation TVA';
+        TextDemande: Label 'Choisisez votre impression :';
+        PurchQuoteTxt: label 'Purchase - Quote', Comment = 'FRA="Demande de prix"';
+    begin
+        Selected := DIALOG.STRMENU(TextSTR, 1, TextDemande);
+        if Selected = 1 then
+            DocumentSendingProfile.SendVendorRecords(
+              ReportSelections.Usage::"P.Order".AsInteger(), PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
+              PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."))
+        else
+            if Selected = 2 then
+                DocumentSendingProfile.SendVendorRecords(
+                  ReportSelections.Usage::"P.OrderVAT".AsInteger(), PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
+                  PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."));
+
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Quote then
+            DocumentSendingProfile.SendVendorRecords(
+                ReportSelections.Usage::"P.Quote".AsInteger(), PurchaseHeader, PurchQuoteTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
+                PurchaseHeader.FIELDNO("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."));
+        IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnBeforePrintRecords, '', false, false)]
+    local procedure OnBeforePrintRecords(var PurchaseHeader: Record "Purchase Header"; ShowRequestForm: Boolean; var IsHandled: Boolean)
+    var
+        DocumentSendingProfile: Record "Document Sending Profile";
+        DummyReportSelections: Record "Report Selections";
+        Selected: Integer;
+        TextSTR: Label 'Commande achat,Commande achat avec attestation TVA';
+        TextDemande: Label 'Choisisez votre impression :';
+    begin
+        Selected := DIALOG.STRMENU(TextSTR, 1, TextDemande);
+        if Selected = 1 then
+            DocumentSendingProfile.TrySendToPrinterVendor(
+              DummyReportSelections.Usage::"P.Order".AsInteger(), PurchaseHeader, PurchaseHeader.FieldNo("Buy-from Vendor No."), ShowRequestForm)
+        else
+            if Selected = 2 Then
+                DocumentSendingProfile.TrySendToPrinterVendor(
+                 DummyReportSelections.Usage::"P.OrderVAT".AsInteger(),
+                 PurchaseHeader, PurchaseHeader.FIELDNO("Buy-from Vendor No."), ShowRequestForm);
+        IsHandled := true;
+    end;
+
+    //Record 60 
+    [EventSubscriber(ObjectType::Table, Database::"Document Sending Profile", OnSendVendorRecordsOnBeforeLookupProfile, '', false, false)]
+    local procedure OnSendVendorRecordsOnBeforeLookupProfile(ReportUsage: Integer; RecordVariant: Variant; VendorNo: Code[20]; var RecRefToSend: RecordRef; SingleVendorSelected: Boolean; var ShowDialog: Boolean)
+    begin
+        ShowDialog := false;
+    end;
+
+    //Record 81
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", OnValidateAccountTypeOnBeforeCheckKeepDescription, '', false, false)]
+    local procedure OnValidateAccountTypeOnBeforeCheckKeepDescription(var GenJournalLine: Record "Gen. Journal Line"; var xGenJournalLine: Record "Gen. Journal Line"; CurrentFieldNo: Integer)
+    var
+        SourceCodeSetup: Record "Source Code Setup";
+    begin
+        if SourceCodeSetup.Get() then;
+        if GenJournalLine."Source Code" = SourceCodeSetup."Trans. Bank Rec. to Gen. Jnl." then begin
+            if GenJournalLine.Description = '' then
+                GenJournalLine.Validate(Description, '')
+            else
+                GenJournalLine."Keep Description" := true;
+        end
+        else
+            GenJournalLine.Validate(Description, '');
+    end;
+
+
+
+
+
+
+
+
+
+
+
     //Record 18 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnBeforeInsert', '', false, false)]
     local procedure OnBeforeInsert(var Customer: Record Customer; var IsHandled: Boolean)
@@ -149,13 +310,6 @@ codeunit 50001 "AMG_Events"
             Item.UpdateItemCategoryId();
         end;
     end;
-    //Record 36
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeCheckShipmentInfo', '', false, false)]
-    local procedure OnBeforeCheckShipmentInfo(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; BillTo: Boolean; var IsHandled: Boolean)
-    begin
-        if BillTo then
-            IsHandled := true;
-    end;
     //Record 36 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeValidateBillToName', '', false, false)]
     local procedure OnBeforeValidateBillToName(var SalesHeader: Record "Sales Header"; var Customer: Record Customer; var IsHandled: Boolean; xSalesHeader: Record "Sales Header")
@@ -201,44 +355,6 @@ codeunit 50001 "AMG_Events"
         NewOrderDate := SalesHeader."Order Date";
     end;
     //Record 36 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeCheckNoAndShowConfirm', '', false, false)]
-    local procedure OnBeforeCheckNoAndShowConfirm(SalesHeader: Record "Sales Header"; var SalesShptHeader: Record "Sales Shipment Header"; var SalesInvHeader: Record "Sales Invoice Header"; var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; var ReturnRcptHeader: Record "Return Receipt Header"; var SalesInvHeaderPrePmt: Record "Sales Invoice Header"; var SalesCrMemoHeaderPrePmt: Record "Sales Cr.Memo Header"; SourceCode: Record "Source Code"; var Result: Boolean; var IsHandled: Boolean)
-    var
-        LRecHist: Record "Sales Archive";
-        ConfirmManagement: Codeunit "Confirm Management";
-        Text009: Label 'Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-        Text012: Label 'Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-        Text014: Label 'Deleting this document will cause a gap in the number series for posted credit memos. An empty posted credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-        Text030: Label 'Deleting this document will cause a gap in the number series for return receipts. An empty return receipt %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-        Text056: Label 'Deleting this document will cause a gap in the number series for prepayment invoices. An empty prepayment invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-        Text057: Label 'Deleting this document will cause a gap in the number series for prepayment credit memos. An empty prepayment credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?';
-    begin
-        if SalesShptHeader."No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text009, SalesShptHeader."No."), true) then
-                exit;
-        if SalesInvHeader."No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text012, SalesInvHeader."No."), true) then
-                exit;
-        if SalesCrMemoHeader."No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text014, SalesCrMemoHeader."No."), true) then
-                exit;
-        if ReturnRcptHeader."No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text030, ReturnRcptHeader."No."), true) then
-                exit;
-        if SalesHeader."Prepayment No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text056, SalesInvHeaderPrepmt."No."), true) then
-                exit;
-        if SalesHeader."Prepmt. Cr. Memo No." <> '' then
-            if not ConfirmManagement.GetResponseOrDefault(StrSubstNo(Text057, SalesCrMemoHeaderPrepmt."No."), true) then
-                exit;
-        if SalesHeader."Document Type" = SalesHeader."Document Type"::Quote then
-            LRecHist.DELDeleteDevis(SalesHeader."No.")
-        else
-            if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
-                LRecHist.DELDeleteCmdVente(SalesHeader."No.");
-        Result := true;
-        IsHandled := true;
-    end;
     //Record 36 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeUpdateSellToEmail', '', false, false)]
     local procedure OnBeforeUpdateSellToEmail(var SalesHeader: Record "Sales Header"; Contact: Record Contact; var IsHandled: Boolean)
@@ -283,36 +399,8 @@ codeunit 50001 "AMG_Events"
         SalesHeader.SetRange("Date Filter", 0D, WorkDate() - 1);
     end;
     //Record 36 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnCreateSalesLineOnBeforeValidateQuantity', '', false, false)]
-    local procedure OnCreateSalesLineOnBeforeValidateQuantity(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary; var ShouldValidateQuantity: Boolean)
-    begin
-        if ShouldValidateQuantity then begin
-            SalesLine.Validate(Quantity, TempSalesLine.Quantity);
-            SalesLine.Validate("Qty. to Assemble to Order", TempSalesLine."Qty. to Assemble to Order");
-            SalesLine.Marge := TempSalesLine.Marge;
-            SalesLine."Line Discount %" := TempSalesLine."Line Discount %";
-            SalesLine.Validate(Marque, TempSalesLine.Marque);
-            ShouldValidateQuantity := false;
-        end;
-    end;
     //Record 36 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnCreateSalesLineOnBeforeSetDropShipment', '', false, false)]
-    local procedure OnCreateSalesLineOnBeforeSetDropShipment(var SalesLine: Record "Sales Line"; TempSalesLine: Record "Sales Line" temporary; var IsHandled: Boolean)
-    begin
-        SalesLine."Drop Shipment" := TempSalesLine."Drop Shipment";
-        if SalesLine."Bill-to Customer No." <> TempSalesLine."Bill-to Customer No." then begin
-            SalesLine."Purchasing Code" := TempSalesLine."Purchasing Code";
-            SalesLine."Special Order Purchase No." := TempSalesLine."Special Order Purchase No.";
-            SalesLine."Special Order Purch. Line No." := TempSalesLine."Special Order Purch. Line No.";
-        end;
-        IsHandled := true;
-    end;
     //Record 36 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterCopySellToCustomerAddressFieldsFromCustomer', '', false, false)]
-    local procedure OnAfterCopySellToCustomerAddressFieldsFromCustomer(var SalesHeader: Record "Sales Header"; SellToCustomer: Record Customer; CurrentFieldNo: Integer; var SkipBillToContact: Boolean; var SkipSellToContact: Boolean)
-    begin
-        SalesHeader."Compl. cond. livraison" := SellToCustomer."Compl. cond. livraison";
-    end;
     //Record 37 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnValidateNoOnBeforeCheckPostingSetups', '', false, false)]
     local procedure OnValidateNoOnBeforeCheckPostingSetups(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
@@ -735,49 +823,6 @@ codeunit 50001 "AMG_Events"
         IsHandled := true;
     end;
     //Record 38 
-    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeSendRecords', '', false, false)]
-    local procedure OnBeforeSendRecords(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
-    var
-        DocumentSendingProfile: Record "Document Sending Profile";
-        ReportSelections: Record "Report Selections";
-        Selected: Integer;
-        DocTxt: Text[150];
-        TextSTR: Label 'Commande achat,Commande achat avec attestation TVA';
-        TextDemande: Label 'Choisisez votre impression :';
-    begin
-        Selected := DIALOG.STRMENU(TextSTR, 1, TextDemande);
-        if Selected = 1 then
-            DocumentSendingProfile.SendVendorRecords(
-              ReportSelections.Usage::"P.Order", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
-              PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."))
-        else
-            if Selected = 2 Then
-                DocumentSendingProfile.SendVendorRecords(
-                  ReportSelections.Usage::"P.OrderVAT", PurchaseHeader, DocTxt, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."No.",
-                  PurchaseHeader.FieldNo("Buy-from Vendor No."), PurchaseHeader.FieldNo("No."));
-        IsHandled := true;
-    end;
-    //Record 38 
-    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforePrintRecords', '', false, false)]
-    local procedure OnBeforePrintRecords(var PurchaseHeader: Record "Purchase Header"; ShowRequestForm: Boolean; var IsHandled: Boolean)
-    var
-        DocumentSendingProfile: Record "Document Sending Profile";
-        DummyReportSelections: Record "Report Selections";
-        Selected: Integer;
-        TextSTR: Label 'Commande achat,Commande achat avec attestation TVA';
-        TextDemande: Label 'Choisisez votre impression :';
-    begin
-        Selected := DIALOG.STRMENU(TextSTR, 1, TextDemande);
-        if Selected = 1 then
-            DocumentSendingProfile.TrySendToPrinterVendor(
-              DummyReportSelections.Usage::"P.Order", PurchaseHeader, PurchaseHeader.FieldNo("Buy-from Vendor No."), ShowRequestForm)
-        else
-            if Selected = 2 Then
-                DocumentSendingProfile.TrySendToPrinterVendor(
-                 DummyReportSelections.Usage::"P.OrderVAT",
-                 PurchaseHeader, PurchaseHeader.FIELDNO("Buy-from Vendor No."), ShowRequestForm);
-        IsHandled := true;
-    end;
     //Record 38 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeSetDefaultPurchaser', '', false, false)]
     local procedure OnBeforeSetDefaultPurchaser(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
@@ -933,12 +978,6 @@ codeunit 50001 "AMG_Events"
                 Error(Text016, DialogText, PurchLine.FieldCaption("Line No."), PurchLine."Line No.");
         end;
         ShowDialog := ShowDialog::" ";
-    end;
-    //Record 60 
-    [EventSubscriber(ObjectType::Table, Database::"Document Sending Profile", 'OnSendVendorRecordsOnBeforeLookupProfile', '', false, false)]
-    local procedure OnSendVendorRecordsOnBeforeLookupProfile(ReportUsage: Integer; RecordVariant: Variant; VendorNo: Code[20]; var RecRefToSend: RecordRef; SingleVendorSelected: Boolean; var ShowDialog: Boolean)
-    begin
-        ShowDialog := false;
     end;
     //Record 77 
     [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetEmailAddress', '', false, false)]
@@ -1335,18 +1374,6 @@ codeunit 50001 "AMG_Events"
                     "Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
             end;
         end;
-    end;
-    //Record 81
-    [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnValidateAccountTypeOnBeforeCheckKeepDescription', '', false, false)]
-    local procedure OnValidateAccountTypeOnBeforeCheckKeepDescription(var GenJournalLine: Record "Gen. Journal Line"; var xGenJournalLine: Record "Gen. Journal Line"; CurrentFieldNo: Integer)
-    var
-        SourceCodeSetup: Record "Source Code Setup";
-    begin
-        if GenJournalLine."Source Code" = SourceCodeSetup."Trans. Bank Rec. to Gen. Jnl." then begin
-            if GenJournalLine.Description = '' then GenJournalLine.Validate(Description, '');
-        end
-        else
-            GenJournalLine.Validate(Description, '');
     end;
 
     //Record 81
