@@ -7,31 +7,18 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
 {
     layout
     {
-        addafter("No.")
-        {
-            field("No. 2"; Rec."No. 2")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the No. 2 field.';
-            }
-        }
-        modify(Description)
-        {
-            Visible = true;
-        }
         addafter("Description 2")
         {
             field(Historique; Rec.History)
             {
                 Lookup = true;
                 DrillDown = true;
-                TableRelation = "Sales Archive"."Reference";
+                TableRelation = "Historique ventes"."Reference";
                 Importance = Promoted;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Historique field.';
                 trigger OnLookup(var myText: Text): Boolean
                 var
-                    LRecHisto: Record "Sales Archive";
+                    LRecHisto: Record "Historique ventes";
                 begin
                     LRecHisto.SetRange("Reference", Rec."No.");
                     PAGE.RunModal(Page::"Historique ventes article", LRecHisto);
@@ -39,7 +26,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
 
                 trigger OnDrillDown()
                 var
-                    LRecHisto: Record "Sales Archive";
+                    LRecHisto: Record "Historique ventes";
                 begin
                     LRecHisto.SetRange("Reference", Rec."No.");
                     PAGE.RunModal(Page::"Historique ventes article", LRecHisto);
@@ -51,7 +38,6 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 DrillDown = true;
                 AssistEdit = false;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Code ONU field.';
                 trigger OnLookup(var myText: Text): Boolean
                 begin
                     Clear(GPageONU);
@@ -93,43 +79,36 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 ApplicationArea = All;
                 TableRelation = "ONU table".Version where(Code = field("Code ONU"));
                 Visible = false;
-                ToolTip = 'Specifies the value of the UN version field.';
             }
             field(Brand; Rec.Brand)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Brand field.';
             }
             field(Grade; Rec.Grade)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Grade field.';
             }
             field(Color; Rec.Color)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Color field.';
             }
             field(Process1; Rec.Process1)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Process1 field.';
             }
             field(Process2; Rec.Process2)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Process2 field.';
             }
             field(Origin; Rec.Origin)
             {
                 ApplicationArea = All;
                 Visible = false;
-                ToolTip = 'Specifies the value of the Origin field.';
             }
         }
         addafter("Item Category Code")
@@ -137,7 +116,6 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             field("Type carbo"; Rec."Type carbo")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Type carbo field.';
             }
         }
         addafter("Last Direct Cost")
@@ -145,7 +123,18 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             field("Last Date Modified Price"; Rec."Last Date Modified Price")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Last Date Modified Price field.';
+            }
+        }
+        addlast(content)
+        {
+            group("Code a bar")
+            {
+                Caption = 'Code à bar';
+                field(CodeBar; Rec.CodeBar)
+                {
+                    Caption = 'Code Aztec Générer';
+                    ApplicationArea = All;
+                }
             }
         }
         addfirst(factboxes)
@@ -153,14 +142,13 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
             part(LPSubstitute; "Sustitutions possibles")
             {
                 ApplicationArea = All;
-                Caption = 'Substitution';
+                Caption = 'Substitution', Comment = 'FRA="Substitution"';
                 SubPageLink = "No." = field("No.");
             }
         }
     }
     actions
     {
-        moveafter("T&urnover"; "Co&mments")
         addfirst(Functions)
         {
             action(Etiquette)
@@ -170,22 +158,17 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 image = BarCode;
                 PromotedCategory = Process;
                 ApplicationArea = All;
-                ToolTip = 'Executes the Etiquette action.';
                 trigger OnAction()
                 var
                     LRecArticle: Record Item;
-                // LCUCodeBar: Codeunit 50000;
+                    LCUCodeBar: Codeunit MgtBarCode;
                 begin
                     if not Rec.CodeBar then
-                        //     LCUCodeBar.AddCodeBarAztec(Rec);//TODO 
-                        LRecArticle.SetRange("No.", Rec."No.");
+                        LCUCodeBar.AddCodeBarAztec(Rec);
+                    LRecArticle.SetRange("No.", Rec."No.");
                     REPORT.RUN(Report::"Etiquette article", true, true, LRecArticle);
                 end;
             }
-        }
-        modify("CopyItem")
-        {
-            Visible = false;
         }
     }
     trigger OnAfterGetRecord()
@@ -198,5 +181,4 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
     var
         GRecONU: Record "ONU table";
         GPageONU: Page "Liste ONU";
-
 }

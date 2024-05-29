@@ -5,78 +5,61 @@ pageextension 50000 CompanyInformation extends "Company Information" //1
 {
     layout
     {
-        modify("Use GLN in Electronic Document")
-        {
-            Visible = false;
-        }
         addafter("VAT Registration No.")
         {
             field("No. EORI"; rec."No. EORI")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the N° EORI field.';
             }
         }
-        addafter("User Experience")
+        addlast(content)
         {
             group(Factor)
             {
-                Caption = 'Factor';
-                field("Nom Factor"; rec."Name Factor")
+                Caption = 'Factor', Comment = 'FRA="Factor"';
+                field("Nom Factor"; Rec."Nom Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Nom Factor field.';
                 }
-                field("Téléphone Factor"; rec."phone Factor")
+                field("Téléphone Factor"; Rec."Telephone Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Téléphone Factor field.';
                 }
-                field("EMail Factor"; rec."EMail Factor")
+                field("EMail Factor"; Rec."EMail Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the EMail Factor field.';
                 }
-                field("Banque Factor"; rec."Bank Factor")
+                field("Banque Factor"; Rec."Banque Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Banque Factor field.';
                 }
-                field("Adress Factor"; rec."Adress Factor")
+                field("Adresse Factor"; Rec."Adresse Factor")
                 {
-                    Caption = '<Adress Factor>';
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the <Adress Factor> field.';
                 }
-                field("RIB Factor"; rec."RIB Factor")
+                field("RIB Factor"; Rec."RIB Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the RIB Factor field.';
                 }
-                field("IBAN Factor"; rec."IBAN Factor")
+                field("IBAN Factor"; Rec."IBAN Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the IBAN Factor field.';
                 }
-                field("BIC Factor"; rec."BIC Factor")
+                field("BIC Factor"; Rec."BIC Factor")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the BIC Factor field.';
                 }
-                field("RIB Factor Exp"; rec."RIB Factor Exp")
+                field("RIB Factor Exp"; Rec."RIB Factor Exp")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the RIB Factor Exp field.';
                 }
-                field("IBAN Factor Exp"; rec."IBAN Factor Exp")
+                field("IBAN Factor Exp"; Rec."IBAN Factor Exp")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the IBAN Factor Exp field.';
                 }
-                field("BIC Factor Exp"; rec."BIC Factor Exp")
+                field("BIC Factor Exp"; Rec."BIC Factor Exp")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the BIC Factor Exp field.';
                 }
             }
         }

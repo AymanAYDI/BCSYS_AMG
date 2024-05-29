@@ -6,7 +6,7 @@ page 50013 "Fiche DGX"
 {
     PageType = Card;
     SourceTable = "DGX Header";
-    ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {
@@ -14,62 +14,49 @@ page 50013 "Fiche DGX"
         {
             group("Général")
             {
-                field("DGX No."; Rec."DGX No.")
+                field("No DGX"; Rec."No DGX")
                 {
-                    ToolTip = 'Specifies the value of the DGX No. field.';
                 }
-                field("DGX Type"; Rec."DGX Type")
+                field("Type DGX"; Rec."Type DGX")
                 {
-                    ToolTip = 'Specifies the value of the DGX Type field.';
                 }
-                field("Delivery slip no."; Rec."Delivery slip no.")
+                field("No Bon Livraison"; Rec."No Bon Livraison")
                 {
-                    ToolTip = 'Specifies the value of the Delivery slip no. field.';
                 }
-                field(Recipient; Rec.Recipient)
+                field(Destinataire; Rec.Destinataire)
                 {
-                    ToolTip = 'Specifies the value of the Recipient field.', Comment = 'FRA="Destinataire"';
                 }
-                field("Recipient Name"; Rec."Recipient Name")
+                field("Destinataire nom"; Rec."Destinataire nom")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Name field.';
                 }
-                field("Recipient Adress 1"; Rec."Recipient Adress 1")
+                field("Destinataire adresse 1"; Rec."Destinataire adresse 1")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Adress 1 field.';
                 }
-                field("Recipient Adress 2"; Rec."Recipient Adress 2")
+                field("Destinataire adresse 2"; Rec."Destinataire adresse 2")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Adress 2 field.';
                 }
-                field("Recipient Post Code"; Rec."Recipient Post Code")
+                field("Destinataire code postal"; Rec."Destinataire code postal")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Post Code field.';
                 }
-                field("Recipient City"; Rec."Recipient City")
+                field("Destinataire ville"; Rec."Destinataire ville")
                 {
-                    ToolTip = 'Specifies the value of the Recipient City field.';
                 }
-                field("Recipient Country EN"; Rec."Recipient Country EN")
+                field("Destinataire pays EN"; Rec."Destinataire pays EN")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Country EN field.';
                 }
-                field("Airport of departure"; Rec."Airport of departure")
+                field("Aéroport de départ"; Rec."Aeroport de depart")
                 {
-                    ToolTip = 'Specifies the value of the Airport of departure field.';
                 }
-                field(Radioactive; Rec.Radioactive)
+                field(Radioactif; Rec.Radioactif)
                 {
-                    ToolTip = 'Specifies the value of the Radioactive field.';
                 }
-                field("Document Date "; Rec."Document Date")
+                field("Date document"; Rec."Date document")
                 {
-                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
             }
-            part(LignesDGX; "Lignes DGX")
+            part("Lignes DGX"; "Lignes DGX")
             {
-                SubPageLink = DGXNo = field("DGX No.");
+                SubPageLink = DGXNo = field("No DGX");
             }
         }
     }
@@ -84,19 +71,19 @@ page 50013 "Fiche DGX"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-                ToolTip = 'Executes the Importer lignes action.';
+
                 trigger OnAction()
                 var
-                    LRecItem: Record Item;
-                    LRecShipLines: Record "Sales Shipment Line";
+                    LRecColis: Record Colis;
                     LRecDGXHeader: Record "DGX Header";
                     LRecDGXLines: Record "DGX Lines";
-                    LRecColis: Record Package;
+                    LRecItem: Record Item;
                     LRecONU: Record "ONU table";
+                    LRecShipLines: Record "Sales Shipment Line";
                     LIntLineNo: Integer;
                 begin
-                    if Rec."Delivery slip no." <> '' then begin
-                        LRecDGXLines.SETFILTER(DGXNo, Rec."DGX No.");
+                    if Rec."No Bon Livraison" <> '' then begin
+                        LRecDGXLines.SETFILTER(DGXNo, Rec."No DGX");
                         LIntLineNo := 0;
                         if LRecDGXLines.FINDLAST() then
                             LIntLineNo := LRecDGXLines.LineNo + 10000
@@ -105,65 +92,64 @@ page 50013 "Fiche DGX"
 
                         //on récupère les informations à partir des lignes de l'expédition vente enregistrée
                         LRecShipLines.CALCFIELDS("Code ONU");
-                        LRecShipLines.SetRange(Type, LRecShipLines.Type::Item);
-                        LRecShipLines.SETFILTER("Document No.", Rec."Delivery slip no.");
+                        LRecShipLines.SETRANGE(Type, LRecShipLines.Type::Item);
+                        LRecShipLines.SETFILTER("Document No.", Rec."No Bon Livraison");
                         LRecShipLines.SETFILTER(Quantity, '>0'); //DELPHI AUB 12.10.2021
                         LRecShipLines.SETFILTER("Code ONU", '<>%1', '');
 
 
-                        IF LRecShipLines.findset() THEN
-                            REPEAT
-                                LRecDGXLines.Reset();
+                        if LRecShipLines.FIND('-') then
+                            repeat
+                                LRecDGXLines.RESET();
                                 LRecDGXLines.LineNo := LIntLineNo;
-                                LRecDGXLines.DGXNo := Rec."DGX No.";
+                                LRecDGXLines.DGXNo := Rec."No DGX";
                                 LRecDGXLines.ItemNo := LRecShipLines."No.";
-                                LRecItem.Reset();
-                                LRecONU.Reset();
+                                LRecItem.RESET();
+                                LRecONU.RESET();
                                 if LRecItem.GET(LRecShipLines."No.") then
                                     if (LRecItem."Code ONU" <> ' ') and LRecONU.GET(LRecItem."Code ONU", LRecItem."UN version") then begin
                                         LRecDGXLines.UN := LRecItem."Code ONU";
-                                        LRecDGXLines.Class := LRecONU.Class;
-                                        LRecDGXLines."Packaging Group" := LRecONU."Packaging group";
+                                        LRecDGXLines.Classe := LRecONU.Classe;
+                                        LRecDGXLines."Groupe Emballage" := LRecONU."Groupe emballage";
                                         LRecDGXLines.Description := LRecONU.Description;
-                                        LRecDGXLines."Sub-Class" := LRecONU."Sub-Class";
-                                        LRecDGXLines."Package No." := LRecShipLines."Package No.";
-                                        LRecDGXLines."Unit of measure" := LRecShipLines."Unit of Measure";
-                                        if LRecDGXHeader.GET(Rec."DGX No.") then
-                                            case LRecDGXHeader."DGX Type" of
-                                                LRecDGXHeader."DGX Type"::"Aerien cargo":
+                                        LRecDGXLines."Sous-classe" := LRecONU."Sous-classe";
+                                        LRecDGXLines."No Colis" := LRecShipLines."No. Colis";
+                                        LRecDGXLines."Unite de mesure" := LRecShipLines."Unit of Measure";
+                                        if LRecDGXHeader.GET(Rec."No DGX") then
+                                            case LRecDGXHeader."Type DGX" of
+                                                LRecDGXHeader."Type DGX"::"Aerien cargo":
                                                     LRecDGXLines."Packing Inst" := LRecONU."Packing instr cargo";
-                                                LRecDGXHeader."DGX Type"::"Aerien passager":
+                                                LRecDGXHeader."Type DGX"::"Aerien passager":
                                                     LRecDGXLines."Packing Inst" := LRecONU."Packing instr passager";
                                                 else
                                                     LRecDGXLines."Packing Inst" := '';
-                                            end;//TODO VErif 
+                                            end;
                                         //DELPHI AUB récupération du poids net du colis
-                                        if LRecColis.GET(LRecShipLines."Package No.") then begin
-                                            LRecDGXLines."Net mass (kg)" := LRecColis."Net Weight";
-                                            LRecDGXLines."Gross Mass (kg)" := LRecColis."Gross Weight";
-                                            LRecColis.CALCFIELDS("Nb of pieces");
-                                            LRecDGXLines.Qty := LRecColis."Nb of pieces";
-                                            LRecDGXLines."Package Qty" := LRecColis."Nb of pieces";
-                                            LRecDGXLines."Flash point" := LRecONU."Flash Point";
+                                        if LRecColis.GET(LRecShipLines."No. Colis") then begin
+                                            LRecDGXLines."Masse nette (kg)" := LRecColis."Poids net";
+                                            LRecDGXLines."Masse brute (kg)" := LRecColis."Poids brut";
+                                            LRecColis.CALCFIELDS("Nb piece dans le colis");
+                                            LRecDGXLines.Qty := LRecColis."Nb piece dans le colis";
+                                            LRecDGXLines."Qty colis" := LRecColis."Nb piece dans le colis";
+                                            LRecDGXLines."Point eclair" := LRecONU."Flash Point";
                                             LRecDGXLines."Limited qty" := LRecONU."Limited quantity";
-                                        END;
+                                        end;
                                         LRecDGXLines.Qty := LRecShipLines.Quantity;
-                                    END ELSE BEGIN
+                                    end else begin
                                         LRecDGXLines.UN := '';
-                                        LRecDGXLines.Class := '';
+                                        LRecDGXLines.Classe := '';
                                         LRecDGXLines.Description := '';
-                                        LRecDGXLines."Sub-Class" := '';
-                                        LRecDGXLines."Packaging Group" := LRecDGXLines."Packaging Group"::" ";
-                                        LRecDGXLines."Package No." := '';
-                                        LRecDGXLines."Unit of measure" := '';
+                                        LRecDGXLines."Sous-classe" := '';
+                                        LRecDGXLines."Groupe Emballage" := LRecDGXLines."Groupe Emballage"::" ";
+                                        LRecDGXLines."No Colis" := '';
+                                        LRecDGXLines."Unite de mesure" := '';
                                         LRecDGXLines."Packing Inst" := '';
-                                    END;
-
+                                    end;
                                 LRecDGXLines."Type of Packing" := '1 FIBREBOARD BOX';
                                 LRecDGXLines.INSERT();
                                 COMMIT();
                                 LIntLineNo += 10000;
-                            UNTIL LRecShipLines.Next() <= 0;
+                            until LRecShipLines.NEXT() <= 0;
 
                     end else
                         MESSAGE('Le No de bon de colisage est manquant');
@@ -176,15 +162,15 @@ page 50013 "Fiche DGX"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Executes the Imprimer action.';
+
                 trigger OnAction()
                 begin
-                    Rec.SETFILTER("DGX No.", Rec."DGX No.");
-                    if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
-                        REPORT.RunModal(Report::"DGX CERFA RDLC", true, false, Rec)
+                    Rec.SETFILTER("No DGX", Rec."No DGX");
+                    if Rec."Type DGX" = Rec."Type DGX"::"Multi-modal" then
+                        REPORT.RUNMODAL(Report::"DGX CERFA RDLC", true, false, Rec)
                     else
-                        REPORT.RunModal(Report::"DGX IATA RDLC", true, false, Rec);
-                    Rec.SETFILTER("DGX No.", '');
+                        REPORT.RUNMODAL(Report::"DGX IATA RDLC", true, false, Rec);
+                    Rec.SETFILTER("No DGX", '');
                 end;
             }
         }
@@ -192,10 +178,10 @@ page 50013 "Fiche DGX"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        GTxtBonLivraison := Rec.GETFILTER("Delivery slip no.");
-        if Rec.GETFILTER("Delivery slip no.") <> '' then begin
-            Rec."Delivery slip no." := GTxtBonLivraison;
-            Rec.Validate("Delivery slip no.");
+        GTxtBonLivraison := CopyStr(Rec.GETFILTER("No Bon Livraison"), 1, MaxStrLen(GTxtBonLivraison));
+        if Rec.GETFILTER("No Bon Livraison") <> '' then begin
+            Rec."No Bon Livraison" := GTxtBonLivraison;
+            Rec.VALIDATE("No Bon Livraison");
         end;
     end;
 

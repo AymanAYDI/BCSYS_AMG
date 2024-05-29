@@ -1,11 +1,10 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 page 50012 "Liste DGX"
 {
     CardPageID = "Fiche DGX";
     PageType = List;
     SourceTable = "DGX Header";
-    ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {
@@ -13,37 +12,29 @@ page 50012 "Liste DGX"
         {
             repeater(Group)
             {
-                field("DGX No."; rec."DGX No.")
+                field("No DGX"; Rec."No DGX")
                 {
-                    ToolTip = 'Specifies the value of the DGX No. field.';
                 }
-                field("DGX Type"; rec."DGX Type")
+                field("Type DGX"; Rec."Type DGX")
                 {
-                    ToolTip = 'Specifies the value of the DGX Type field.';
                 }
-                field(Recipient; rec.Recipient)
+                field(Destinataire; Rec.Destinataire)
                 {
-                    ToolTip = 'Specifies the value of the Recipient field.', Comment = 'FRA="Destinataire"';
                 }
-                field("Recipient Name"; rec."Recipient Name")
+                field("Destinataire nom"; Rec."Destinataire nom")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Name field.';
                 }
-                field("Recipient Country EN"; rec."Recipient Country EN")
+                field("Destinataire pays EN"; Rec."Destinataire pays EN")
                 {
-                    ToolTip = 'Specifies the value of the Recipient Country EN field.';
                 }
-                field("Airport of departure"; rec."Airport of departure")
+                field("Aéroport de départ"; Rec."Aeroport de depart")
                 {
-                    ToolTip = 'Specifies the value of the Airport of departure field.';
                 }
-                field("Document Date "; rec."Document Date")
+                field("Date document"; Rec."Date document")
                 {
-                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
-                field("Delivery slip no."; rec."Delivery slip no.")
+                field("No Bon Livraison"; Rec."No Bon Livraison")
                 {
-                    ToolTip = 'Specifies the value of the Delivery slip no. field.';
                 }
             }
         }
@@ -60,15 +51,15 @@ page 50012 "Liste DGX"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Executes the Imprimer action.';
+
                 trigger OnAction()
                 begin
-                    rec.SETFILTER("DGX No.", Rec."DGX No.");
-                    if Rec."DGX Type" = Rec."DGX Type"::"Multi-modal" then
-                        REPORT.RunModal(Report::"DGX CERFA RDLC", true, false, xRec)
+                    Rec.SETFILTER("No DGX", Rec."No DGX");
+                    if Rec."Type DGX" = Rec."Type DGX"::"Multi-modal" then
+                        REPORT.RUNMODAL(Report::"DGX CERFA RDLC", true, false, xRec)
                     else
-                        REPORT.RunModal(Report::"DGX IATA RDLC", true, false, xRec);
-                    rec.SETFILTER("DGX No.", '');
+                        REPORT.RUNMODAL(Report::"DGX IATA RDLC", true, false, xRec);
+                    Rec.SETFILTER("No DGX", '');
                 end;
             }
         }
@@ -76,10 +67,10 @@ page 50012 "Liste DGX"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        GTxtBonLivraison := Rec.GETFILTER("Delivery slip no.");
-        if rec.GETFILTER("Delivery slip no.") <> '' then begin
-            rec."Delivery slip no." := GTxtBonLivraison;
-            rec.Validate("Delivery slip no.");
+        GTxtBonLivraison := CopyStr(Rec.GETFILTER("No Bon Livraison"), 1, MaxStrLen(GTxtBonLivraison));
+        if Rec.GETFILTER("No Bon Livraison") <> '' then begin
+            Rec."No Bon Livraison" := GTxtBonLivraison;
+            Rec.VALIDATE("No Bon Livraison");
         end;
     end;
 

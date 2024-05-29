@@ -22,7 +22,7 @@ tableextension 50018 SalesShipmentLine extends "Sales Shipment Line" //111
         }
         field(50010; "No. Colis"; Code[20])
         {
-            TableRelation = Package."Package No." where("Shipping No." = field("Document No."));
+            TableRelation = Colis."No." where("No. expedition" = field("Document No."));
             Caption = 'No. Colis', Comment = 'FRA="N° Colis"';
         }
         field(50020; "Code ONU"; Code[10])

@@ -1,49 +1,49 @@
 namespace BCSYS.AMGALLOIS.Basic;
+
 using Microsoft.Sales.Document;
-using Microsoft.Utilities;
-using Microsoft.Inventory.Item.Catalog;
-using Microsoft.Finance.Deferral;
-using Microsoft.Finance.Dimension;
 using Microsoft.Purchases.History;
-using Microsoft.Sales.Pricing;
 using Microsoft.Inventory.BOM;
-using Microsoft.Foundation.ExtendedText;
-using Microsoft.Inventory.Location;
-using Microsoft.Inventory.Item.Substitution;
-using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Availability;
-using Microsoft.Foundation.Attachment;
+using Microsoft.Inventory.Item;
+using Microsoft.Finance.Dimension;
+using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Foundation.ExtendedText;
+using Microsoft.Sales.Pricing;
+using Microsoft.Utilities;
+using Microsoft.Finance.Deferral;
+using Microsoft.Finance.Currency;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Archive;
-using Microsoft.Finance.Currency;
 using System.Environment.Configuration;
-using Microsoft.Inventory.Setup;
 using Microsoft.Sales.Setup;
+using Microsoft.Inventory.Setup;
 using System.Utilities;
 using Microsoft.Foundation.Navigate;
+using Microsoft.Foundation.Attachment;
 page 50007 "Sales Order Subform Color"
 {
     AutoSplitKey = true;
-    Caption = 'Lines';
+    Caption = 'Lines', Comment = 'FRA="Lignes"';
     DelayedInsert = true;
     LinksAllowed = false;
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Sales Line";
     SourceTableView = where("Document Type" = filter(Order));
-    ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {
         area(content)
         {
-            repeater(Control1)
+            repeater(Genera)
             {
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = Advanced;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the type of entity that will be posted for this sales line, such as Item, Resource, or G/L Account.';
 
                     trigger OnValidate()
                     begin
@@ -57,18 +57,17 @@ page 50007 "Sales Order Subform Color"
                 field(FilteredTypeField; TypeAsText)
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Type';
+                    Caption = 'Type', Comment = 'FRA="Type"';
                     Editable = CurrPageIsEditable;
                     LookupPageID = "Option Lookup List";
                     TableRelation = "Option Lookup Buffer"."Option Caption" where("Lookup Type" = const(Sales));
-                    ToolTip = 'Specifies the type of transaction that will be posted with the document line. If you select Comment, then you can enter any text in the Description field, such as a message to a customer. ';
                     Visible = IsFoundation;
 
                     trigger OnValidate()
                     begin
                         TempOptionLookupBuffer.SetCurrentType(Rec.Type.AsInteger());
                         if TempOptionLookupBuffer.AutoCompleteLookup(TypeAsText, TempOptionLookupBuffer."Lookup Type"::Sales) then
-                            Rec.Validate(Type, TempOptionLookupBuffer.ID);
+                            Rec.VALIDATE(Type, TempOptionLookupBuffer.ID);
                         TempOptionLookupBuffer.ValidateOption(TypeAsText);
                         UpdateEditableOnRow();
                         UpdateTypeText();
@@ -80,7 +79,6 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = Basic, Suite;
                     ShowMandatory = not IsCommentLine;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the number of a general ledger account, item, resource, additional cost, or fixed asset, depending on the contents of the Type field.';
 
                     trigger OnValidate()
                     begin
@@ -92,25 +90,21 @@ page 50007 "Sales Order Subform Color"
                         UpdateTypeText();
                         DeltaUpdateTotals();
                         //DELPHI AUB 22.03.2021 AMG.CARBO
-                        CurrPage.Update(true);
+                        CurrPage.UPDATE(true);
                         //END DELPHI AUB
                     end;
                 }
                 field("Item Reference No."; Rec."Item Reference No.")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the Item Reference number. If you enter a Item Reference number on a sales or purchase document.';
                     Visible = false;
 
                     trigger OnLookup(var Text: Text): Boolean
                     var
-                        SalesHeader: Record "Sales Header";
                         ItemReferenceMgt: Codeunit "Item Reference Management";
                     begin
-                        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
                         ItemReferenceMgt.SalesReferenceNoLookup(Rec, SalesHeader);
                         NoOnAfterValidate();
-                        OnReferenceNoOnAfterLookup(Rec);
                     end;
 
                     trigger OnValidate()
@@ -118,32 +112,27 @@ page 50007 "Sales Order Subform Color"
                         NoOnAfterValidate();
                     end;
                 }
-                field("Item supplier"; Rec."Item supplier")
+                field("Fournisseur article"; Rec."Fournisseur article")
                 {
-                    ToolTip = 'Specifies the value of the Vendor field.';
                 }
                 field("IC Partner Code"; Rec."IC Partner Code")
                 {
                     ApplicationArea = Intercompany;
-                    ToolTip = 'Specifies the code of the intercompany partner that the transaction is related to if the entry was created from an intercompany transaction.';
                     Visible = false;
                 }
                 field("IC Partner Ref. Type"; Rec."IC Partner Ref. Type")
                 {
                     ApplicationArea = Intercompany;
-                    ToolTip = 'Specifies the item or account in your IC partner''s company that corresponds to the item or account on the line.';
                     Visible = false;
                 }
                 field("IC Partner Reference"; Rec."IC Partner Reference")
                 {
                     ApplicationArea = Intercompany;
-                    ToolTip = 'Specifies the IC partner. If the line is being sent to one of your intercompany partners, this field is used together with the IC Partner Ref. Type field to indicate the item or account in your partner''s company that corresponds to the line.';
                     Visible = false;
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     ApplicationArea = Planning;
-                    ToolTip = 'Specifies the variant of the item on the line.';
                     Visible = false;
 
                     trigger OnValidate()
@@ -154,26 +143,22 @@ page 50007 "Sales Order Subform Color"
                 field("Substitution Available"; Rec."Substitution Available")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies that a substitute is available for the item on the sales line.';
                     Visible = false;
                 }
                 field("Purchasing Code"; Rec."Purchasing Code")
                 {
                     ApplicationArea = Basic, Suite;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies which purchaser is assigned to the vendor.';
                     Visible = true;
                 }
                 field(Nonstock; Rec.Nonstock)
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies that this item is a catalog item.';
                     Visible = false;
                 }
                 field("VAT Prod. Posting Group"; Rec."VAT Prod. Posting Group")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the VAT product posting group. Links business transactions made for the item, resource, or G/L account with the general ledger, to account for VAT amounts resulting from trade with that record.';
                     Visible = false;
                 }
                 field(Description; Rec.Description)
@@ -182,7 +167,6 @@ page 50007 "Sales Order Subform Color"
                     QuickEntry = false;
                     ShowMandatory = not IsCommentLine;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies a description of the entry of the product to be sold. To add a non-transactional text line, fill in the Description field only.';
 
                     trigger OnValidate()
                     begin
@@ -199,34 +183,28 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Description 2"; Rec."Description 2")
                 {
-                    ToolTip = 'Specifies the value of the Description 2 field.';
                 }
                 field("Drop Shipment"; Rec."Drop Shipment")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies if your vendor ships the items directly to your customer.';
                     Visible = false;
                 }
                 field("Special Order"; Rec."Special Order")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies that the item on the sales line is a special-order item.';
                     Visible = false;
                 }
                 field("Special Order Purchase No."; Rec."Special Order Purchase No.")
                 {
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
                 }
                 field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
                 {
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
                 }
                 field("Return Reason Code"; Rec."Return Reason Code")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the code explaining why the item was returned.';
                     Visible = false;
                 }
                 field("Location Code"; Rec."Location Code")
@@ -237,7 +215,6 @@ page 50007 "Sales Order Subform Color"
                     QuickEntry = false;
                     ShowMandatory = LocationCodeMandatory;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the inventory location from which the items sold should be picked and where the inventory decrease is registered.';
                     Visible = LocationCodeVisible;
 
                     trigger OnValidate()
@@ -248,13 +225,11 @@ page 50007 "Sales Order Subform Color"
                 field("Bin Code"; Rec."Bin Code")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies the bin where the items are picked or put away.';
                     Visible = false;
                 }
-                field(Reserve; Rec.Reserve)
+                field(ReserveF; Rec.Reserve)
                 {
                     ApplicationArea = Reservation;
-                    ToolTip = 'Specifies whether a reservation can be made for items on this line.';
                     Visible = false;
 
                     trigger OnValidate()
@@ -270,38 +245,29 @@ page 50007 "Sales Order Subform Color"
                     Enabled = not (IsCommentLine or IsBlankNumber);
                     ShowMandatory = (not IsCommentLine) and (Rec."No." <> '');
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies how many units are being sold.';
 
                     trigger OnValidate()
                     begin
                         QuantityOnAfterValidate();
                         DeltaUpdateTotals();
-
-                        //DEB DELPHI XAV
-                        Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                        Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //Modify;
-                        //FIN DELPHI XAV
                     end;
                 }
-                field("Qty received"; GDecQtyReceived)
+                field("Qté réceptionnée"; GDecQtyReceived)
                 {
-                    Caption = 'Qty Received from Supplier';
+                    Caption = 'Qté Reçue du Fourn.', Comment = 'FRA="Qté Reçue du Fourn."';
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the Qty Received from the Supplier field.';
                 }
-                field("Qty In Stock"; GDecStock)
+                field("Qté en stock"; GDecStock)
                 {
+                    Caption = 'Qté en stock';
                     DecimalPlaces = 0 : 2;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the value of the GDecStock field.';
                 }
                 field("Qty. to Assemble to Order"; Rec."Qty. to Assemble to Order")
                 {
                     ApplicationArea = Assembly;
                     BlankZero = true;
-                    ToolTip = 'Specifies how many units of the sales line quantity that you want to supply by assembly.';
                     Visible = false;
 
                     trigger OnDrillDown()
@@ -319,7 +285,6 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = Reservation;
                     BlankZero = true;
                     QuickEntry = false;
-                    ToolTip = 'Specifies how many units of the item on the line have been reserved.';
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
@@ -328,40 +293,32 @@ page 50007 "Sales Order Subform Color"
                     Enabled = UnitofMeasureCodeIsChangeable;
                     QuickEntry = false;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
 
                     trigger OnValidate()
                     begin
                         UnitofMeasureCodeOnAfterValida();
                         DeltaUpdateTotals();
-                        //DELPHI AUB 25.07.2019
-                        Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                        Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //Rec.Modify; //AUB 29.05.2020
                     end;
                 }
                 field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the unit of measure for the item or resource on the sales line.';
                     Visible = false;
                 }
-                field("Last direct cost"; GDecLastDirectCost)
+                field("Dernier coût direct"; GDecLastDirectCost)
                 {
-                    ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
+                    Caption = 'Dernier coût direct';
                 }
                 field("Unit Cost (LCY)"; Rec."Unit Cost (LCY)")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the unit cost of the item on the line.';
                     Visible = false;
                 }
                 field(SalesPriceExist; Rec.PriceExists())
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Sales Price Exists';
+                    Caption = 'Sales Price Exists', Comment = 'FRA="Prix vente existant"';
                     Editable = false;
-                    ToolTip = 'Specifies that there is a specific price for this customer.';
                     Visible = false;
                 }
                 field("Unit Price"; Rec."Unit Price")
@@ -372,15 +329,10 @@ page 50007 "Sales Order Subform Color"
                     Enabled = not (IsCommentLine or IsBlankNumber);
                     ShowMandatory = (not IsCommentLine) and (Rec."No." <> '');
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the price for one unit on the sales line.';
 
                     trigger OnValidate()
                     begin
                         DeltaUpdateTotals();
-                        //DEB DELPHI XAV
-                        Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                        Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        //Rec.Modify; //AUB 29.05.2020
                     end;
                 }
                 field("Line Amount"; Rec."Line Amount")
@@ -391,7 +343,6 @@ page 50007 "Sales Order Subform Color"
                     Enabled = not (IsCommentLine or IsBlankNumber);
                     ShowMandatory = (not IsCommentLine) and (Rec."No." <> '');
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the net amount, excluding any invoice discount amount, that must be paid for products on the line.';
 
                     trigger OnValidate()
                     begin
@@ -401,27 +352,24 @@ page 50007 "Sales Order Subform Color"
                 field(SalesLineDiscExists; Rec.LineDiscExists())
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Sales Line Disc. Exists';
+                    Caption = 'Sales Line Disc. Exists', Comment = 'FRA="Rem. ligne vente existante"';
                     Editable = false;
-                    ToolTip = 'Specifies that there is a specific discount for this customer.';
                     Visible = false;
                 }
                 field(Marge; Rec.Marge)
                 {
+                    Editable = false;
                     Importance = Standard;
                     Style = Strong;
                     StyleExpr = true;
-                    ToolTip = 'Specifies the value of the Marge field.';
                 }
                 field(Marque; Rec.Marque)
                 {
                     Style = StrongAccent;
                     StyleExpr = true;
-                    ToolTip = 'Specifies the value of the % Marge field.';
+
                     trigger OnValidate()
                     begin
-                        //DELPHI AUB 16.07.2019 Réactualisation Marge
-                        Rec.FCalculateOnMargeChange(Rec."No.", Rec.Marque); //DELPHI AUB
                         DeltaUpdateTotals(); //DELPHI AUB
                     end;
                 }
@@ -429,55 +377,40 @@ page 50007 "Sales Order Subform Color"
                 {
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
-                    ToolTip = 'Specifies the line discount percentage that is valid for the item quantity on the line.';
 
                     trigger OnValidate()
                     begin
-                        Rec.FCalculateMargeOnLineDiscountChange(Rec."No."); //DELPHI AUB
                         DeltaUpdateTotals(); //DELPHI AUB
-                        //DEB DELPHI XAV
-                        Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                        Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        Rec.Modify();
                     end;
                 }
                 field("Line Discount Amount"; Rec."Line Discount Amount")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the discount amount that is granted for the item on the line.';
                     Visible = false;
 
                     trigger OnValidate()
                     begin
                         DeltaUpdateTotals();
-                        //DEB DELPHI XAV
-                        Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                        Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                        Rec.Modify();
                     end;
                 }
                 field("Prepayment %"; Rec."Prepayment %")
                 {
                     ApplicationArea = Prepayments;
-                    ToolTip = 'Specifies the prepayment percentage to use to calculate the prepayment for sales.';
                     Visible = false;
                 }
                 field("Prepmt. Line Amount"; Rec."Prepmt. Line Amount")
                 {
                     ApplicationArea = Prepayments;
-                    ToolTip = 'Specifies the prepayment amount of the line in the currency of the sales document if a prepayment percentage is specified for the sales line.';
                     Visible = false;
                 }
                 field("Prepmt. Amt. Inv."; Rec."Prepmt. Amt. Inv.")
                 {
                     ApplicationArea = Prepayments;
-                    ToolTip = 'Specifies the prepayment amount that has already been invoiced to the customer for this sales line.';
                     Visible = false;
                 }
                 field("Allow Invoice Disc."; Rec."Allow Invoice Disc.")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies if the invoice line is included when the invoice discount is calculated.';
                     Visible = false;
 
                     trigger OnValidate()
@@ -491,13 +424,11 @@ page 50007 "Sales Order Subform Color"
                 field("Inv. Discount Amount"; Rec."Inv. Discount Amount")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the total calculated invoice discount amount for the line.';
                     Visible = false;
                 }
                 field("Inv. Disc. Amount to Invoice"; Rec."Inv. Disc. Amount to Invoice")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the actual invoice discount amount that will be posted for the line in next invoice.';
                     Visible = false;
                 }
                 field("Qty. to Ship"; Rec."Qty. to Ship")
@@ -505,13 +436,12 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the quantity of items that remain to be shipped.';
 
                     trigger OnValidate()
                     begin
                         if Rec."Qty. to Asm. to Order (Base)" <> 0 then begin
                             CurrPage.SAVERECORD();
-                            CurrPage.Update(false);
+                            CurrPage.UPDATE(false);
                         end;
                     end;
                 }
@@ -521,38 +451,32 @@ page 50007 "Sales Order Subform Color"
                     BlankZero = true;
                     QuickEntry = false;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies how many units of the item on the line have been posted as shipped.';
                 }
                 field("Qty. to Invoice"; Rec."Qty. to Invoice")
                 {
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies the quantity that remains to be invoiced. It is calculated as Quantity - Qty. Invoiced.';
                 }
                 field("Quantity Invoiced"; Rec."Quantity Invoiced")
                 {
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
-                    ToolTip = 'Specifies how many units of the item on the line have been posted as invoiced.';
                 }
                 field("Prepmt Amt to Deduct"; Rec."Prepmt Amt to Deduct")
                 {
                     ApplicationArea = Prepayments;
-                    ToolTip = 'Specifies the prepayment amount that has already been deducted from ordinary invoices posted for this sales order line.';
                     Visible = false;
                 }
                 field("Prepmt Amt Deducted"; Rec."Prepmt Amt Deducted")
                 {
                     ApplicationArea = Prepayments;
-                    ToolTip = 'Specifies the prepayment amount that has already been deducted from ordinary invoices posted for this sales order line.';
                     Visible = false;
                 }
                 field("Allow Item Charge Assignment"; Rec."Allow Item Charge Assignment")
                 {
                     ApplicationArea = ItemCharges;
-                    ToolTip = 'Specifies that you can assign item charges to this line.';
                     Visible = false;
                 }
                 field("Qty. to Assign"; Rec."Qty. to Assign")
@@ -560,7 +484,6 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = ItemCharges;
                     QuickEntry = false;
                     StyleExpr = ItemChargeStyleExpression;
-                    ToolTip = 'Specifies how many units of the item charge will be assigned to the line.';
 
                     trigger OnDrillDown()
                     begin
@@ -574,19 +497,17 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = ItemCharges;
                     BlankZero = true;
                     QuickEntry = false;
-                    ToolTip = 'Specifies the quantity of the item charge that was assigned to a specified item when you posted this sales line.';
 
                     trigger OnDrillDown()
                     begin
                         CurrPage.SAVERECORD();
                         Rec.ShowItemChargeAssgnt();
-                        CurrPage.Update(false);
+                        CurrPage.UPDATE(false);
                     end;
                 }
                 field("Requested Delivery Date"; Rec."Requested Delivery Date")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the date that the customer has asked for the order to be delivered.';
                     Visible = false;
 
                     trigger OnValidate()
@@ -597,7 +518,6 @@ page 50007 "Sales Order Subform Color"
                 field("Promised Delivery Date"; Rec."Promised Delivery Date")
                 {
                     ApplicationArea = OrderPromising;
-                    ToolTip = 'Specifies the date that you have promised to deliver the order, as a result of the Order Promising function.';
                     Visible = false;
 
                     trigger OnValidate()
@@ -609,7 +529,6 @@ page 50007 "Sales Order Subform Color"
                 {
                     ApplicationArea = Planning;
                     QuickEntry = false;
-                    ToolTip = 'Specifies the planned date that the shipment will be delivered at the customer''s address. If the customer requests a delivery date, the program calculates whether the items will be available for delivery on this date. If the items are available, the planned delivery date will be the same as the requested delivery date. If not, the program calculates the date that the items are available for delivery and enters this date in the Planned Delivery Date field.';
 
                     trigger OnValidate()
                     begin
@@ -619,7 +538,6 @@ page 50007 "Sales Order Subform Color"
                 field("Planned Shipment Date"; Rec."Planned Shipment Date")
                 {
                     ApplicationArea = Planning;
-                    ToolTip = 'Specifies the date that the shipment should ship from the warehouse. If the customer requests a delivery date, the program calculates the planned shipment date by subtracting the shipping time from the requested delivery date. If the customer does not request a delivery date or the requested delivery date cannot be met, the program calculates the content of this field by adding the shipment time to the shipping date.';
 
                     trigger OnValidate()
                     begin
@@ -630,7 +548,6 @@ page 50007 "Sales Order Subform Color"
                 {
                     ApplicationArea = Basic, Suite;
                     QuickEntry = false;
-                    ToolTip = 'Specifies when items on the document are shipped or were shipped. A shipment date is usually calculated from a requested delivery date plus lead time.';
 
                     trigger OnValidate()
                     begin
@@ -640,109 +557,91 @@ page 50007 "Sales Order Subform Color"
                 field("Shipping Agent Code"; Rec."Shipping Agent Code")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the code for the shipping agent who is transporting the items.';
                     Visible = false;
                 }
                 field("Shipping Agent Service Code"; Rec."Shipping Agent Service Code")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the code for the service, such as a one-day delivery, that is offered by the shipping agent.';
                     Visible = false;
                 }
                 field("Shipping Time"; Rec."Shipping Time")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies how long it takes from when the items are shipped from the warehouse to when they are delivered.';
                     Visible = false;
                 }
                 field("Work Type Code"; Rec."Work Type Code")
                 {
                     ApplicationArea = Manufacturing;
-                    ToolTip = 'Specifies which work type the resource applies to when the sale is related to a job.';
                     Visible = false;
                 }
                 field("Whse. Outstanding Qty."; Rec."Whse. Outstanding Qty.")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies how many units on the sales order line remain to be handled in warehouse documents.';
                     Visible = false;
                 }
                 field("Whse. Outstanding Qty. (Base)"; Rec."Whse. Outstanding Qty. (Base)")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies how many units on the sales order line remain to be handled in warehouse documents.';
                     Visible = false;
                 }
                 field("ATO Whse. Outstanding Qty."; Rec."ATO Whse. Outstanding Qty.")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies how many assemble-to-order units on the sales order line need to be assembled and handled in warehouse documents.';
                     Visible = false;
                 }
                 field("ATO Whse. Outstd. Qty. (Base)"; Rec."ATO Whse. Outstd. Qty. (Base)")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies how many assemble-to-order units on the sales order line remain to be assembled and handled in warehouse documents.';
                     Visible = false;
                 }
                 field("Outbound Whse. Handling Time"; Rec."Outbound Whse. Handling Time")
                 {
                     ApplicationArea = Warehouse;
-                    ToolTip = 'Specifies a date formula for the time it takes to get items ready to ship from this location. The time element is used in the calculation of the delivery date as follows: Shipment Date + Outbound Warehouse Handling Time = Planned Shipment Date + Shipping Time = Planned Delivery Date.';
                     Visible = false;
                 }
                 field("Blanket Order No."; Rec."Blanket Order No.")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the number of the blanket order that the record originates from.';
                     Visible = false;
                 }
                 field("Blanket Order Line No."; Rec."Blanket Order Line No.")
                 {
                     ApplicationArea = Suite;
-                    ToolTip = 'Specifies the number of the blanket order line that the record originates from.';
                     Visible = false;
                 }
                 field("FA Posting Date"; Rec."FA Posting Date")
                 {
                     ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies the date that will be used on related fixed asset ledger entries.';
                     Visible = false;
                 }
                 field("Depr. until FA Posting Date"; Rec."Depr. until FA Posting Date")
                 {
                     ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies if depreciation was calculated until the FA posting date of the line.';
                     Visible = false;
                 }
                 field("<Depr. until FA Posting Date>"; Rec."Depreciation Book Code")
                 {
                     ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies the code for the depreciation book to which the line will be posted if you have selected Fixed Asset in the Type field for this line.';
                     Visible = false;
                 }
                 field("Use Duplication List"; Rec."Use Duplication List")
                 {
                     ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies, if the type is Fixed Asset, that information on the line is to be posted to all the assets defined depreciation books. ';
                     Visible = false;
                 }
                 field("Duplicate in Depreciation Book"; Rec."Duplicate in Depreciation Book")
                 {
                     ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies a depreciation book code if you want the journal line to be posted to that depreciation book, as well as to the depreciation book in the Depreciation Book Code field.';
                     Visible = false;
                 }
                 field("Appl.-from Item Entry"; Rec."Appl.-from Item Entry")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the number of the item ledger entry that the document or journal line is applied from.';
                     Visible = false;
                 }
                 field("Appl.-to Item Entry"; Rec."Appl.-to Item Entry")
                 {
                     ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies the number of the item ledger entry that the document or journal line is applied -to.';
                     Visible = false;
                 }
                 field("Deferral Code"; Rec."Deferral Code")
@@ -750,7 +649,6 @@ page 50007 "Sales Order Subform Color"
                     ApplicationArea = Suite;
                     Enabled = (Rec.Type <> Rec.Type::"Fixed Asset") and (Rec.Type <> Rec.Type::" ");
                     TableRelation = "Deferral Template"."Deferral Code";
-                    ToolTip = 'Specifies the deferral template that governs how revenue earned with this sales document is deferred to the different accounting periods when the good or service was delivered.';
                     Visible = false;
 
                     trigger OnAssistEdit()
@@ -761,13 +659,11 @@ page 50007 "Sales Order Subform Color"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = Dimensions;
-                    ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = DimVisible1;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = Dimensions;
-                    ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = DimVisible2;
                 }
                 field(ShortcutDimCode3; ShortcutDimCode[3])
@@ -778,7 +674,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible3;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(3, ShortcutDimCode[3]);
@@ -792,7 +688,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible4;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(4, ShortcutDimCode[4]);
@@ -806,7 +702,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible5;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(5, ShortcutDimCode[5]);
@@ -820,7 +716,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible6;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(6, ShortcutDimCode[6]);
@@ -834,7 +730,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible7;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(7, ShortcutDimCode[7]);
@@ -848,7 +744,7 @@ page 50007 "Sales Order Subform Color"
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
                     Visible = DimVisible8;
-                    ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
+
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(8, ShortcutDimCode[8]);
@@ -858,48 +754,43 @@ page 50007 "Sales Order Subform Color"
                 {
                     ApplicationArea = Basic, Suite;
                     Editable = false;
-                    ToolTip = 'Specifies the document number.';
                     Visible = false;
                 }
                 field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
                 {
-                    ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
                 }
                 field("Gen. Prod. Posting Group"; Rec."Gen. Prod. Posting Group")
                 {
-                    ToolTip = 'Specifies the value of the Gen. Prod. Posting Group field.';
                 }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = Basic, Suite;
                     Editable = false;
-                    ToolTip = 'Specifies the line number.';
                     Visible = false;
                 }
             }
-            group(Control51)
+            group(Group2)
             {
-                group(Control45)
+                group(Group3)
                 {
-                    field("TotalSalesLineLineAmount"; TotalSalesLine."Line Amount")
+                    ShowCaption = false;
+                    field(TotalSalesLine_LineAmount; TotalSalesLine."Line Amount")
                     {
                         ApplicationArea = Basic, Suite;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalLineAmountWithVATAndCurrencyCaption(Currency.Code, TotalSalesHeader."Prices Including VAT");
-                        Caption = 'Subtotal Excl. VAT';
+                        Caption = 'Subtotal Excl. VAT', Comment = 'FRA="Sous-total HT"';
                         Editable = false;
-                        ToolTip = 'Specifies the sum of the value in the Line Amount Excl. VAT field on all lines in the document.';
                     }
                     field("Invoice Discount Amount"; InvoiceDiscountAmount)
                     {
                         ApplicationArea = Basic, Suite;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
-                        CaptionClass = DocumentTotals.GetInvoiceDiscAmountWithVATAndCurrencyCaption(rec.FIELDCAPTION("Inv. Discount Amount"), Currency.Code);
-                        Caption = 'Invoice Discount Amount';
+                        CaptionClass = DocumentTotals.GetInvoiceDiscAmountWithVATAndCurrencyCaption(Rec.FIELDCAPTION("Inv. Discount Amount"), Currency.Code);
+                        Caption = 'Invoice Discount Amount', Comment = 'FRA="Montant remise facture"';
                         Editable = InvDiscAmountEditable;
-                        ToolTip = 'Specifies a discount amount that is deducted from the value in the Total Incl. VAT field. You can enter or change the amount manually.';
 
                         trigger OnValidate()
                         begin
@@ -910,10 +801,9 @@ page 50007 "Sales Order Subform Color"
                     field("Invoice Disc. Pct."; InvoiceDiscountPct)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Invoice Discount %';
+                        Caption = 'Invoice Discount %', Comment = 'FRA="% remise facture"';
                         DecimalPlaces = 0 : 3;
                         Editable = InvDiscAmountEditable;
-                        ToolTip = 'Specifies a discount percentage that is granted if criteria that you have set up for the customer are met.';
 
                         trigger OnValidate()
                         begin
@@ -924,18 +814,18 @@ page 50007 "Sales Order Subform Color"
                         end;
                     }
                 }
-                group(Control28)
+                group(Group1)
                 {
+                    ShowCaption = false;
                     field("Total Amount Excl. VAT"; TotalSalesLine.Amount)
                     {
                         ApplicationArea = Basic, Suite;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalExclVATCaption(Currency.Code);
-                        Caption = 'Total Amount Excl. VAT';
+                        Caption = 'Total Amount Excl. VAT', Comment = 'FRA="Montant total HT"';
                         DrillDown = false;
                         Editable = false;
-                        ToolTip = 'Specifies the sum of the value in the Line Amount Excl. VAT field on all lines in the document minus any discount amount in the Invoice Discount Amount field.';
                     }
                     field("Total VAT Amount"; VATAmount)
                     {
@@ -943,9 +833,8 @@ page 50007 "Sales Order Subform Color"
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalVATCaption(Currency.Code);
-                        Caption = 'Total VAT';
+                        Caption = 'Total VAT', Comment = 'FRA="Total TVA"';
                         Editable = false;
-                        ToolTip = 'Specifies the sum of VAT amounts on all lines in the document.';
                     }
                     field("Total Amount Incl. VAT"; TotalSalesLine."Amount Including VAT")
                     {
@@ -953,9 +842,8 @@ page 50007 "Sales Order Subform Color"
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalInclVATCaption(Currency.Code);
-                        Caption = 'Total Amount Incl. VAT';
+                        Caption = 'Total Amount Incl. VAT', Comment = 'FRA="Montant total TTC"';
                         Editable = false;
-                        ToolTip = 'Specifies the sum of the value in the Line Amount Incl. VAT field on all lines in the document minus any discount amount in the Invoice Discount Amount field.';
                     }
                 }
             }
@@ -970,10 +858,9 @@ page 50007 "Sales Order Subform Color"
             {
                 AccessByPermission = TableData Item = R;
                 ApplicationArea = Basic, Suite;
-                Caption = 'Select items';
+                Caption = 'Select items', Comment = 'FRA="Sélectionner des articles"';
                 Ellipsis = true;
                 Image = NewItem;
-                ToolTip = 'Add two or more items from the full list of your inventory items.';
 
                 trigger OnAction()
                 begin
@@ -982,95 +869,84 @@ page 50007 "Sales Order Subform Color"
             }
             action(ActRemplir)
             {
-                Caption = 'Fill Qty';
+                Caption = 'Remplir Qté', Comment = 'FRA="Remplir Qté"';
                 Image = AutofillQtyToHandle;
-                Promoted = true;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Execute the Fill Qty action.';
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.Reset();
-                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FindSet() then
+                    GRecSalesLine.RESET();
+                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    if GRecSalesLine.FINDSET() then
                         repeat
-                            GRecSalesLine.Validate("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
+                            GRecSalesLine.VALIDATE("Qty. to Ship", GRecSalesLine."Outstanding Quantity");
                             if GRecSalesLine."Qty. to Ship (Base)" <> GRecSalesLine."Outstanding Qty. (Base)" then
-                                GRecSalesLine.Validate("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
-                            GRecSalesLine.Modify();
-                        until GRecSalesLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", GRecSalesLine."Outstanding Qty. (Base)");
+                            GRecSalesLine.MODIFY();
+                        until GRecSalesLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
                     //END DELPHI AUB 08/10/2019
                 end;
             }
             action(ActViderAExpedier)
             {
-                Caption = 'Empty Qty to ship';
+                Caption = 'Vider Qté à expédier', Comment = 'FRA="Vider Qté à expédier"';
                 Image = DeleteQtyToHandle;
-                Promoted = true;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Executes the Empty Qty to Ship action.';
+
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.Reset();
-                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FindSet() then
+                    GRecSalesLine.RESET();
+                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    if GRecSalesLine.FINDSET() then
                         repeat
-                            GRecSalesLine.Validate("Qty. to Ship", 0);
+                            GRecSalesLine.VALIDATE("Qty. to Ship", 0);
                             if GRecSalesLine."Qty. to Ship (Base)" <> 0 then
-                                GRecSalesLine.Validate("Qty. to Ship (Base)", 0);
-                            GRecSalesLine.Modify();
-                        until GRecSalesLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecSalesLine.VALIDATE("Qty. to Ship (Base)", 0);
+                            GRecSalesLine.MODIFY();
+                        until GRecSalesLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
                     //END DELPHI AUB 24/09/2019
                 end;
             }
             action(ActViderAFacturer)
             {
-                Caption = 'Empty Qty to invoice';
+                Caption = 'Vider Qté à facturer', Comment = 'FRA="Vider Qté à facturer"';
                 Image = DeleteQtyToHandle;
-                Promoted = true;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Execute the Empty Qty to Invoice action.';
+
                 trigger OnAction()
                 begin
                     //DELPHI AUB 24/09/2019
-                    GRecSalesLine.Reset();
-                    GRecSalesLine.SetRange("Document Type", GRecSalesLine."Document Type"::Order);
-                    GRecSalesLine.SetRange("Document No.", Rec."Document No.");
-                    if GRecSalesLine.FindSet() then
+                    GRecSalesLine.RESET();
+                    GRecSalesLine.SETRANGE("Document Type", GRecSalesLine."Document Type"::Order);
+                    GRecSalesLine.SETRANGE("Document No.", Rec."Document No.");
+                    if GRecSalesLine.FINDSET() then
                         repeat
-                            GRecSalesLine.Validate("Qty. to Invoice", 0);
+                            GRecSalesLine.VALIDATE("Qty. to Invoice", 0);
                             if GRecSalesLine."Qty. to Invoice (Base)" <> 0 then
-                                GRecSalesLine.Validate("Qty. to Invoice (Base)", 0);
-                            GRecSalesLine.Modify();
-                        until GRecSalesLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecSalesLine.VALIDATE("Qty. to Invoice (Base)", 0);
+                            GRecSalesLine.MODIFY();
+                        until GRecSalesLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
                     //END DELPHI AUB 24/09/2019
                 end;
             }
             group("&Line")
             {
-                Caption = '&Line';
+                Caption = '&Line', Comment = 'FRA="Ligne"';
                 Image = Line;
                 group("F&unctions")
                 {
-                    Caption = 'F&unctions';
+                    Caption = 'F&unctions', Comment = 'FRA="Fonctions"';
                     Image = "Action";
                     action(GetPrice)
                     {
                         AccessByPermission = TableData "Sales Price" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Get Price';
+                        Caption = 'Get Price', Comment = 'FRA="Extraire prix"';
                         Ellipsis = true;
                         Image = Price;
-                        ToolTip = 'Insert the lowest possible price in the Unit Price field according to any special price that you have set up.';
 
                         trigger OnAction()
                         begin
@@ -1081,10 +957,9 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Sales Line Discount" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Get Li&ne Discount';
+                        Caption = 'Get Li&ne Discount', Comment = 'FRA="Extraire remise ligne"';
                         Ellipsis = true;
                         Image = LineDiscount;
-                        ToolTip = 'Insert the best possible discount in the Line Discount field according to any special discounts that you have set up.';
 
                         trigger OnAction()
                         begin
@@ -1095,9 +970,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "BOM Component" = R;
                         ApplicationArea = Suite;
-                        Caption = 'E&xplode BOM';
+                        Caption = 'E&xplode BOM', Comment = 'FRA="Eclater nomenclature"';
                         Image = ExplodeBOM;
-                        ToolTip = 'Insert new lines for the components on the bill of materials, for example to sell the parent item as a kit. CAUTION: The line for the parent item will be deleted and represented by a description only. To undo, you must delete the component lines and add a line the parent item again.';
 
                         trigger OnAction()
                         begin
@@ -1108,22 +982,20 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Extended Text Header" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Insert &Ext. Texts';
+                        Caption = 'Insert &Ext. Texts', Comment = 'FRA="Insérer textes étendus"';
                         Image = Text;
-                        ToolTip = 'Insert the extended item description that is set up for the item that is being processed on the line.';
 
                         trigger OnAction()
                         begin
                             InsertExtendedText(true);
                         end;
                     }
-                    action(ReserveAction)
+                    action(Reserve)
                     {
                         ApplicationArea = Reservation;
-                        Caption = '&Reserve';
+                        Caption = '&Reserve', Comment = 'FRA="Réserver"';
                         Ellipsis = true;
                         Image = Reserve;
-                        ToolTip = 'Reserve the quantity that is required on the document line that you opened this window for.';
 
                         trigger OnAction()
                         begin
@@ -1134,9 +1006,8 @@ page 50007 "Sales Order Subform Color"
                     action(OrderTracking)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Order &Tracking';
+                        Caption = 'Order &Tracking', Comment = 'FRA="Chaînage"';
                         Image = OrderTracking;
-                        ToolTip = 'Tracks the connection of a supply to its corresponding demand. This can help you find the original demand that created a specific production order or purchase order.';
 
                         trigger OnAction()
                         begin
@@ -1147,9 +1018,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Nonstock Item" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Select Ca&talog Items';
+                        Caption = 'Select Ca&talog Items', Comment = 'FRA="Sélectionner des articles de catalogue"';
                         Image = NonStockItem;
-                        ToolTip = 'View the list of catalog items that exist in the system. ';
 
                         trigger OnAction()
                         begin
@@ -1159,14 +1029,13 @@ page 50007 "Sales Order Subform Color"
                 }
                 group("Item Availability by")
                 {
-                    Caption = 'Item Availability by';
+                    Caption = 'Item Availability by', Comment = 'FRA="Disponibilité article par"';
                     Image = ItemAvailability;
                     action("<Action3>")
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Event';
+                        Caption = 'Event', Comment = 'FRA="Événement"';
                         Image = "Event";
-                        ToolTip = 'View how the actual and the projected available balance of an item will develop over time according to supply and demand events.';
 
                         trigger OnAction()
                         begin
@@ -1176,9 +1045,8 @@ page 50007 "Sales Order Subform Color"
                     action(ItemAvailabilityByPeriod)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Period';
+                        Caption = 'Period', Comment = 'FRA="Période"';
                         Image = Period;
-                        ToolTip = 'Show the projected quantity of the item over time according to time periods, such as day, week, or month.';
 
                         trigger OnAction()
                         begin
@@ -1188,9 +1056,8 @@ page 50007 "Sales Order Subform Color"
                     action(ItemAvailabilityByVariant)
                     {
                         ApplicationArea = Planning;
-                        Caption = 'Variant';
+                        Caption = 'Variant', Comment = 'FRA="Variante"';
                         Image = ItemVariant;
-                        ToolTip = 'View or edit the item''s variants. Instead of setting up each color of an item as a separate item, you can set up the various colors as variants of the item.';
 
                         trigger OnAction()
                         begin
@@ -1201,9 +1068,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData Location = R;
                         ApplicationArea = Location;
-                        Caption = 'Location';
+                        Caption = 'Location', Comment = 'FRA="Magasin"';
                         Image = Warehouse;
-                        ToolTip = 'View the actual and projected quantity of the item per location.';
 
                         trigger OnAction()
                         begin
@@ -1214,9 +1080,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "BOM Buffer" = R;
                         ApplicationArea = Assembly;
-                        Caption = 'BOM Level';
+                        Caption = 'BOM Level', Comment = 'FRA="Niveau nomenclature"';
                         Image = BOMLevel;
-                        ToolTip = 'View availability figures for items on bills of materials that show how many units of a parent item you can make based on the availability of child items.';
 
                         trigger OnAction()
                         begin
@@ -1226,14 +1091,13 @@ page 50007 "Sales Order Subform Color"
                 }
                 group("Related Information")
                 {
-                    Caption = 'Related Information';
+                    Caption = 'Related Information', Comment = 'FRA="Informations connexes"';
                     action("Reservation Entries")
                     {
                         AccessByPermission = TableData Item = R;
                         ApplicationArea = Reservation;
-                        Caption = 'Reservation Entries';
+                        Caption = 'Reservation Entries', Comment = 'FRA="Écritures réservation"';
                         Image = ReservationLedger;
-                        ToolTip = 'View the entries for every reservation that is made, either manually or automatically.';
 
                         trigger OnAction()
                         begin
@@ -1243,10 +1107,9 @@ page 50007 "Sales Order Subform Color"
                     action(ItemTrackingLines)
                     {
                         ApplicationArea = ItemTracking;
-                        Caption = 'Item &Tracking Lines';
+                        Caption = 'Item &Tracking Lines', Comment = 'FRA="Lignes traçabilité"';
                         Image = ItemTrackingLines;
                         ShortCutKey = 'Shift+Ctrl+I';
-                        ToolTip = 'View or edit serial numbers and lot numbers that are assigned to the item on the document or journal line.';
 
                         trigger OnAction()
                         begin
@@ -1257,15 +1120,14 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Item Substitution" = R;
                         ApplicationArea = Suite;
-                        Caption = 'Select Item Substitution';
+                        Caption = 'Select Item Substitution', Comment = 'FRA="Sélectionner article de substitution"';
                         Image = SelectItemSubstitution;
-                        ToolTip = 'Select another item that has been set up to be sold instead of the original item if it is unavailable.';
 
                         trigger OnAction()
                         begin
                             CurrPage.SAVERECORD();
                             Rec.ShowItemSub();
-                            CurrPage.Update(true);
+                            CurrPage.UPDATE(true);
                             Rec.AutoReserve();
                         end;
                     }
@@ -1273,10 +1135,9 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData Dimension = R;
                         ApplicationArea = Dimensions;
-                        Caption = 'Dimensions';
+                        Caption = 'Dimensions', Comment = 'FRA="Axes analytiques"';
                         Image = Dimensions;
                         ShortCutKey = 'Shift+Ctrl+D';
-                        ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
 
                         trigger OnAction()
                         begin
@@ -1286,9 +1147,8 @@ page 50007 "Sales Order Subform Color"
                     action("Co&mments")
                     {
                         ApplicationArea = Comments;
-                        Caption = 'Co&mments';
+                        Caption = 'Co&mments', Comment = 'FRA="Commentaires"';
                         Image = ViewComments;
-                        ToolTip = 'View or add comments for the record.';
 
                         trigger OnAction()
                         begin
@@ -1299,9 +1159,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Item Charge" = R;
                         ApplicationArea = ItemCharges;
-                        Caption = 'Item Charge &Assignment';
+                        Caption = 'Item Charge &Assignment', Comment = 'FRA="Affectation frais annexes"';
                         Image = ItemCosts;
-                        ToolTip = 'Assign additional direct costs, for example for freight, to the item on the line.';
 
                         trigger OnAction()
                         begin
@@ -1313,9 +1172,8 @@ page 50007 "Sales Order Subform Color"
                     {
                         AccessByPermission = TableData "Order Promising Line" = R;
                         ApplicationArea = OrderPromising;
-                        Caption = 'Order &Promising';
+                        Caption = 'Order &Promising', Comment = 'FRA="Promesse de livraison"';
                         Image = OrderPromising;
-                        ToolTip = 'Calculate the shipment and delivery dates based on the item''s known and expected availability dates, and then promise the dates to the customer.';
 
                         trigger OnAction()
                         begin
@@ -1325,9 +1183,8 @@ page 50007 "Sales Order Subform Color"
                     action(DocAttach)
                     {
                         ApplicationArea = All;
-                        Caption = 'Attachments';
+                        Caption = 'Attachments', Comment = 'FRA="Pièces jointes"';
                         Image = Attach;
-                        ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
 
                         trigger OnAction()
                         var
@@ -1336,19 +1193,18 @@ page 50007 "Sales Order Subform Color"
                         begin
                             RecRef.GETTABLE(Rec);
                             DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                            DocumentAttachmentDetails.RunModal();
+                            DocumentAttachmentDetails.RUNMODAL();
                         end;
                     }
                     group("Assemble to Order")
                     {
-                        Caption = 'Assemble to Order';
+                        Caption = 'Assemble to Order', Comment = 'FRA="Assembler pour commande"';
                         Image = AssemblyBOM;
                         action(AssembleToOrderLines)
                         {
                             AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
-                            Caption = 'Assemble-to-Order Lines';
-                            ToolTip = 'View any linked assembly order lines if the documents represents an assemble-to-order sale.';
+                            Caption = 'Assemble-to-Order Lines', Comment = 'FRA="Lignes Assembler pour commande"';
 
                             trigger OnAction()
                             begin
@@ -1359,9 +1215,8 @@ page 50007 "Sales Order Subform Color"
                         {
                             AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
-                            Caption = 'Roll Up &Price';
+                            Caption = 'Roll Up &Price', Comment = 'FRA="Prix relation"';
                             Ellipsis = true;
-                            ToolTip = 'Update the unit price of the assembly item according to any changes that you have made to the assembly components.';
 
                             trigger OnAction()
                             begin
@@ -1372,9 +1227,8 @@ page 50007 "Sales Order Subform Color"
                         {
                             AccessByPermission = TableData "BOM Component" = R;
                             ApplicationArea = Assembly;
-                            Caption = 'Roll Up &Cost';
+                            Caption = 'Roll Up &Cost', Comment = 'FRA="Coûts relation"';
                             Ellipsis = true;
-                            ToolTip = 'Update the unit cost of the assembly item according to any changes that you have made to the assembly components.';
 
                             trigger OnAction()
                             begin
@@ -1385,9 +1239,8 @@ page 50007 "Sales Order Subform Color"
                     action(DocumentLineTracking)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Document &Line Tracking';
+                        Caption = 'Document &Line Tracking', Comment = 'FRA="Traçabilité ligne document"';
                         Image = Navigate;
-                        ToolTip = 'View related open, posted, or archived documents or document lines. ';
 
                         trigger OnAction()
                         begin
@@ -1397,10 +1250,9 @@ page 50007 "Sales Order Subform Color"
                     action(DeferralSchedule)
                     {
                         ApplicationArea = Suite;
-                        Caption = 'Deferral Schedule';
+                        Caption = 'Deferral Schedule', Comment = 'FRA="Tableau d''échelonnement"';
                         Enabled = Rec."Deferral Code" <> '';
                         Image = PaymentPeriod;
-                        ToolTip = 'View or edit the deferral schedule that governs how revenue made with this sales document is deferred to different accounting periods when the document is posted.';
 
                         trigger OnAction()
                         begin
@@ -1411,19 +1263,18 @@ page 50007 "Sales Order Subform Color"
             }
             group("O&rder")
             {
-                Caption = 'O&rder';
+                Caption = 'O&rder', Comment = 'FRA="Commande"';
                 Image = "Order";
                 group("Dr&op Shipment")
                 {
-                    Caption = 'Dr&op Shipment';
+                    Caption = 'Dr&op Shipment', Comment = 'FRA="Livraison directe"';
                     Image = Delivery;
                     action("Purchase &Order")
                     {
                         AccessByPermission = TableData "Purch. Rcpt. Header" = R;
                         ApplicationArea = Suite;
-                        Caption = 'Purchase &Order';
+                        Caption = 'Purchase &Order', Comment = 'FRA="Commande achat"';
                         Image = Document;
-                        ToolTip = 'View the purchase order that is linked to the sales order, for drop shipment or special order.';
 
                         trigger OnAction()
                         begin
@@ -1433,15 +1284,14 @@ page 50007 "Sales Order Subform Color"
                 }
                 group("Speci&al Order")
                 {
-                    Caption = 'Speci&al Order';
+                    Caption = 'Speci&al Order', Comment = 'FRA="Commande spéciale"';
                     Image = SpecialOrder;
                     action(OpenSpecialPurchaseOrder)
                     {
                         AccessByPermission = TableData "Purch. Rcpt. Header" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Purchase &Order';
+                        Caption = 'Purchase &Order', Comment = 'FRA="Commande achat"';
                         Image = Document;
-                        ToolTip = 'View the purchase order that is linked to the sales order, for drop shipment or special order.';
 
                         trigger OnAction()
                         begin
@@ -1452,9 +1302,8 @@ page 50007 "Sales Order Subform Color"
                 action(BlanketOrder)
                 {
                     ApplicationArea = Suite;
-                    Caption = 'Blanket Order';
+                    Caption = 'Blanket Order', Comment = 'FRA="Commande ouverte"';
                     Image = BlanketOrder;
-                    ToolTip = 'View the blanket sales order.';
 
                     trigger OnAction()
                     var
@@ -1462,7 +1311,7 @@ page 50007 "Sales Order Subform Color"
                         BlanketSalesOrder: Page "Blanket Sales Order";
                     begin
                         Rec.TESTFIELD("Blanket Order No.");
-                        SalesHeader.SetRange("No.", Rec."Blanket Order No.");
+                        SalesHeader.SETRANGE("No.", Rec."Blanket Order No.");
                         if not SalesHeader.ISEMPTY then begin
                             BlanketSalesOrder.SETTABLEVIEW(SalesHeader);
                             BlanketSalesOrder.EDITABLE := false;
@@ -1501,41 +1350,44 @@ page 50007 "Sales Order Subform Color"
         GDecStock := 0;
         GDecLastDirectCost := 0;
         if Rec.Type = Rec.Type::Item then begin
-            LRecItem.Reset();
+            LRecItem.RESET();
             if LRecItem.GET(Rec."No.") then begin
                 LRecItem.CALCFIELDS(Inventory);
                 GDecStock := LRecItem.Inventory;
+                //DELPHI AUB 19.12.19 affichage Dernier coût direct
                 GDecLastDirectCost := LRecItem."Last Direct Cost";
+                //END DELPHI AUB 19.12.19
             end;
-            LRecPurchaseLine.Reset();
+            LRecPurchaseLine.RESET();
             if (Rec."Special Order Purchase No." <> '') and (Rec."Special Order Purch. Line No." <> 0) then begin
-                LRecPurchaseLine.SetRange("Document No.", Rec."Special Order Purchase No.");
-                LRecPurchaseLine.SetRange("Line No.", Rec."Special Order Purch. Line No.");
+                LRecPurchaseLine.SETRANGE("Document No.", Rec."Special Order Purchase No.");
+                LRecPurchaseLine.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
                 if LRecPurchaseLine.FINDFIRST() then
                     GDecQtyReceived := LRecPurchaseLine."Quantity Received"
                 else begin
                     // If no result, search in Purch. Invoice Lines
-                    LRecPurchInvHeader.SetRange("Order No.", Rec."Special Order Purchase No.");
-                    if LRecPurchInvHeader.FINDSET() then
+                    LRecPurchInvHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
+                    if LRecPurchInvHeader.FIND('-') then
                         repeat
-                            LRecPurchInvLine.SetRange("Document No.", LRecPurchInvHeader."No.");
-                            LRecPurchInvLine.SetRange(Type, Rec.Type::Item);
-                            LRecPurchInvLine.SetRange("No.", Rec."No.");
+                            LRecPurchInvLine.SETRANGE("Document No.", LRecPurchInvHeader."No.");
+                            LRecPurchInvLine.SETRANGE(Type, Rec.Type::Item);
+                            LRecPurchInvLine.SETRANGE("No.", Rec."No.");
                             LRecPurchInvLine.SETFILTER(Quantity, '<>0');
-                            if LRecPurchInvLine.FINDSET() then
+                            if LRecPurchInvLine.FIND('-') then
                                 repeat
                                     GDecQtyReceived += LRecPurchInvLine.Quantity;
-                                until LRecPurchInvLine.Next() = 0;
-                        until LRecPurchInvHeader.Next() = 0
+                                until LRecPurchInvLine.NEXT() = 0;
+                        until LRecPurchInvHeader.NEXT() = 0
                     else begin
-                        LRecPurchHeaderArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                        LRecPurchHeaderArchive.SetRange("No.", Rec."Special Order Purchase No.");
+                        //DELPHI AUB search in Purchase Order Archives 03.09.2020
+                        LRecPurchHeaderArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                        LRecPurchHeaderArchive.SETRANGE("No.", Rec."Special Order Purchase No.");
                         if LRecPurchHeaderArchive.FINDLAST() then begin
-                            LRecPurchLineArchive.SetRange("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
-                            LRecPurchLineArchive.SetRange("Document No.", LRecPurchHeaderArchive."No.");
-                            LRecPurchLineArchive.SetRange("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
-                            LRecPurchLineArchive.SetRange("Version No.", LRecPurchHeaderArchive."Version No.");
-                            LRecPurchLineArchive.SetRange("Line No.", Rec."Special Order Purch. Line No.");
+                            LRecPurchLineArchive.SETRANGE("Document Type", LRecPurchHeaderArchive."Document Type"::Order);
+                            LRecPurchLineArchive.SETRANGE("Document No.", LRecPurchHeaderArchive."No.");
+                            LRecPurchLineArchive.SETRANGE("Doc. No. Occurrence", LRecPurchHeaderArchive."Doc. No. Occurrence");
+                            LRecPurchLineArchive.SETRANGE("Version No.", LRecPurchHeaderArchive."Version No.");
+                            LRecPurchLineArchive.SETRANGE("Line No.", Rec."Special Order Purch. Line No.");
                             if LRecPurchLineArchive.FINDFIRST() then
                                 GDecQtyReceived += LRecPurchLineArchive."Quantity Received";
                         end;
@@ -1547,13 +1399,14 @@ page 50007 "Sales Order Subform Color"
                     GTxtStyleText := 'StandardAccent'
                 else
                     GTxtStyleText := 'StrongAccent';
-
         end;
         if (GDecQtyReceived > 0) and (GDecQtyReceived >= Rec.Quantity) then
             GTxtStyleText := 'Favorable'
         else
             if GDecQtyReceived > 0 then
                 GTxtStyleText := 'Ambiguous';
+        //END DELPHI AUB
+
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -1576,14 +1429,12 @@ page 50007 "Sales Order Subform Color"
     end;
 
     trigger OnInit()
-    var
-        ApplicationAreaMgmtFacade2: Codeunit "Application Area Mgmt. Facade";
     begin
         SalesSetup.GET();
         InventorySetup.GET();
         Currency.InitRoundingPrecision();
-        TempOptionLookupBuffer.FillLookupBuffer(Enum::"Option Lookup Type"::Sales);
-        IsFoundation := ApplicationAreaMgmtFacade2.IsFoundationEnabled();
+        TempOptionLookupBuffer.FillLookupBuffer(TempOptionLookupBuffer."Lookup Type"::Sales);
+        IsFoundation := ApplicationAreaMgmtFacade.IsFoundationEnabled();
     end;
 
     trigger OnModifyRecord(): Boolean
@@ -1599,7 +1450,7 @@ page 50007 "Sales Order Subform Color"
         if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
             if xRec."Document No." = '' then
                 Rec.Type := Rec.Type::Item;
-        Clear(ShortcutDimCode);
+        CLEAR(ShortcutDimCode);
         UpdateTypeText();
     end;
 
@@ -1652,8 +1503,8 @@ page 50007 "Sales Order Subform Color"
         InvoiceDiscountAmount: Decimal;
         InvoiceDiscountPct: Decimal;
         VATAmount: Decimal;
-        Text001: Label 'You cannot use the Explode BOM function because a prepayment of the sales order has been invoiced.';
-        UpdateInvDiscountQst: Label 'One or more lines have been invoiced. The discount distributed to invoiced lines will not be taken into account.\\Do you want to update the invoice discount?';
+        Text001: Label 'You cannot use the Explode BOM function because a prepayment of the sales order has been invoiced.', Comment = 'FRA="Vous ne pouvez pas utiliser la fonction Éclater nomenclature car un acompte de la commande vente a été facturé."';
+        UpdateInvDiscountQst: Label 'One or more lines have been invoiced. The discount distributed to invoiced lines will not be taken into account.\\Do you want to update the invoice discount?', Comment = 'FRA="Une ou plusieurs lignes ont été facturées. La remise répartie sur les lignes facturées n''est pas prise en compte.\\Voulez-vous mettre à jour la remise facture ?"';
         ItemChargeStyleExpression: Text;
         TypeAsText: Text[30];
         GTxtStyleText: Text[80];
@@ -1666,17 +1517,17 @@ page 50007 "Sales Order Subform Color"
 
     local procedure ValidateInvoiceDiscountAmount()
     var
-        SalesHeader2: Record "Sales Header";
+        SalesHeaderL: Record "Sales Header";
         ConfirmManagement: Codeunit "Confirm Management";
     begin
-        SalesHeader2.Get(Rec."Document Type", Rec."Document No.");
-        if SalesHeader2.InvoicedLineExists() then
+        SalesHeaderL.GET(Rec."Document Type", Rec."Document No.");
+        if SalesHeaderL.InvoicedLineExists() then
             if not ConfirmManagement.GetResponseOrDefault(UpdateInvDiscountQst, true) then
                 exit;
 
-        SalesCalcDiscountByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, SalesHeader2);
+        SalesCalcDiscountByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, SalesHeaderL);
         DocumentTotals.SalesDocTotalsNotUpToDate();
-        CurrPage.Update(false);
+        CurrPage.UPDATE(false);
     end;
 
     procedure CalcInvDisc()
@@ -1701,7 +1552,7 @@ page 50007 "Sales Order Subform Color"
         PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Purchase Order No.");
-        PurchHeader.SetRange("No.", Rec."Purchase Order No.");
+        PurchHeader.SETRANGE("No.", Rec."Purchase Order No.");
         PurchOrder.SETTABLEVIEW(PurchHeader);
         PurchOrder.EDITABLE := false;
         PurchOrder.RUN();
@@ -1714,13 +1565,13 @@ page 50007 "Sales Order Subform Color"
         PurchOrder: Page "Purchase Order";
     begin
         Rec.TESTFIELD("Special Order Purchase No.");
-        PurchHeader.SetRange("No.", Rec."Special Order Purchase No.");
+        PurchHeader.SETRANGE("No.", Rec."Special Order Purchase No.");
         if not PurchHeader.ISEMPTY then begin
             PurchOrder.SETTABLEVIEW(PurchHeader);
             PurchOrder.EDITABLE := false;
             PurchOrder.RUN();
         end else begin
-            PurchRcptHeader.SetRange("Order No.", Rec."Special Order Purchase No.");
+            PurchRcptHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
             if PurchRcptHeader.COUNT = 1 then
                 PAGE.RUN(PAGE::"Posted Purchase Receipt", PurchRcptHeader)
             else
@@ -1730,7 +1581,6 @@ page 50007 "Sales Order Subform Color"
 
     procedure InsertExtendedText(Unconditionally: Boolean)
     begin
-        OnBeforeInsertExtendedText(Rec);
         if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally) then begin
             CurrPage.SAVERECORD();
             COMMIT();
@@ -1750,7 +1600,7 @@ page 50007 "Sales Order Subform Color"
         TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetSalesLine(Rec);
-        TrackingForm.RunModal();
+        TrackingForm.RUNMODAL();
     end;
 
     procedure ItemChargeAssgnt()
@@ -1760,35 +1610,35 @@ page 50007 "Sales Order Subform Color"
 
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
-        CurrPage.Update(SetSaveRecord);
+        CurrPage.UPDATE(SetSaveRecord);
     end;
 
     procedure ShowPrices()
     begin
         SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        Clear(SalesPriceCalcMgt);
+        CLEAR(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLinePrice(SalesHeader, Rec);
     end;
 
     procedure ShowLineDisc()
     begin
         SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        Clear(SalesPriceCalcMgt);
+        CLEAR(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLineLineDisc(SalesHeader, Rec);
     end;
 
     procedure OrderPromisingLine()
     var
-        TempOrderPromisingLine: Record "Order Promising Line" temporary;
+        OrderPromisingLine: Record "Order Promising Line" temporary;
         OrderPromisingLines: Page "Order Promising Lines";
     begin
-        TempOrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
-        TempOrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
-        TempOrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
+        OrderPromisingLine.SetRange("Source Type", Rec."Document Type");
+        OrderPromisingLine.SetRange("Source ID", Rec."Document No.");
+        OrderPromisingLine.SetRange("Source Line No.", Rec."Line No.");
 
-        OrderPromisingLines.SetSource(TempOrderPromisingLine."Source Type"::Sales);
-        OrderPromisingLines.SETTABLEVIEW(TempOrderPromisingLine);
-        OrderPromisingLines.RUNMODAL();
+        OrderPromisingLines.SetSource(OrderPromisingLine."Source Type"::Sales);
+        OrderPromisingLines.SetTableView(OrderPromisingLine);
+        OrderPromisingLines.RunModal();
     end;
 
     local procedure NoOnAfterValidate()
@@ -1805,7 +1655,7 @@ page 50007 "Sales Order Subform Color"
             CurrPage.SAVERECORD();
             if (Rec."Outstanding Qty. (Base)" <> 0) and (Rec."No." <> xRec."No.") then begin
                 Rec.AutoReserve();
-                CurrPage.Update(false);
+                CurrPage.UPDATE(false);
             end;
         end;
     end;
@@ -1825,7 +1675,7 @@ page 50007 "Sales Order Subform Color"
         then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.Update(false);
+            CurrPage.UPDATE(false);
         end;
     end;
 
@@ -1847,8 +1697,6 @@ page 50007 "Sales Order Subform Color"
                         Rec.AutoReserve();
                     end;
             end;
-
-        OnAfterQuantityOnAfterValidate(Rec, xRec);
     end;
 
     local procedure QtyToAsmToOrderOnAfterValidate()
@@ -1856,7 +1704,7 @@ page 50007 "Sales Order Subform Color"
         CurrPage.SAVERECORD();
         if Rec.Reserve = Rec.Reserve::Always then
             Rec.AutoReserve();
-        CurrPage.Update(true);
+        CurrPage.UPDATE(true);
     end;
 
     local procedure UnitofMeasureCodeOnAfterValida()
@@ -1865,7 +1713,7 @@ page 50007 "Sales Order Subform Color"
         if Rec.Reserve = Rec.Reserve::Always then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.Update(false);
+            CurrPage.UPDATE(false);
         end;
     end;
 
@@ -1877,27 +1725,28 @@ page 50007 "Sales Order Subform Color"
         then begin
             CurrPage.SAVERECORD();
             Rec.AutoReserve();
-            CurrPage.Update(false);
+            CurrPage.UPDATE(false);
         end else
-            CurrPage.Update(true);
+            CurrPage.UPDATE(true);
     end;
 
     local procedure SaveAndAutoAsmToOrder()
     begin
-        if (Rec.Type = Rec.Type::Item) and rec.IsAsmToOrderRequired() then begin
+        if (Rec.Type = Rec.Type::Item) and Rec.IsAsmToOrderRequired() then begin
             CurrPage.SAVERECORD();
             Rec.AutoAsmToOrder();
-            CurrPage.Update(false);
+            CurrPage.UPDATE(false);
         end;
     end;
 
     procedure ShowDocumentLineTracking()
     var
-        DocLineTracking: Page "Document Line Tracking";
+        DocumentLineTrackingPage: Page "Document Line Tracking";
     begin
-        CLEAR(DocLineTracking);
-        DocLineTracking.SetDoc(0, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocLineTracking.RUNMODAL();
+        Clear(DocumentLineTrackingPage);
+        DocumentLineTrackingPage.SetSourceDoc(
+            "Document Line Source Type"::"Sales Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        DocumentLineTrackingPage.RunModal();
     end;
 
     local procedure SetLocationCodeMandatory()
@@ -1965,22 +1814,7 @@ page 50007 "Sales Order Subform Color"
         DimMgt.UseShortcutDims(
           DimVisible1, DimVisible2, DimVisible3, DimVisible4, DimVisible5, DimVisible6, DimVisible7, DimVisible8);
 
-        Clear(DimMgt);
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnAfterQuantityOnAfterValidate(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
-    begin
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnBeforeInsertExtendedText(var SalesLine: Record "Sales Line")
-    begin
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnReferenceNoOnAfterLookup(var SalesLine: Record "Sales Line")
-    begin
+        CLEAR(DimMgt);
     end;
 }
 

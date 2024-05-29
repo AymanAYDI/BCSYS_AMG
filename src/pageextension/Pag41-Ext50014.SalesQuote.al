@@ -14,8 +14,8 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             trigger OnAfterValidate()
             begin
                 if GRecUserSetup.GET(GCodUserID) then
-                    rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
-                CurrPage.Update(true);
+                    Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
+                CurrPage.Update();
             end;
         }
         modify("Sell-to Customer Name")
@@ -24,21 +24,19 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             begin
                 if GRecUserSetup.GET(GCodUserID) then
                     rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
-                CurrPage.Update(true);
+                CurrPage.Update();
             end;
         }
         moveafter("Sell-to Contact No."; "Your Reference")
         addafter("Due Date")
         {
-            field("Delivery time"; rec."Delivery time")
+            field("Delai de livraison"; Rec."Delai de livraison")
             {
-                ApplicationArea = ALL;
-                ToolTip = 'Specifies the value of the Délai de livraison field.';
+                ApplicationArea = All;
             }
-            field("Validity period"; rec."Validity period")
+            field("Duree de validite"; Rec."Duree de validite")
             {
-                ApplicationArea = ALL;
-                ToolTip = 'Specifies the value of the Durée de validité field.';
+                ApplicationArea = All;
             }
         }
         modify("Requested Delivery Date")
@@ -50,47 +48,7 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             field("Compl. cond. livraison"; rec."Compl. cond. livraison")
             {
                 ApplicationArea = ALL;
-                ToolTip = 'Specifies the value of the Additional terms of delivery field.';
             }
-        }
-        modify("Bill-to Name")
-        {
-            Editable = true;
-        }
-        modify("Bill-to Address")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Address 2")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to City")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to County")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Post Code")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Contact No.")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Contact")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
         }
         addbefore(Control1901314507)
         {
@@ -104,29 +62,9 @@ pageextension 50014 "SalesQuote" extends "Sales Quote" //41
             }
         }
     }
-    actions
-    {
-        addafter(Customer)
-        {
-            action(Customerspe)
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Customer';
-                Enabled = (Rec."Sell-to Customer No." <> '') or (Rec."Sell-to Contact No." <> '');
-                Image = Customer;
-                RunObject = Page "Customer Card";
-                RunPageLink = "No." = field("Sell-to Customer No."),
-                                  "Date Filter" = field("Date Filter");
-                ShortCutKey = 'Shift+F7';
-                ToolTip = 'View or edit detailed information about the customer on the sales document.';
-            }
-        }
-    }
-    //TODO modif line 35
-    //TODO modif line 1171,1179,1360,1372
     trigger OnOpenPage()
     begin
-        GCodUserID := USERID;
+        GCodUserID := CopyStr(UserId, 1, MaxStrLen(GCodUserID));
         if GRecUserSetup.GET(GCodUserID) and (Rec."Salesperson Code" = '') then
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
         if Rec."No." <> '' then

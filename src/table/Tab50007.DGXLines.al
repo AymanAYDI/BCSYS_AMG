@@ -66,7 +66,7 @@ table 50007 "DGX Lines"
             TableRelation = Colis."No.";
             Caption = 'No Colis';
         }
-        field(55; "Unite de mesure"; Text[30])
+        field(55; "Unite de mesure"; Text[50])
         {
             Caption = 'Unité de mesure';
         }

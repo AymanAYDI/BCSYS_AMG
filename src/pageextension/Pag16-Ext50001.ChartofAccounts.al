@@ -14,11 +14,11 @@ pageextension 50001 ChartofAccounts extends "Chart of Accounts" //16
         {
             action("Detail Trial Balance spe")
             {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Detail Trial Balance';
+                ApplicationArea = All;
+                Caption = 'Detail Trial Balance', Comment = 'FRA="Grand livre"';
                 Image = "Report";
                 RunObject = Report "G/L Detail Trial Balance";
-                ToolTip = 'View a detail trial balance for the general ledger accounts that you specify.';
+                ToolTip = 'View a detail trial balance for the general ledger accounts that you specify.', Comment = 'FRA="Affichez un grand livre pour les comptes généraux que vous spécifiez."';
             }
         }
     }

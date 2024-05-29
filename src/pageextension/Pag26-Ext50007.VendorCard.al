@@ -11,7 +11,6 @@ pageextension 50007 "VendorCard" extends "Vendor Card" //26
         {
             Importance = Promoted;
         }
-        moveafter("Post Code"; "Country/Region Code")
     }
     actions
     {
@@ -20,13 +19,12 @@ pageextension 50007 "VendorCard" extends "Vendor Card" //26
             action("Vendor - Detail Trial Balance")
             {
                 ApplicationArea = Basic, Suite;
-                Caption = 'Vendor - Detail Trial Balance';
+                Caption = 'Vendor - Detail Trial Balance', Comment = 'FRA="Fourn. : Grand livre fourn."';
                 Image = "Report";
-                ToolTip = 'View a detail Trial balance for selected vendors.';
 
                 trigger OnAction()
                 begin
-                    RunReport(REPORT::"Vendor Detail Trial Balance FR");
+                    RunReport(REPORT::"Vendor - Detail Trial Balance");
                 end;
             }
         }

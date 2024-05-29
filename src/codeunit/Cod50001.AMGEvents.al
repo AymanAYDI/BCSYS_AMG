@@ -11,7 +11,7 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnBeforeCheckNoAndShowConfirm, '', false, false)]
     local procedure OnBeforeCheckNoAndShowConfirm(SalesHeader: Record "Sales Header"; var SalesShptHeader: Record "Sales Shipment Header"; var SalesInvHeader: Record "Sales Invoice Header"; var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; var ReturnRcptHeader: Record "Return Receipt Header"; var SalesInvHeaderPrePmt: Record "Sales Invoice Header"; var SalesCrMemoHeaderPrePmt: Record "Sales Cr.Memo Header"; SourceCode: Record "Source Code"; var Result: Boolean; var IsHandled: Boolean)
     var
-        LRecHist: Record "Sales Archive";
+        LRecHist: Record "Historique ventes";
         ConfirmManagement: Codeunit "Confirm Management";
         Text009: Label 'Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche expédition. Une expédition vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
         Text012: Label 'Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?', Comment = 'FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures enregistrées. Une facture enregistrée vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"';
@@ -149,6 +149,12 @@ codeunit 50001 "AMG_Events"
         end
         else
             GenJournalLine.Validate(Description, '');
+    end;
+    //Page 30
+    [EventSubscriber(ObjectType::Page, Page::"Item Card", OnCreateItemFromTemplateOnBeforeCurrPageUpdate, '', false, false)]
+    local procedure OnCreateItemFromTemplateOnBeforeCurrPageUpdate(var Item: Record Item)
+    begin
+        Item."Price/Profit Calculation" := Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit";
     end;
 
 
@@ -1069,12 +1075,6 @@ codeunit 50001 "AMG_Events"
         RequisitionLine."Planning Line Origin" := RequisitionLine."Planning Line Origin"::"Order Planning";
         IsHandled := true;
     end;
-    //Page 30
-    [EventSubscriber(ObjectType::Page, Page::"Item Card", 'OnCreateItemFromTemplateOnBeforeCurrPageUpdate', '', false, false)]
-    local procedure OnCreateItemFromTemplateOnBeforeCurrPageUpdate(var Item: Record Item)
-    begin
-        item."Price/Profit Calculation" := Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit";
-    end;
     //Page 42
     [EventSubscriber(ObjectType::Page, Page::"Sales Order", 'OnBeforeQueryClosePage', '', false, false)]
     local procedure OnBeforeQueryClosePage(var DocumentIsScheduledForPosting: Boolean; var SalesHeader: Record "Sales Header"; CloseAction: Action; ShowReleaseNotification: Boolean; DocumentIsPosted: Boolean; var Result: Boolean; var IsHandled: Boolean)
@@ -1269,7 +1269,7 @@ codeunit 50001 "AMG_Events"
         SalesOrder: Page "Sales Order";
         OpenPage: Boolean;
         OpenNewInvoiceQst: Label 'The quote has been converted to order %1. Do you want to open the new order?', Comment = '%1 = No. of the new sales order document.';
-        LRecHisto: Record "Sales Archive";
+        LRecHisto: Record "Historique ventes";
     begin
         if GuiAllowed() then
             if OfficeMgt.AttachAvailable() then
@@ -1363,16 +1363,14 @@ codeunit 50001 "AMG_Events"
         AverageCostACY: Decimal;
         RndgSetupRead: Boolean;
     begin
-        with Item do begin
-            CostCalcMgt.GetRndgSetup(GLSetup, Currency, RndgSetupRead);
-            if AMGFunctions.CalculateAverageCost(Item, AverageCost, AverageCostACY) then begin
-                if AverageCost <> 0 then
-                    "Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
-            end else begin
-                AMGFunctions.CalcLastAdjEntryAvgCost(Item, AverageCost, AverageCostACY);
-                if AverageCost <> 0 then
-                    "Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
-            end;
+        CostCalcMgt.GetRndgSetup(GLSetup, Currency, RndgSetupRead);
+        if AMGFunctions.CalculateAverageCost(Item, AverageCost, AverageCostACY) then begin
+            if AverageCost <> 0 then
+                Item."Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
+        end else begin
+            AMGFunctions.CalcLastAdjEntryAvgCost(Item, AverageCost, AverageCostACY);
+            if AverageCost <> 0 then
+                Item."Unit Cost" := Round(AverageCost, GLSetup."Unit-Amount Rounding Precision");
         end;
     end;
 
@@ -1401,7 +1399,7 @@ codeunit 50001 "AMG_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterPostSalesDoc', '', false, false)]
     local procedure OnAfterPostSalesDoc(var SalesHeader: Record "Sales Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; SalesShptHdrNo: Code[20]; RetRcpHdrNo: Code[20]; SalesInvHdrNo: Code[20]; SalesCrMemoHdrNo: Code[20]; CommitIsSuppressed: Boolean; InvtPickPutaway: Boolean; var CustLedgerEntry: Record "Cust. Ledger Entry"; WhseShip: Boolean; WhseReceiv: Boolean; PreviewMode: Boolean)
     var
-        LRecHisto: Record "Sales Archive";
+        LRecHisto: Record "Historique ventes";
     begin
         //DELPHI AUB 01.07.2020
         LRecHisto.DELTransfCmdFactV(SalesHeader."No.", SalesInvHdrNo);
@@ -1423,10 +1421,9 @@ codeunit 50001 "AMG_Events"
     var
         FormatAddress: Codeunit "Format Address";
     begin
-        with SalesHeader do
-            FormatAddress.FormatAddr(
-                AddrArray, "Sell-to Customer Name", "Sell-to Customer Name 2", '', "Sell-to Address", "Sell-to Address 2",
-                "Sell-to City", "Sell-to Post Code", "Sell-to County", "Sell-to Country/Region Code");
+        FormatAddress.FormatAddr(
+    AddrArray, SalesHeader."Sell-to Customer Name", SalesHeader."Sell-to Customer Name 2", '', SalesHeader."Sell-to Address", SalesHeader."Sell-to Address 2",
+    SalesHeader."Sell-to City", SalesHeader."Sell-to Post Code", SalesHeader."Sell-to County", SalesHeader."Sell-to Country/Region Code");
         Handled := true;
     end;
 
@@ -1436,10 +1433,9 @@ codeunit 50001 "AMG_Events"
     var
         FormatAddress: Codeunit "Format Address";
     begin
-        with SalesInvHeader do
-            FormatAddress.FormatAddr(
-              AddrArray, "Bill-to Name", "Bill-to Name 2", '', "Bill-to Address", "Bill-to Address 2",
-              "Bill-to City", "Bill-to Post Code", "Bill-to County", "Bill-to Country/Region Code");
+        FormatAddress.FormatAddr(
+  AddrArray, SalesInvHeader."Bill-to Name", SalesInvHeader."Bill-to Name 2", '', SalesInvHeader."Bill-to Address", SalesInvHeader."Bill-to Address 2",
+  SalesInvHeader."Bill-to City", SalesInvHeader."Bill-to Post Code", SalesInvHeader."Bill-to County", SalesInvHeader."Bill-to Country/Region Code");
         Handled := true;
     end;
 

@@ -3,15 +3,15 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Inventory.Item;
 page 50022 ListeColisage
 {
-    Caption = 'List of packing items';
+    Caption = 'Liste des articles du colisage', Comment = 'FRA="Liste des articles du colisage"';
     DelayedInsert = false;
     DeleteAllowed = false;
     Editable = false;
     InsertAllowed = false;
     ModifyAllowed = false;
     PageType = List;
-    SourceTable = Packaging;
-    ApplicationArea = All;
+    SourceTable = Colisage;
+    UsageCategory = None;
 
     layout
     {
@@ -19,47 +19,35 @@ page 50022 ListeColisage
         {
             repeater(Group)
             {
-                field("Package No."; Rec."Package No.")
+                field("N°"; Rec."No.")
                 {
-                    ToolTip = 'Specifies the value of the Package No. field.';
                 }
-                field("Line No."; Rec."Line No.")
+                field("N° ligne"; Rec."No. ligne")
                 {
-                    ToolTip = 'Specifies the value of the Line No. field.';
                 }
-                field("Shipping No."; Rec."Shipping No.")
+                field("N° expédition"; Rec."No. expedition")
                 {
-                    ToolTip = 'Specifies the value of the Shipping No. field.';
                 }
-                field("Shipping Line No."; Rec."Shipping Line No.")
+                field("N° ligne expédition"; Rec."No. ligne expedition")
                 {
-                    ToolTip = 'Specifies the value of the Shipping Line No. field.';
                 }
-                field("Item No."; Rec."Item No.")
+                field("N° article"; Rec."No. article")
                 {
                     Lookup = true;
                     LookupPageID = "Item Card";
                     TableRelation = Item."No.";
-                    ToolTip = 'Specifies the value of the Item No. field.';
                 }
-                field(Quantity; Rec."Quantity")
+                field(Quantité; Rec.Quantite)
                 {
-                    ToolTip = 'Specifies the value of the Quantity field.';
                 }
-                field("Net unit weight"; Rec."Net unit weight")
+                field("Poids Unitaire Net"; Rec."Poids Unitaire Net")
                 {
-                    ToolTip = 'Specifies the value of the Net unit weight field.';
                 }
-                field("Gross Unit Weight"; Rec."Gross Unit Weight")
+                field("Poids Unitaire Brut"; Rec."Poids Unitaire Brut")
                 {
-                    ToolTip = 'Specifies the value of the Gross Unit Weight field.';
                 }
             }
         }
-    }
-
-    actions
-    {
     }
 }
 

@@ -9,60 +9,25 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
     {
         modify("Purchasing Code")
         {
-            visible = true;
+            Visible = true;
+        }
+        modify("Unit of Measure Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                DeltaUpdateTotals();
+            end;
         }
         addafter("Special Order")
         {
             field("Special Order Purchase No."; Rec."Special Order Purchase No.")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
             }
             field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
             }
-        }
-        modify("Location Code")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify(Quantity)
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-            trigger OnAfterValidate()
-            begin
-                rec.Marge := Rec.FCalculeMarge(rec."No.", rec."Quantity (Base)", rec.Amount);
-                rec.Marque := Rec.FCalculeMarque(rec.Marge, rec.Amount);
-            end;
-        }
-        modify("Unit of Measure Code")
-        {
-            trigger OnAfterValidate()
-            begin
-                rec.Marge := Rec.FCalculeMarge(rec."No.", rec."Quantity (Base)", rec.Amount);
-                rec.Marque := Rec.FCalculeMarque(rec.Marge, rec.Amount);
-                rec.Modify();
-            end;
-        }
-        modify("Unit Price")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-            trigger OnAfterValidate()
-            begin
-                rec.Marge := Rec.FCalculeMarge(rec."No.", rec."Quantity (Base)", rec.Amount);
-                rec.Marque := Rec.FCalculeMarque(rec.Marge, rec.Amount);
-                rec.Modify();
-            end;
-        }
-        modify("Line Amount")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
         }
         addafter(SalesLineDiscExists)
         {
@@ -72,80 +37,31 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
                 Style = Strong;
                 StyleExpr = true;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Marge field.';
             }
             field(Marque; Rec.Marque)
             {
                 Style = StrongAccent;
                 StyleExpr = true;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the % Marge field.';
                 trigger OnValidate()
                 begin
-                    Rec.FCalculateOnMargeChange(Rec."No.", Rec.Marque);
                     DeltaUpdateTotals();
                 end;
             }
         }
         moveafter(Marque; "Line Discount %")
-        //TODO verifier
-        modify("Line Discount %")
-        {
-            trigger OnAfterValidate()
-            begin
-                Rec.FCalculateMargeOnLineDiscountChange(Rec."No.");
-                DeltaUpdateTotals();
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                Rec.Modify();
-            end;
-        }
-        modify("Line Discount Amount")
-        {
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                Rec.Modify();
-            end;
-        }
         moveafter("Document No."; "Gen. Bus. Posting Group")
         moveafter("Gen. Bus. Posting Group"; "Gen. Prod. Posting Group")
     }
     actions
     {
-        modify(SelectItemSubstitution)
-        {
-            Visible = false;
-        }
-        addafter(SelectItemSubstitution)
-        {
-            action(SelectItemSubstitutionamg)
-            {
-                AccessByPermission = TableData "Item Substitution" = R;
-                ApplicationArea = Suite;
-                Caption = 'Select Item Substitution';
-                Image = SelectItemSubstitution;
-                ToolTip = 'Select another item that has been set up to be sold instead of the original item if it is unavailable.';
-
-                trigger OnAction()
-                begin
-                    CurrPage.SaveRecord();
-                    Rec.ShowItemSub();
-                    CurrPage.Update(true);
-                    // if (Rec.Reserve = Rec.Reserve::Always) and (Rec."No." <> xRec."No.") then begin
-                    Rec.AutoReserve();
-                    //    CurrPage.Update(false);
-                    //  end;
-                end;
-            }
-        }
         addafter(SelectMultiItems)
         {
             action(ActRemplir)
             {
                 ApplicationArea = All;
-                ToolTip = 'Executes the ActRemplir action.';
+                Image = UntrackedQuantity;
+                Caption = 'ActRemplir', Comment = 'FRA="Remplir Qté"';
                 trigger OnAction()
                 begin
                     GRecSalesLine.Reset();
@@ -163,12 +79,9 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
             }
             action(ActViderAExpedier)
             {
-                Promoted = true;
-                PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
-                PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the ActViderAExpedier action.';
+                Caption = 'ActViderAExpedier', Comment = 'FRA="Vider Qté à expédier"';
                 trigger OnAction()
                 begin
                     GRecSalesLine.Reset();
@@ -186,12 +99,9 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
             }
             action(ActViderAFacturer)
             {
-                Promoted = true;
-                PromotedIsBig = true;
                 Image = DeleteQtyToHandle;
-                PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the ActViderAFacturer action.';
+                Caption = 'ActViderAFacturer', Comment = 'FRA="Vider Qté à facturer"';
                 trigger OnAction()
                 begin
                     GRecSalesLine.Reset();

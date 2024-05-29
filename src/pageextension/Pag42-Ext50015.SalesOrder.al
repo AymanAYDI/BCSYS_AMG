@@ -2,7 +2,6 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
-using BCSYS.AMGALLOIS.Basic;
 using System.Security.User;
 
 pageextension 50015 "SalesOrder" extends "Sales Order" //42
@@ -15,6 +14,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
             begin
                 if GRecUserSetup.GET(GCodUserID) then
                     Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
+                CurrPage.Update();
             end;
         }
         modify("Sell-to Customer Name")
@@ -23,6 +23,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
             begin
                 if GRecUserSetup.GET(GCodUserID) then
                     Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
+                CurrPage.Update();
             end;
         }
         moveafter("Promised Delivery Date"; "Your Reference")
@@ -36,119 +37,50 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
         addafter(SalesLines)
         {
-            part(SalesLinesspe; "Sales Order Subform Color")
+            part(SalesLinesColor; "Sales Order Subform Color")
             {
-                //TODO var removed
                 ApplicationArea = Basic, Suite;
-                //  Editable = DynamicEditable;
-                Enabled = Rec."Sell-to Customer No." <> '';
+                Editable = IsSalesLinesEditable2;
+                Enabled = IsSalesLinesEditable2;
                 SubPageLink = "Document No." = field("No.");
                 UpdatePropagation = Both;
             }
         }
         addafter("Prices Including VAT")
         {
-            field("Gen. Bus. Posting Group"; rec."Gen. Bus. Posting Group")
+            field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
-        }
-        modify("Bill-to Name")
-        {
-            Enabled = true;
-            Editable = true;
-        }
-        modify("Bill-to Address")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Address 2")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to City")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to County")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Post Code")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Country/Region Code")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Contact No.")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-        }
-        modify("Bill-to Contact")
-        {
-            Enabled = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
-            Editable = Rec."Bill-to Customer No." <> Rec."Sell-to Customer No.";
         }
         addbefore(ApprovalFactBox)
         {
             part(Substitution; "Sustitutions possibles")
             {
                 ApplicationArea = Basic, Suite;
-                Provider = SalesLines;
+                Provider = SalesLinesColor;
                 SubPageLink = "No." = field("No.");
                 ShowFilter = false;
             }
         }
     }
-    actions
-    {
-        modify(Customer)
-        {
-            Visible = false;
-        }
-        addafter(Customer)
-        {
-            action(Customerspe)
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Customer';
-                Enabled = (Rec."Sell-to Customer No." <> '') or (Rec."Sell-to Contact No." <> '');
-                Image = Customer;
-                RunObject = Page "Customer Card";
-                RunPageLink = "No." = field("Sell-to Customer No.");
-                ShortCutKey = 'Shift+F7';
-                ToolTip = 'View or edit detailed information about the customer on the sales document.';
-            }
-        }
-        modify("Work Order")
-        {
-            //TODO check line 1165
-            ApplicationArea = all;
-        }
-    }
     var
         GRecUserSetup: Record "User Setup";
         GCodUserID: Code[50];
+        IsSalesLinesEditable2: Boolean;
 
     trigger OnOpenPage()
     begin
         Rec."Posting Date" := 0D;
-        GCodUserID := USERID();
+        GCodUserID := CopyStr(UserId, 1, MaxStrLen(GCodUserID));
         if GRecUserSetup.GET(GCodUserID) and (Rec."Salesperson Code" = '') then
             Rec."Salesperson Code" := GRecUserSetup."Salespers./Purch. Code";
-        if Rec."No." <> '' then Rec.Modify();
+        if Rec."No." <> '' then
+            Rec.Modify();
     end;
-    //TODO i can't find solution for line 38
-    //TODO check line 1318
-    //TODO check line 1658,1763,1917
+
+    trigger OnAfterGetRecord()
+    begin
+        IsSalesLinesEditable2 := Rec.SalesLinesEditable();
+    end;
 }
