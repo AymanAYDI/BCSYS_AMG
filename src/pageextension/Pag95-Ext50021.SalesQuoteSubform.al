@@ -9,116 +9,44 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
     {
         addbefore("Variant Code")
         {
-            field("Item supplier"; Rec."Item supplier")
+            field("Fournisseur article"; Rec."Fournisseur article")
             {
                 Editable = false;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Vendor field.';
             }
-        }
-        modify("Location Code")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify(Quantity)
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-            end;
         }
         addafter(Quantity)
         {
             field("Dernier cout direct"; GDecLastDirectCost)
             {
+                Caption = 'Dernier coût direct';
                 Editable = false;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
             }
-            field(Marge; rec.Marge)
+            field(Marge; Rec.Marge)
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Marge field.';
             }
-            field(Marque; rec."Prepmt. VAT Amount Inv. (LCY)")
+            field(Marque; Rec.Marque)
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Prepmt. VAT Amount Inv. (LCY) field.';
                 trigger OnValidate()
                 begin
-                    Rec.FCalculateOnMargeChange(rec."No.", rec.Marque);
                     DeltaUpdateTotals();
                 end;
             }
         }
-        modify("Qty. to Assemble to Order")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Unit of Measure Code")
-        {
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-            end;
-        }
         modify("Unit Price")
         {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-            end;
-        }
-        modify("Line Discount %")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-            trigger OnBeforeValidate()
-            begin
-                Rec.FCalculateMargeOnLineDiscountChange(Rec."No.");
-            end;
-
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-            end;
+            Caption = 'Unit Price', Comment = 'FRA="Prix unitaire"';
         }
         addafter("Line Discount %")
         {
             field(Amount; Rec.Amount)
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Amount field.';
             }
         }
-        modify("Line Amount")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Line Discount Amount")
-        {
-            trigger OnAfterValidate()
-            begin
-                Rec.Marge := Rec.FCalculeMarge(Rec."No.", Rec."Quantity (Base)", Rec.Amount);
-                Rec.Marque := Rec.FCalculeMarque(Rec.Marge, Rec.Amount);
-                Rec.Modify();
-            end;
-        }
-    }
-    actions
-    {
-
     }
     trigger OnAfterGetRecord()
     begin
@@ -131,6 +59,4 @@ pageextension 50021 "SalesQuoteSubform" extends "Sales Quote Subform" //95
     var
         GRecItem: Record Item;
         GDecLastDirectCost: Decimal;
-
-    //TODO check line 419,445,469,660,1138
 }

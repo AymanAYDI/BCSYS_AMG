@@ -7,7 +7,7 @@ tableextension 50024 SalesReceivablesSetup extends "Sales & Receivables Setup" /
 {
     fields
     {
-        field(50000; "Code catégorie Carbo"; Code[20])
+        field(50000; "Code categorie Carbo"; Code[20])
         {
             TableRelation = "Item Category".Code;
             Caption = 'Code categorie Carbo', Comment = 'FRA="Code catégorie Carbo"';

@@ -4,20 +4,135 @@ codeunit 50002 "AMG_Functions"
 
     var
         CalledFromAdjustment: Boolean;
+    //Codeunit 5702
+    procedure GetNewSpecialOrders(var PurchHeader: Record "Purchase Header");
+    var
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
+        PurchLine: Record "Purchase Line";
+        PurchLine2: Record "Purchase Line";
+        SalesHeader: Record "Sales Header";
+        LRecSalesLine: Record "Sales Line";
+        SalesLine: Record "Sales Line";
+        Vendor: Record Vendor;
+        CopyDocMgt: Codeunit "Copy Document Mgt.";
+        TransferExtendedText: Codeunit "Transfer Extended Text";
+        LPageSalesLine: Page "Lignes Commandes Vte Speciales";
+        NextLineNo: Integer;
+        Text000: Label 'Il n"existe aucun article avec la référence externe %1.';
+        Text001: Label 'The Quantity per Unit of Measure %1 has changed from %2 to %3 since the sales order was created. Adjust the quantity on the sales order or the unit of measure.', Comment = '%1=Unit of Measure Code,%2=Qty. per Unit of Measure in Sales Line,%3=Qty. per Unit of Measure in Item Unit of Measure';
+    begin
+        PurchHeader.TESTFIELD("Document Type", PurchHeader."Document Type"::Order);
+
+        LRecSalesLine.SETRANGE("Document Type", LRecSalesLine."Document Type"::Order);
+        LRecSalesLine.SETRANGE(Type, LRecSalesLine.Type::Item);
+        LRecSalesLine.SETFILTER("Outstanding Quantity", '>%1', 0);
+        LRecSalesLine.SETRANGE("Fournisseur article", PurchHeader."Buy-from Vendor No.");
+        LRecSalesLine.SETFILTER("Special Order Purchase No.", '=%1', '');
+        LRecSalesLine.SETRANGE("Special Order", true);
+        LPageSalesLine.SETTABLEVIEW(LRecSalesLine);
+        if (LPageSalesLine.RUNMODAL() <> ACTION::OK) then
+            exit;
+
+        PurchHeader.LOCKTABLE();
+        if Vendor.GET(PurchHeader."Buy-from Vendor No.") then
+            PurchHeader.VALIDATE("Shipment Method Code", Vendor."Shipment Method Code");
+
+        PurchLine.LOCKTABLE();
+        SalesLine.LOCKTABLE();
+
+        PurchLine.SETRANGE("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SETRANGE("Document No.", PurchHeader."No.");
+        if PurchLine.FINDLAST() then
+            NextLineNo := PurchLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        SalesLine.RESET();
+        SalesLine.SETRANGE("Document Type", SalesLine."Document Type"::Order);
+        SalesLine.SETRANGE("Special Order", true);
+        SalesLine.SETFILTER("Outstanding Quantity", '<>0');
+        SalesLine.SETRANGE(Type, SalesLine.Type::Item);
+        SalesLine.SETFILTER("No.", '<>%1', '');
+        SalesLine.SETRANGE("Special Order Purch. Line No.", 0);
+        SalesLine.SETRANGE(Sel, true);
+
+        if SalesLine.FINDSET() then
+            repeat
+                if (SalesLine.Type = SalesLine.Type::Item) and ItemUnitOfMeasure.GET(SalesLine."No.", SalesLine."Unit of Measure Code") then
+                    if SalesLine."Qty. per Unit of Measure" <> ItemUnitOfMeasure."Qty. per Unit of Measure" then
+                        ERROR(Text001,
+                          SalesLine."Unit of Measure Code",
+                          SalesLine."Qty. per Unit of Measure",
+                          ItemUnitOfMeasure."Qty. per Unit of Measure");
+                PurchLine.INIT();
+                PurchLine."Document Type" := PurchLine."Document Type"::Order;
+                PurchLine."Document No." := PurchHeader."No.";
+                PurchLine."Line No." := NextLineNo;
+                CopyDocMgt.TransfldsFromSalesToPurchLine(SalesLine, PurchLine);
+                PurchLine.GetItemTranslation();
+                PurchLine."Special Order" := true;
+                PurchLine."Purchasing Code" := SalesLine."Purchasing Code";
+                PurchLine."Special Order Sales No." := SalesLine."Document No.";
+                PurchLine."Special Order Sales Line No." := SalesLine."Line No.";
+                PurchLine.INSERT();
+                NextLineNo := NextLineNo + 10000;
+
+                SalesLine."Unit Cost (LCY)" := PurchLine."Unit Cost (LCY)";
+                SalesLine.VALIDATE("Unit Cost (LCY)");
+                SalesLine."Special Order Purchase No." := PurchLine."Document No.";
+                SalesLine."Special Order Purch. Line No." := PurchLine."Line No.";
+                SalesLine.Sel := false;
+                // DELPHI DEB 26/10/2018 MultiSelection.
+                SalesLine.MODIFY();
+                if TransferExtendedText.PurchCheckIfAnyExtText(PurchLine, true) then begin
+                    TransferExtendedText.InsertPurchExtText(PurchLine);
+                    PurchLine2.SETRANGE("Document Type", PurchHeader."Document Type");
+                    PurchLine2.SETRANGE("Document No.", PurchHeader."No.");
+                    if PurchLine2.FINDLAST() then
+                        NextLineNo := PurchLine2."Line No.";
+                    NextLineNo := NextLineNo + 10000;
+                end;
+            until SalesLine.NEXT() = 0
+        else
+            if SalesHeader."No." <> '' then
+                ERROR(
+                  Text000,
+                  SalesHeader."No.")
+            else
+                MESSAGE('Aucune ligne sélectionnée');
+        PurchHeader.MODIFY();
+    end;
+
+
+
+
+
+
+
+
+
+
+
+
+
     //Codeunit 22 dupliqué
     procedure GetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line"; OrderNo: Code[20]; OrderLineNo: Integer)
     begin
         ProdOrderLine.Get(ProdOrderLine.Status::Released, OrderNo, OrderLineNo);
     end;
     //Codeunit 22 dupliqué
-    procedure SetOrderAdjmtProperties(ItemLedgEntryType: Enum "Item Ledger Entry Type"; OrderType: Enum "Inventory Order Type"; OrderNo: Code[20]; OrderLineNo: Integer; OriginalPostingDate: Date; ValuationDate: Date)
+    procedure SetOrderAdjmtProperties(ItemLedgEntryType: Enum "Item Ledger Entry Type"; OrderType: Enum "Inventory Order Type";
+                                                             OrderNo: Code[20];
+                                                             OrderLineNo: Integer;
+                                                             OriginalPostingDate: Date;
+                                                             ValuationDate: Date)
     var
-        ValueEntry: Record "Value Entry";
+        AssemblyHeader: Record "Assembly Header";
         InventoryAdjmtEntryOrder: Record "Inventory Adjmt. Entry (Order)";
         ProdOrderLine: Record "Prod. Order Line";
-        AssemblyHeader: Record "Assembly Header";
-        ModifyOrderAdjmt: Boolean;
+        ValueEntry: Record "Value Entry";
         ItemJN: Codeunit "Item Jnl.-Post Line";
+        ModifyOrderAdjmt: Boolean;
     begin
         if not (OrderType in [ValueEntry."Order Type"::Production,
                             ValueEntry."Order Type"::Assembly])
@@ -67,131 +182,30 @@ codeunit 50002 "AMG_Functions"
         ValueEntry: Record "Value Entry";
         ValuationDate: Date;
     begin
-        with ValueEntry do begin
-            SetCurrentKey("Item Ledger Entry Type", "Order No.", "Valuation Date");
-            SetRange("Order Type", "Order Type"::Production);
-            SetRange("Order No.", ItemLedgerEntry."Order No.");
-            SetRange("Order Line No.", ItemLedgerEntry."Order Line No.");
-            SetRange("Item Ledger Entry Type", "Item Ledger Entry Type"::Consumption);
-            if FindLast() then
-                repeat
-                    if ("Valuation Date" > ValuationDate) and
-                       ("Entry Type" <> "Entry Type"::Revaluation)
-                    then
-                        ValuationDate := "Valuation Date";
-                until Next() = 0;
-            exit(ValuationDate);
-        end;
-    end;
-    //Codeunit 5702
-    procedure GetNewSpecialOrders(var PurchHeader: Record "Purchase Header");
-    var
-        SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        PurchLine2: Record "Purchase Line";
-        ItemUnitOfMeasure: Record "Item Unit of Measure";
-        Vendor: Record Vendor;
-        TransferExtendedText: Codeunit "Transfer Extended Text";
-        CopyDocMgt: Codeunit "Copy Document Mgt.";
-        NextLineNo: Integer;
-        LPageSalesLine: Page "Lignes Commandes Vte Spéciales";
-        LRecSalesLine: Record "Sales Line";
-        PurchLine: Record "Purchase Line";
-        Text001: Label 'The Quantity per Unit of Measure %1 has changed from %2 to %3 since the sales order was created. Adjust the quantity on the sales order or the unit of measure.', Comment = '%1=Unit of Measure Code,%2=Qty. per Unit of Measure in Sales Line,%3=Qty. per Unit of Measure in Item Unit of Measure';
-        Text000: Label 'Il n"existe aucun article avec la référence externe %1.';
-    begin
-        with PurchHeader do begin
-            TESTFIELD("Document Type", "Document Type"::Order);
-
-            LRecSalesLine.SetRange("Document Type", LRecSalesLine."Document Type"::Order);
-            LRecSalesLine.SetRange(Type, LRecSalesLine.Type::Item);
-            LRecSalesLine.SETFILTER("Outstanding Quantity", '>%1', 0);
-            LRecSalesLine.SetRange("Item Supplier", PurchHeader."Buy-from Vendor No.");
-            LRecSalesLine.SETFILTER("Special Order Purchase No.", '=%1', '');
-            LRecSalesLine.SetRange("Special Order", true);
-            LPageSalesLine.SETTABLEVIEW(LRecSalesLine);
-            if (LPageSalesLine.RunModal() <> ACTION::OK) then
-                exit;
-
-            LOCKTABLE();
-            if Vendor.GET("Buy-from Vendor No.") then
-                Validate("Shipment Method Code", Vendor."Shipment Method Code");
-
-            PurchLine.LOCKTABLE();
-            SalesLine.LOCKTABLE();
-
-            PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
-            PurchLine.SetRange("Document No.", "No.");
-            if PurchLine.FINDLAST() then
-                NextLineNo := PurchLine."Line No." + 10000
-            else
-                NextLineNo := 10000;
-
-            SalesLine.Reset();
-            SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-            SalesLine.SetRange("Special Order", true);
-            SalesLine.SETFILTER("Outstanding Quantity", '<>0');
-            SalesLine.SetRange(Type, SalesLine.Type::Item);
-            SalesLine.SETFILTER("No.", '<>%1', '');
-            SalesLine.SetRange("Special Order Purch. Line No.", 0);
-            SalesLine.SetRange(Sel, true);
-
-            if SalesLine.FINDSET() then
-                repeat
-                    if (SalesLine.Type = SalesLine.Type::Item) and ItemUnitOfMeasure.GET(SalesLine."No.", SalesLine."Unit of Measure Code") then
-                        if SalesLine."Qty. per Unit of Measure" <> ItemUnitOfMeasure."Qty. per Unit of Measure" then
-                            ERROR(Text001,
-                              SalesLine."Unit of Measure Code",
-                              SalesLine."Qty. per Unit of Measure",
-                              ItemUnitOfMeasure."Qty. per Unit of Measure");
-                    PurchLine.INIT();
-                    PurchLine."Document Type" := PurchLine."Document Type"::Order;
-                    PurchLine."Document No." := "No.";
-                    PurchLine."Line No." := NextLineNo;
-                    CopyDocMgt.TransfldsFromSalesToPurchLine(SalesLine, PurchLine);
-                    PurchLine.GetItemTranslation();
-                    PurchLine."Special Order" := true;
-                    PurchLine."Purchasing Code" := SalesLine."Purchasing Code";
-                    PurchLine."Special Order Sales No." := SalesLine."Document No.";
-                    PurchLine."Special Order Sales Line No." := SalesLine."Line No.";
-                    PurchLine.INSERT();
-                    NextLineNo := NextLineNo + 10000;
-
-                    SalesLine."Unit Cost (LCY)" := PurchLine."Unit Cost (LCY)";
-                    SalesLine.Validate("Unit Cost (LCY)");
-                    SalesLine."Special Order Purchase No." := PurchLine."Document No.";
-                    SalesLine."Special Order Purch. Line No." := PurchLine."Line No.";
-                    SalesLine.Sel := false; // DELPHI DEB 26/10/2018 MultiSelection.
-                    SalesLine.Modify();
-                    if TransferExtendedText.PurchCheckIfAnyExtText(PurchLine, true) then begin
-                        TransferExtendedText.InsertPurchExtText(PurchLine);
-                        PurchLine2.SetRange("Document Type", "Document Type");
-                        PurchLine2.SetRange("Document No.", "No.");
-                        if PurchLine2.FINDLAST() then
-                            NextLineNo := PurchLine2."Line No.";
-                        NextLineNo := NextLineNo + 10000;
-                    end;
-                until SalesLine.Next() = 0
-            else
-                if SalesHeader."No." <> '' then
-                    ERROR(
-                      Text000,
-                      SalesHeader."No.")
-                else
-                    MESSAGE('Aucune ligne sélectionnée');
-            Modify();
-        end;
+        ValueEntry.SetCurrentKey("Item Ledger Entry Type", "Order No.", "Valuation Date");
+        ValueEntry.SetRange("Order Type", ValueEntry."Order Type"::Production);
+        ValueEntry.SetRange("Order No.", ItemLedgerEntry."Order No.");
+        ValueEntry.SetRange("Order Line No.", ItemLedgerEntry."Order Line No.");
+        ValueEntry.SetRange("Item Ledger Entry Type", ValueEntry."Item Ledger Entry Type"::Consumption);
+        if ValueEntry.FindLast() then
+            repeat
+                if (ValueEntry."Valuation Date" > ValuationDate) and
+                   (ValueEntry."Entry Type" <> ValueEntry."Entry Type"::Revaluation)
+                then
+                    ValuationDate := ValueEntry."Valuation Date";
+            until ValueEntry.Next() = 0;
+        exit(ValuationDate);
     end;
     //Codeunit 5804 dupliqué
     procedure CalculateAverageCost(var Item: Record Item; var AverageCost: Decimal; var AverageCostACY: Decimal): Boolean
     var
+        Currency: Record Currency;
+        GLSetup: Record "General Ledger Setup";
+        NeedCalcPreciseAmt: Boolean;
+        NeedCalcPreciseAmtACY: Boolean;
         AverageQty: Decimal;
         CostAmt: Decimal;
         CostAmtACY: Decimal;
-        NeedCalcPreciseAmt: Boolean;
-        NeedCalcPreciseAmtACY: Boolean;
-        GLSetup: Record "General Ledger Setup";
-        Currency: Record Currency;
     begin
         AverageCost := 0;
         AverageCostACY := 0;
@@ -237,25 +251,23 @@ codeunit 50002 "AMG_Functions"
         OpenItemLedgEntry: Record "Item Ledger Entry";
         OpenValueEntry: Record "Value Entry";
     begin
-        with OpenValueEntry do begin
-            OpenItemLedgEntry.SetCurrentKey("Item No.", Open, "Variant Code", Positive);
-            OpenItemLedgEntry.SetRange("Item No.", Item."No.");
-            OpenItemLedgEntry.SetRange(Open, true);
-            OpenItemLedgEntry.SetRange(Positive, false);
-            OpenItemLedgEntry.SetFilter("Location Code", Item.GetFilter("Location Filter"));
-            OpenItemLedgEntry.SetFilter("Variant Code", Item.GetFilter("Variant Filter"));
-            SetCurrentKey("Item Ledger Entry No.");
-            if OpenItemLedgEntry.findfirst() then
-                repeat
-                    SetRange("Item Ledger Entry No.", OpenItemLedgEntry."Entry No.");
-                    if findfirst() then
-                        repeat
-                            CostAmt := CostAmt - "Cost Amount (Actual)" - "Cost Amount (Expected)";
-                            CostAmtACY := CostAmtACY - "Cost Amount (Actual) (ACY)" - "Cost Amount (Expected) (ACY)";
-                            Quantity := Quantity - "Item Ledger Entry Quantity";
-                        until Next() = 0;
-                until OpenItemLedgEntry.Next() = 0;
-        end;
+        OpenItemLedgEntry.SetCurrentKey("Item No.", Open, "Variant Code", Positive);
+        OpenItemLedgEntry.SetRange("Item No.", Item."No.");
+        OpenItemLedgEntry.SetRange(Open, true);
+        OpenItemLedgEntry.SetRange(Positive, false);
+        OpenItemLedgEntry.SetFilter("Location Code", Item.GetFilter("Location Filter"));
+        OpenItemLedgEntry.SetFilter("Variant Code", Item.GetFilter("Variant Filter"));
+        OpenValueEntry.SetCurrentKey("Item Ledger Entry No.");
+        if OpenItemLedgEntry.findfirst() then
+            repeat
+                OpenValueEntry.SetRange("Item Ledger Entry No.", OpenItemLedgEntry."Entry No.");
+                if OpenValueEntry.findfirst() then
+                    repeat
+                        CostAmt := CostAmt - OpenValueEntry."Cost Amount (Actual)" - OpenValueEntry."Cost Amount (Expected)";
+                        CostAmtACY := CostAmtACY - OpenValueEntry."Cost Amount (Actual) (ACY)" - OpenValueEntry."Cost Amount (Expected) (ACY)";
+                        Quantity := Quantity - OpenValueEntry."Item Ledger Entry Quantity";
+                    until OpenValueEntry.Next() = 0;
+            until OpenItemLedgEntry.Next() = 0;
     end;
     //Codeunit 5804 dupliqué
     procedure CalculateQuantity(var Item: Record Item) CalcQty: Decimal
@@ -263,12 +275,10 @@ codeunit 50002 "AMG_Functions"
         ValueEntry: Record "Value Entry";
         ItemCostManagement: codeunit ItemCostManagement;
     begin
-        with ValueEntry do begin
-            ItemCostManagement.SetFilters(ValueEntry, Item);
-            CalcSums("Item Ledger Entry Quantity");
-            CalcQty := "Item Ledger Entry Quantity";
-            exit(CalcQty);
-        end;
+        ItemCostManagement.SetFilters(ValueEntry, Item);
+        ValueEntry.CalcSums("Item Ledger Entry Quantity");
+        CalcQty := ValueEntry."Item Ledger Entry Quantity";
+        exit(CalcQty);
     end;
     //Codeunit 5804 dupliqué
     procedure CalculateCostAmt(var Item: Record Item; Actual: Boolean) CostAmount: Decimal
@@ -276,15 +286,13 @@ codeunit 50002 "AMG_Functions"
         ValueEntry: Record "Value Entry";
         ItemCostManagement: codeunit ItemCostManagement;
     begin
-        with ValueEntry do begin
-            ItemCostManagement.SetFilters(ValueEntry, Item);
-            if Actual then begin
-                CalcSums("Cost Amount (Actual)");
-                exit("Cost Amount (Actual)");
-            end;
-            CalcSums("Cost Amount (Expected)");
-            exit("Cost Amount (Expected)");
+        ItemCostManagement.SetFilters(ValueEntry, Item);
+        if Actual then begin
+            ValueEntry.CalcSums("Cost Amount (Actual)");
+            exit(ValueEntry."Cost Amount (Actual)");
         end;
+        ValueEntry.CalcSums("Cost Amount (Expected)");
+        exit(ValueEntry."Cost Amount (Expected)");
     end;
     //Codeunit 5804 dupliqué
     procedure CalculateCostAmtACY(var Item: Record Item; Actual: Boolean): Decimal
@@ -292,23 +300,21 @@ codeunit 50002 "AMG_Functions"
         ValueEntry: Record "Value Entry";
         ItemCostManagement: codeunit ItemCostManagement;
     begin
-        with ValueEntry do begin
-            ItemCostManagement.SetFilters(ValueEntry, Item);
-            if Actual then begin
-                CalcSums("Cost Amount (Actual) (ACY)");
-                exit("Cost Amount (Actual) (ACY)");
-            end;
-            CalcSums("Cost Amount (Expected) (ACY)");
-            exit("Cost Amount (Expected) (ACY)");
+        ItemCostManagement.SetFilters(ValueEntry, Item);
+        if Actual then begin
+            ValueEntry.CalcSums("Cost Amount (Actual) (ACY)");
+            exit(ValueEntry."Cost Amount (Actual) (ACY)");
         end;
+        ValueEntry.CalcSums("Cost Amount (Expected) (ACY)");
+        exit(ValueEntry."Cost Amount (Expected) (ACY)");
     end;
     //Codeunit 5804 dupliqué   //TODO verifier line 365
     procedure CalculatePreciseCostAmounts(var Item: Record Item; NeedCalcPreciseAmt: Boolean; NeedCalcPreciseAmtACY: Boolean; var PreciseAmt: Decimal; var PreciseAmtACY: Decimal)
     var
+        ItemApplicationEntry: Record "Item Application Entry";
         OpenInbndItemLedgEntry: Record "Item Ledger Entry";
         OpenOutbndItemLedgEntry: Record "Item Ledger Entry";
         TempItemLedgerEntry: Record "Item Ledger Entry" temporary;
-        ItemApplicationEntry: Record "Item Application Entry";
     begin
         // Collect precise (not rounded) remaining cost on:
         // 1. open inbound item ledger entries;
@@ -345,26 +351,24 @@ codeunit 50002 "AMG_Functions"
                     until ItemApplicationEntry.Next() = 0;
             until OpenOutbndItemLedgEntry.Next() = 0;
 
-        with TempItemLedgerEntry do begin
-            Reset();
-            if FindSet() then
-                repeat
-                    if NeedCalcPreciseAmt then begin
-                        CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
-                        PreciseAmt += ("Cost Amount (Actual)" + "Cost Amount (Expected)") / Quantity * "Remaining Quantity";
-                    end;
-                    if NeedCalcPreciseAmtACY then begin
-                        CalcFields("Cost Amount (Actual) (ACY)", "Cost Amount (Expected) (ACY)");
-                        PreciseAmtACY += ("Cost Amount (Actual) (ACY)" + "Cost Amount (Expected) (ACY)") / Quantity * "Remaining Quantity";
-                    end;
-                until Next() = 0;
-        end;
+        TempItemLedgerEntry.Reset();
+        if TempItemLedgerEntry.FindSet() then
+            repeat
+                if NeedCalcPreciseAmt then begin
+                    TempItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
+                    PreciseAmt += (TempItemLedgerEntry."Cost Amount (Actual)" + TempItemLedgerEntry."Cost Amount (Expected)") / TempItemLedgerEntry.Quantity * TempItemLedgerEntry."Remaining Quantity";
+                end;
+                if NeedCalcPreciseAmtACY then begin
+                    TempItemLedgerEntry.CalcFields("Cost Amount (Actual) (ACY)", "Cost Amount (Expected) (ACY)");
+                    PreciseAmtACY += (TempItemLedgerEntry."Cost Amount (Actual) (ACY)" + TempItemLedgerEntry."Cost Amount (Expected) (ACY)") / TempItemLedgerEntry.Quantity * TempItemLedgerEntry."Remaining Quantity";
+                end;
+            until TempItemLedgerEntry.Next() = 0;
     end;
     //Codeunit 5804 dupliqué
     procedure CalcLastAdjEntryAvgCost(var Item: Record Item; var AverageCost: Decimal; var AverageCostACY: Decimal)
     var
-        ValueEntry: Record "Value Entry";
         ItemLedgEntry: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
         ItemCostManagement: codeunit ItemCostManagement;
         ComputeThisEntry: Boolean;
         IsSubOptimal: Boolean;
@@ -377,50 +381,46 @@ codeunit 50002 "AMG_Functions"
         if not HasOpenEntries(Item) then
             exit;
 
-        with ValueEntry do begin
-            ItemCostManagement.SetFilters(ValueEntry, Item);
-            if findlast() then
-                repeat
-                    ComputeThisEntry := ("Item Ledger Entry Quantity" < 0) and not Adjustment and not "Drop Shipment";
-                    if ComputeThisEntry then begin
-                        ItemLedgEntry.Get("Item Ledger Entry No.");
-                        IsSubOptimal :=
-                          ItemLedgEntry.Correction or
-                          ((Item."Costing Method" = Item."Costing Method"::Average) and not "Valued By Average Cost");
+        ItemCostManagement.SetFilters(ValueEntry, Item);
+        if ValueEntry.findlast() then
+            repeat
+                ComputeThisEntry := (ValueEntry."Item Ledger Entry Quantity" < 0) and not ValueEntry.Adjustment and not ValueEntry."Drop Shipment";
+                if ComputeThisEntry then begin
+                    ItemLedgEntry.Get(ValueEntry."Item Ledger Entry No.");
+                    IsSubOptimal :=
+                      ItemLedgEntry.Correction or
+                      ((Item."Costing Method" = Item."Costing Method"::Average) and not ValueEntry."Valued By Average Cost");
 
-                        if not IsSubOptimal or (IsSubOptimal and (AverageCost = 0)) then begin
-                            ItemLedgEntry.CalcFields(
-                              "Cost Amount (Expected)", "Cost Amount (Actual)",
-                              "Cost Amount (Expected) (ACY)", "Cost Amount (Actual) (ACY)");
-                            AverageCost :=
-                              (ItemLedgEntry."Cost Amount (Expected)" +
-                               ItemLedgEntry."Cost Amount (Actual)") /
-                              ItemLedgEntry.Quantity;
-                            AverageCostACY :=
-                              (ItemLedgEntry."Cost Amount (Expected) (ACY)" +
-                               ItemLedgEntry."Cost Amount (Actual) (ACY)") /
-                              ItemLedgEntry.Quantity;
-                            if (AverageCost <> 0) and not IsSubOptimal then
-                                exit;
-                        end;
+                    if not IsSubOptimal or (IsSubOptimal and (AverageCost = 0)) then begin
+                        ItemLedgEntry.CalcFields(
+                          "Cost Amount (Expected)", "Cost Amount (Actual)",
+                          "Cost Amount (Expected) (ACY)", "Cost Amount (Actual) (ACY)");
+                        AverageCost :=
+                          (ItemLedgEntry."Cost Amount (Expected)" +
+                           ItemLedgEntry."Cost Amount (Actual)") /
+                          ItemLedgEntry.Quantity;
+                        AverageCostACY :=
+                          (ItemLedgEntry."Cost Amount (Expected) (ACY)" +
+                           ItemLedgEntry."Cost Amount (Actual) (ACY)") /
+                          ItemLedgEntry.Quantity;
+                        if (AverageCost <> 0) and not IsSubOptimal then
+                            exit;
                     end;
-                until Next(-1) = 0;
-        end;
+                end;
+            until ValueEntry.Next(-1) = 0;
     end;
     //Codeunit 5804 dupliqué
     local procedure HasOpenEntries(var Item: Record Item): Boolean
     var
         ItemLedgEntry: Record "Item Ledger Entry";
     begin
-        with ItemLedgEntry do begin
-            Reset();
-            SetCurrentKey("Item No.", Open);
-            SetRange("Item No.", Item."No.");
-            SetRange(Open, true);
-            SetFilter("Location Code", Item.GetFilter("Location Filter"));
-            SetFilter("Variant Code", Item.GetFilter("Variant Filter"));
-            exit(not FindFirst())
-        end;
+        ItemLedgEntry.Reset();
+        ItemLedgEntry.SetCurrentKey("Item No.", Open);
+        ItemLedgEntry.SetRange("Item No.", Item."No.");
+        ItemLedgEntry.SetRange(Open, true);
+        ItemLedgEntry.SetFilter("Location Code", Item.GetFilter("Location Filter"));
+        ItemLedgEntry.SetFilter("Variant Code", Item.GetFilter("Variant Filter"));
+        exit(not ItemLedgEntry.FindFirst())
     end;
     //Codeunit 5804 dupliqué
     procedure SetProperties(NewCalledFromAdjustment: Boolean)

@@ -4,12 +4,12 @@ using Microsoft.Inventory.Item;
 using Microsoft.Sales.History;
 table 50010 Colisage
 {
-    DrillDownPageID = Package;
-    LookupPageID = Package;
+    DrillDownPageID = Colis;
+    LookupPageID = Colis;
 
     fields
     {
-        field(1; "No."; Code[10])
+        field(1; "No."; Code[20])
         {
             TableRelation = Colis."No.";
             Caption = 'N°';
@@ -77,7 +77,7 @@ table 50010 Colisage
             Return := LRecColisage."No. ligne" + 1;
     end;
 
-    procedure FCalcPoidsNetColis(PColisNo: Code[10]) Return: Decimal
+    procedure FCalcPoidsNetColis(PColisNo: Code[20]) Return: Decimal
     var
         LRecColissage: Record Colisage;
         LDecPoidsNet: Decimal;

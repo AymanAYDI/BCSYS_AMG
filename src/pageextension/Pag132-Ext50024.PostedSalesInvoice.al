@@ -4,8 +4,6 @@ using Microsoft.Sales.History;
 
 pageextension 50024 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
 {
-    //TODO cannot be customized
-    // DeleteAllowed =false;
     layout
     {
         modify("External Document No.")
@@ -21,4 +19,10 @@ pageextension 50024 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
             PromotedOnly = true;
         }
     }
+    trigger OnDeleteRecord(): Boolean
+    var
+        DeleteErr: Label 'Deletion not authorized', Comment = 'FRA="Suppresion non autorisée"';
+    begin
+        Error(DeleteErr);
+    end;
 }

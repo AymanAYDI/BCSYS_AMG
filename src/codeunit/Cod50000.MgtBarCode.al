@@ -15,12 +15,12 @@ codeunit 50000 MgtBarCode
         BitMatrix: DotNet BitMatrix;
         ImageFormat: DotNet ImageFormat;
         AztecBitmap: DotNet Bitmap;
-        Item: Record 27;
-        FileManagement: Codeunit 419;
-        TempBlob: Record 99008535;
+        Item: Record Item;
+        FileManagement: Codeunit "File Management";
+        TempBlob: Record TempBlob;
         TxtLocationSave: Text;
 
-    procedure AddCodeBarAztec(PArticle: Record 27)
+    procedure AddCodeBarAztec(PArticle: Record Item)
     begin
         EncodingOption := EncodingOption.EncodingOptions();
         EncodingOption.Height := 75;

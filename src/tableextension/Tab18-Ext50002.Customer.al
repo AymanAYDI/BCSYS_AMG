@@ -9,13 +9,12 @@ tableextension 50002 Customer extends Customer //18
         {
             Caption = 'ICE';
         }
-        field(50100; History; Boolean)
+        field(50100; Historique; Boolean)
         {
             CalcFormula = exist("Historique ventes" where("No. client" = field("No.")));
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Historique ventes";
-            Caption = 'History';
         }
         field(51010; "Compl. cond. livraison"; Text[80])
         {

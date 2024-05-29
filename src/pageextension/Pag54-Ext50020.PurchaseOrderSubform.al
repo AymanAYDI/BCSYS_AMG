@@ -8,45 +8,14 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
     {
         addafter("Drop Shipment")
         {
-            field("Special Order Sales No."; rec."Prepmt. VAT Amount Inv. (LCY)")
+            field("Special Order Sales No."; Rec."Special Order Sales No.")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Prepmt. VAT Amount Inv. (LCY) field.';
             }
-            field("Special Order Sales Line No."; rec."Special Order Sales Line No.")
+            field("Special Order Sales Line No."; Rec."Special Order Sales Line No.")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Special Order Sales Line No. field.';
             }
-        }
-        modify("Location Code")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify(Quantity)
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Line Amount")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Direct Unit Cost")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Line Discount %")
-        {
-            Enabled = not (IsCommentLine or IsBlankNumber);
-            Editable = not (IsCommentLine or IsBlankNumber);
-        }
-        modify("Invoice Disc. Pct.")
-        {
-            Editable = false;
         }
     }
     actions
@@ -55,80 +24,78 @@ pageextension 50020 "PurchaseOrderSubform" extends "Purchase Order Subform" //54
         {
             action(ActRemplir)
             {
-                Caption = 'Fill in Qty to receive';
-                Promoted = true;
-                PromotedIsBig = true;
+                Caption = 'Remplir Qté à recevoir';
                 Image = AutofillQtyToHandle;
-                PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Execute the Fill Qty to Receive action.';
+
                 trigger OnAction()
                 begin
-                    GRecPurchLine.Reset();
-                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
-                    GRecPurchLine.SetRange(Type, Rec.Type::Item);
+                    //DEB DELPHI 18/01/2019 MHR
+                    GRecPurchLine.RESET();
+                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
+                    GRecPurchLine.SETRANGE(Type, Rec.Type::Item); //DELPHI AUB 17.05.21 pour réception type Item uniquement
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.Validate("Qty. to Receive", GRecPurchLine."Outstanding Quantity");
+                            GRecPurchLine.VALIDATE("Qty. to Receive", GRecPurchLine."Outstanding Quantity");
                             if GRecPurchLine."Qty. to Receive (Base)" <> GRecPurchLine."Outstanding Qty. (Base)" then
-                                GRecPurchLine.Validate("Qty. to Receive (Base)", GRecPurchLine."Outstanding Qty. (Base)");
-                            GRecPurchLine.Modify();
-                        until GRecPurchLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecPurchLine.VALIDATE("Qty. to Receive (Base)", GRecPurchLine."Outstanding Qty. (Base)");
+                            GRecPurchLine.MODIFY();
+                        until GRecPurchLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
+                    //FIN DELPHI 18/01/2019 MHR
                 end;
             }
             action(ActVider)
             {
-                Caption = 'Empty Qty to receive';
-                Promoted = true;
-                PromotedIsBig = true;
+                Caption = 'Vider Qté à recevoir';
                 Image = DeleteQtyToHandle;
-                PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Execute the Empty Qty to Receive action.';
+
                 trigger OnAction()
                 begin
-                    GRecPurchLine.Reset();
-                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
+                    //DEB DELPHI 18/01/2019 MHR
+                    GRecPurchLine.RESET();
+                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.Validate("Qty. to Receive", 0);
+                            GRecPurchLine.VALIDATE("Qty. to Receive", 0);
                             if GRecPurchLine."Qty. to Receive (Base)" <> 0 then
-                                GRecPurchLine.Validate("Qty. to Receive (Base)", 0);
-                            GRecPurchLine.Modify();
-                        until GRecPurchLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecPurchLine.VALIDATE("Qty. to Receive (Base)", 0);
+                            GRecPurchLine.MODIFY();
+                        until GRecPurchLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
+                    //FIN DELPHI 18/01/2019 MHR
                 end;
             }
             action(ActViderAFacturer)
             {
-                Caption = 'Empty Qty to invoice';
-                Promoted = true;
-                PromotedIsBig = true;
+                Caption = 'Vider Qté à facturer';
                 Image = DeleteQtyToHandle;
-                PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Execute the Empty Qty to Invoice action.';
+
                 trigger OnAction()
                 begin
-                    GRecPurchLine.Reset();
-                    GRecPurchLine.SetRange("Document Type", GRecPurchLine."Document Type"::Order);
-                    GRecPurchLine.SetRange("Document No.", Rec."Document No.");
+                    //DELPHI AUB 24/09/2019
+                    GRecPurchLine.RESET();
+                    GRecPurchLine.SETRANGE("Document Type", GRecPurchLine."Document Type"::Order);
+                    GRecPurchLine.SETRANGE("Document No.", Rec."Document No.");
                     if GRecPurchLine.FINDSET() then
                         repeat
-                            GRecPurchLine.Validate("Qty. to Invoice", 0);
+                            GRecPurchLine.VALIDATE("Qty. to Invoice", 0);
                             if GRecPurchLine."Qty. to Invoice (Base)" <> 0 then
-                                GRecPurchLine.Validate("Qty. to Invoice (Base)", 0);
-                            GRecPurchLine.Modify();
-                        until GRecPurchLine.Next() = 0;
-                    CurrPage.Update(true);
+                                GRecPurchLine.VALIDATE("Qty. to Invoice (Base)", 0);
+                            GRecPurchLine.MODIFY();
+                        until GRecPurchLine.NEXT() = 0;
+                    CurrPage.UPDATE(true);
+                    //END DELPHI AUB 24/09/2019
                 end;
             }
         }
     }
+
     var
         GRecPurchLine: Record "Purchase Line";
-    //TODO line 489,1019
 }
+

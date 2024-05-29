@@ -8,15 +8,10 @@ pageextension 50035 "PurchasesPayablesSetup" extends "Purchases & Payables Setup
     {
         addafter("Discount Posting")
         {
-            field("Purchase Invoice Start Date"; Rec."Purchase Invoice Start Date")
+            field("Date debut factures achats"; Rec."Date debut factures achats")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Date début factures achats field.';
             }
         }
-    }
-    actions
-    {
-
     }
 }

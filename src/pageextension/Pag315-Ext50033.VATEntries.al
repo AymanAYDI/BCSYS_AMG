@@ -8,25 +8,25 @@ pageextension 50033 "VATEntries" extends "VAT Entries" //315
     {
         addafter("Bill-to/Pay-to No.")
         {
-            field("Supplier Name"; rec."Supplier Name")
+            field("Nom Fournisseur"; Rec."Nom Fournisseur")
             {
-
+                ApplicationArea = All;
             }
-            field(Adress; rec.Adress)
+            field(Adresse; Rec.Adresse)
             {
-
+                ApplicationArea = All;
             }
-            field("Postal code"; rec."Postal code")
+            field("Code postal"; Rec."Code postal")
             {
-
+                ApplicationArea = All;
             }
-            field(City; rec.City)
+            field(Ville; Rec.Ville)
             {
-
+                ApplicationArea = All;
             }
-            field("Supp Invoice No."; rec."Supp Invoice No.")
+            field("No. Facture Fourn"; Rec."No. Facture Fourn")
             {
-
+                ApplicationArea = All;
             }
         }
         modify("VAT Registration No.")

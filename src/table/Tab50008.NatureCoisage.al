@@ -1,8 +1,8 @@
 namespace BCSYS.AMGALLOIS.Basic;
 table 50008 NatureCoisage
 {
-    DrillDownPageID = NatureColisage;
-    LookupPageID = NatureColisage;
+    DrillDownPageID = NatureCoisage;
+    LookupPageID = NatureCoisage;
 
     fields
     {

@@ -1,7 +1,6 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
-using BCSYS.AMGALLOIS.Basic;
 
 pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform" //131
 {
@@ -22,7 +21,6 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                 TableRelation = "ONU table".Code;
                 Editable = false;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Code ONU field.';
             }
         }
         modify("Variant Code")
@@ -94,12 +92,10 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
             field("Gen. Bus. Posting Group"; rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
             field("Gen. Prod. Posting Group"; rec."Gen. Prod. Posting Group")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Gen. Prod. Posting Group field.';
             }
         }
         modify("Shortcut Dimension 1 Code")
@@ -112,113 +108,121 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
         }
         addafter("ShortcutDimCode[8]")
         {
-            field("Package No."; rec."Package No.")
+            field("No. Colis"; Rec."No. Colis")
             {
                 Lookup = true;
                 DrillDown = false;
-                TableRelation = Package."Package No." where("Package No." = field("Package No."));
-                LookupPageID = Package;
+                TableRelation = Colis."No." where("No." = field("No. Colis"));
+                LookupPageID = Colis;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Package No. field.';
                 trigger OnValidate()
                 var
-                    LRecColis: Record Package;
-                    LRecColisage: Record Packaging;
+                    LRecColis: Record Colis;
+                    LRecColisage: Record Colisage;
                     LNoColis: Code[20];
                 begin
-                    if (xRec."Package No." <> Rec."Package No.") and (xRec."Package No." <> '') then begin
-                        LRecColisage.SetRange("Shipping No.", Rec."Document No.");
-                        LRecColisage.SetRange("Shipping Line No.", Rec."Line No.");
+                    if (xRec."No. Colis" <> Rec."No. Colis") and (xRec."No. Colis" <> '') then begin
+                        LRecColisage.SETRANGE("No. expedition", Rec."Document No.");
+                        LRecColisage.SETRANGE("No. ligne expedition", Rec."Line No.");
                         if LRecColisage.FINDFIRST() then begin
-                            LNoColis := LRecColisage."Package No.";
+                            LNoColis := LRecColisage."No.";
                             LRecColisage.DELETE(true);
-                            Clear(LRecColis);
+                            CLEAR(LRecColis);
                             if LRecColis.GET(LNoColis) then begin
-                                LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LNoColis);
-                                LRecColis.Modify();
+                                LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LNoColis);
+                                LRecColis.MODIFY();
                             end;
                         end;
                     end;
 
-                    if Rec."Package No." <> '' then begin
-                        Clear(LRecColisage);
+                    if Rec."No. Colis" <> '' then begin
+                        CLEAR(LRecColisage);
                         LRecColisage.INIT();
-                        LRecColisage."Package No." := Rec."Package No.";
-                        LRecColisage."Line No." := LRecColisage.NextLineNo(Rec."Package No.");
-                        LRecColisage."Shipping No." := Rec."Document No.";
-                        LRecColisage."Shipping Line No." := Rec."Line No.";
-                        LRecColisage."Item No." := Rec."No.";
-                        LRecColisage.Quantity := Rec.Quantity;
+                        LRecColisage."No." := Rec."No. Colis";
+                        LRecColisage."No. ligne" := LRecColisage.NextLineNo(Rec."No. Colis");
+                        LRecColisage."No. expedition" := Rec."Document No.";
+                        LRecColisage."No. ligne expedition" := Rec."Line No.";
+                        LRecColisage."No. article" := Rec."No.";
+                        LRecColisage.Quantite := Rec.Quantity;
                         LRecColisage.INSERT(true);
-                        Clear(LRecColis);
-                        if LRecColis.GET(Rec."Package No.") then begin
-                            LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
-                            LRecColis.Modify();
+                        CLEAR(LRecColis);
+                        if LRecColis.GET(Rec."No. Colis") then begin
+                            LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LRecColis."No.");
+                            LRecColis.MODIFY();
                         end;
                     end;
 
-                    CurrPage.Update();
+                    CurrPage.UPDATE();
                 end;
             }
         }
     }
     actions
     {
-        addafter("&Line")
+        addlast(processing)
         {
-            group(Package)
+            group(Colis)
             {
+                Caption = 'Colis', Comment = 'FRA="Colis"';
                 Image = NewItem;
                 action("Create Package")
                 {
+                    Caption = 'Create Package', Comment = 'FRA="Créer Colis"';
+                    AccessByPermission = TableData "Sales Shipment Line" = RIM;
                     Image = Item;
                     ApplicationArea = All;
-                    ToolTip = 'Executes the Create Package action.';
                     trigger OnAction()
                     var
+                        LRecColis: Record Colis;
                         LRecSalesShipmentLine: Record "Sales Shipment Line";
-                        LRecColis: Record Package;
-                        LRecColis2: Record Package;
-                        LRecColisage: Record Packaging;
-                        LIntI: Integer;
+                        LRecColisage: Record Colisage;
+                        LRecColis2: Record Colis;
                         LIntNbColis: Integer;
+                        LIntI: Integer;
                     begin
                         CurrPage.SETSELECTIONFILTER(LRecSalesShipmentLine);
 
                         if LRecSalesShipmentLine.FINDFIRST() then
-                            if LRecSalesShipmentLine."Package No." <> '' then
-                                ERROR('Un Numéro de colis est déja atribué … cette ligne, veuillez le supprimer ou s‚lectionnez une autre ligne')
+                            if LRecSalesShipmentLine."No. Colis" <> '' then
+                                ERROR('Un Numéro de colis est déja atribué à cette ligne, veuillez le supprimer ou sélectionnez une autre ligne')
                             else begin
                                 LRecColis.INIT();
-                                LRecColis."Shipping No." := LRecSalesShipmentLine."Document No.";
+                                LRecColis."No. expedition" := LRecSalesShipmentLine."Document No.";
                                 LRecColis.INSERT(true);
 
                                 LRecColisage.INIT();
-                                LRecColisage."Package No." := LRecColis."Package No.";
-                                LRecColisage."Line No." := 1;
-                                LRecColisage."Shipping No." := LRecSalesShipmentLine."Document No.";
-                                LRecColisage."Shipping Line No." := LRecSalesShipmentLine."Line No.";
-                                LRecColisage."Item No." := LRecSalesShipmentLine."No.";
-                                LRecColisage."Quantity" := LRecSalesShipmentLine.Quantity;
+                                LRecColisage."No." := LRecColis."No.";
+                                LRecColisage."No. ligne" := 1;
+                                LRecColisage."No. expedition" := LRecSalesShipmentLine."Document No.";
+                                LRecColisage."No. ligne expedition" := LRecSalesShipmentLine."Line No.";
+                                LRecColisage."No. article" := LRecSalesShipmentLine."No.";
+                                LRecColisage.Quantite := LRecSalesShipmentLine.Quantity;
                                 LRecColisage.INSERT(true);
 
-                                LRecSalesShipmentLine."Package No." := LRecColis."Package No.";
-                                LRecSalesShipmentLine.Modify();
+                                LRecSalesShipmentLine."No. Colis" := LRecColis."No.";
+                                LRecSalesShipmentLine.MODIFY();
 
-                                LRecColis."Net Weight" := LRecColisage.FCalcPoidsNetColis(LRecColis."Package No.");
-                                LRecColis.Modify();
+                                LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LRecColis."No.");
+                                LRecColis.MODIFY();
                                 COMMIT();
+                                //DELPHI AUB 05.07.2021
                                 LIntI := 1;
-                                LRecColis2.Reset();
-                                LRecColis2.SETFILTER("Shipping No.", LRecColis."Shipping No.");
+                                LRecColis2.RESET();
+                                LRecColis2.SETFILTER("No. expedition", LRecColis."No. expedition");
                                 LIntNbColis := LRecColis2.COUNT;
-                                if LRecColis2.FINDFIRST() then
+                                //IF LRecColis2.FINDFIRST THEN
+                                //LRecColis."R‚f‚rence Colis" := FORMAT(LIntNbColis) + '/' + FORMAT(LIntNbColis);
+
+
+                                if LRecColis2.FIND('-') then
                                     repeat
-                                        LRecColis2."Package Reference" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-                                        LRecColis2.Modify();
+                                        LRecColis2."Reference Colis" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
+                                        LRecColis2.MODIFY();
                                         COMMIT();
                                         LIntI += 1;
-                                    until LRecColis2.Next() <= 0;
+                                    until LRecColis2.NEXT() <= 0;
+
+                                //END DELPHI AUB
                             end;
                     end;
                 }

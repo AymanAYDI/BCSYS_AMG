@@ -121,6 +121,4 @@ pageextension 50016 "SalesOrderSubform" extends "Sales Order Subform" //46
     }
     var
         GRecSalesLine: Record "Sales Line";
-        IsBlankNumber: Boolean;
-    //TODO i can't find solution for line 578,585,649,706,1011,1198,1733,1742
 }

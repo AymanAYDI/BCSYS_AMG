@@ -3,8 +3,8 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Sales.History;
 pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
 {
-    PromotedActionCategories = 'New,Process,Report,Print/Send,Shipment';
-
+    //TODO cannot be customized
+    // ModifyAllowed =true;
     layout
     {
         addafter("Document Date")
@@ -12,7 +12,6 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
             field("Your Reference"; Rec."Your Reference")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Your Reference field.';
             }
         }
         addafter("Shipment Method Code")
@@ -20,54 +19,32 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
             field("Compl. cond. livraison"; Rec."Compl. cond. livraison")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Additional terms of delivery field.';
             }
         }
-        addafter("Shipment Date")
+        addafter(Shipping)
         {
-            part("Sous-formulaire Package"; "Sous-formulaire Package")
+            part("Sous-formulaire Colis"; "Sous-formulaire Colis")
             {
-                SubPageLink = "Shipping No." = field("No.");
+                SubPageLink = "No. expedition" = field("No.");
                 UpdatePropagation = Both;
                 ApplicationArea = All;
             }
         }
-        // modify(SalesShipmLines)
-        // {
-        //     UpdatePropagation = Both;
-        // }
-        modify("Shipping Agent Code")
-        {
-            Editable = true;
-        }
-        modify("Shipping Agent Service Code")
-        {
-            Editable = true;
-        }
-        modify("Package Tracking No.")
-        {
-            Editable = true;
-        }
     }
     actions
     {
-        modify("Update Document")
-        {
-            Visible = false;
-        }
-        addafter("&Navigate")
+        addlast(processing)
         {
             action(DGX)
             {
-                Caption = 'DGX';
+                Caption = 'DGX', Comment = 'FRA="DGX"';
                 Image = Shipment;
                 Promoted = true;
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
                 RunObject = Page "Liste DGX";
-                RunPageLink = "Delivery slip no." = field("No.");
+                RunPageLink = "No Bon Livraison" = field("No.");
                 ApplicationArea = All;
-                ToolTip = 'Executes the DGX action.';
             }
             action("Etiquette colisage")
             {
@@ -77,21 +54,13 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                ToolTip = 'Executes the Etiquette colisage action.';
                 trigger OnAction()
                 begin
-                    //DELPHI AUB 23.04.2021
                     Rec.SETFILTER("No.", Rec."No.");
                     REPORT.RunModal(Report::"Etiquette Packaging", true, false, Rec)
                 end;
             }
         }
     }
-
-    trigger OnModifyRecord(): Boolean
-    begin
-        CODEUNIT.RUN(CODEUNIT::"Shipment Header - Edit", Rec);
-        exit(false);
-    end;
 }
 

@@ -10,9 +10,9 @@ pageextension 50025 PostedSalesInvoiceSubform extends "Posted Sales Invoice Subf
         {
             field("Last direct cost"; GDecLastDirectCost)
             {
+                Caption = 'Last direct cost', Comment = 'FRA="Dernier Coût direct"';
                 Editable = false;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the GDecLastDirectCost field.';
             }
         }
     }

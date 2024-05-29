@@ -156,6 +156,19 @@ codeunit 50001 "AMG_Events"
     begin
         Item."Price/Profit Calculation" := Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit";
     end;
+    //Page 50
+    [EventSubscriber(ObjectType::Page, Page::"Purchase Order", OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted, '', false, false)]
+    local procedure OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted(var PurchaseHeader: Record "Purchase Header"; var ShowConfirmCloseUnposted: Boolean)
+    begin
+        ShowConfirmCloseUnposted := false;
+    end;
+
+
+
+
+
+
+
 
 
 
@@ -1115,12 +1128,6 @@ codeunit 50001 "AMG_Events"
     begin
         if PurchaseHeader."Document Date" <> 0D then
             PurchaseHeader."Requested Receipt Date" := PurchaseHeader."Document Date";
-    end;
-    //Page 50
-    [EventSubscriber(ObjectType::Page, Page::"Purchase Order", 'OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted', '', false, false)]
-    local procedure OnQueryClosePageOnAfterCalcShowConfirmCloseUnposted(var PurchaseHeader: Record "Purchase Header"; var ShowConfirmCloseUnposted: Boolean)
-    begin
-        ShowConfirmCloseUnposted := false;
     end;
     //Page 50
     [EventSubscriber(ObjectType::Page, Page::"Purchase Order", 'OnBeforeCalculateCurrentShippingAndPayToOption', '', false, false)]
