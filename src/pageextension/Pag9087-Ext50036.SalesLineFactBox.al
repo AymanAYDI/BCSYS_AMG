@@ -30,24 +30,22 @@ pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
         {
             Visible = false;
         }
-        addafter(Item)
+        addlast(content)
         {
             field("Special Order Purchase No."; Rec."Special Order Purchase No.")
             {
                 DrillDown = false;
                 Lookup = true;
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Special Order Purchase No. field.';
             }
             field("Special Order Purch. Line No."; Rec."Special Order Purch. Line No.")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Special Order Purch. Line No. field.';
             }
             field("Nom fournisseur"; GTxtNomFournisseur)
             {
+                Caption = 'Nom fournisseur';
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the GTxtNomFournisseur field.';
             }
         }
     }
@@ -62,7 +60,7 @@ pageextension 50036 SalesLineFactBox extends "Sales Line FactBox" //9087
                 GTxtNomFournisseur := LRecPurchaseHeader."Buy-from Vendor Name";
         end;
     end;
-    //TODO i can't find solution for 194
+
     var
         GTxtNomFournisseur: Text[250];
 }

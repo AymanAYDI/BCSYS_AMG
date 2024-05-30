@@ -18,6 +18,7 @@ pageextension 50004 "CustomerCard" extends "Customer Card" //21
         {
             field("Compl. cond. livraison"; Rec."Compl. cond. livraison")
             {
+                ApplicationArea = All;
             }
         }
     }

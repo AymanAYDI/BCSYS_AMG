@@ -536,7 +536,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Class or Division (subsidiary hazard)</Value>
+                                  <Value EvaluationMode="Auto">Classe or Division (subsidiary hazard)</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>7pt</FontSize>

@@ -9,6 +9,7 @@ page 50030 DELItemDrillDownCarbo
     SourceTableView = sorting("No.")
                       order(ascending);
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

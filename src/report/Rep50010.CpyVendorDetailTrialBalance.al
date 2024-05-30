@@ -7,10 +7,9 @@ using Microsoft.Foundation.Period;
 report 50010 "CpyVendor Detail Trial Balance"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/RDL/CpyVendorDetailTrialBalance.rdlc';
-    Caption = 'Vendor Detail Trial Balance';
-    ApplicationArea = All;
-
+    RDLCLayout = './src/report/rdl/CpyVendorDetailTrialBalance.rdl';
+    Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
+    UsageCategory = None;
     dataset
     {
         dataitem(Vendor; Vendor)
@@ -30,7 +29,7 @@ report 50010 "CpyVendor Detail Trial Balance"
             column(STRSUBSTNO_Text004_PreviousStartDate_; STRSUBSTNO(Text004, PreviousStartDate))
             {
             }
-            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, CurrReport.PAGENO()))
+            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, ''))
             {
             }
             column(PageCaption; STRSUBSTNO(Text005, ' '))
@@ -39,7 +38,7 @@ report 50010 "CpyVendor Detail Trial Balance"
             column(PrintedByCaption; STRSUBSTNO(Text003, ''))
             {
             }
-            column(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+            column(ExcludeBalanceOnly; ExcludeBalanceOnly)
             {
             }
             column(Vendor_TABLECAPTION__________Filter; Vendor.TABLECAPTION + ': ' + Filter)
@@ -312,13 +311,13 @@ report 50010 "CpyVendor Detail Trial Balance"
 
                     trigger OnPreDataItem()
                     begin
-                        if BoolDocNumSort then
+                        if DocNumSort then
                             SETCURRENTKEY("Vendor No.", "Document No.", "Posting Date");
                         if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
                         if EndDate < Date."Period End" then
                             Date."Period End" := EndDate;
-                        SetRange("Posting Date", Date."Period Start", Date."Period End");
+                        SETRANGE("Posting Date", Date."Period Start", Date."Period End");
                     end;
                 }
 
@@ -326,7 +325,7 @@ report 50010 "CpyVendor Detail Trial Balance"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -337,8 +336,8 @@ report 50010 "CpyVendor Detail Trial Balance"
 
                 VendLedgEntry.SETCURRENTKEY(
                   "Vendor No.", "Posting Date", "Entry Type", "Initial Entry Global Dim. 1", "Initial Entry Global Dim. 2", "Currency Code");
-                VendLedgEntry.SetRange("Vendor No.", "No.");
-                VendLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
+                VendLedgEntry.SETRANGE("Vendor No.", "No.");
+                VendLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 VendLedgEntry.SETFILTER(
                   "Entry Type", '%1|%2|%3|%4|%5|%6|%7|%8|%9..%10',
                   VendLedgEntry."Entry Type"::"Initial Entry", VendLedgEntry."Entry Type"::"Unrealized Loss",
@@ -350,11 +349,11 @@ report 50010 "CpyVendor Detail Trial Balance"
                     repeat
                         PreviousDebitAmountLCY := PreviousDebitAmountLCY + VendLedgEntry."Debit Amount (LCY)";
                         PreviousCreditAmountLCY := PreviousCreditAmountLCY + VendLedgEntry."Credit Amount (LCY)";
-                    until VendLedgEntry.Next() = 0;
+                    until VendLedgEntry.NEXT() = 0;
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
                 VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if BoolExcludeBalanceOnly then begin
+                if ExcludeBalanceOnly then begin
                     if VendLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
@@ -367,12 +366,10 @@ report 50010 "CpyVendor Detail Trial Balance"
 
                 DebitPeriodAmount := 0;
                 CreditPeriodAmount := 0;
-                CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPreDataItem()
-            var
-                AMG_Functions: Codeunit AMG_Functions;
             begin
                 if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
@@ -403,31 +400,21 @@ report 50010 "CpyVendor Detail Trial Balance"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(DocNumSort; BoolDocNumSort)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(DocNumSortF; DocNumSort)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Sorted by Document No.';
-                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
+                        Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
-                    field(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+                    field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Exclude Vendors That Have A Balance Only';
+                        Caption = 'Exclude Vendors That Have A Balance Only', Comment = 'FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"';
                         MultiLine = true;
-                        ToolTip = 'Specifies the value of the Exclude Vendors That Have A Balance Only field.';
                     }
                 }
             }
         }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 
     trigger OnInitReport()
@@ -444,9 +431,10 @@ report 50010 "CpyVendor Detail Trial Balance"
         VendLedgEntry: Record "Detailed Vendor Ledg. Entry";
         VendLedgEntry2: Record "Detailed Vendor Ledg. Entry";
         OriginalLedgerEntry: Record "Vendor Ledger Entry";
+        AMG_Functions: Codeunit AMG_Functions;
         FiltreDateCalc: codeunit "DateFilter-Calc";
-        BoolDocNumSort: Boolean;
-        BoolExcludeBalanceOnly: Boolean;
+        DocNumSort: Boolean;
+        ExcludeBalanceOnly: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
@@ -460,32 +448,32 @@ report 50010 "CpyVendor Detail Trial Balance"
         PreviousDebitAmountLCY: Decimal;
         ReportCreditAmountLCY: Decimal;
         ReportDebitAmountLCY: Decimal;
-        BalanceCaptionLbl: Label 'Balance';
-        ContinuedCaptionLbl: Label 'Continued';
-        CreditCaptionLbl: Label 'Credit';
-        Current_pageCaptionLbl: Label 'Current page';
-        DebitCaptionLbl: Label 'Debit';
-        DescriptionCaptionLbl: Label 'Description';
-        Document_No_CaptionLbl: Label 'Document No.';
-        External_Document_No_CaptionLbl: Label 'External Document No.';
-        Grand_TotalCaptionLbl: Label 'Grand Total';
-        Posting_DateCaptionLbl: Label 'Posting Date';
-        Previous_pageCaptionLbl: Label 'Previous page';
-        Source_CodeCaptionLbl: Label 'Source Code';
-        Text001: Label 'You must fill in the %1 field.', Comment = '%1="Date Filter"';
-        Text002: Label 'You must specify a Starting Date.';
-        Text003: Label 'Printed by %1', Comment = '%1=USERID';
-        Text004: Label 'Fiscal Year Start Date : %1', Comment = '%1=PreviousStartDate';
-        Text005: Label 'Page %1', Comment = '%1=PAGENO';
-        Text006: Label 'Balance at %1 ', Comment = '%1=PreviousEndDate';
-        Text007: Label 'Balance at %1', Comment = '%1=EndDate';
-        Text008: Label 'Total';
-        This_report_also_includes_vendors_that_only_have_balances_CaptionLbl: Label 'This report also includes vendors that only have balances.';
-        To_be_continuedCaptionLbl: Label 'To be continued';
-        Total_Date_RangeCaptionLbl: Label 'Total Date Range';
-        Vendor_Detail_Trial_BalanceCaptionLbl: Label 'Vendor Detail Trial Balance';
+        BalanceCaptionLbl: Label 'Balance', Comment = 'FRA="Solde"';
+        ContinuedCaptionLbl: Label 'Continued', Comment = 'FRA="Suite"';
+        CreditCaptionLbl: Label 'Credit', Comment = 'FRA="Crédit"';
+        Current_pageCaptionLbl: Label 'Current page', Comment = 'FRA="Page courante"';
+        DebitCaptionLbl: Label 'Debit', Comment = 'FRA="Débit"';
+        DescriptionCaptionLbl: Label 'Description', Comment = 'FRA="Description"';
+        Document_No_CaptionLbl: Label 'Document No.', Comment = 'FRA="N° document"';
+        External_Document_No_CaptionLbl: Label 'External Document No.', Comment = 'FRA="N° doc. externe"';
+        Grand_TotalCaptionLbl: Label 'Grand Total', Comment = 'FRA="Total général"';
+        Posting_DateCaptionLbl: Label 'Posting Date', Comment = 'FRA="Date comptabilisation"';
+        Previous_pageCaptionLbl: Label 'Previous page', Comment = 'FRA="Page précédente"';
+        Source_CodeCaptionLbl: Label 'Source Code', Comment = 'FRA="Code journal"';
+        Text001: Label 'You must fill in the %1 field.', Comment = 'FRA="Vous devez renseigner le champ %1."';
+        Text002: Label 'You must specify a Starting Date.', Comment = 'FRA="Vous devez spécifier une date de début."';
+        Text003: Label 'Printed by %1', Comment = 'FRA="Imprimé par %1"';
+        Text004: Label 'Fiscal Year Start Date : %1', Comment = 'FRA="Début exercice comptable : %1"';
+        Text005: Label 'Page %1', Comment = 'FRA="Page %1"';
+        Text006: Label 'Balance at %1 ', Comment = 'FRA="Solde au %1 "';
+        Text007: Label 'Balance at %1', Comment = 'FRA="Solde au %1"';
+        Text008: Label 'Total', Comment = 'FRA="Total"';
+        This_report_also_includes_vendors_that_only_have_balances_CaptionLbl: Label 'This report also includes vendors that only have balances.', Comment = 'FRA="Cet état inclut aussi les fournisseurs ne présentant que des soldes."';
+        To_be_continuedCaptionLbl: Label 'To be continued', Comment = 'FRA="À suivre"';
+        Total_Date_RangeCaptionLbl: Label 'Total Date Range', Comment = 'FRA="Total plage de dates"';
+        Vendor_Detail_Trial_BalanceCaptionLbl: Label 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
         TotalBy: Option Date,Week,Month,Quarter,Year;
         "Filter": Text;
-        TextDate: Text[30]; //TODO Verif was (TextDate: Text;)
+        TextDate: Text;
 }
 

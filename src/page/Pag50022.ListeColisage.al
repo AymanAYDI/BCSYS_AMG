@@ -12,6 +12,7 @@ page 50022 ListeColisage
     PageType = List;
     SourceTable = Colisage;
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

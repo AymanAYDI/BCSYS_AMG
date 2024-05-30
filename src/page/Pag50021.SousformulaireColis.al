@@ -12,6 +12,7 @@ page 50021 "Sous-formulaire Colis"
     SourceTableView = sorting("No.")
                       order(ascending);
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

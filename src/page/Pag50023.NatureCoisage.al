@@ -4,6 +4,7 @@ page 50023 NatureCoisage
     PageType = List;
     SourceTable = NatureCoisage;
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

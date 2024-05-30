@@ -5,6 +5,7 @@ page 50012 "Liste DGX"
     PageType = List;
     SourceTable = "DGX Header";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

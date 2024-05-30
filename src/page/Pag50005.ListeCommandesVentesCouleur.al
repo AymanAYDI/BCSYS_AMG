@@ -41,6 +41,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                       order(descending)
                       where("Document Type" = const(Order));
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

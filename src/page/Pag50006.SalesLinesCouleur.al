@@ -14,6 +14,7 @@ page 50006 "Sales Lines Couleur"
     PageType = List;
     SourceTable = "Sales Line";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

@@ -7,6 +7,7 @@ page 50013 "Fiche DGX"
     PageType = Card;
     SourceTable = "DGX Header";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

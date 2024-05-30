@@ -14,6 +14,7 @@ page 50010 "Historique ventes article"
     SourceTableView = sorting("Date document vente", Reference, "No. client")
                       order(descending);
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

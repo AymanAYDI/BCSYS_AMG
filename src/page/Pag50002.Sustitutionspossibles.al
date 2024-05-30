@@ -10,6 +10,7 @@ page 50002 "Sustitutions possibles"
     ShowFilter = false;
     SourceTable = "Item Substitution";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

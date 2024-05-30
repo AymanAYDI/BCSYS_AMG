@@ -6,11 +6,11 @@ using Microsoft.Utilities;
 using System.Globalization;
 report 50008 "DGX IATA"
 {
-    RDLCLayout = './src/report/RDL/DGXIATA.rdlc';
+    RDLCLayout = './src/report/rdl/DGXIATA.rdl';
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -20,52 +20,52 @@ report 50008 "DGX IATA"
                                 order(ascending);
             dataitem("DGX Header"; "DGX Header")
             {
-                RequestFilterFields = "DGX No.";
+                RequestFilterFields = "No DGX";
                 dataitem(PageLoop; Integer)
                 {
                     DataItemTableView = sorting(Number)
                                         where(Number = const(1));
-                    column(NoDGX_DGXHeader; "DGX Header"."DGX No.")
+                    column(NoDGX_DGXHeader; "DGX Header"."No DGX")
                     {
                     }
-                    column(TypeDGX_DGXHeader; "DGX Header"."DGX Type")
+                    column(TypeDGX_DGXHeader; "DGX Header"."Type DGX")
                     {
                     }
-                    column(Destinataire_DGXHeader; "DGX Header".Recipient)
+                    column(Destinataire_DGXHeader; "DGX Header".Destinataire)
                     {
                     }
-                    column(Destinatairenom_DGXHeader; "DGX Header"."Recipient Name")
+                    column(Destinatairenom_DGXHeader; "DGX Header"."Destinataire nom")
                     {
                     }
-                    column(Destinataireadresse1_DGXHeader; "DGX Header"."Recipient Adress 1")
+                    column(Destinataireadresse1_DGXHeader; "DGX Header"."Destinataire adresse 1")
                     {
                     }
-                    column(Destinataireadresse2_DGXHeader; "DGX Header"."Recipient Adress 2")
+                    column(Destinataireadresse2_DGXHeader; "DGX Header"."Destinataire adresse 2")
                     {
                     }
-                    column(Destinatairecodepostal_DGXHeader; "DGX Header"."Recipient Post Code")
+                    column(Destinatairecodepostal_DGXHeader; "DGX Header"."Destinataire code postal")
                     {
                     }
-                    column(Destinataireville_DGXHeader; "DGX Header"."Recipient City")
+                    column(Destinataireville_DGXHeader; "DGX Header"."Destinataire ville")
                     {
                     }
-                    column(DestinatairepaysEN_DGXHeader; "DGX Header"."Recipient Country EN")
+                    column(DestinatairepaysEN_DGXHeader; "DGX Header"."Destinataire pays EN")
                     {
                     }
-                    column(Typedetransport_DGXHeader; "DGX Header"."Type of transport")
+                    column(Typedetransport_DGXHeader; "DGX Header"."Type de transport")
                     {
                     }
-                    column("Aéroportdedépart_DGXHeader"; "DGX Header"."Airport of departure")
+                    column("Aéroportdedépart_DGXHeader"; "DGX Header"."Aeroport de depart")
                     {
                     }
-                    column(Radioactif_DGXHeader; "DGX Header".Radioactive)
+                    column(Radioactif_DGXHeader; "DGX Header".Radioactif)
                     {
                     }
-                    column(Datedocument_DGXHeader; FORMAT("DGX Header"."Document Date", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>'))
+                    column(Datedocument_DGXHeader; FORMAT("DGX Header"."Date document", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>'))
                     {
-                        AutoFormatExpression = FORMAT("DGX Header"."Document Date", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>');
+                        AutoFormatExpression = FORMAT("DGX Header"."Date document", 0, '<Day,2><Filler Character, > <Month Text,3>. <Year4>');
                     }
-                    column(NoBonLivraison_DGXHeader; "DGX Header"."Delivery slip no.")
+                    column(NoBonLivraison_DGXHeader; "DGX Header"."No Bon Livraison")
                     {
                     }
                     column(OutputNo; OutputNo)
@@ -84,9 +84,6 @@ report 50008 "DGX IATA"
                         }
 
                         trigger OnAfterGetRecord()
-                        var
-                            Text01: Label '%1 - %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                            Text02: Label '%1; %2 - %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                         begin
                             if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
@@ -95,29 +92,29 @@ report 50008 "DGX IATA"
                                 if not Continue then
                                     CurrReport.BREAK();
 
-                            Clear(DimText);
+                            CLEAR(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := STRSUBSTNO('%1 - %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
                                       STRSUBSTNO(
-                                        Text02, DimText,
+                                        '%1; %2 - %3', DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
                                 if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.Next() = 0;
+                            until DimSetEntry1.NEXT() = 0;
                         end;
                     }
                 }
                 dataitem("DGX Lines"; "DGX Lines")
                 {
-                    DataItemLink = DGXNo = field("DGX No.");
+                    DataItemLink = DGXNo = field("No DGX");
                     DataItemLinkReference = "DGX Header";
                     DataItemTableView = sorting(DGXNo, LineNo)
                                         order(ascending);
@@ -136,10 +133,10 @@ report 50008 "DGX IATA"
                     column(Description_DGXLines; "DGX Lines".Description)
                     {
                     }
-                    column(Classe_DGXLines; "DGX Lines".Class)
+                    column(Classe_DGXLines; "DGX Lines".Classe)
                     {
                     }
-                    column(GroupeEmballage_DGXLines; "DGX Lines"."Packaging Group")
+                    column(GroupeEmballage_DGXLines; "DGX Lines"."Groupe Emballage")
                     {
                     }
                     column(Qty_DGXLines; "DGX Lines".Qty)
@@ -149,16 +146,16 @@ report 50008 "DGX IATA"
                     column(TypeofPacking_DGXLines; "DGX Lines"."Type of Packing")
                     {
                     }
-                    column("Pointéclair_DGXLines"; "DGX Lines"."Flash point")
+                    column("Pointéclair_DGXLines"; "DGX Lines"."Point eclair")
                     {
                     }
                     column(Limitedqty_DGXLines; "DGX Lines"."Limited qty")
                     {
                     }
-                    column(Massebrutekg_DGXLines; "DGX Lines"."Gross Mass (kg)")
+                    column(Massebrutekg_DGXLines; "DGX Lines"."Masse brute (kg)")
                     {
                     }
-                    column(Massenettekg_DGXLines; "DGX Lines"."Net mass (kg)")
+                    column(Massenettekg_DGXLines; "DGX Lines"."Masse nette (kg)")
                     {
                     }
                     column(LinNo; LinNo)
@@ -170,7 +167,7 @@ report 50008 "DGX IATA"
                     column(PackingInstr; "DGX Lines"."Packing Inst")
                     {
                     }
-                    column("Unitédemesure_DGXLines"; "DGX Lines"."Unit of measure")
+                    column("Unitédemesure_DGXLines"; "DGX Lines"."Unite de mesure")
                     {
                     }
 
@@ -181,12 +178,12 @@ report 50008 "DGX IATA"
 
                     trigger OnPreDataItem()
                     begin
-                        MoreLines := FINDLAST();
+                        MoreLines := FIND('+');
                         while MoreLines and (ItemNo = '') do
-                            MoreLines := Next(-1) <> 0;
+                            MoreLines := NEXT(-1) <> 0;
                         if not MoreLines then
                             CurrReport.BREAK();
-                        SetRange(LineNo, 0, "DGX Lines".LineNo);
+                        SETRANGE(LineNo, 0, "DGX Lines".LineNo);
                     end;
                 }
             }
@@ -197,14 +194,13 @@ report 50008 "DGX IATA"
                     CopyText := FormatDocument.GetCOPYText();
                     OutputNo += 1;
                 end;
-                CurrReport.PAGENO := 1;
             end;
 
             trigger OnPreDataItem()
             begin
                 NoOfLoops := "DGX Header".COUNT * (ABS(NoOfCopies) + 1); //1 + ABS(NoOfCopies);
                 CopyText := '';
-                SetRange(Number, 1, NoOfLoops);
+                SETRANGE(Number, 1, NoOfLoops);
 
                 OutputNo := 1;
             end;
@@ -233,23 +229,23 @@ report 50008 "DGX IATA"
 
     trigger OnInitReport()
     begin
-        CurrReport.LANGUAGE := CDULanguage.GetLanguageID('ENU');
+        CurrReport.LANGUAGE := GRecLanguage.GetLanguageIdOrDefault('ENU');
     end;
 
     var
         DimSetEntry1: Record "Dimension Set Entry";
         FormatDocument: Codeunit "Format Document";
-        CDULanguage: codeunit Language;
+        GRecLanguage: Codeunit Language;
         Continue: Boolean;
         MoreLines: Boolean;
         LinNo: Integer;
         NoOfCopies: Integer;
         NoOfLoops: Integer;
         OutputNo: Integer;
-        CTxtAirport: Label 'ROISSY';
-        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
+        CTxtAirport: Label 'ROISSY', Comment = 'FRA="ROISSY"';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions', Comment = 'FRA="Analytique en-tête"';
         CopyText: Text[30];
+        OldDimText: Text[75];
         DimText: Text[120];
-        OldDimText: Text[150];
 }
 

@@ -46,6 +46,7 @@ page 50008 "AMG Business Manager Role Cent"
     Caption = 'Business Manager', Comment = 'FRA="Gestionnaire d''activité"';
     PageType = RoleCenter;
     UsageCategory = None;
+    ApplicationArea = All;
     layout
     {
         area(rolecenter)

@@ -6,28 +6,27 @@ using Microsoft.Sales.Customer;
 using Microsoft.Foundation.Company;
 using Microsoft.CRM.Team;
 using Microsoft.Assembly.History;
-using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Setup;
 using Microsoft.Finance.Dimension;
 using System.Globalization;
-using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Reports;
 using Microsoft.Foundation.Shipping;
+using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Address;
 using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Archive;
-using System.EMail;
 using Microsoft.Foundation.UOM;
+using System.EMail;
 using Microsoft.CRM.Interaction;
-report 50007 "Edition Bon colisage"
+report 50016 "Etiquette Colisage"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/rdl/EditionBoncolisage.rdl';
-    Caption = 'Sales - Shipment', Comment = 'FRA="Ventes : Expédition"';
+    RDLCLayout = './src/report/rdl/EtiquetteColisage.rdl';
+    Caption = 'Sales - Shipment', Comment = 'FRA="Etiquette colisage"';
     PreviewMode = PrintLayout;
     UsageCategory = None;
 
@@ -36,7 +35,7 @@ report 50007 "Edition Bon colisage"
         dataitem("Sales Shipment Header"; "Sales Shipment Header")
         {
             DataItemTableView = sorting("No.");
-            RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
+            RequestFilterFields = "No.";
             RequestFilterHeading = 'Posted Sales Shipment', Comment = 'FRA="Expédition vente enregistrée"';
             column(No_SalesShptHeader; "No.")
             {
@@ -69,9 +68,6 @@ report 50007 "Edition Bon colisage"
                     column(SalesShptCopyText; GTxtSalesShptCopyText)
                     {
                     }
-                    column(ShipToAddr1; ShipToAddr[1])
-                    {
-                    }
                     column(CompanyAddr1; CompanyAddr[1])
                     {
                     }
@@ -81,25 +77,13 @@ report 50007 "Edition Bon colisage"
                     column(CompanyAddr2; CompanyAddr[2])
                     {
                     }
-                    column(ShipToAddr3; ShipToAddr[3])
-                    {
-                    }
                     column(CompanyAddr3; CompanyAddr[3])
-                    {
-                    }
-                    column(ShipToAddr4; ShipToAddr[4])
                     {
                     }
                     column(CompanyAddr4; CompanyAddr[4])
                     {
                     }
-                    column(ShipToAddr5; ShipToAddr[5])
-                    {
-                    }
                     column(CompanyInfoPhoneNo; CompanyInfo."Phone No.")
-                    {
-                    }
-                    column(ShipToAddr6; ShipToAddr[6])
                     {
                     }
                     column(CompanyInfoHomePage; CompanyInfo."Home Page")
@@ -148,9 +132,6 @@ report 50007 "Edition Bon colisage"
                     {
                     }
                     column(ReferenceText; ReferenceText)
-                    {
-                    }
-                    column(YourRef_SalesShptHeader; "Sales Shipment Header"."Your Reference")
                     {
                     }
                     column(ShipToAddr7; ShipToAddr[7])
@@ -208,9 +189,6 @@ report 50007 "Edition Bon colisage"
                     {
                     }
                     column(OrderNoCaption_SalesShptHeader; 'Our Document No.')
-                    {
-                    }
-                    column(OrderNo_SalesShptHeader; "Sales Shipment Header"."Order No.")
                     {
                     }
                     column(ExternalDocumentNoCaption_SalesShptHeader; 'Purchase Order No.')
@@ -354,9 +332,7 @@ report 50007 "Edition Bon colisage"
                         DataItemLink = "Document No." = field("No.");
                         DataItemLinkReference = "Sales Shipment Header";
                         DataItemTableView = sorting("Document No.", "Line No.")
-                                            where(Quantity = filter(> 0),
-                                                  Type = filter(Item),
-                                                  "No. Colis" = filter(<> ''));
+                                            where(Quantity = filter(> 0));
                         column(Description_SalesShptLine; Description)
                         {
                         }
@@ -443,12 +419,6 @@ report 50007 "Edition Bon colisage"
                         {
                         }
                         column(GTxtColisRef; GTxtColisREF)
-                        {
-                        }
-                        column(GTxtUnClasse; GTxtUnClasse)
-                        {
-                        }
-                        column(CodeONU_SalesShipmentLine; "Sales Shipment Line"."Code ONU")
                         {
                         }
                         dataitem(DimensionLoop2; Integer)
@@ -542,8 +512,6 @@ report 50007 "Edition Bon colisage"
                         }
 
                         trigger OnAfterGetRecord()
-                        var
-                            LRecItem: Record Item;
                         begin
                             LinNo := "Line No.";
                             if not ShowCorrectionLines and Correction then
@@ -578,32 +546,12 @@ report 50007 "Edition Bon colisage"
                             end;
 
                             //END DELPHI AUB 03.10.2019
-                            //DELPHI AUB 21.10.2021
-                            GTxtUnClasse := '';
-                            if ("Sales Shipment Line"."Code ONU" <> '') and LRecItem.GET("Sales Shipment Line"."No.") then
-                                if GRecUn.GET(LRecItem."Code ONU", LRecItem."UN version") then begin
-                                    if LRecItem."Code ONU" <> '' then
-                                        GTxtUnClasse += 'UN' + LRecItem."Code ONU" + ' ';
-                                    if GRecUn.Classe <> '' then
-                                        GTxtUnClasse += ' CL ' + GRecUn.Classe;
-                                    if GRecUn."Sous-classe" <> '' then
-                                        GTxtUnClasse += '(' + GRecUn."Sous-classe" + ')';
-                                    if GRecUn."Groupe emballage" <> GRecUn."Groupe emballage"::" " then
-                                        case GRecUn."Groupe emballage" of
-                                            GRecUn."Groupe emballage"::I:
-                                                GTxtUnClasse += ' GRPI';
-                                            GRecUn."Groupe emballage"::II:
-                                                GTxtUnClasse += ' GRPII';
-                                            GRecUn."Groupe emballage"::III:
-                                                GTxtUnClasse += ' GRPIII';
-                                        end;
-                                end;
-                            //END DELPHI AUB
+
                             //DEB DELPHI XAV Colis 24/03/21
                             if "Sales Shipment Line"."No. Colis" <> '' then begin
                                 GTxtColisCaption := 'Colis : ';
                                 LRecColis.GET("Sales Shipment Line"."No. Colis");
-                                GTxtColisREF := LRecColis."Nature du colis" + ' ' + LRecColis."Reference Colis";
+                                GTxtColisREF := LRecColis."Reference Colis" + ' ' + LRecColis."Nature du colis";
                             end
                             else begin
                                 GTxtColisREF := '';
@@ -925,6 +873,27 @@ report 50007 "Edition Bon colisage"
                 column(Colis_Reference; Colis."Reference Colis")
                 {
                 }
+                column(OrderNo_SalesShptHeader; "Sales Shipment Header"."Order No.")
+                {
+                }
+                column(ShipToAddr1; ShipToAddr[1])
+                {
+                }
+                column(ShipToAddr3; ShipToAddr[3])
+                {
+                }
+                column(ShipToAddr4; ShipToAddr[4])
+                {
+                }
+                column(ShipToAddr5; ShipToAddr[5])
+                {
+                }
+                column(ShipToAddr6; ShipToAddr[6])
+                {
+                }
+                column(YourRef_SalesShptHeader; "Sales Shipment Header"."Your Reference")
+                {
+                }
 
                 trigger OnAfterGetRecord()
                 begin
@@ -933,10 +902,20 @@ report 50007 "Edition Bon colisage"
             }
 
             trigger OnAfterGetRecord()
+            var
+                LRecPays: Record "Country/Region";
             begin
                 CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
-                FormatAddressFields("Sales Shipment Header");
+                //FormatAddressFields("Sales Shipment Header");
+
+                //DELPHI AUB 12.10.2021
+                ShipToAddr[1] := "Sales Shipment Header"."Ship-to Name";
+                ShipToAddr[3] := "Sales Shipment Header"."Ship-to Address" + ' ' + "Sales Shipment Header"."Ship-to Address 2";
+                ShipToAddr[4] := "Sales Shipment Header"."Ship-to Post Code" + ' ' + "Sales Shipment Header"."Ship-to City";
+                ShipToAddr[5] := ' ';
+                if LRecPays.GET("Sales Shipment Header"."Sell-to Country/Region Code") then ShipToAddr[5] := LRecPays."County Name";
+                //END DELPHI AUB
                 FormatDocumentFields("Sales Shipment Header");
 
                 DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
@@ -1007,57 +986,13 @@ report 50007 "Edition Bon colisage"
     {
         SaveValues = true;
 
-        layout
-        {
-            area(content)
-            {
-                group(Options)
-                {
-                    Caption = 'Options', Comment = 'FRA="Options"';
-                    field(NoOfCopiesF; NoOfCopies)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'No. of Copies', Comment = 'FRA="Nombre de copies"';
-                    }
-                    field(ShowInternalInfoF; ShowInternalInfo)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Show Internal Information', Comment = 'FRA="Afficher info. internes"';
-                    }
-                    field(LogInteractionF; LogInteraction)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
-                        Enabled = LogInteractionEnable;
-                    }
-                    field("Show Correction Lines"; ShowCorrectionLines)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Show Correction Lines', Comment = 'FRA="Afficher lignes correction"';
-                    }
-                    field(ShowLotSNF; ShowLotSN)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Show Serial/Lot Number Appendix', Comment = 'FRA="Afficher annexe numéro série/lot"';
-                    }
-                    field(DisplayAsmInfoF; DisplayAssemblyInformation)
-                    {
-                        ApplicationArea = Assembly;
-                        Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
-                    }
-                }
-            }
-        }
-
         trigger OnInit()
         begin
-            LogInteractionEnable := true;
         end;
 
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := LogInteraction;
         end;
     }
 
@@ -1098,11 +1033,9 @@ report 50007 "Edition Bon colisage"
         DimSetEntry1: Record "Dimension Set Entry";
         DimSetEntry2: Record "Dimension Set Entry";
         DimSetEntry3: Record "Dimension Set Entry";
-        GRecUn: Record "ONU table";
         PaymentTerms: Record "Payment Terms";
         PostedAsmHeader: Record "Posted Assembly Header";
         PostedAsmLine: Record "Posted Assembly Line";
-        RespCenter: Record "Responsibility Center";
         SalesSetup: Record "Sales & Receivables Setup";
         GRecSalesHeaderArchive: Record "Sales Header Archive";
         GRecSalesLine: Record "Sales Line";
@@ -1113,7 +1046,6 @@ report 50007 "Edition Bon colisage"
         GrecTransporteur: Record "Shipping Agent";
         TrackingSpecBuffer: Record "Tracking Specification" temporary;
         ItemTrackingAppendix: report "Item Tracking Appendix";
-        FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
         ItemTrackingDocMgt: Codeunit "Item Tracking Doc. Management";
         LanguageCdu: Codeunit Language;
@@ -1122,7 +1054,6 @@ report 50007 "Edition Bon colisage"
         Continue: Boolean;
         DisplayAssemblyInformation: Boolean;
         LogInteraction: Boolean;
-        LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowCorrectionLines: Boolean;
         ShowCustAddr: Boolean;
@@ -1155,8 +1086,8 @@ report 50007 "Edition Bon colisage"
         GTxtCompanyVAT: Label 'VAT Id. Num.', Comment = 'FRA="No. TVA"';
         GTxtItemNoLbl: Label 'N° article', Comment = 'FRA="N° article"';
         GTxtQteCommandeeLbl: Label 'Qté commandée', Comment = 'FRA="Qté commandée"';
-        GTxtQteExpedieeLbl: Label 'Qté expédiée';
-        GTxtQteRestante: Label 'Qté restante';
+        GTxtQteExpedieeLbl: Label 'Qté expédiée', Comment = 'FRA="Qté expédiée"';
+        GTxtQteRestante: Label 'Qté restante', Comment = 'FRA="Qté restante"';
         GTxtResteALivrerLbl: Label 'Reste à livrer', Comment = 'FRA="Reste à livrer"';
         GTxtSalesShptCopyText: Label 'Shipment', Comment = 'FRA="Bon de colisage N°"';
         GTxtYourRef_Lbl: Label 'Your Reference', Comment = 'FRA="Votre référence :"';
@@ -1192,7 +1123,6 @@ report 50007 "Edition Bon colisage"
         CompanyAddr: array[8] of Text[100];
         CustAddr: array[8] of Text[100];
         GTxtColisREF: Text[100];
-        GTxtUnClasse: Text[100];
         ShipToAddr: array[8] of Text[100];
         DimText: Text[120];
         DimText3: Text[120];
@@ -1220,13 +1150,6 @@ report 50007 "Edition Bon colisage"
         MailManagement: codeunit "Mail Management";
     begin
         exit(CurrReport.PREVIEW or MailManagement.IsHandlingGetEmailBody());
-    end;
-
-    local procedure FormatAddressFields(SalesShipmentHeader: Record "Sales Shipment Header")
-    begin
-        FormatAddr.GetCompanyAddr(SalesShipmentHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
-        FormatAddr.SalesShptShipTo(ShipToAddr, SalesShipmentHeader);
-        ShowCustAddr := FormatAddr.SalesShptBillTo(CustAddr, ShipToAddr, SalesShipmentHeader);
     end;
 
     local procedure FormatDocumentFields(SalesShipmentHeader: Record "Sales Shipment Header")

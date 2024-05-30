@@ -21,6 +21,7 @@ page 50001 "Lignes Commandes Vte Speciales"
                             Type = const(Item),
                             "Outstanding Quantity" = filter(> 0));
     UsageCategory = None;
+    ApplicationArea = All;
     layout
     {
         area(content)

@@ -6,6 +6,7 @@ page 50003 "Ligne Modèle configuration"
     PageType = Worksheet;
     SourceTable = "Config. Template Line";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

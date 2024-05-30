@@ -33,6 +33,7 @@ page 50007 "Sales Order Subform Color"
     SourceTable = "Sales Line";
     SourceTableView = where("Document Type" = filter(Order));
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

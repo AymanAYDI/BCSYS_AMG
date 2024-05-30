@@ -1,11 +1,10 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Inventory.Item;
 report 50015 "Etiquette article"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/RDL/Etiquettearticle.rdlc';
-    ApplicationArea = All;
+    RDLCLayout = './src/report/rdl/Etiquettearticle.rdl';
+    UsageCategory = None;
 
     dataset
     {
@@ -26,22 +25,6 @@ report 50015 "Etiquette article"
                 Item.CALCFIELDS(CodeAZTEC);
             end;
         }
-    }
-
-    requestpage
-    {
-
-        layout
-        {
-        }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 }
 

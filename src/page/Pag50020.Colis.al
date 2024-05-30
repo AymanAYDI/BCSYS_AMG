@@ -4,6 +4,7 @@ page 50020 Colis
     PageType = List;
     SourceTable = Colis;
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

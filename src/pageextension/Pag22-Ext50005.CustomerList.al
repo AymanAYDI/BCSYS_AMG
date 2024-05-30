@@ -13,6 +13,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
             field(Historique; Rec.Historique)
             {
                 TableRelation = "Historique ventes"."No. client";
+                ApplicationArea = All;
 
                 trigger OnLookup(var Text: Text): Boolean
                 var
@@ -29,15 +30,18 @@ pageextension 50005 CustomerList extends "Customer List" //22
         {
             field("Mobile Phone No."; Rec."Mobile Phone No.")
             {
+                ApplicationArea = All;
             }
         }
         addafter("Payments (LCY)")
         {
             field(City; Rec.City)
             {
+                ApplicationArea = All;
             }
             field("Fax No."; Rec."Fax No.")
             {
+                ApplicationArea = All;
             }
         }
     }

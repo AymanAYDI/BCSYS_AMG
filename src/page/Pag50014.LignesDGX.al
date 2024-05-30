@@ -4,6 +4,7 @@ page 50014 "Lignes DGX"
     PageType = ListPart;
     SourceTable = "DGX Lines";
     UsageCategory = None;
+    ApplicationArea = All;
 
     layout
     {

@@ -11,6 +11,7 @@ page 50000 "Lignes Commande Ventes"
                             Type = const(Item),
                             "Outstanding Quantity" = filter(> 0));
     UsageCategory = None;
+    ApplicationArea = All;
     layout
     {
         area(content)

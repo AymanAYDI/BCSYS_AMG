@@ -2,18 +2,18 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.Setup;
 using Microsoft.Foundation.Reporting;
-pageextension 50043 ReportSelectionSales extends "Report Selection - Sales" //306
+pageextension 50042 CustomerReportSelections extends "Customer Report Selections" //9657
 {
     layout
     {
-        addafter("Report Caption")
+        addafter(ReportCaption)
         {
             field("Custom Report Layout Code"; Rec."Custom Report Layout Code")
             {
-                Editable = true;
-                TableRelation = "Custom Report Layout".Code where(Code = field("Custom Report Layout Code"));
+                TableRelation = "Custom Report Layout" where(Code = field("Custom Report Layout Code"));
                 ApplicationArea = All;
             }
         }
     }
 }
+
