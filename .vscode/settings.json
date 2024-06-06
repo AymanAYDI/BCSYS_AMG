@@ -30,4 +30,15 @@
         "XXX"
     ],
     "todo-tree.tree.showCountsInTree": true,
+    "multiCommand.commands": [
+        {
+            "command": "multiCommand.azALDevTools",
+            "interval": 10,
+            "sequence": [
+                "azALDevTools.ConvertEditorObjectIdsToNames",
+                "azALDevTools.RemoveEditorWithStatements",
+                "azALDevTools.AddMissingEditorParentheses",
+            ]
+        }
+    ]
 }

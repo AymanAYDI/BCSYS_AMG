@@ -1,10 +1,33 @@
+namespace BCSYS.AMGALLOIS.Basic;
+
+using Microsoft.Sales.Document;
+using System.Utilities;
+using Microsoft.Foundation.Company;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Foundation.Shipping;
+using Microsoft.CRM.Team;
+using Microsoft.Finance.VAT.Calculation;
+using Microsoft.Inventory.Item;
+using Microsoft.Sales.Posting;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Sales.Setup;
+using Microsoft.Finance.Dimension;
+using Microsoft.Inventory.Location;
+using System.Globalization;
+using Microsoft.Finance.Currency;
+using Microsoft.Foundation.Address;
+using Microsoft.CRM.Segment;
+using Microsoft.Utilities;
+using Microsoft.Sales.Customer;
+using Microsoft.CRM.Contact;
+using Microsoft.CRM.Interaction;
 report 50003 "Sales - Quote AMGallois Excel"
 {
-    RDLCLayout = './src/report/RDL/SalesQuoteAMGalloisExcel.rdlc';
-    Caption = 'Sales - Quote';
+    RDLCLayout = './src/report/rdl/SalesQuoteAMGalloisExcel.rdl';
+    Caption = 'Sales - Quote', Comment = 'FRA="Ventes : Devis"';
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -13,7 +36,7 @@ report 50003 "Sales - Quote AMGallois Excel"
             DataItemTableView = sorting("Document Type", "No.")
                                 where("Document Type" = const(Quote));
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
-            RequestFilterHeading = 'Sales Quote';
+            RequestFilterHeading = 'Sales Quote', Comment = 'FRA="Devis"';
             column(DocType_SalesHeader; "Document Type")
             {
             }
@@ -43,11 +66,11 @@ report 50003 "Sales - Quote AMGallois Excel"
             }
             dataitem(CopyLoop; Integer)
             {
-                DataItemTableView = sorting(Number);
+                DataItemTableView = SORTING(Number);
                 dataitem(PageLoop; Integer)
                 {
-                    DataItemTableView = sorting(Number)
-                                        where(Number = const(1));
+                    DataItemTableView = SORTING(Number)
+                                        WHERE(Number = CONST(1));
                     column(NumTVAClient; GTxtNumTVAClient)
                     {
                     }
@@ -228,8 +251,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                     dataitem(DimensionLoop1; Integer)
                     {
                         DataItemLinkReference = "Sales Header";
-                        DataItemTableView = sorting(Number)
-                                            where(Number = filter(1 ..));
+                        DataItemTableView = SORTING(Number)
+                                            WHERE(Number = FILTER(1 ..));
                         column(DimText; DimText)
                         {
                         }
@@ -238,43 +261,39 @@ report 50003 "Sales - Quote AMGallois Excel"
                         }
 
                         trigger OnAfterGetRecord()
-                        var
-                            Text01: Label '%1 %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                            Text02: Label '%1, %2 %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
-
                         begin
-                            if Number = 1 then begin
+                            IF Number = 1 THEN BEGIN
                                 if not DimSetEntry1.FINDSET() then
                                     CurrReport.BREAK();
-                            end else
-                                if not Continue then
+                            END ELSE
+                                IF NOT Continue THEN
                                     CurrReport.BREAK();
 
-                            Clear(DimText);
-                            Continue := false;
-                            repeat
+                            CLEAR(DimText);
+                            Continue := FALSE;
+                            REPEAT
                                 OldDimText := DimText;
-                                if DimText = '' then
-                                    DimText := STRSUBSTNO(Text01, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
-                                else
+                                IF DimText = '' THEN
+                                    DimText := STRSUBSTNO('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                ELSE
                                     DimText :=
                                       STRSUBSTNO(
-                                        Text02, DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                        '%1, %2 %3', DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
+                                IF STRLEN(DimText) > MAXSTRLEN(OldDimText) THEN BEGIN
                                     DimText := OldDimText;
-                                    Continue := true;
-                                    exit;
-                                end;
-                            until DimSetEntry1.Next() = 0;
+                                    Continue := TRUE;
+                                    EXIT;
+                                END;
+                            until DimSetEntry1.NEXT() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            if not BoolShowInternalInfo then
+                            IF NOT ShowInternalInfo THEN
                                 CurrReport.BREAK();
                         end;
                     }
-                    dataitem(DataItem2844; "Sales Line")
+                    dataitem("Sales Line"; "Sales Line")
                     {
                         DataItemLink = "Document Type" = field("Document Type"),
                                        "Document No." = field("No.");
@@ -288,54 +307,54 @@ report 50003 "Sales - Quote AMGallois Excel"
                     }
                     dataitem(RoundLoop; Integer)
                     {
-                        DataItemTableView = sorting(Number);
+                        DataItemTableView = SORTING(Number);
                         column(Desc_SalesLine; GTxtDescriptionLine)
                         {
                         }
-                        column(LineAmt_SalesLine; DataItem2844."Line Amount")
+                        column(LineAmt_SalesLine; SalesLine."Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(No_SalesLine; DataItem2844."No.")
+                        column(No_SalesLine; "Sales Line"."No.")
                         {
                         }
-                        column(Quantity_SalesLine; DataItem2844.Quantity)
+                        column(Quantity_SalesLine; "Sales Line".Quantity)
                         {
                         }
-                        column(UnitofMeasure_SalesLine; DataItem2844."Unit of Measure")
+                        column(UnitofMeasure_SalesLine; "Sales Line"."Unit of Measure")
                         {
                         }
-                        column(LineAmt1_SalesLine; DataItem2844."Line Amount")
+                        column(LineAmt1_SalesLine; "Sales Line"."Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(UnitPrice_SalesLine; DataItem2844."Unit Price")
+                        column(UnitPrice_SalesLine; "Sales Line"."Unit Price")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 2;
                         }
-                        column(LineDiscount_SalesLine; DataItem2844."Line Discount %")
+                        column(LineDiscount_SalesLine; "Sales Line"."Line Discount %")
                         {
                         }
-                        column(AllowInvoiceDisc_SalesLine; DataItem2844."Allow Invoice Disc.")
+                        column(AllowInvoiceDisc_SalesLine; "Sales Line"."Allow Invoice Disc.")
                         {
                             IncludeCaption = false;
                         }
-                        column(VATIdentifier_SalesLine; DataItem2844."VAT Identifier")
+                        column(VATIdentifier_SalesLine; "Sales Line"."VAT Identifier")
                         {
                         }
-                        column(Type_SalesLine; FORMAT(DataItem2844.Type))
+                        column(Type_SalesLine; FORMAT("Sales Line".Type))
                         {
                         }
-                        column(No1_SalesLine; DataItem2844."Line No.")
+                        column(No1_SalesLine; "Sales Line"."Line No.")
                         {
                         }
-                        column(AllowInvoiceDisYesNo; FORMAT(DataItem2844."Allow Invoice Disc."))
+                        column(AllowInvoiceDisYesNo; FORMAT("Sales Line"."Allow Invoice Disc."))
                         {
                         }
-                        column(InvDiscountAmount_SalesLine; -DataItem2844."Inv. Discount Amount")
+                        column(InvDiscountAmount_SalesLine; -SalesLine."Inv. Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
@@ -343,12 +362,12 @@ report 50003 "Sales - Quote AMGallois Excel"
                         column(TotalText; TotalText)
                         {
                         }
-                        column(DiscountAmt_SalesLine; DataItem2844."Line Amount" - DataItem2844."Inv. Discount Amount")
+                        column(DiscountAmt_SalesLine; SalesLine."Line Amount" - SalesLine."Inv. Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VATAmtLineVATAmtTxt; TempVATAmountLine.VATAmountText())
+                        column(VATAmtLineVATAmtTxt; VATAmountLine.VATAmountText())
                         {
                         }
                         column(TotalExclVATText; TotalExclVATText)
@@ -395,25 +414,25 @@ report 50003 "Sales - Quote AMGallois Excel"
                         column(VATDiscountAmountCaption; VATDiscountAmountCaptionLbl)
                         {
                         }
-                        column(No_SalesLineCaption; DataItem2844.FIELDCAPTION("No."))
+                        column(No_SalesLineCaption; "Sales Line".FIELDCAPTION("No."))
                         {
                         }
-                        column(Desc_SalesLineCaption; DataItem2844.FIELDCAPTION(Description))
+                        column(Desc_SalesLineCaption; "Sales Line".FIELDCAPTION(Description))
                         {
                         }
-                        column(Quantity_SalesLineCaption; DataItem2844.FIELDCAPTION(Quantity))
+                        column(Quantity_SalesLineCaption; "Sales Line".FIELDCAPTION(Quantity))
                         {
                         }
-                        column(UnitofMeasure_SalesLineCaption; DataItem2844.FIELDCAPTION("Unit of Measure"))
+                        column(UnitofMeasure_SalesLineCaption; "Sales Line".FIELDCAPTION("Unit of Measure"))
                         {
                         }
-                        column(Itemreference_SalesLine; DataItem2844."Item Reference No.")
+                        column(Crossreference_SalesLine; SalesLine."Item Reference No.")
                         {
                         }
                         dataitem(DimensionLoop2; Integer)
                         {
-                            DataItemTableView = sorting(Number)
-                                                where(Number = filter(1 ..));
+                            DataItemTableView = SORTING(Number)
+                                                WHERE(Number = FILTER(1 ..));
                             column(DimText_DimnLoop2; DimText)
                             {
                             }
@@ -422,42 +441,39 @@ report 50003 "Sales - Quote AMGallois Excel"
                             }
 
                             trigger OnAfterGetRecord()
-                            var
-                                Text01: Label '%1 %2', Comment = '%1 = "Dimension Code",%2 = "Dimension Value Code"';
-                                Text02: Label '%1, %2 %3', Comment = '%1 = DimText , %2 = "Dimension Code", %3 = "Dimension Value Code"';
                             begin
-                                if Number = 1 then begin
+                                IF Number = 1 THEN BEGIN
                                     if not DimSetEntry2.FINDSET() then
                                         CurrReport.BREAK();
-                                end else
-                                    if not Continue then
+                                END ELSE
+                                    IF NOT Continue THEN
                                         CurrReport.BREAK();
 
-                                Clear(DimText);
-                                Continue := false;
-                                repeat
+                                CLEAR(DimText);
+                                Continue := FALSE;
+                                REPEAT
                                     OldDimText := DimText;
-                                    if DimText = '' then
-                                        DimText := STRSUBSTNO(Text01, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
-                                    else
+                                    IF DimText = '' THEN
+                                        DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                    ELSE
                                         DimText :=
                                           STRSUBSTNO(
-                                            Text02, DimText,
+                                            '%1, %2 %3', DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    IF STRLEN(DimText) > MAXSTRLEN(OldDimText) THEN BEGIN
                                         DimText := OldDimText;
-                                        Continue := true;
-                                        exit;
-                                    end;
-                                until DimSetEntry2.Next() = 0;
+                                        Continue := TRUE;
+                                        EXIT;
+                                    END;
+                                until DimSetEntry2.NEXT() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                if not BoolShowInternalInfo then
+                                IF NOT ShowInternalInfo THEN
                                     CurrReport.BREAK();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", TempSalesLine."Dimension Set ID");
+                                DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
                             end;
                         }
 
@@ -465,83 +481,83 @@ report 50003 "Sales - Quote AMGallois Excel"
                         var
                             LRecItem: Record Item;
                         begin
-                            if Number = 1 then
-                                TempSalesLine.FindFirst()
-                            else
-                                TempSalesLine.NEXT();
-                            DataItem2844 := TempSalesLine;
+                            IF Number = 1 THEN
+                                SalesLine.FIND('-')
+                            ELSE
+                                SalesLine.NEXT();
+                            "Sales Line" := SalesLine;
 
-                            if not "Sales Header"."Prices Including VAT" and
-                               (TempSalesLine."VAT Calculation Type" = TempSalesLine."VAT Calculation Type"::"Full VAT")
-                            then
-                                TempSalesLine."Line Amount" := 0;
+                            IF NOT "Sales Header"."Prices Including VAT" AND
+                               (SalesLine."VAT Calculation Type" = SalesLine."VAT Calculation Type"::"Full VAT")
+                            THEN
+                                SalesLine."Line Amount" := 0;
 
-                            if (TempSalesLine.Type = TempSalesLine.Type::"G/L Account") and (not BoolShowInternalInfo) then
-                                DataItem2844."No." := '';
+                            IF (SalesLine.Type = SalesLine.Type::"G/L Account") AND (NOT ShowInternalInfo) THEN
+                                "Sales Line"."No." := '';
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
-                            if (DataItem2844.Type = DataItem2844.Type::Item) and (DataItem2844."Item Reference No." <> '') then begin
-                                LRecItem.Reset();
-                                LRecItem.SETFILTER("No.", DataItem2844."No.");
+                            if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."Item Reference No." <> '') then begin
+                                LRecItem.RESET();
+                                LRecItem.SETFILTER("No.", "Sales Line"."No.");
                                 if LRecItem.FINDFIRST() then
-                                    GTxtDescriptionLine := DataItem2844.Description + ' ' + LRecItem."Description 2";
-                            end else
-                                GTxtDescriptionLine := DataItem2844.Description + ' ' + DataItem2844."Description 2";
+                                    GTxtDescriptionLine := "Sales Line".Description + ' ' + LRecItem."Description 2";
+                            END ELSE
+                                GTxtDescriptionLine := "Sales Line".Description + ' ' + "Sales Line"."Description 2";
                             //FIN DELPHI XAV
                         end;
 
                         trigger OnPostDataItem()
                         begin
-                            TempSalesLine.DELETEALL();
+                            SalesLine.DELETEALL();
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := TempSalesLine.FindLast();
-                            while MoreLines and (TempSalesLine.Description = '') and (TempSalesLine."Description 2" = '') and
-                                  (TempSalesLine."No." = '') and (TempSalesLine.Quantity = 0) and
-                                  (TempSalesLine.Amount = 0)
-                            do
-                                MoreLines := TempSalesLine.NEXT(-1) <> 0;
-                            if not MoreLines then
+                            MoreLines := SalesLine.FIND('+');
+                            WHILE MoreLines AND (SalesLine.Description = '') AND (SalesLine."Description 2" = '') AND
+                                  (SalesLine."No." = '') AND (SalesLine.Quantity = 0) AND
+                                  (SalesLine.Amount = 0)
+                            DO
+                                MoreLines := SalesLine.NEXT(-1) <> 0;
+                            IF NOT MoreLines THEN
                                 CurrReport.BREAK();
-                            TempSalesLine.SETRANGE("Line No.", 0, TempSalesLine."Line No.");
-                            SETRANGE(Number, 1, TempSalesLine.COUNT);
+                            SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
+                            SETRANGE(Number, 1, SalesLine.COUNT);
                         end;
                     }
                     dataitem(VATCounter; Integer)
                     {
-                        DataItemTableView = sorting(Number);
-                        column(VATBase_VATAmtLine; TempVATAmountLine."VAT Base")
+                        DataItemTableView = SORTING(Number);
+                        column(VATBase_VATAmtLine; VATAmountLine."VAT Base")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VATAmt_VATAmtLine; TempVATAmountLine."VAT Amount")
+                        column(VATAmt_VATAmtLine; VATAmountLine."VAT Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(LineAmount_VATAmtLine; TempVATAmountLine."Line Amount")
+                        column(LineAmount_VATAmtLine; VATAmountLine."Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(InvDiscBaseAmt_VATAmtLine; TempVATAmountLine."Inv. Disc. Base Amount")
+                        column(InvDiscBaseAmt_VATAmtLine; VATAmountLine."Inv. Disc. Base Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(InvoiceDiscAmt_VATAmtLine; TempVATAmountLine."Invoice Discount Amount")
+                        column(InvoiceDiscAmt_VATAmtLine; VATAmountLine."Invoice Discount Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VAT_VATAmtLine; TempVATAmountLine."VAT %")
+                        column(VAT_VATAmtLine; VATAmountLine."VAT %")
                         {
                             DecimalPlaces = 0 : 5;
                         }
-                        column(VATIdentifier_VATAmtLine; TempVATAmountLine."VAT Identifier")
+                        column(VATIdentifier_VATAmtLine; VATAmountLine."VAT Identifier")
                         {
                         }
                         column(VATAmountLineVATCaption; VATAmountLineVATCaptionLbl)
@@ -571,20 +587,19 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnAfterGetRecord()
                         begin
-                            TempVATAmountLine.GetLine(Number);
+                            VATAmountLine.GetLine(Number);
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            if VATAmount = 0 then
+                            IF VATAmount = 0 THEN
                                 CurrReport.BREAK();
-                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-
+                            SETRANGE(Number, 1, VATAmountLine.COUNT);
                         end;
                     }
                     dataitem(VATCounterLCY; Integer)
                     {
-                        DataItemTableView = sorting(Number);
+                        DataItemTableView = SORTING(Number);
                         column(VALExchRate; VALExchRate)
                         {
                         }
@@ -599,38 +614,38 @@ report 50003 "Sales - Quote AMGallois Excel"
                         {
                             AutoFormatType = 1;
                         }
-                        column(VATCtrl_VATAmtLine; TempVATAmountLine."VAT %")
+                        column(VATCtrl_VATAmtLine; VATAmountLine."VAT %")
                         {
                             DecimalPlaces = 0 : 5;
                         }
-                        column(VATIdentifierCtrl_VATAmtLine; TempVATAmountLine."VAT Identifier")
+                        column(VATIdentifierCtrl_VATAmtLine; VATAmountLine."VAT Identifier")
                         {
                         }
 
                         trigger OnAfterGetRecord()
                         begin
-                            TempVATAmountLine.GetLine(Number);
+                            VATAmountLine.GetLine(Number);
                             VALVATBaseLCY :=
-                              TempVATAmountLine.GetBaseLCY(
+                              VATAmountLine.GetBaseLCY(
                                 "Sales Header"."Posting Date", "Sales Header"."Currency Code", "Sales Header"."Currency Factor");
                             VALVATAmountLCY :=
-                              TempVATAmountLine.GetAmountLCY(
+                              VATAmountLine.GetAmountLCY(
                                 "Sales Header"."Posting Date", "Sales Header"."Currency Code", "Sales Header"."Currency Factor");
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            if (not GLSetup."Print VAT specification in LCY") or
-                               ("Sales Header"."Currency Code" = '') or
-                               (TempVATAmountLine.GetTotalVATAmount() = 0)
-                            then
+                            IF (NOT GLSetup."Print VAT specification in LCY") OR
+                               ("Sales Header"."Currency Code" = '') OR
+                               (VATAmountLine.GetTotalVATAmount() = 0)
+                            THEN
                                 CurrReport.BREAK();
 
-                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
+                            SETRANGE(Number, 1, VATAmountLine.COUNT);
 
-                            if GLSetup."LCY Code" = '' then
+                            IF GLSetup."LCY Code" = '' THEN
                                 VALSpecLCYHeader := Text008 + Text009
-                            else
+                            ELSE
                                 VALSpecLCYHeader := Text008 + FORMAT(GLSetup."LCY Code");
 
                             CurrExchRate.FindCurrency("Sales Header"."Order Date", "Sales Header"."Currency Code", 1);
@@ -639,13 +654,13 @@ report 50003 "Sales - Quote AMGallois Excel"
                     }
                     dataitem(Total; Integer)
                     {
-                        DataItemTableView = sorting(Number)
-                                            where(Number = const(1));
+                        DataItemTableView = SORTING(Number)
+                                            WHERE(Number = CONST(1));
                     }
                     dataitem(Total2; Integer)
                     {
-                        DataItemTableView = sorting(Number)
-                                            where(Number = const(1));
+                        DataItemTableView = SORTING(Number)
+                                            WHERE(Number = CONST(1));
                         column(SelltoCustNo_SalesHeader; "Sales Header"."Sell-to Customer No.")
                         {
                         }
@@ -682,7 +697,7 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnPreDataItem()
                         begin
-                            if not ShowShippingAddr then
+                            IF NOT ShowShippingAddr THEN
                                 CurrReport.BREAK();
                         end;
                     }
@@ -692,89 +707,86 @@ report 50003 "Sales - Quote AMGallois Excel"
                 var
                     SalesPost: codeunit "Sales-Post";
                 begin
-                    CLEAR(TempSalesLine);
+                    CLEAR(SalesLine);
                     CLEAR(SalesPost);
-                    TempSalesLine.DELETEALL();
-                    TempVATAmountLine.DELETEALL();
-                    SalesPost.GetSalesLines("Sales Header", TempSalesLine, 0);
-                    TempSalesLine.CalcVATAmountLines(0, "Sales Header", TempSalesLine, TempVATAmountLine);
-                    TempSalesLine.UpdateVATOnLines(0, "Sales Header", TempSalesLine, TempVATAmountLine);
-                    VATAmount := TempVATAmountLine.GetTotalVATAmount();
-                    VATBaseAmount := TempVATAmountLine.GetTotalVATBase();
+                    SalesLine.DELETEALL();
+                    VATAmountLine.DELETEALL();
+                    SalesPost.GetSalesLines("Sales Header", SalesLine, 0);
+                    SalesLine.CalcVATAmountLines(0, "Sales Header", SalesLine, VATAmountLine);
+                    SalesLine.UpdateVATOnLines(0, "Sales Header", SalesLine, VATAmountLine);
+                    VATAmount := VATAmountLine.GetTotalVATAmount();
+                    VATBaseAmount := VATAmountLine.GetTotalVATBase();
                     VATDiscountAmount :=
-                      TempVATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
-                    TotalAmountInclVAT := TempVATAmountLine.GetTotalAmountInclVAT();
+                      VATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
+                    TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT();
 
-                    if Number > 1 then begin
+                    IF Number > 1 THEN BEGIN
                         CopyText := FormatDocument.GetCOPYText();
                         OutputNo += 1;
-                    end;
+                    END;
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    if Print then
-                        codeunit.RUN(codeunit::"Sales-Printed", "Sales Header");
+                    IF Print THEN
+                        CODEUNIT.RUN(CODEUNIT::"Sales-Printed", "Sales Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(IntNoOfCopies) + 1;
+                    NoOfLoops := ABS(NoOfCopies) + 1;
                     CopyText := '';
-                    SetRange(Number, 1, NoOfLoops);
+                    SETRANGE(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
 
             trigger OnAfterGetRecord()
             begin
-                CurrReport.LANGUAGE := CULanguage.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
                 FormatAddressFields("Sales Header");
                 FormatDocumentFields("Sales Header");
 
-                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
 
-                if Print then begin
-                    if CurrReport.USEREQUESTPAGE and BoolArchiveDocument or
-                       not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders"
-                    then
-                        ArchiveManagement.StoreSalesDocument("Sales Header", BoolLogInteraction);
+                IF Print THEN BEGIN
+                    IF CurrReport.USEREQUESTPAGE AND ArchiveDocument OR
+                      not CurrReport.UseRequestPage and (SalesSetup."Archive Quotes" <> SalesSetup."Archive Quotes"::Never) then
+                        ArchiveManagement.StoreSalesDocument("Sales Header", LogInteraction);
 
-                    if BoolLogInteraction then begin
+                    IF LogInteraction THEN BEGIN
                         CALCFIELDS("No. of Archived Versions");
-                        if "Bill-to Contact No." <> '' then
+                        IF "Bill-to Contact No." <> '' THEN
                             SegManagement.LogDocument(
                               1, "No.", "Doc. No. Occurrence",
                               "No. of Archived Versions", DATABASE::Contact, "Bill-to Contact No.",
                               "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.")
-                        else
+                        ELSE
                             SegManagement.LogDocument(
                               1, "No.", "Doc. No. Occurrence",
                               "No. of Archived Versions", DATABASE::Customer, "Bill-to Customer No.",
                               "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.");
-                    end;
-                end;
-                MARK(true);
-                if GRecCust2.GET("Sell-to Customer No.") then
+                    END;
+                END;
+                MARK(TRUE);
+
+                //DEB DELPHI XAV 20/06/18
+                IF GRecCust2.GET("Sell-to Customer No.") THEN
                     GTxtNumTVAClient := GRecCust2."VAT Registration No.";
+                // FIN DELPHI XAV
             end;
 
             trigger OnPostDataItem()
-            var
             begin
-                MARKEDONLY := true;
+                MARKEDONLY := TRUE;
                 COMMIT();
-                //CurrReport.LANGUAGE := GLOBALLANGUAGE; //TODO possible change 
-                CurrReport.Language := CULanguage.GetLanguageIdOrDefault("Language Code");
-                CurrReport.FormatRegion := CULanguage.GetFormatRegionOrDefault("Format Region");
-                FormatAddr.SetLanguageCode("Language Code");
+                CurrReport.LANGUAGE := GLOBALLANGUAGE;
             end;
 
             trigger OnPreDataItem()
             begin
-                NoOfRecords := COUNT;
-                Print := Print or not CurrReport.PREVIEW;
+                Print := Print OR NOT CurrReport.PREVIEW;
             end;
         }
     }
@@ -789,71 +801,60 @@ report 50003 "Sales - Quote AMGallois Excel"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(NoOfCopies; IntNoOfCopies)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(NoOfCopiesF; NoOfCopies)
                     {
-                        Caption = 'No. of Copies';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the No. of Copies field.';
+                        Caption = 'No. of Copies', Comment = 'FRA="Nombre de copies"';
                     }
-                    field(ShowInternalInfo; BoolShowInternalInfo)
+                    field(ShowInternalInfoF; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Show Internal Information field.';
+                        Caption = 'Show Internal Information', Comment = 'FRA="Afficher info. internes"';
                     }
-                    field(ArchiveDocument; BoolArchiveDocument)
+                    field(ArchiveDocumentF; ArchiveDocument)
                     {
-                        Caption = 'Archive Document';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Archive Document field.';
+                        Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
+
                         trigger OnValidate()
                         begin
-                            if not BoolArchiveDocument then
-                                BoolLogInteraction := false;
+                            IF NOT ArchiveDocument THEN
+                                LogInteraction := FALSE;
                         end;
                     }
-                    field(LogInteraction; BoolLogInteraction)
+                    field(LogInteractionF; LogInteraction)
                     {
-                        Caption = 'Log Interaction';
+                        Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Log Interaction field.';
+
                         trigger OnValidate()
                         begin
-                            if BoolLogInteraction then
-                                BoolArchiveDocument := ArchiveDocumentEnable;
+                            IF LogInteraction THEN
+                                ArchiveDocument := ArchiveDocumentEnable;
                         end;
                     }
                 }
             }
         }
 
-        actions
-        {
-        }
-
         trigger OnInit()
         begin
-            LogInteractionEnable := true;
+            LogInteractionEnable := TRUE;
         end;
 
         trigger OnOpenPage()
-        var
-            DocumentType: Enum "Interaction Log Entry Document Type";
         begin
-            BoolArchiveDocument := SalesSetup."Archive Orders";
-            BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Qte.") <> '';
-            LogInteractionEnable := BoolLogInteraction;
+            ArchiveDocument := SalesSetup."Archive Quotes" <> SalesSetup."Archive Quotes"::Never;
+            LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Qte.") <> '';
+
+            LogInteractionEnable := LogInteraction;
         end;
     }
 
     labels
     {
-        Item_No = 'Item No.';
-        Quantity = 'Qty';
-        UnittOfMesure = 'Unit';
-        UnitPrice = 'Unit Price';
+        Item_No = 'Item No.', Comment = 'FRA="Reference"';
+        Quantity = 'Qty', Comment = 'FRA="Qté"';
+        UnittOfMesure = 'Unit', Comment = 'FRA="Unité"';
+        UnitPrice = 'Unit Price', Comment = 'FRA="Prix Unit."';
     }
 
     trigger OnInitReport()
@@ -877,23 +878,23 @@ report 50003 "Sales - Quote AMGallois Excel"
         PaymentTerms: Record "Payment Terms";
         RespCenter: Record "Responsibility Center";
         SalesSetup: Record "Sales & Receivables Setup";
-        TempSalesLine: Record "Sales Line" temporary;
+        SalesLine: Record "Sales Line" temporary;
         SalesPurchPerson: Record "Salesperson/Purchaser";
         ShipmentMethod: Record "Shipment Method";
-        TempVATAmountLine: Record "VAT Amount Line" temporary;
+        VATAmountLine: Record "VAT Amount Line" temporary;
         ArchiveManagement: codeunit ArchiveManagement;
         FormatAddr: codeunit "Format Address";
         FormatDocument: codeunit "Format Document";
-        CULanguage: codeunit Language;
+        LanguageCdu: Codeunit Language;
         SegManagement: codeunit SegManagement;
-        BoolArchiveDocument: Boolean;
+        ArchiveDocument: Boolean;
         ArchiveDocumentEnable: Boolean;
         Continue: Boolean;
-        BoolLogInteraction: Boolean;
+        LogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         Print: Boolean;
-        BoolShowInternalInfo: Boolean;
+        ShowInternalInfo: Boolean;
         ShowShippingAddr: Boolean;
         TotalAmountInclVAT: Decimal;
         VALVATAmountLCY: Decimal;
@@ -901,52 +902,48 @@ report 50003 "Sales - Quote AMGallois Excel"
         VATAmount: Decimal;
         VATBaseAmount: Decimal;
         VATDiscountAmount: Decimal;
-        IntNoOfCopies: Integer;
+        NoOfCopies: Integer;
         NoOfLoops: Integer;
-        NoOfRecords: Integer;
         OutputNo: Integer;
-        AmountCaptionLbl: Label 'Amount';
-        CompanyInfoBankAccountNoCaptionLbl: Label 'Account No.';
-        CompanyInfoBankNameCaptionLbl: Label 'Bank';
-        CompanyInfoEmailCaptionLbl: Label 'Email';
-        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.';
-        CompanyInfoHomePageCaptionLbl: Label 'Home Page';
-        CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.';
-        CompanyInfoVATRegNoCaptionLbl: Label 'VAT Registration No.';
-        DocumentDateCaptionLbl: Label 'Document Date';
-        HeaderDimensionsCaptionLbl: Label 'Header Dimensions';
-        InvoiceDiscAmtCaptionLbl: Label 'Invoice Discount Amount';
-        InvoiceDiscBaseAmtCaptionLbl: Label 'Invoice Discount Base Amount';
-        LineAmtCaptionLbl: Label 'Line Amount';
-        LineDimensionsCaptionLbl: Label 'Line Dimensions';
-        PaymentTermsDescriptionCaptionLbl: Label 'Payment Terms';
-        SalesHeaderNoCaptionLbl: Label 'Quote No.';
-        SalesHeaderShipmentDateCaptionLbl: Label 'Shipment Date';
-        SalesLineAllowInvoiceDiscCaptionLbl: Label 'Allow Invoice Discount';
-        SalesLineInvDiscAmtCaptionLbl: Label 'Invoice Discount Amount';
-        SalesLineLineDiscCaptionLbl: Label 'Discount %';
-        SalesLineVATIdentifierCaptionLbl: Label 'VAT Identifier';
-        ShipmentMethodDescriptionCaptionLbl: Label 'Shipment Method';
-        ShiptoAddressCaptionLbl: Label 'Ship-to Address';
-        SubtotalCaptionLbl: Label 'Subtotal';
-        Text004: Label 'Quote ';
-        Text005: Label 'Page %1';
-        Text008: Label 'VAT Amount Specification in ';
-        Text009: Label 'Local Currency';
-        Text010: Label 'Exchange rate: %1/%2';
-        TotalCaptionLbl: Label 'Total';
-        UnitPriceCaptionLbl: Label 'Unit Price';
-        VATAmountLineVATCaptionLbl: Label 'VAT %';
-        VATAmountSpecificationCaptionLbl: Label 'VAT Amount Specification';
-        VATAmtCaptionLbl: Label 'VAT Amount';
-        VATBaseCaptionLbl: Label 'VAT Base';
-        VATDiscountAmountCaptionLbl: Label 'Payment Discount on VAT';
+        AmountCaptionLbl: Label 'Amount', Comment = 'FRA="Montant"';
+        CompanyInfoBankAccountNoCaptionLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
+        CompanyInfoBankNameCaptionLbl: Label 'Bank', Comment = 'FRA="Banque"';
+        CompanyInfoEmailCaptionLbl: Label 'Email', Comment = 'FRA="E-mail"';
+        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
+        CompanyInfoHomePageCaptionLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
+        CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
+        CompanyInfoVATRegNoCaptionLbl: Label 'VAT Registration No.', Comment = 'FRA="N° identif. intracomm."';
+        DocumentDateCaptionLbl: Label 'Document Date', Comment = 'FRA="Date document"';
+        HeaderDimensionsCaptionLbl: Label 'Header Dimensions', Comment = 'FRA="Analytique en-tête"';
+        InvoiceDiscAmtCaptionLbl: Label 'Invoice Discount Amount', Comment = 'FRA="Montant remise facture"';
+        InvoiceDiscBaseAmtCaptionLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
+        LineAmtCaptionLbl: Label 'Line Amount', Comment = 'FRA="Montant ligne"';
+        LineDimensionsCaptionLbl: Label 'Line Dimensions', Comment = 'FRA="Analytique ligne"';
+        PaymentTermsDescriptionCaptionLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        SalesHeaderNoCaptionLbl: Label 'Quote No.', Comment = 'FRA="N° devis"';
+        SalesHeaderShipmentDateCaptionLbl: Label 'Shipment Date', Comment = 'FRA="Date d''expédition"';
+        SalesLineAllowInvoiceDiscCaptionLbl: Label 'Allow Invoice Discount', Comment = 'FRA="Autoriser remise facture"';
+        SalesLineInvDiscAmtCaptionLbl: Label 'Invoice Discount Amount', Comment = 'FRA="Montant remise facture"';
+        SalesLineLineDiscCaptionLbl: Label 'Discount %', Comment = 'FRA="% remise"';
+        SalesLineVATIdentifierCaptionLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
+        ShipmentMethodDescriptionCaptionLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
+        ShiptoAddressCaptionLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
+        SubtotalCaptionLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        Text004: Label 'Quote ', Comment = 'FRA="Devis"';
+        Text005: Label 'Page %1', Comment = 'FRA="Page %1"';
+        Text008: Label 'VAT Amount Specification in ', Comment = 'FRA="Détail TVA dans "';
+        Text009: Label 'Local Currency', Comment = 'FRA="Devise société"';
+        Text010: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
+        TotalCaptionLbl: Label 'Total', Comment = 'FRA="Total"';
+        UnitPriceCaptionLbl: Label 'Unit Price', Comment = 'FRA="Prix unitaire"';
+        VATAmountLineVATCaptionLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
+        VATAmountSpecificationCaptionLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
+        VATAmtCaptionLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        VATBaseCaptionLbl: Label 'VAT Base', Comment = 'FRA="Base TVA"';
+        VATDiscountAmountCaptionLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
         CopyText: Text[30];
-        SalesPersonText: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
         GTxtSelltoAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        SalesPersonText: Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];
@@ -956,29 +953,30 @@ report 50003 "Sales - Quote AMGallois Excel"
         ReferenceText: Text[80];
         VALSpecLCYHeader: Text[80];
         VATNoText: Text[80];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
         DimText: Text[120];
         GTxtDescriptionLine: Text[250];
 
     procedure InitializeRequest(NoOfCopiesFrom: Integer; ShowInternalInfoFrom: Boolean; ArchiveDocumentFrom: Boolean; LogInteractionFrom: Boolean; PrintFrom: Boolean)
     begin
-        IntNoOfCopies := NoOfCopiesFrom;
-        BoolShowInternalInfo := ShowInternalInfoFrom;
-        BoolArchiveDocument := ArchiveDocumentFrom;
-        BoolLogInteraction := LogInteractionFrom;
+        NoOfCopies := NoOfCopiesFrom;
+        ShowInternalInfo := ShowInternalInfoFrom;
+        ArchiveDocument := ArchiveDocumentFrom;
+        LogInteraction := LogInteractionFrom;
         Print := PrintFrom;
     end;
 
     local procedure FormatDocumentFields(SalesHeader: Record "Sales Header")
     begin
-        with SalesHeader do begin
-            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
-            FormatDocument.SetSalesPerson(SalesPurchPerson, "Salesperson Code", SalesPersonText);
-            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
-            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
+        FormatDocument.SetTotalLabels(SalesHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetSalesPerson(SalesPurchPerson, SalesHeader."Salesperson Code", SalesPersonText);
+        FormatDocument.SetPaymentTerms(PaymentTerms, SalesHeader."Payment Terms Code", SalesHeader."Language Code");
+        FormatDocument.SetShipmentMethod(ShipmentMethod, SalesHeader."Shipment Method Code", SalesHeader."Language Code");
 
-            ReferenceText := FormatDocument.SetText("Your Reference" <> '', CopyStr(FIELDCAPTION("Your Reference"), 1, 80));//TODO Verif
-            VATNoText := FormatDocument.SetText("VAT Registration No." <> '', FIELDCAPTION("VAT Registration No."));
-        end;
+        ReferenceText := FormatDocument.SetText(SalesHeader."Your Reference" <> '', SalesHeader.FIELDCAPTION("Your Reference"));
+        VATNoText := FormatDocument.SetText(SalesHeader."VAT Registration No." <> '', SalesHeader.FIELDCAPTION("VAT Registration No."));
     end;
 
     local procedure FormatAddressFields(var SalesHeader: Record "Sales Header")

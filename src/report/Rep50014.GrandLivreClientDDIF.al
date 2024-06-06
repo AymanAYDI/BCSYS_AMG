@@ -1,5 +1,4 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Sales.Customer;
 using System.Utilities;
 using Microsoft.Sales.Receivables;
@@ -7,9 +6,9 @@ using Microsoft.Foundation.Period;
 report 50014 "Grand Livre Client DDIF"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/RDL/GrandLivreClientDDIF.rdlc';
-    Caption = 'Customer Detail Trial Balance';
-    ApplicationArea = All;
+    RDLCLayout = './src/report/rdl/GrandLivreClientDDIF.rdl';
+    Caption = 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre clients"';
+    UsageCategory = None;
 
     dataset
     {
@@ -31,7 +30,7 @@ report 50014 "Grand Livre Client DDIF"
             column(STRSUBSTNO_Text004_PreviousStartDate_; STRSUBSTNO(Text004, PreviousStartDate))
             {
             }
-            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, CurrReport.PAGENO()))
+            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, ''))
             {
             }
             column(PageCaption; STRSUBSTNO(Text005, ''))
@@ -40,7 +39,7 @@ report 50014 "Grand Livre Client DDIF"
             column(PrintedByCaption; STRSUBSTNO(Text003, ''))
             {
             }
-            column(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+            column(ExcludeBalanceOnly; ExcludeBalanceOnly)
             {
             }
             column(Customer_TABLECAPTION__________Filter; Customer.TABLECAPTION + ': ' + Filter)
@@ -160,7 +159,7 @@ report 50014 "Grand Livre Client DDIF"
             column(Grand_TotalCaption; Grand_TotalCaptionLbl)
             {
             }
-            column(AffichageEcrituresOuvretes; BoolShowOnlyUnappliedWritings)
+            column(AffichageEcrituresOuvretes; ShowOnlyUnappliedWritings)
             {
             }
             column(PreviousDebitAmountLCY_Open; PreviousDebitAmountLCY_Open)
@@ -172,7 +171,7 @@ report 50014 "Grand Livre Client DDIF"
             column(PreviousDebitAmountLCY_PreviousCreditAmountLCY_Open; PreviousDebitAmountLCY_Open - PreviousCreditAmountLCY_Open)
             {
             }
-            dataitem("Date"; "Date")
+            dataitem(Date; Date)
             {
                 DataItemTableView = sorting("Period Type");
                 column(DebitPeriodAmount_PreviousDebitAmountLCY___CreditPeriodAmount_PreviousCreditAmountLCY_; (DebitPeriodAmount + PreviousDebitAmountLCY) - (CreditPeriodAmount + PreviousCreditAmountLCY))
@@ -366,11 +365,11 @@ report 50014 "Grand Livre Client DDIF"
 
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if BoolShowOnlyUnappliedWritings then begin
+                        if ShowOnlyUnappliedWritings then begin
                             GRecCustLedgEntry.RESET();
                             if GRecCustLedgEntry.GET("Cust. Ledger Entry No.") then begin
-                                GRecCustLedgEntry.SetRange("Date Filter", StartDate, EndDate);
-                                //  GRecCustLedgEntry.SetRange("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
+                                GRecCustLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
+                                //  GRecCustLedgEntry.SETRANGE("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
                                 GRecCustLedgEntry.CALCFIELDS("Remaining Amount");
                                 if GRecCustLedgEntry."Remaining Amount" <> 0 then GBooOpen := true else GBooOpen := false;
                                 if GRecCustLedgEntry."Remaining Amount" > 0 then begin
@@ -398,13 +397,13 @@ report 50014 "Grand Livre Client DDIF"
 
                     trigger OnPreDataItem()
                     begin
-                        if BoolDocNumSort then
+                        if DocNumSort then
                             SETCURRENTKEY("Customer No.", "Document No.", "Posting Date");
                         if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
                         if EndDate < Date."Period End" then
                             Date."Period End" := EndDate;
-                        SetRange("Posting Date", Date."Period Start", Date."Period End");
+                        SETRANGE("Posting Date", Date."Period Start", Date."Period End");
                     end;
                 }
 
@@ -417,7 +416,7 @@ report 50014 "Grand Livre Client DDIF"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -431,16 +430,16 @@ report 50014 "Grand Livre Client DDIF"
                 PreviousCreditAmountLCY_Open := 0;
 
                 //MHR
-                Customer.SetRange("Date Filter", 0D, EndDate);
+                Customer.SETRANGE("Date Filter", 0D, EndDate);
                 Customer.CALCFIELDS("Balance (LCY)");
-                if (BoolSoldeZero) and (Customer."Balance (LCY)" = 0) then
+                if (GBoolSoldeZero) and (Customer."Balance (LCY)" = 0) then
                     CurrReport.SKIP();
                 // FIN Calcul total lettré et non lettré 31/08/2015
 
                 //AUB CustLedgEntry.SETCURRENTKEY(
                 //AUB  "Customer No.","Posting Date","Entry Type","Initial Entry Global Dim. 1","Initial Entry Global Dim. 2","Currency Code");
-                CustLedgEntry.SetRange("Customer No.", "No.");
-                CustLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
+                CustLedgEntry.SETRANGE("Customer No.", "No.");
+                CustLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 /*CustLedgEntry.SETFILTER(
                   "Entry Type",'%1|%2|%3|%4|%5|%6|%7|%8',
                   CustLedgEntry."Entry Type"::"Initial Entry",CustLedgEntry."Entry Type"::"Unrealized Loss",
@@ -451,16 +450,16 @@ report 50014 "Grand Livre Client DDIF"
                     repeat
                         PreviousDebitAmountLCY += CustLedgEntry."Debit Amount (LCY)";
                         PreviousCreditAmountLCY += CustLedgEntry."Credit Amount (LCY)";
-                    until CustLedgEntry.Next() = 0;
+                    until CustLedgEntry.NEXT() = 0;
 
                 // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
-                GRecCustLedgEntry.Reset();
-                GRecCustLedgEntry.SetRange("Customer No.", "No.");
-                GRecCustLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
+                GRecCustLedgEntry.RESET();
+                GRecCustLedgEntry.SETRANGE("Customer No.", "No.");
+                GRecCustLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 if GRecCustLedgEntry.FINDSET() then
                     repeat
                         // DEB Calcul total lettré et non lettré 31/08/2015
-                        GRecCustLedgEntry.SetRange("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
+                        GRecCustLedgEntry.SETRANGE("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
 
                         GRecCustLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
                         if GRecCustLedgEntry."Remaining Amt. (LCY)" <> 0 then
@@ -470,14 +469,13 @@ report 50014 "Grand Livre Client DDIF"
                                 PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecCustLedgEntry."Remaining Amt. (LCY)"
                             else
                                 PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open - GRecCustLedgEntry."Remaining Amt. (LCY)";
-
                     // FIN Calcul total lettré et non lettré 31/08/2015
-                    until GRecCustLedgEntry.Next() = 0;
+                    until GRecCustLedgEntry.NEXT() = 0;
 
 
                 CustLedgEntry2.COPYFILTERS(CustLedgEntry);
                 CustLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if BoolExcludeBalanceOnly then begin
+                if ExcludeBalanceOnly then begin
                     if CustLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
@@ -502,17 +500,16 @@ report 50014 "Grand Livre Client DDIF"
                 // DEB Calcul total lettré et non lettré 31/08/2015
                 DebitPeriodAmount_Open := 0;
                 CreditPeriodAmount_Open := 0;
-                GDecSumMntOuvert := 0;
                 BalanceLCY_Open := PreviousDebitAmountLCY_Open - PreviousCreditAmountLCY_Open;
 
                 //DEB MHR Solde ouvert de la période
-                GRecCustLedgEntry.Reset();
-                GRecCustLedgEntry.SetRange("Customer No.", "No.");
-                GRecCustLedgEntry.SetRange("Posting Date", StartDate, EndDate);
+                GRecCustLedgEntry.RESET();
+                GRecCustLedgEntry.SETRANGE("Customer No.", "No.");
+                GRecCustLedgEntry.SETRANGE("Posting Date", StartDate, EndDate);
                 if GRecCustLedgEntry.FINDSET() then
                     repeat
                         // DEB Calcul total lettré et non lettré 31/08/2015
-                        GRecCustLedgEntry.SetRange("Date Filter", StartDate, EndDate);
+                        GRecCustLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
 
                         GRecCustLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
                         if GRecCustLedgEntry."Remaining Amt. (LCY)" <> 0 then
@@ -522,14 +519,13 @@ report 50014 "Grand Livre Client DDIF"
                                 DebitPeriodAmount_Open := DebitPeriodAmount_Open + GRecCustLedgEntry."Remaining Amt. (LCY)"
                             else
                                 CreditPeriodAmount_Open := CreditPeriodAmount_Open - GRecCustLedgEntry."Remaining Amt. (LCY)";
-
                     // FIN Calcul total lettré et non lettré 31/08/2015
-                    until GRecCustLedgEntry.Next() = 0;
+                    until GRecCustLedgEntry.NEXT() = 0;
                 // FIN MHR
 
 
                 // FIN Calcul total lettré et non lettré 31/08/2015
-                CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
 
             end;
 
@@ -539,8 +535,6 @@ report 50014 "Grand Livre Client DDIF"
             end;
 
             trigger OnPreDataItem()
-            var
-                AMG_Functions: Codeunit AMG_Functions;
             begin
                 if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
@@ -558,7 +552,7 @@ report 50014 "Grand Livre Client DDIF"
                 else
                     EndDate := GETRANGEMAX("Date Filter");
                 //DEB DELPHI CORRECTION 06/12/2016
-                BoolExcludeBalanceOnly := false;
+                ExcludeBalanceOnly := false;
             end;
         }
     }
@@ -573,44 +567,28 @@ report 50014 "Grand Livre Client DDIF"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(DocNumSort; BoolDocNumSort)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(DocNumSortF; DocNumSort)
                     {
-                        Caption = 'Sorted by Document No.';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
+                        Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
-                    field(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+                    field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        Caption = 'Exclude Customers That Have a Balance Only';
+                        Caption = 'Exclude Customers That Have a Balance Only', Comment = 'FRA="Exclure seulement les clients qui ont un solde ouvert"';
                         MultiLine = true;
                         Visible = false;
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Exclude Customers That Have a Balance Only field.';
                     }
-                    field(ShowOnlyUnappliedWritings; BoolShowOnlyUnappliedWritings)
+                    field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
                     {
-                        Caption = 'Show Only Unapplied Writings';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Show Only Unapplied Writings field.';
+                        Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
                     }
-                    field(GBoolSoldeZero; BoolSoldeZero)
+                    field(GBoolSoldeZeroF; GBoolSoldeZero)
                     {
-                        Caption = 'Exclure les clients avec solde à 0';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Exclure les clients avec solde à 0 field.';
+                        Caption = 'Exclure les clients avec solde à 0', Comment = 'FRA="Exclure les clients avec solde à 0"';
                     }
                 }
             }
         }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 
     trigger OnInitReport()
@@ -629,12 +607,13 @@ report 50014 "Grand Livre Client DDIF"
         OriginalLedgerEntry: Record "Cust. Ledger Entry";
         CustLedgEntry: Record "Detailed Cust. Ledg. Entry";
         CustLedgEntry2: Record "Detailed Cust. Ledg. Entry";
-        FiltreDateCalc: Codeunit "DateFilter-Calc";
-        BoolDocNumSort: Boolean;
-        BoolExcludeBalanceOnly: Boolean;
-        BoolSoldeZero: Boolean;
+        AMG_Functions: Codeunit AMG_Functions;
+        FiltreDateCalc: codeunit "DateFilter-Calc";
+        DocNumSort: Boolean;
+        ExcludeBalanceOnly: Boolean;
+        GBoolSoldeZero: Boolean;
         GBooOpen: Boolean;
-        BoolShowOnlyUnappliedWritings: Boolean;
+        ShowOnlyUnappliedWritings: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
@@ -647,7 +626,6 @@ report 50014 "Grand Livre Client DDIF"
         DebitPeriodAmount_Open: Decimal;
         GDecCredit: Decimal;
         GDecDebit: Decimal;
-        GDecSumMntOuvert: Decimal;
         GeneralCreditAmountLCY: Decimal;
         GeneralCreditAmountLCY_Open: Decimal;
         GeneralDebitAmountLCY: Decimal;
@@ -659,33 +637,33 @@ report 50014 "Grand Livre Client DDIF"
         ReportCreditAmountLCY: Decimal;
         ReportDebitAmountLCY: Decimal;
         DatePeriodTypeInt: Integer;
-        BalanceCaptionLbl: Label 'Balance';
-        ContinuedCaptionLbl: Label 'Continued';
-        CreditCaptionLbl: Label 'Credit';
-        Current_pageCaptionLbl: Label 'Current page';
-        Customer_Detail_Trial_BalanceCaptionLbl: Label 'Customer Detail Trial Balance';
-        DebitCaptionLbl: Label 'Debit';
-        DescriptionCaptionLbl: Label 'Description';
-        Document_No_CaptionLbl: Label 'Document No.';
-        External_Document_No_CaptionLbl: Label 'External Document No.';
-        Grand_TotalCaptionLbl: Label 'Grand Total';
-        Posting_DateCaptionLbl: Label 'Posting Date';
-        Previous_pageCaptionLbl: Label 'Previous page';
-        Source_CodeCaptionLbl: Label 'Source Code';
-        Text001: Label 'You must fill in the %1 field.', Comment = '%1="Date Filter"';
-        Text002: Label 'You must specify a Starting Date.';
-        Text003: Label 'Printed by %1', Comment = '%1=USERID';
-        Text004: Label 'Fiscal Year Start Date : %1', Comment = '%1=PreviousStartDate';
-        Text005: Label 'Page %1', Comment = '%1=PAGENO';
-        Text006: Label 'Balance at %1 ', Comment = '%1=PreviousEndDate';
-        Text007: Label 'Balance at %1', Comment = '%1=EndDate';
-        Text008: Label 'Total';
-        Text009: Label 'Balance Unrecognized at %1', Comment = '%1=PreviousEndDate';
-        This_report_also_includes_customers_that_only_have_balances_CaptionLbl: Label 'This report also includes customers that only have balances.';
-        To_be_continuedCaptionLbl: Label 'To be continued';
-        Total_Date_RangeCaptionLbl: Label 'Total Date Range';
+        BalanceCaptionLbl: Label 'Balance', Comment = 'FRA="Solde"';
+        ContinuedCaptionLbl: Label 'Continued', Comment = 'FRA="Suite"';
+        CreditCaptionLbl: Label 'Credit', Comment = 'FRA="Crédit"';
+        Current_pageCaptionLbl: Label 'Current page', Comment = 'FRA="Page courante"';
+        Customer_Detail_Trial_BalanceCaptionLbl: Label 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre clients"';
+        DebitCaptionLbl: Label 'Debit', Comment = 'FRA="Débit"';
+        DescriptionCaptionLbl: Label 'Description', Comment = 'FRA="Désignation"';
+        Document_No_CaptionLbl: Label 'Document No.', Comment = 'FRA="N° document"';
+        External_Document_No_CaptionLbl: Label 'External Document No.', Comment = 'FRA="N° doc. externe"';
+        Grand_TotalCaptionLbl: Label 'Grand Total', Comment = 'FRA="Total général"';
+        Posting_DateCaptionLbl: Label 'Posting Date', Comment = 'FRA="Date comptabilisation"';
+        Previous_pageCaptionLbl: Label 'Previous page', Comment = 'FRA="Page précédente"';
+        Source_CodeCaptionLbl: Label 'Source Code', Comment = 'FRA="Code journal"';
+        Text001: Label 'You must fill in the %1 field.', Comment = 'FRA="Vous devez renseigner le champ %1."';
+        Text002: Label 'You must specify a Starting Date.', Comment = 'FRA="Vous devez spécifier une date de début."';
+        Text003: Label 'Printed by %1', Comment = 'FRA="Imprimé par %1"';
+        Text004: Label 'Fiscal Year Start Date : %1', Comment = 'FRA="Début exercice comptable : %1"';
+        Text005: Label 'Page %1', Comment = 'FRA="Page %1"';
+        Text006: Label 'Balance at %1 ', Comment = 'FRA="Solde au %1 "';
+        Text007: Label 'Balance at %1', Comment = 'FRA="Solde au %1"';
+        Text008: Label 'Total', Comment = 'FRA="Total"';
+        Text009: Label 'Solde Non-lettré au %1', Comment = 'FRA="Solde Non-lettré au %1"';
+        This_report_also_includes_customers_that_only_have_balances_CaptionLbl: Label 'This report also includes customers that only have balances.', Comment = 'FRA="Cet état inclut aussi les clients ne présentant que des soldes."';
+        To_be_continuedCaptionLbl: Label 'To be continued', Comment = 'FRA="À suivre"';
+        Total_Date_RangeCaptionLbl: Label 'Total Date Range', Comment = 'FRA="Total plage de dates"';
         TotalBy: Option Date,Week,Month,Quarter,Year;
         "Filter": Text;
-        TextDate: Text[30]; //TODO Verif was (TextDate: Text;)
+        TextDate: Text;
 }
 

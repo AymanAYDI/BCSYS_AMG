@@ -103,6 +103,14 @@ codeunit 50002 "AMG_Functions"
         PurchHeader.MODIFY();
     end;
 
+    procedure VerifiyDateFilter("Filter": Text[30])
+    var
+        Text10800: Label 'The selected date is not a starting period.', Comment = 'FRA="La date choisie n''est pas un début de période."';
+    begin
+        if Filter = ',,,' then
+            Error(Text10800);
+    end;
+
 
 
 
@@ -426,13 +434,5 @@ codeunit 50002 "AMG_Functions"
     procedure SetProperties(NewCalledFromAdjustment: Boolean)
     begin
         CalledFromAdjustment := NewCalledFromAdjustment;
-    end;
-
-    procedure VerifiyDateFilter("Filter": Text[30])
-    var
-        Text10800: Label 'The selected date is not a starting period.';
-    begin
-        if Filter = ',,,' then
-            Error(Text10800);
     end;
 }

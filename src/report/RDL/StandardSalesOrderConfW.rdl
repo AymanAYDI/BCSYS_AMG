@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource">
@@ -8,61 +8,15 @@
         <ConnectString />
       </ConnectionProperties>
       <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>b23244e3-9790-4712-be0f-6041ac5f0e69</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <ReportSections>
-    <ReportSection>
-      <Body>
-        <Height>2in</Height>
-        <Style />
-      </Body>
-      <Width>6.5in</Width>
-      <Page>
-        <Style />
-      </Page>
-    </ReportSection>
-  </ReportSections>
-  <Code>Public Function BlankZero(ByVal Value As Decimal)
-    if Value = 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankPos(ByVal Value As Decimal)
-    if Value &gt; 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankZeroAndPos(ByVal Value As Decimal)
-    if Value &gt;= 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankNeg(ByVal Value As Decimal)
-    if Value &lt; 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankNegAndZero(ByVal Value As Decimal)
-    if Value &lt;= 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-</Code>
-  <Language>=User!Language</Language>
-  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <DataSets>
     <DataSet Name="DataSet_Result">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
       <Fields>
         <Field Name="CompanyAddress1">
           <DataField>CompanyAddress1</DataField>
@@ -169,9 +123,6 @@ End Function
         <Field Name="CompanyLegalStatement">
           <DataField>CompanyLegalStatement</DataField>
         </Field>
-        <Field Name="DisplayAdditionalFeeNote">
-          <DataField>DisplayAdditionalFeeNote</DataField>
-        </Field>
         <Field Name="CustomerAddress1">
           <DataField>CustomerAddress1</DataField>
         </Field>
@@ -211,14 +162,14 @@ End Function
         <Field Name="ShipmentMethodDescription_Lbl">
           <DataField>ShipmentMethodDescription_Lbl</DataField>
         </Field>
+        <Field Name="Shipment_Lbl">
+          <DataField>Shipment_Lbl</DataField>
+        </Field>
         <Field Name="ShipmentDate">
           <DataField>ShipmentDate</DataField>
         </Field>
         <Field Name="ShipmentDate_Lbl">
           <DataField>ShipmentDate_Lbl</DataField>
-        </Field>
-        <Field Name="Shipment_Lbl">
-          <DataField>Shipment_Lbl</DataField>
         </Field>
         <Field Name="ShowShippingAddress">
           <DataField>ShowShippingAddress</DataField>
@@ -289,11 +240,11 @@ End Function
         <Field Name="DocumentNo_Lbl">
           <DataField>DocumentNo_Lbl</DataField>
         </Field>
-        <Field Name="OrderNo">
-          <DataField>OrderNo</DataField>
+        <Field Name="QuoteNo">
+          <DataField>QuoteNo</DataField>
         </Field>
-        <Field Name="OrderNo_Lbl">
-          <DataField>OrderNo_Lbl</DataField>
+        <Field Name="QuoteNo_Lbl">
+          <DataField>QuoteNo_Lbl</DataField>
         </Field>
         <Field Name="PricesIncludingVAT">
           <DataField>PricesIncludingVAT</DataField>
@@ -307,11 +258,8 @@ End Function
         <Field Name="SalesPerson_Lbl">
           <DataField>SalesPerson_Lbl</DataField>
         </Field>
-        <Field Name="Salesperson_Lbl2">
-          <DataField>Salesperson_Lbl2</DataField>
-        </Field>
-        <Field Name="SalesPersonBlank_Lbl">
-          <DataField>SalesPersonBlank_Lbl</DataField>
+        <Field Name="SalesPersonText_Lbl">
+          <DataField>SalesPersonText_Lbl</DataField>
         </Field>
         <Field Name="SalesPersonName">
           <DataField>SalesPersonName</DataField>
@@ -334,12 +282,6 @@ End Function
         <Field Name="GlobalLocationNumber_Lbl">
           <DataField>GlobalLocationNumber_Lbl</DataField>
         </Field>
-        <Field Name="PaymentReference">
-          <DataField>PaymentReference</DataField>
-        </Field>
-        <Field Name="PaymentReference_Lbl">
-          <DataField>PaymentReference_Lbl</DataField>
-        </Field>
         <Field Name="LegalEntityType">
           <DataField>LegalEntityType</DataField>
         </Field>
@@ -349,11 +291,11 @@ End Function
         <Field Name="Copy_Lbl">
           <DataField>Copy_Lbl</DataField>
         </Field>
-        <Field Name="EMail_Header_Lbl">
-          <DataField>EMail_Header_Lbl</DataField>
+        <Field Name="EMail_Lbl">
+          <DataField>EMail_Lbl</DataField>
         </Field>
-        <Field Name="HomePage_Header_Lbl">
-          <DataField>HomePage_Header_Lbl</DataField>
+        <Field Name="HomePage_Lbl">
+          <DataField>HomePage_Lbl</DataField>
         </Field>
         <Field Name="InvoiceDiscountBaseAmount_Lbl">
           <DataField>InvoiceDiscountBaseAmount_Lbl</DataField>
@@ -376,11 +318,8 @@ End Function
         <Field Name="SalesInvoiceLineDiscount_Lbl">
           <DataField>SalesInvoiceLineDiscount_Lbl</DataField>
         </Field>
-        <Field Name="DocumentTitle_Lbl">
-          <DataField>DocumentTitle_Lbl</DataField>
-        </Field>
-        <Field Name="ShowWorkDescription">
-          <DataField>ShowWorkDescription</DataField>
+        <Field Name="Invoice_Lbl">
+          <DataField>Invoice_Lbl</DataField>
         </Field>
         <Field Name="Subtotal_Lbl">
           <DataField>Subtotal_Lbl</DataField>
@@ -409,17 +348,11 @@ End Function
         <Field Name="VATClause_Lbl">
           <DataField>VATClause_Lbl</DataField>
         </Field>
-        <Field Name="PackageTrackingNo">
-          <DataField>PackageTrackingNo</DataField>
+        <Field Name="ExtDocNo_SalesHeader">
+          <DataField>ExtDocNo_SalesHeader</DataField>
         </Field>
-        <Field Name="PackageTrackingNo_Lbl">
-          <DataField>PackageTrackingNo_Lbl</DataField>
-        </Field>
-        <Field Name="ShippingAgentCode">
-          <DataField>ShippingAgentCode</DataField>
-        </Field>
-        <Field Name="ShippingAgentCode_Lbl">
-          <DataField>ShippingAgentCode_Lbl</DataField>
+        <Field Name="ShowWorkDescription">
+          <DataField>ShowWorkDescription</DataField>
         </Field>
         <Field Name="LineNo_Line">
           <DataField>LineNo_Line</DataField>
@@ -508,38 +441,17 @@ End Function
         <Field Name="TransHeaderAmountFormat">
           <DataField>TransHeaderAmountFormat</DataField>
         </Field>
-        <Field Name="JobTaskNo_Lbl">
-          <DataField>JobTaskNo_Lbl</DataField>
+        <Field Name="CrossReferenceNo">
+          <DataField>CrossReferenceNo</DataField>
         </Field>
-        <Field Name="JobTaskNo">
-          <DataField>JobTaskNo</DataField>
+        <Field Name="CrossReferenceNo_Lbl">
+          <DataField>CrossReferenceNo_Lbl</DataField>
         </Field>
-        <Field Name="JobTaskDescription">
-          <DataField>JobTaskDescription</DataField>
+        <Field Name="WorkDescriptionLineNumber">
+          <DataField>WorkDescriptionLineNumber</DataField>
         </Field>
-        <Field Name="JobTaskDesc_Lbl">
-          <DataField>JobTaskDesc_Lbl</DataField>
-        </Field>
-        <Field Name="JobNo_Lbl">
-          <DataField>JobNo_Lbl</DataField>
-        </Field>
-        <Field Name="JobNo">
-          <DataField>JobNo</DataField>
-        </Field>
-        <Field Name="DocumentNo_ShipmentLine">
-          <DataField>DocumentNo_ShipmentLine</DataField>
-        </Field>
-        <Field Name="PostingDate_ShipmentLine">
-          <DataField>PostingDate_ShipmentLine</DataField>
-        </Field>
-        <Field Name="PostingDate_ShipmentLine_Lbl">
-          <DataField>PostingDate_ShipmentLine_Lbl</DataField>
-        </Field>
-        <Field Name="Quantity_ShipmentLine">
-          <DataField>Quantity_ShipmentLine</DataField>
-        </Field>
-        <Field Name="Quantity_ShipmentLine_Lbl">
-          <DataField>Quantity_ShipmentLine_Lbl</DataField>
+        <Field Name="WorkDescriptionLine">
+          <DataField>WorkDescriptionLine</DataField>
         </Field>
         <Field Name="LineNo_AssemblyLine">
           <DataField>LineNo_AssemblyLine</DataField>
@@ -555,12 +467,6 @@ End Function
         </Field>
         <Field Name="VariantCode_AssemblyLine">
           <DataField>VariantCode_AssemblyLine</DataField>
-        </Field>
-        <Field Name="WorkDescriptionLineNumber">
-          <DataField>WorkDescriptionLineNumber</DataField>
-        </Field>
-        <Field Name="WorkDescriptionLine">
-          <DataField>WorkDescriptionLine</DataField>
         </Field>
         <Field Name="InvoiceDiscountAmount_VATAmountLine">
           <DataField>InvoiceDiscountAmount_VATAmountLine</DataField>
@@ -594,6 +500,9 @@ End Function
         </Field>
         <Field Name="VATBase_VatAmountLine">
           <DataField>VATBase_VatAmountLine</DataField>
+        </Field>
+        <Field Name="VATBase_VatAmountLineFormat">
+          <DataField>VATBase_VatAmountLineFormat</DataField>
         </Field>
         <Field Name="VATBase_VatAmountLine_Lbl">
           <DataField>VATBase_VatAmountLine_Lbl</DataField>
@@ -658,36 +567,6 @@ End Function
         <Field Name="FontUnderline_ReportTotalsLine">
           <DataField>FontUnderline_ReportTotalsLine</DataField>
         </Field>
-        <Field Name="LineFeeCaptionText">
-          <DataField>LineFeeCaptionText</DataField>
-        </Field>
-        <Field Name="PaymentServiceLogo">
-          <DataField>PaymentServiceLogo</DataField>
-        </Field>
-        <Field Name="PaymentServiceLogo_UrlText">
-          <DataField>PaymentServiceLogo_UrlText</DataField>
-        </Field>
-        <Field Name="PaymentServiceLogo_Url">
-          <DataField>PaymentServiceLogo_Url</DataField>
-        </Field>
-        <Field Name="PaymentServiceText_UrlText">
-          <DataField>PaymentServiceText_UrlText</DataField>
-        </Field>
-        <Field Name="PaymentServiceText_Url">
-          <DataField>PaymentServiceText_Url</DataField>
-        </Field>
-        <Field Name="LeftHeaderName">
-          <DataField>LeftHeaderName</DataField>
-        </Field>
-        <Field Name="LeftHeaderValue">
-          <DataField>LeftHeaderValue</DataField>
-        </Field>
-        <Field Name="RightHeaderName">
-          <DataField>RightHeaderName</DataField>
-        </Field>
-        <Field Name="RightHeaderValue">
-          <DataField>RightHeaderValue</DataField>
-        </Field>
         <Field Name="GreetingText">
           <DataField>GreetingText</DataField>
         </Field>
@@ -739,17 +618,70 @@ End Function
         <Field Name="TotalText">
           <DataField>TotalText</DataField>
         </Field>
-        <Field Name="TotalAmountExclInclVAT">
-          <DataField>TotalAmountExclInclVAT</DataField>
-        </Field>
-        <Field Name="TotalAmountExclInclVATText">
-          <DataField>TotalAmountExclInclVATText</DataField>
-        </Field>
       </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
+      <rd:DataSetInfo>
+        <rd:DataSetName>DataSet</rd:DataSetName>
+        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
+        <rd:TableName>Result</rd:TableName>
+      </rd:DataSetInfo>
     </DataSet>
   </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>5.17727cm</Height>
+        <Style />
+      </Body>
+      <Width>12.38813cm</Width>
+      <Page>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>21cm</PageWidth>
+        <LeftMargin>1.9cm</LeftMargin>
+        <RightMargin>0.4cm</RightMargin>
+        <TopMargin>0.4cm</TopMargin>
+        <BottomMargin>1cm</BottomMargin>
+        <ColumnSpacing>1.27cm</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
 </Report>

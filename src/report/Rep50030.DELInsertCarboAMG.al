@@ -2,13 +2,11 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Setup;
-using BCSYS.AMGALLOIS.Basic;
 report 50030 DELInsertCarboAMG
 {
     Caption = 'Choix de l''emballage Carboglace';
     ProcessingOnly = true;
-    ApplicationArea = All;
-
+    UsageCategory = None;
     dataset
     {
         dataitem(Item; Item)
@@ -16,8 +14,6 @@ report 50030 DELInsertCarboAMG
             RequestFilterFields = "No.";
 
             trigger OnPreDataItem()
-            var
-                LRecSalesSetup: Record "Sales & Receivables Setup";
             begin
             end;
         }
@@ -31,25 +27,26 @@ report 50030 DELInsertCarboAMG
         {
             area(content)
             {
-                group(General)
+                group(Group1)
                 {
-                    field("Item No."; ItemNo)
+                    ShowCaption = false;
+                    field("No article"; ItemNo)
                     {
-                        Caption = 'Item No.';
+                        Caption = 'N° article';
                         TableRelation = Item."No.";
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Item No. field.';
+
                         trigger OnLookup(var Text: Text): Boolean
                         begin
-                            if PAGE.RunModal(PAGE::DELItemDrillDownCarbo, Item) = ACTION::LookupOK then
+                            //DELPHI AUB 22.03.2021
+                            if PAGE.RUNMODAL(PAGE::DELItemDrillDownCarbo, Item) = ACTION::LookupOK then
                                 ItemNo := Item."No.";
+
+                            //END DELPHI AUB
                         end;
                     }
-                    field("Quantity"; GDecQty)
+                    field("Quantité"; GDecQty)
                     {
-                        Caption = 'Quantity';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Quantity field.';
+                        Caption = 'Quantité';
                     }
                 }
             }
@@ -61,9 +58,9 @@ report 50030 DELInsertCarboAMG
 
         trigger OnOpenPage()
         begin
-            if GRecSalesSetup.FINDFIRST() and (GRecSalesSetup."Category Code Carbo" <> '') then
-                Item.SETFILTER("Item Category Code", GRecSalesSetup."Category Code Carbo");
-            GDecQty := 1;
+            if GRecSalesSetup.Get() and (GRecSalesSetup."Code categorie Carbo" <> '') then
+                Item.SETFILTER("Item Category Code", GRecSalesSetup."Code categorie Carbo");
+            GDecQty := 1; //DELPHI AUB 01.04.2021
         end;
     }
 
@@ -73,7 +70,7 @@ report 50030 DELInsertCarboAMG
 
     var
         GRecSalesSetup: Record "Sales & Receivables Setup";
-        ItemNo: Code[20];
         GDecQty: Decimal;
+        ItemNo: Code[20];
 }
 

@@ -1,38 +1,37 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Sales.Document;
-using System.Utilities;
-using Microsoft.Assembly.Document;
 using Microsoft.Finance.VAT.Calculation;
+using Microsoft.Assembly.Document;
+using System.Utilities;
 using Microsoft.Foundation.Reporting;
-using Microsoft.Finance.Currency;
-using Microsoft.Utilities;
-using Microsoft.Sales.Posting;
 using Microsoft.CRM.Contact;
-using System.Globalization;
-using Microsoft.CRM.Interaction;
-using Microsoft.Foundation.UOM;
-using Microsoft.Sales.Customer;
-using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Foundation.Company;
+using Microsoft.Foundation.Address;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Bank.BankAccount;
 using Microsoft.CRM.Team;
-using Microsoft.Foundation.Company;
+using Microsoft.Sales.Customer;
+using Microsoft.Finance.VAT.Clause;
+using Microsoft.Finance.Currency;
+using Microsoft.Utilities;
+using Microsoft.Sales.Posting;
+using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Location;
-using Microsoft.Finance.VAT.Clause;
-using Microsoft.Foundation.Address;
+using System.Globalization;
 using Microsoft.CRM.Segment;
+using Microsoft.Foundation.UOM;
+using Microsoft.CRM.Interaction;
 report 50000 "Standard Sales - Order Conf. W"
 {
-    RDLCLayout = './src/report/RDL/StandardSalesOrderConfW.rdlc';
-    WordLayout = './StandardSalesOrderConfW.docx';
-    Caption = 'Sales - Confirmation';
+    RDLCLayout = './src/report/rdl/StandardSalesOrderConfW.rdl';
+    WordLayout = './src/report/rdl/StandardSalesOrderConfW.docx';
+    Caption = 'Sales - Confirmation', Comment = 'FRA="Ventes - Confirmation"';
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -41,7 +40,7 @@ report 50000 "Standard Sales - Order Conf. W"
             DataItemTableView = sorting("Document Type", "No.")
                                 where("Document Type" = const(Order));
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
-            RequestFilterHeading = 'Sales Order';
+            RequestFilterHeading = 'Sales Order', Comment = 'FRA="Commande vente"';
             column(CompanyAddress1; CompanyAddr[1])
             {
             }
@@ -132,16 +131,16 @@ report 50000 "Standard Sales - Order Conf. W"
             column(CompanyVATRegistrationNo_Lbl; CompanyInfo.GetVATRegistrationNumberLbl())
             {
             }
-            column(CompanyLegalOffice; CompanyInfo.GetLegalOffice())
+            column(CompanyLegalOffice; '')
             {
             }
-            column(CompanyLegalOffice_Lbl; CompanyInfo.GetLegalOfficeLbl())
+            column(CompanyLegalOffice_Lbl; '')
             {
             }
-            column(CompanyCustomGiro; CompanyInfo.GetCustomGiro())
+            column(CompanyCustomGiro; '')
             {
             }
-            column(CompanyCustomGiro_Lbl; CompanyInfo.GetCustomGiroLbl())
+            column(CompanyCustomGiro_Lbl; '')
             {
             }
             column(CompanyLegalStatement; GetLegalStatement())
@@ -474,16 +473,14 @@ report 50000 "Standard Sales - Order Conf. W"
                     AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
-                column(CrossReferenceNo; "Item Reference No.") //replaced "Cross-Reference No."
+                column(CrossReferenceNo; "Item Reference No.")
                 {
                 }
-                column(CrossReferenceNo_Lbl; FIELDCAPTION("Item Reference No."))//replaced "Cross-Reference No."
+                column(CrossReferenceNo_Lbl; FIELDCAPTION("Item Reference No."))
                 {
                 }
 
                 trigger OnAfterGetRecord()
-                var
-                    Text01: Label '%1', Comment = '%1 = "Line Discount %"';
                 begin
                     PostedShipmentDate := 0D;
 
@@ -493,7 +490,7 @@ report 50000 "Standard Sales - Order Conf. W"
                     if "Line Discount %" = 0 then
                         LineDiscountPctText := ''
                     else
-                        LineDiscountPctText := STRSUBSTNO(Text01, -ROUND("Line Discount %", 0.1));
+                        LineDiscountPctText := STRSUBSTNO('%1%', -ROUND("Line Discount %", 0.1));
 
                     if DisplayAssemblyInformation then
                         AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
@@ -508,15 +505,15 @@ report 50000 "Standard Sales - Order Conf. W"
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
                     if FirstLineHasBeenOutput then
-                        Clear(CompanyInfo.Picture);
+                        CLEAR(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    MoreLines := FINDLAST();
+                    MoreLines := FIND('+');
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                        MoreLines := Next(-1) <> 0;
+                        MoreLines := NEXT(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
@@ -561,8 +558,8 @@ report 50000 "Standard Sales - Order Conf. W"
                             CurrReport.BREAK();
                         if not AsmInfoExistsForLine then
                             CurrReport.BREAK();
-                        SetRange("Document Type", AsmHeader."Document Type");
-                        SetRange("Document No.", AsmHeader."No.");
+                        SETRANGE("Document Type", AsmHeader."Document Type");
+                        SETRANGE("Document No.", AsmHeader."No.");
                     end;
                 }
 
@@ -575,17 +572,15 @@ report 50000 "Standard Sales - Order Conf. W"
 
                 trigger OnPostDataItem()
                 begin
-                    Clear(WorkDescriptionInstream)
+                    CLEAR(TempBlobWorkDescription);
                 end;
 
                 trigger OnPreDataItem()
                 begin
                     if not ShowWorkDescription then
-                        CurrReport.Break();
+                        CurrReport.BREAK();
                     Header."Work Description".CreateInStream(WorkDescriptionInstream, TEXTENCODING::UTF8);
                 end;
-
-
             }
             dataitem(VATAmountLine; "VAT Amount Line")
             {
@@ -827,8 +822,8 @@ report 50000 "Standard Sales - Order Conf. W"
                 SalesPost: Codeunit "Sales-Post";
             begin
                 FirstLineHasBeenOutput := false;
-                Clear(Line);
-                Clear(SalesPost);
+                CLEAR(Line);
+                CLEAR(SalesPost);
                 VATAmountLine.DELETEALL();
                 Line.DELETEALL();
                 SalesPost.GetSalesLines(Header, Line, 0);
@@ -838,7 +833,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 if not CurrReport.PREVIEW then
                     CODEUNIT.RUN(CODEUNIT::"Sales-Printed", Header);
 
-                CurrReport.LANGUAGE := CULanguage.GetLanguageIdOrDefault("Language Code");
+                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
                 CALCFIELDS("Work Description");
                 ShowWorkDescription := "Work Description".HASVALUE;
@@ -848,7 +843,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 ShowShippingAddr := FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
-                    Clear(Cust);
+                    CLEAR(Cust);
 
                 if "Currency Code" <> '' then begin
                     CurrencyExchangeRate.FindCurrency("Posting Date", "Currency Code", 1);
@@ -860,12 +855,12 @@ report 50000 "Standard Sales - Order Conf. W"
                 FormatDocumentFields(Header);
 
                 if not CurrReport.PREVIEW and
-                   (CurrReport.USEREQUESTPAGE and BoolArchiveDocument or
+                   (CurrReport.USEREQUESTPAGE and ArchiveDocument or
                     not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders")
                 then
-                    ArchiveManagement.StoreSalesDocument(Header, BoolLogInteraction);
+                    ArchiveManagement.StoreSalesDocument(Header, LogInteraction);
 
-                if BoolLogInteraction and not CurrReport.PREVIEW then begin
+                if LogInteraction and not CurrReport.PREVIEW then begin
                     CALCFIELDS("No. of Archived Versions");
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
@@ -899,40 +894,31 @@ report 50000 "Standard Sales - Order Conf. W"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(LogInteraction; BoolLogInteraction)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(LogInteractionF; LogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Log Interaction';
+                        Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
-                        ToolTip = 'Specifies that interactions with the contact are logged.';
                     }
-                    field(DisplayAsmInformation; DisplayAssemblyInformation)
+                    field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
-                        Caption = 'Show Assembly Components';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Show Assembly Components field.';
+                        Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
                     }
-                    field(ArchiveDocument; BoolArchiveDocument)
+                    field(ArchiveDocumentF; ArchiveDocument)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Archive Document';
-                        ToolTip = 'Specifies if the document is archived after you print it.';
+                        Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
 
                         trigger OnValidate()
                         begin
-                            if not BoolArchiveDocument then
-                                BoolLogInteraction := false;
+                            if not ArchiveDocument then
+                                LogInteraction := false;
                         end;
                     }
                 }
             }
         }
-
-        actions
-        {
-        }
-
         trigger OnInit()
         begin
             LogInteractionEnable := true;
@@ -941,13 +927,9 @@ report 50000 "Standard Sales - Order Conf. W"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := BoolLogInteraction;
-            BoolArchiveDocument := SalesSetup."Archive Orders";
+            LogInteractionEnable := LogInteraction;
+            ArchiveDocument := SalesSetup."Archive Orders";
         end;
-    }
-
-    labels
-    {
     }
 
     trigger OnInitReport()
@@ -983,13 +965,14 @@ report 50000 "Standard Sales - Order Conf. W"
         VATClause: Record "VAT Clause";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        CULanguage: Codeunit Language;
+        LanguageCdu: Codeunit Language;
         SegManagement: Codeunit SegManagement;
-        BoolArchiveDocument: Boolean;
+        TempBlobWorkDescription: Codeunit "Temp Blob";
+        ArchiveDocument: Boolean;
         AsmInfoExistsForLine: Boolean;
         DisplayAssemblyInformation: Boolean;
         FirstLineHasBeenOutput: Boolean;
-        BoolLogInteraction: Boolean;
+        LogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowShippingAddr: Boolean;
@@ -1008,64 +991,62 @@ report 50000 "Standard Sales - Order Conf. W"
         TransHeaderAmount: Decimal;
         VATAmountLCY: Decimal;
         VATBaseLCY: Decimal;
-        WorkDescriptionInstream: InStream;
         CompanyLogoPosition: Integer;
-        BodyLbl: Label 'Thank you for your business. Your order confirmation is attached to this message.';
-        ClosingLbl: Label 'Sincerely';
-        CompanyInfoBankAccNoLbl: Label 'Account No.';
-        CompanyInfoBankNameLbl: Label 'Bank';
-        CompanyInfoGiroNoLbl: Label 'Giro No.';
-        CompanyInfoPhoneNoLbl: Label 'Phone No.';
-        CopyLbl: Label 'Copy';
-        EMailLbl: Label 'Email';
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
-        GreetingLbl: Label 'Hello';
-        HomePageLbl: Label 'Home Page';
-        InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount';
-        InvDiscountAmtLbl: Label 'Invoice Discount';
-        InvNoLbl: Label 'Order No.';
-        LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT';
-        LocalCurrencyLbl: Label 'Local Currency';
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
-        PageLbl: Label 'Page';
-        PaymentMethodDescLbl: Label 'Payment Method';
-        PaymentTermsDescLbl: Label 'Payment Terms';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% Payment Discount %', Comment = '%1=Discount Due Date , %2=value of Payment Discount %';
-        PostedShipmentDateLbl: Label 'Shipment Date';
-        SalesConfirmationLbl: Label 'Order Confirmation';
-        SalesInvLineDiscLbl: Label 'Discount %';
-        SalespersonLbl: Label 'Sales person';
-        ShipmentLbl: Label 'Shipment';
-        ShiptoAddrLbl: Label 'Ship-to Address';
-        ShptMethodDescLbl: Label 'Shipment Method';
-        SubtotalLbl: Label 'Subtotal';
-        TotalLbl: Label 'Total';
-        VATAmountLCYLbl: Label 'VAT Amount (LCY)';
-        VATAmtLbl: Label 'VAT Amount';
-        VATAmtSpecificationLbl: Label 'VAT Amount Specification';
-        VATBaseLbl: Label 'VAT Base';
-        VATBaseLCYLbl: Label 'VAT Base (LCY)';
-        VATClausesLbl: Label 'VAT Clause';
-        VATIdentifierLbl: Label 'VAT Identifier';
-        VATPercentageLbl: Label 'VAT %';
+        BodyLbl: Label 'Thank you for your business. Your order confirmation is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre confirmation de commande est jointe à ce message."';
+        ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
+        CompanyInfoBankAccNoLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
+        CompanyInfoBankNameLbl: Label 'Bank', Comment = 'FRA="Banque"';
+        CompanyInfoGiroNoLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
+        CompanyInfoPhoneNoLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
+        CopyLbl: Label 'Copy', Comment = 'FRA="Copier"';
+        EMailLbl: Label 'Email', Comment = 'FRA="Adresse e-mail"';
+        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
+        GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
+        HomePageLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
+        InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
+        InvDiscountAmtLbl: Label 'Invoice Discount', Comment = 'FRA="Remise facture"';
+        InvNoLbl: Label 'Order No.', Comment = 'FRA="N° commande"';
+        LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
+        LocalCurrencyLbl: Label 'Local Currency', Comment = 'FRA="Devise société"';
+        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.', Comment = 'FRA="Vous devez spécifier un ou plusieurs filtres pour éviter d''imprimer accidentellement tous les documents."';
+        PageLbl: Label 'Page', Comment = 'FRA="Page"';
+        PaymentMethodDescLbl: Label 'Payment Method', Comment = 'FRA="Mode de règlement"';
+        PaymentTermsDescLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = 'FRA="Si nous recevons le paiement avant le %1, vous pouvez bénéficier d''un escompte de 2 %."';
+        PostedShipmentDateLbl: Label 'Shipment Date', Comment = 'FRA="Date d''expédition"';
+        SalesConfirmationLbl: Label 'Order Confirmation', Comment = 'FRA="Confirmation de commande"';
+        SalesInvLineDiscLbl: Label 'Discount %', Comment = 'FRA="% remise"';
+        SalespersonLbl: Label 'Sales person', Comment = 'FRA="Vendeur"';
+        ShipmentLbl: Label 'Shipment', Comment = 'FRA="Expédition"';
+        ShiptoAddrLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
+        ShptMethodDescLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
+        SubtotalLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        TotalLbl: Label 'Total', Comment = 'FRA="Total"';
+        VATAmountLCYLbl: Label 'VAT Amount (LCY)', Comment = 'FRA="Montant TVA DS"';
+        VATAmtLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        VATAmtSpecificationLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
+        VATBaseLbl: Label 'VAT Base', Comment = 'FRA="Base TVA"';
+        VATBaseLCYLbl: Label 'VAT Base (LCY)', Comment = 'FRA="Base TVA (DS)"';
+        VATClausesLbl: Label 'VAT Clause', Comment = 'FRA="Clause TVA"';
+        VATIdentifierLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
+        VATPercentageLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
         ExchangeRateText: Text;
         LineDiscountPctText: Text;
         PmtDiscText: Text;
+        WorkDescriptionInstream: InStream;
         WorkDescriptionLine: Text;
         CopyText: Text[30];
-        SalesPersonText: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        SalesPersonText: Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
 
     local procedure InitLogInteraction()
-    var
-        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Ord. Cnfrmn.") <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Ord. Cnfrmn.") <> '';
     end;
 
     local procedure DocumentCaption(): Text[250]
@@ -1073,25 +1054,22 @@ report 50000 "Standard Sales - Order Conf. W"
         exit(SalesConfirmationLbl);
     end;
 
-
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
-        BoolLogInteraction := NewLogInteraction;
+        LogInteraction := NewLogInteraction;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
     local procedure FormatDocumentFields(SalesHeader: Record "Sales Header")
     begin
-        with SalesHeader do begin
-            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
-            FormatDocument.SetSalesPerson(SalespersonPurchaser, "Salesperson Code", SalesPersonText);
-            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
-            FormatDocument.SetPaymentMethod(PaymentMethod, "Payment Method Code", "Language Code");
-            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
-        end;
+        FormatDocument.SetTotalLabels(SalesHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetSalesPerson(SalespersonPurchaser, SalesHeader."Salesperson Code", SalesPersonText);
+        FormatDocument.SetPaymentTerms(PaymentTerms, SalesHeader."Payment Terms Code", SalesHeader."Language Code");
+        FormatDocument.SetPaymentMethod(PaymentMethod, SalesHeader."Payment Method Code", SalesHeader."Language Code");
+        FormatDocument.SetShipmentMethod(ShipmentMethod, SalesHeader."Shipment Method Code", SalesHeader."Language Code");
     end;
 
-    local procedure GetUOMText(UOMCode: Code[20]): Text
+    local procedure GetUOMText(UOMCode: Code[10]): Text[50]
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin

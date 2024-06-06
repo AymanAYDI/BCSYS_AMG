@@ -7,7 +7,7 @@ pageextension 50003 GeneralLedgerEntries extends "General Ledger Entries" //20
     {
         addafter("Description")
         {
-            field("Long description"; Rec."Long description")
+            field("Long description"; Rec."Description longue")
             {
                 ApplicationArea = All;
             }

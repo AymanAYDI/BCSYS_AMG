@@ -2,38 +2,37 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Sales.History;
 using Microsoft.Assembly.History;
-using Microsoft.Inventory.Ledger;
 using Microsoft.Finance.VAT.Calculation;
-using Microsoft.Foundation.Reporting;
 using System.Utilities;
-using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Foundation.Company;
+using Microsoft.Foundation.Address;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.PaymentTerms;
-using Microsoft.CRM.Team;
 using Microsoft.Bank.BankAccount;
-using Microsoft.Foundation.Company;
-using Microsoft.Sales.Setup;
+using Microsoft.CRM.Team;
 using Microsoft.Sales.Customer;
+using Microsoft.Finance.VAT.Clause;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Finance.Currency;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Location;
 using System.Globalization;
-using Microsoft.Finance.VAT.Clause;
-using Microsoft.Foundation.Address;
 using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
 using Microsoft.Foundation.UOM;
 using Microsoft.CRM.Contact;
 using Microsoft.CRM.Interaction;
-using Microsoft.Finance.Currency;
 report 50001 "Standard Sales - Credit Memo W"
 {
-    RDLCLayout = './src/report/RDL/StandardSalesCreditMemoW.rdlc';
-    WordLayout = './StandardSalesCreditMemoW.docx';
-    Caption = 'Sales - Credit Memo';
+    RDLCLayout = './src/report/rdl/StandardSalesCreditMemoW.rdl';
+    WordLayout = './src/report/rdl/StandardSalesCreditMemoW.docx';
+    Caption = 'Sales - Credit Memo', Comment = 'FRA="Ventes : Avoir"';
     DefaultLayout = Word;
     Permissions = TableData "Sales Shipment Buffer" = rimd;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -41,7 +40,7 @@ report 50001 "Standard Sales - Credit Memo W"
         {
             DataItemTableView = sorting("No.");
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
-            RequestFilterHeading = 'Posted Sales Credit Memo';
+            RequestFilterHeading = 'Posted Sales Credit Memo', Comment = 'FRA="Avoir vente enregistré"';
             column(CompanyAddress1; CompanyAddr[1])
             {
             }
@@ -132,16 +131,16 @@ report 50001 "Standard Sales - Credit Memo W"
             column(CompanyVATRegistrationNo_Lbl; CompanyInfo.GetVATRegistrationNumberLbl())
             {
             }
-            column(CompanyLegalOffice; CompanyInfo.GetLegalOffice())
+            column(CompanyLegalOffice; '')
             {
             }
-            column(CompanyLegalOffice_Lbl; CompanyInfo.GetLegalOfficeLbl())
+            column(CompanyLegalOffice_Lbl; '')
             {
             }
-            column(CompanyCustomGiro; CompanyInfo.GetCustomGiro())
+            column(CompanyCustomGiro; '')
             {
             }
-            column(CompanyCustomGiro_Lbl; CompanyInfo.GetCustomGiroLbl())
+            column(CompanyCustomGiro_Lbl; '')
             {
             }
             column(CompanyLegalStatement; GetLegalStatement())
@@ -493,7 +492,7 @@ report 50001 "Standard Sales - Credit Memo W"
 
                     trigger OnPreDataItem()
                     begin
-                        SetRange("Line No.", Line."Line No.");
+                        SETRANGE("Line No.", Line."Line No.");
                     end;
                 }
                 dataitem(AssemblyLine; "Posted Assembly Line")
@@ -521,7 +520,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     var
                         ValueEntry: Record "Value Entry";
                     begin
-                        Clear(AssemblyLine);
+                        CLEAR(AssemblyLine);
                         if not DisplayAssemblyInformation then
                             CurrReport.BREAK();
                         GetAssemblyLinesForDocument(
@@ -530,8 +529,6 @@ report 50001 "Standard Sales - Credit Memo W"
                 }
 
                 trigger OnAfterGetRecord()
-                var
-                    Text01: Label '%1%', Comment = '%1 = "Line Discount %"';
                 begin
                     PostedShipmentDate := 0D;
                     if Quantity <> 0 then
@@ -543,7 +540,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     if "Line Discount %" = 0 then
                         LineDiscountPctText := ''
                     else
-                        LineDiscountPctText := STRSUBSTNO(Text01, -ROUND("Line Discount %", 0.1));
+                        LineDiscountPctText := STRSUBSTNO('%1%', -ROUND("Line Discount %", 0.1));
 
                     VATAmountLine.INIT();
                     VATAmountLine."VAT Identifier" := "VAT Identifier";
@@ -570,7 +567,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
                     if FirstLineHasBeenOutput then
-                        Clear(CompanyInfo.Picture);
+                        CLEAR(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
                 end;
 
@@ -578,11 +575,11 @@ report 50001 "Standard Sales - Credit Memo W"
                 begin
                     VATAmountLine.DELETEALL();
                     VATClauseLine.DELETEALL();
-                    ShipmentLine.Reset();
+                    ShipmentLine.RESET();
                     ShipmentLine.DELETEALL();
-                    MoreLines := FINDLAST();
+                    MoreLines := FIND('+');
                     while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                        MoreLines := Next(-1) <> 0;
+                        MoreLines := NEXT(-1) <> 0;
                     if not MoreLines then
                         CurrReport.BREAK();
                     SETRANGE("Line No.", 0, "Line No.");
@@ -727,7 +724,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     VATClause.TranslateDescription(Header."Language Code");
                 end;
             }
-            dataitem(ReportTotalsLine; "Report Totals Buffer")
+            dataitem(ReportTotalsLine; 1150)
             {
                 DataItemTableView = sorting("Line No.");
                 UseTemporary = true;
@@ -828,13 +825,13 @@ report 50001 "Standard Sales - Credit Memo W"
                 if not CurrReport.PREVIEW then
                     CODEUNIT.RUN(CODEUNIT::"Sales Cr. Memo-Printed", Header);
 
-                CurrReport.LANGUAGE := CDULanguage.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
                 FormatAddressFields(Header);
                 FormatDocumentFields(Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
-                    Clear(Cust);
+                    CLEAR(Cust);
 
                 if "Currency Code" <> '' then begin
                     CurrencyExchangeRate.FindCurrency("Posting Date", "Currency Code", 1);
@@ -843,7 +840,7 @@ report 50001 "Standard Sales - Credit Memo W"
                     ExchangeRateText := STRSUBSTNO(ExchangeRateTxt, CalculatedExchRate, CurrencyExchangeRate."Exchange Rate Amount");
                 end;
 
-                if BoolLogInteraction and not CurrReport.PREVIEW then
+                if LogInteraction and not CurrReport.PREVIEW then
                     if "Bill-to Contact No." <> '' then
                         SegManagement.LogDocument(
                           6, "No.", 0, 0, DATABASE::Contact, "Bill-to Contact No.", "Salesperson Code",
@@ -878,32 +875,24 @@ report 50001 "Standard Sales - Credit Memo W"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(LogInteraction; BoolLogInteraction)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(LogInteractionF; LogInteraction)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Log Interaction';
+                        Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
-                        ToolTip = 'Specifies that interactions with the contact are logged.';
                     }
-                    field(DisplayAsmInformation; DisplayAssemblyInformation)
+                    field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
-                        Caption = 'Show Assembly Components';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Show Assembly Components field.';
+                        Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
                     }
-                    field(DisplayShipmentInformation; BoolDisplayShipmentInformation)
+                    field(DisplayShipmentInformationF; DisplayShipmentInformation)
                     {
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Show Shipments';
-                        ToolTip = 'Specifies that shipments are shown on the document.';
+                        Caption = 'Show Shipments', Comment = 'FRA="Afficher expéditions"';
                     }
                 }
             }
-        }
-
-        actions
-        {
         }
 
         trigger OnInit()
@@ -914,12 +903,8 @@ report 50001 "Standard Sales - Credit Memo W"
         trigger OnOpenPage()
         begin
             InitLogInteraction();
-            LogInteractionEnable := BoolLogInteraction;
+            LogInteractionEnable := LogInteraction;
         end;
-    }
-
-    labels
-    {
     }
 
     trigger OnInitReport()
@@ -942,66 +927,67 @@ report 50001 "Standard Sales - Credit Memo W"
     end;
 
     var
-        CompanyInfo: Record "Company Information";
-        Cust: Record Customer;
+        SalesCreditMemoNoLbl: Label 'Sales - Credit Memo %1', Comment = 'FRA="Ventes : Avoir %1"';
+        SalespersonLbl: Label 'Sales person', Comment = 'FRA="Vendeur"';
+        CompanyInfoBankAccNoLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
+        CompanyInfoBankNameLbl: Label 'Bank', Comment = 'FRA="Banque"';
+        CompanyInfoGiroNoLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
+        CompanyInfoPhoneNoLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
+        CopyLbl: Label 'Copy', Comment = 'FRA="Copier"';
+        EMailLbl: Label 'Email', Comment = 'FRA="Adresse e-mail"';
+        HomePageLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
+        InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
+        InvDiscountAmtLbl: Label 'Invoice Discount', Comment = 'FRA="Remise facture"';
+        InvNoLbl: Label 'Credit Memo No.', Comment = 'FRA="N° avoir"';
+        LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
+        LocalCurrencyLbl: Label 'Local Currency', Comment = 'FRA="Devise société"';
+        PageLbl: Label 'Page', Comment = 'FRA="Page"';
+        PaymentTermsDescLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        PaymentMethodDescLbl: Label 'Payment Method', Comment = 'FRA="Mode de règlement"';
+        PostedShipmentDateLbl: Label 'Shipment Date', Comment = 'FRA="Date d''expédition"';
+        SalesInvLineDiscLbl: Label 'Discount %', Comment = 'FRA="% remise"';
+        SalesCreditMemoLbl: Label 'Credit Memo', Comment = 'FRA="Avoir"';
+        ShipmentLbl: Label 'Shipment', Comment = 'FRA="Expédition"';
+        ShiptoAddrLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
+        ShptMethodDescLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
+        SubtotalLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        TotalLbl: Label 'Total', Comment = 'FRA="Total"';
+        VATAmtSpecificationLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
+        VATAmtLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        VATAmountLCYLbl: Label 'VAT Amount (LCY)', Comment = 'FRA="Montant TVA DS"';
+        VATBaseLbl: Label 'VAT Base', Comment = 'FRA="Base TVA"';
+        VATBaseLCYLbl: Label 'VAT Base (LCY)', Comment = 'FRA="Base TVA (DS)"';
+        VATClausesLbl: Label 'VAT Clause', Comment = 'FRA="Clause TVA"';
+        VATIdentifierLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
+        VATPercentageLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
         GLSetup: Record "General Ledger Setup";
-        PaymentMethod: Record "Payment Method";
-        PaymentTerms: Record "Payment Terms";
-        RespCenter: Record "Responsibility Center";
-        SalesSetup: Record "Sales & Receivables Setup";
-        SalespersonPurchaser: Record "Salesperson/Purchaser";
         ShipmentMethod: Record "Shipment Method";
+        PaymentTerms: Record "Payment Terms";
+        PaymentMethod: Record "Payment Method";
+        SalespersonPurchaser: Record "Salesperson/Purchaser";
+        CompanyInfo: Record "Company Information";
+        SalesSetup: Record "Sales & Receivables Setup";
+        Cust: Record Customer;
+        RespCenter: Record "Responsibility Center";
+        LanguageCdu: Codeunit Language;
         VATClause: Record "VAT Clause";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        CDULanguage: codeunit Language;
         SegManagement: Codeunit SegManagement;
         PostedShipmentDate: Date;
-        CompanyInfoBankAccNoLbl: Label 'Account No.';
-        CompanyInfoBankNameLbl: Label 'Bank';
-        CompanyInfoGiroNoLbl: Label 'Giro No.';
-        CompanyInfoPhoneNoLbl: Label 'Phone No.';
-        CopyLbl: Label 'Copy';
-        EMailLbl: Label 'Email';
-        HomePageLbl: Label 'Home Page';
-        InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount';
-        InvDiscountAmtLbl: Label 'Invoice Discount';
-        InvNoLbl: Label 'Credit Memo No.';
-        LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT';
-        LocalCurrencyLbl: Label 'Local Currency';
-        PageLbl: Label 'Page';
-        PaymentMethodDescLbl: Label 'Payment Method';
-        PaymentTermsDescLbl: Label 'Payment Terms';
-        PostedShipmentDateLbl: Label 'Shipment Date';
-        SalesCreditMemoLbl: Label 'Credit Memo';
-        SalesCreditMemoNoLbl: Label 'Sales - Credit Memo %1';
-        SalesInvLineDiscLbl: Label 'Discount %';
-        SalespersonLbl: Label 'Sales person';
-        ShipmentLbl: Label 'Shipment';
-        ShiptoAddrLbl: Label 'Ship-to Address';
-        ShptMethodDescLbl: Label 'Shipment Method';
-        SubtotalLbl: Label 'Subtotal';
-        TotalLbl: Label 'Total';
-        VATAmountLCYLbl: Label 'VAT Amount (LCY)';
-        VATAmtLbl: Label 'VAT Amount';
-        VATAmtSpecificationLbl: Label 'VAT Amount Specification';
-        VATBaseLbl: Label 'VAT Base';
-        VATBaseLCYLbl: Label 'VAT Base (LCY)';
-        VATClausesLbl: Label 'VAT Clause';
-        VATIdentifierLbl: Label 'VAT Identifier';
-        VATPercentageLbl: Label 'VAT %';
-        SalesPersonText: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
+        SalesPersonText: Text[50];
+        TotalText: Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         LineDiscountPctText: Text;
         MoreLines: Boolean;
         CopyText: Text[30];
         ShowShippingAddr: Boolean;
-        BoolLogInteraction: Boolean;
-        SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1';
+        LogInteraction: Boolean;
+        SalesPrepCreditMemoNoLbl: Label 'Sales - Prepmt. Credit Memo %1', Comment = 'FRA="Ventes - Avoir acompte %1"';
         TotalSubTotal: Decimal;
         TotalAmount: Decimal;
         TotalAmountInclVAT: Decimal;
@@ -1011,30 +997,27 @@ report 50001 "Standard Sales - Credit Memo W"
         TransHeaderAmount: Decimal;
         LogInteractionEnable: Boolean;
         DisplayAssemblyInformation: Boolean;
-        BoolDisplayShipmentInformation: Boolean;
+        DisplayShipmentInformation: Boolean;
         CompanyLogoPosition: Integer;
         FirstLineHasBeenOutput: Boolean;
         CalculatedExchRate: Decimal;
         ExchangeRateText: Text;
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = '%1 and %2 are both amounts.';
+        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
         VATBaseLCY: Decimal;
         VATAmountLCY: Decimal;
         TotalVATBaseLCY: Decimal;
         TotalVATAmountLCY: Decimal;
         PrevLineAmount: Decimal;
         AppliesToText: Text;
-        AppliesToTextLbl: Label 'Applies to Document';
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.';
-        GreetingLbl: Label 'Hello';
-        ClosingLbl: Label 'Sincerely';
-        BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.';
-        TotalText: Text[50];
+        AppliesToTextLbl: Label 'Applies to Document', Comment = 'FRA="Document lettrage"';
+        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.', Comment = 'FRA="Vous devez spécifier un ou plusieurs filtres pour éviter d''imprimer accidentellement tous les documents."';
+        GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
+        ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
+        BodyLbl: Label 'Thank you for your business. Your credit memo is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre avoir est joint à ce message."';
 
     local procedure InitLogInteraction()
-    var
-        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Sales Cr. Memo") <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Cr. Memo") <> '';
     end;
 
     local procedure FindPostedShipmentDate(): Date
@@ -1052,11 +1035,11 @@ report 50001 "Standard Sales - Credit Memo W"
 
         ShipmentLine.GetLinesForSalesCreditMemoLine(Line, Header);
 
-        ShipmentLine.Reset();
-        ShipmentLine.SetRange("Line No.", Line."Line No.");
-        if ShipmentLine.FINDFIRST() then begin
+        ShipmentLine.RESET();
+        ShipmentLine.SETRANGE("Line No.", Line."Line No.");
+        if ShipmentLine.FIND('-') then begin
             SalesShipmentBuffer2 := ShipmentLine;
-            if not BoolDisplayShipmentInformation then
+            if not DisplayShipmentInformation then
                 if ShipmentLine.NEXT() = 0 then begin
                     ShipmentLine.GET(
                       SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
@@ -1081,7 +1064,7 @@ report 50001 "Standard Sales - Credit Memo W"
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
-        BoolLogInteraction := NewLogInteraction;
+        LogInteraction := NewLogInteraction;
         DisplayAssemblyInformation := DisplayAsmInfo;
     end;
 
@@ -1116,18 +1099,14 @@ report 50001 "Standard Sales - Credit Memo W"
     end;
 
     local procedure FormatDocumentFields(SalesCrMemoHeader: Record "Sales Cr.Memo Header")
-    var
-        Text01: Label '%1 %2', Comment = '%1 = "Applies-to Doc. Type" , %2 = "Applies-to Doc. No."';
     begin
-        with SalesCrMemoHeader do begin
-            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
-            FormatDocument.SetSalesPerson(SalespersonPurchaser, "Salesperson Code", SalesPersonText);
-            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
-            FormatDocument.SetPaymentMethod(PaymentMethod, "Payment Method Code", "Language Code");
-            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
+        FormatDocument.SetTotalLabels(SalesCrMemoHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetSalesPerson(SalespersonPurchaser, SalesCrMemoHeader."Salesperson Code", SalesPersonText);
+        FormatDocument.SetPaymentTerms(PaymentTerms, SalesCrMemoHeader."Payment Terms Code", SalesCrMemoHeader."Language Code");
+        FormatDocument.SetPaymentMethod(PaymentMethod, SalesCrMemoHeader."Payment Method Code", SalesCrMemoHeader."Language Code");
+        FormatDocument.SetShipmentMethod(ShipmentMethod, SalesCrMemoHeader."Shipment Method Code", SalesCrMemoHeader."Language Code");
 
-            FormatDocument.SetText("Applies-to Doc. No." <> '', STRSUBSTNO(Text01, FORMAT("Applies-to Doc. Type"), "Applies-to Doc. No."));
-        end;
+        FormatDocument.SetText(SalesCrMemoHeader."Applies-to Doc. No." <> '', STRSUBSTNO('%1 %2', FORMAT(SalesCrMemoHeader."Applies-to Doc. Type"), SalesCrMemoHeader."Applies-to Doc. No."));
     end;
 }
 

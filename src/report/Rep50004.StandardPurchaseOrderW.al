@@ -2,33 +2,33 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Purchases.Document;
 using System.Utilities;
-using System.Globalization;
 using Microsoft.Purchases.Vendor;
-using Microsoft.CRM.Interaction;
-using Microsoft.Purchases.Posting;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.CRM.Segment;
-using Microsoft.Utilities;
-using Microsoft.Finance.Currency;
-using Microsoft.Purchases.Setup;
-using Microsoft.Foundation.Address;
-using Microsoft.Finance.VAT.Calculation;
-using Microsoft.Inventory.Location;
-using Microsoft.Finance.ReceivablesPayables;
+using Microsoft.Foundation.Company;
 using Microsoft.CRM.Team;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Foundation.Shipping;
-using Microsoft.Foundation.Company;
+using Microsoft.Finance.VAT.Calculation;
+using Microsoft.Finance.ReceivablesPayables;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Inventory.Location;
+using System.Globalization;
+using Microsoft.Finance.Currency;
+using Microsoft.Purchases.Setup;
+using Microsoft.Foundation.Address;
+using Microsoft.Utilities;
+using Microsoft.Purchases.Posting;
+using Microsoft.CRM.Segment;
+using Microsoft.CRM.Interaction;
 report 50004 "Standard Purchase - Order W"
 {
-    RDLCLayout = './src/report/RDL/StandardPurchaseOrderW.rdlc';
-    WordLayout = './StandardPurchaseOrderW.docx';
-    Caption = 'Purchase - Order';
+    RDLCLayout = './src/report/rdl/StandardPurchaseOrderW.rdl';
+    WordLayout = './src/report/rdl/StandardPurchaseOrderW.docx';
+    Caption = 'Purchase - Order', Comment = 'FRA="Achat - Commande"';
     DefaultLayout = Word;
     EnableHyperlinks = true;
     PreviewMode = PrintLayout;
     WordMergeDataItem = "Purchase Header";
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -37,7 +37,7 @@ report 50004 "Standard Purchase - Order W"
             DataItemTableView = sorting("Document Type", "No.")
                                 where("Document Type" = const(Order));
             RequestFilterFields = "No.", "Buy-from Vendor No.", "No. Printed";
-            RequestFilterHeading = 'Standard Purchase - Order';
+            RequestFilterHeading = 'Standard Purchase - Order', Comment = 'FRA="Codes achat standard - commande"';
             column(CompanyAddress1; CompanyAddr[1])
             {
             }
@@ -134,16 +134,16 @@ report 50004 "Standard Purchase - Order W"
             column(CompanyVATRegistrationNo_Lbl; CompanyInfo.GetVATRegistrationNumberLbl())
             {
             }
-            column(CompanyLegalOffice; CompanyInfo.GetLegalOffice())
+            column(CompanyLegalOffice; '')
             {
             }
-            column(CompanyLegalOffice_Lbl; CompanyInfo.GetLegalOfficeLbl())
+            column(CompanyLegalOffice_Lbl; '')
             {
             }
-            column(CompanyCustomGiro; CompanyInfo.GetCustomGiro())
+            column(CompanyCustomGiro; '')
             {
             }
-            column(CompanyCustomGiro_Lbl; CompanyInfo.GetCustomGiroLbl())
+            column(CompanyCustomGiro_Lbl; '')
             {
             }
             column(DocType_PurchHeader; "Document Type")
@@ -206,7 +206,7 @@ report 50004 "Standard Purchase - Order W"
             column(AllowInvoiceDisc_Lbl; AllowInvoiceDiscCaptionLbl)
             {
             }
-            column(CurrRepPageNo; STRSUBSTNO(PageLbl, FORMAT(CurrReport.PAGENO())))
+            column(CurrRepPageNo; STRSUBSTNO(PageLbl, FORMAT('')))
             {
             }
             column(DocumentDate; FORMAT("Document Date", 0, 4))
@@ -422,7 +422,7 @@ report 50004 "Standard Purchase - Order W"
             column(OrderDate_Lbl; OrderDateLbl)
             {
             }
-            dataitem(DataItem4; "Purchase Line")
+            dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document Type" = field("Document Type"),
                                "Document No." = field("No.");
@@ -575,8 +575,8 @@ report 50004 "Standard Purchase - Order W"
                 var
                     TempPrepmtPurchLine: Record "Purchase Line" temporary;
                 begin
-                    Clear(TempPurchLine);
-                    Clear(PurchPost);
+                    CLEAR(TempPurchLine);
+                    CLEAR(PurchPost);
                     TempPurchLine.DELETEALL();
                     TempVATAmountLine.DELETEALL();
                     PurchPost.GetPurchLines("Purchase Header", TempPurchLine, 0);
@@ -598,7 +598,6 @@ report 50004 "Standard Purchase - Order W"
                     PurchasePostPrepayments.CalcVATAmountLines("Purchase Header", TempPrepmtPurchLine, TempPrepmtVATAmountLine, 0);
                     TempPrepmtVATAmountLine.DeductVATAmountLine(TempPrePmtVATAmountLineDeduct);
                     PurchasePostPrepayments.UpdateVATOnLines("Purchase Header", TempPrepmtPurchLine, TempPrepmtVATAmountLine, 0);
-                    //PurchasePostPrepayments.BuildInvLineBuffer2("Purchase Header", TempPrepmtPurchLine, 0, TempPrepaymentInvLineBuffer);
                     PurchasePostPrepayments.BuildInvLineBuffer("Purchase Header", TempPrepmtPurchLine, 0, TempPrepaymentInvLineBuffer);
                     PrepmtVATAmount := TempPrepmtVATAmountLine.GetTotalVATAmount();
                     PrepmtVATBaseAmount := TempPrepmtVATAmountLine.GetTotalVATBase();
@@ -690,7 +689,7 @@ report 50004 "Standard Purchase - Order W"
                     then
                         CurrReport.BREAK();
 
-                    SetRange(Number, 1, TempVATAmountLine.COUNT);
+                    SETRANGE(Number, 1, TempVATAmountLine.COUNT);
 
                     if GLSetup."LCY Code" = '' then
                         VALSpecLCYHeader := VATAmountSpecificationLbl + LocalCurrentyLbl
@@ -758,10 +757,10 @@ report 50004 "Standard Purchase - Order W"
                 trigger OnAfterGetRecord()
                 begin
                     if Number = 1 then begin
-                        if not TempPrepaymentInvLineBuffer.FINDFIRST() then
+                        if not TempPrepaymentInvLineBuffer.FIND('-') then
                             CurrReport.BREAK();
                     end else
-                        if TempPrepaymentInvLineBuffer.Next() = 0 then
+                        if TempPrepaymentInvLineBuffer.NEXT() = 0 then
                             CurrReport.BREAK();
 
                     if "Purchase Header"."Prices Including VAT" then
@@ -806,7 +805,7 @@ report 50004 "Standard Purchase - Order W"
 
                 trigger OnPreDataItem()
                 begin
-                    SetRange(Number, 1, TempPrepmtVATAmountLine.COUNT);
+                    SETRANGE(Number, 1, TempPrepmtVATAmountLine.COUNT);
                 end;
             }
             dataitem(LetterText; Integer)
@@ -827,16 +826,16 @@ report 50004 "Standard Purchase - Order W"
             trigger OnAfterGetRecord()
             begin
                 TotalAmount := 0;
-                CurrReport.LANGUAGE := CULanguage.GetLanguageID("Language Code");
+                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
                 FormatAddressFields("Purchase Header");
                 FormatDocumentFields("Purchase Header");
 
                 if not CurrReport.PREVIEW then begin
-                    if BoolArchiveDocument then
-                        ArchiveManagement.StorePurchDocument("Purchase Header", BoolLogInteraction);
+                    if ArchiveDocument then
+                        ArchiveManagement.StorePurchDocument("Purchase Header", LogInteraction);
 
-                    if BoolLogInteraction then
+                    if LogInteraction then
                         SegManagement.LogDocument(
                           13, "No.", 0, 0, DATABASE::Vendor, "Buy-from Vendor No.",
                           "Purchaser Code", '', "Posting Description", '');
@@ -855,26 +854,20 @@ report 50004 "Standard Purchase - Order W"
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(ArchiveDocument; BoolArchiveDocument)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(ArchiveDocumentF; ArchiveDocument)
                     {
                         ApplicationArea = Suite;
-                        Caption = 'Archive Document';
-                        ToolTip = 'Specifies whether to archive the order.';
+                        Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
                     }
-                    field(LogInteraction; BoolLogInteraction)
+                    field(LogInteractionF; LogInteraction)
                     {
                         ApplicationArea = Suite;
-                        Caption = 'Log Interaction';
+                        Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
-                        ToolTip = 'Specifies whether to log interaction.';
                     }
                 }
             }
-        }
-
-        actions
-        {
         }
 
         trigger OnInit()
@@ -884,15 +877,10 @@ report 50004 "Standard Purchase - Order W"
 
         trigger OnOpenPage()
         begin
-            BoolArchiveDocument := PurchSetup."Archive Orders";
-            LogInteractionEnable := BoolLogInteraction;
+            ArchiveDocument := PurchSetup."Archive Orders";
+            LogInteractionEnable := LogInteraction;
         end;
     }
-
-    labels
-    {
-    }
-
     trigger OnInitReport()
     begin
         GLSetup.GET();
@@ -922,15 +910,15 @@ report 50004 "Standard Purchase - Order W"
         TempPrepmtVATAmountLine: Record "VAT Amount Line" temporary;
         TempPrePmtVATAmountLineDeduct: Record "VAT Amount Line" temporary;
         TempVATAmountLine: Record "VAT Amount Line" temporary;
-        ArchiveManagement: Codeunit ArchiveManagement;
-        FormatAddr: Codeunit "Format Address";
-        FormatDocument: Codeunit "Format Document";
-        CULanguage: Codeunit Language;
-        PurchPost: Codeunit "Purch.-Post";
-        PurchasePostPrepayments: Codeunit "Purchase-Post Prepayments";
-        SegManagement: Codeunit SegManagement;
-        BoolArchiveDocument: Boolean;
-        BoolLogInteraction: Boolean;
+        ArchiveManagement: codeunit ArchiveManagement;
+        FormatAddr: codeunit "Format Address";
+        FormatDocument: codeunit "Format Document";
+        LanguageCdu: Codeunit Language;
+        PurchPost: codeunit "Purch.-Post";
+        PurchasePostPrepayments: codeunit "Purchase-Post Prepayments";
+        SegManagement: codeunit SegManagement;
+        ArchiveDocument: Boolean;
+        LogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         PrepmtLineAmount: Decimal;
         PrepmtTotalAmountInclVAT: Decimal;
@@ -947,90 +935,90 @@ report 50004 "Standard Purchase - Order W"
         VATDiscountAmount: Decimal;
         CompanyLogoPosition: Integer;
         OutputNo: Integer;
-        AllowInvoiceDiscCaptionLbl: Label 'Allow Invoice Discount';
-        AmountCaptionLbl: Label 'Amount';
-        BodyLbl: Label 'The purchase order is attached to this message.';
-        BuyerCaptionLbl: Label 'Buyer';
-        ClosingLbl: Label 'Sincerely';
-        CompanyInfoBankAccNoCaptionLbl: Label 'Account No.';
-        CompanyInfoBankNameCaptionLbl: Label 'Bank';
-        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.';
-        CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.';
-        ConfirmToCaptionLbl: Label 'Confirm To';
-        DirectUniCostCaptionLbl: Label 'Unit Price';
-        DocumentDateCaptionLbl: Label 'Document Date';
-        DocumentTitleLbl: Label 'Purchase Order';
-        EmailIDCaptionLbl: Label 'Email';
-        ExchangeRateLbl: Label 'Exchange rate: %1/%2', Comment = '%1 = CurrExchRate."Relational Exch. Rate Amount", %2 = CurrExchRate."Exchange Rate Amount"';
-        GreetingLbl: Label 'Hello';
-        HomePageCaptionLbl: Label 'Home Page';
-        InvDiscCaptionLbl: Label 'Invoice Discount:';
-        ItemDescriptionCaptionLbl: Label 'Description';
-        ItemLineAmountCaptionLbl: Label 'Line Amount';
-        ItemNumberCaptionLbl: Label 'Item No.';
-        ItemQuantityCaptionLbl: Label 'Quantity';
-        ItemUnitCaptionLbl: Label 'Unit';
-        ItemUnitOfMeasureCaptionLbl: Label 'Unit';
-        ItemUnitPriceCaptionLbl: Label 'Unit Price';
-        LocalCurrentyLbl: Label 'Local Currency';
-        OrderDateLbl: Label 'Order Date';
-        OrderNoCaptionLbl: Label 'Order No.';
-        PageCaptionLbl: Label 'Page';
-        PageLbl: Label 'Page %1', Comment = '%1 = Page No.';
-        PaymentDetailsCaptionLbl: Label 'Payment Details';
-        PaymentTermsDescCaptionLbl: Label 'Payment Terms';
-        PrepaymentSpecCaptionLbl: Label 'Prepayment Specification';
-        PrepmtInvBuDescCaptionLbl: Label 'Description';
-        PrepmtInvBufGLAccNoCaptionLbl: Label 'G/L Account No.';
-        PrepymtTermsDescCaptionLbl: Label 'Prepmt. Payment Terms';
-        PrepymtVATAmtSpecCaptionLbl: Label 'Prepayment VAT Amount Specification';
-        PricesIncludingVATCaptionLbl: Label 'Prices Including VAT';
-        PricesInclVATtxtLbl: Label 'Prices Including VAT';
-        PurchLineInvDiscAmtCaptionLbl: Label 'Invoice Discount Amount';
-        PurchLineLineDiscCaptionLbl: Label 'Discount %';
-        PurchOrderCaptionLbl: Label 'PURCHASE ORDER';
-        PurchOrderDateCaptionLbl: Label 'Purchase Order Date:';
-        PurchOrderNumCaptionLbl: Label 'Purchase Order Number:';
-        ReceivebyCaptionLbl: Label 'Receive By';
-        ShipmentMethodDescCaptionLbl: Label 'Shipment Method';
-        ShiptoAddressCaptionLbl: Label 'Ship-to Address';
-        SubtotalCaptionLbl: Label 'Subtotal';
-        TaxIdentTypeCaptionLbl: Label 'Tax Ident. Type';
-        ToCaptionLbl: Label 'To:';
-        TotalCaptionLbl: Label 'Total';
-        TotalPriceCaptionLbl: Label 'Total Price';
-        VALVATBaseLCYCaptionLbl: Label 'VAT Base';
-        VATAmountSpecificationLbl: Label 'VAT Amount Specification in ';
-        VATAmtLineInvDiscBaseAmtCaptionLbl: Label 'Invoice Discount Base Amount';
-        VATAmtLineLineAmtCaptionLbl: Label 'Line Amount';
-        VATAmtLineVATAmtCaptionLbl: Label 'VAT Amount';
-        VATAmtLineVATCaptionLbl: Label 'VAT %';
-        VATAmtSpecCaptionLbl: Label 'VAT Amount Specification';
-        VATDiscountAmountCaptionLbl: Label 'Payment Discount on VAT';
-        VATIdentifierCaptionLbl: Label 'VAT Identifier';
-        VendNoCaptionLbl: Label 'Vendor No.';
-        VendorIDCaptionLbl: Label 'Vendor ID';
+        AllowInvoiceDiscCaptionLbl: Label 'Allow Invoice Discount', Comment = 'FRA="Autoriser remise facture"';
+        AmountCaptionLbl: Label 'Amount', Comment = 'FRA="Montant"';
+        BodyLbl: Label 'The purchase order is attached to this message.', Comment = 'FRA="La commande achat est jointe à ce message."';
+        BuyerCaptionLbl: Label 'Buyer', Comment = 'FRA="Acheteur"';
+        ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
+        CompanyInfoBankAccNoCaptionLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
+        CompanyInfoBankNameCaptionLbl: Label 'Bank', Comment = 'FRA="Banque"';
+        CompanyInfoGiroNoCaptionLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
+        CompanyInfoPhoneNoCaptionLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
+        ConfirmToCaptionLbl: Label 'Confirm To', Comment = 'FRA="Confirmer à"';
+        DirectUniCostCaptionLbl: Label 'Unit Price', Comment = 'FRA="Prix unitaire"';
+        DocumentDateCaptionLbl: Label 'Document Date', Comment = 'FRA="Date document"';
+        DocumentTitleLbl: Label 'Purchase Order', Comment = 'FRA="Commande achat"';
+        EmailIDCaptionLbl: Label 'Email', Comment = 'FRA="Adresse e-mail"';
+        ExchangeRateLbl: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
+        GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
+        HomePageCaptionLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
+        InvDiscCaptionLbl: Label 'Invoice Discount:', Comment = 'FRA="Remise facture :"';
+        ItemDescriptionCaptionLbl: Label 'Description', Comment = 'FRA="Description"';
+        ItemLineAmountCaptionLbl: Label 'Line Amount', Comment = 'FRA="Montant ligne"';
+        ItemNumberCaptionLbl: Label 'Item No.', Comment = 'FRA="N° article"';
+        ItemQuantityCaptionLbl: Label 'Quantity', Comment = 'FRA="Quantité"';
+        ItemUnitCaptionLbl: Label 'Unit', Comment = 'FRA="Unité"';
+        ItemUnitOfMeasureCaptionLbl: Label 'Unit', Comment = 'FRA="Unité"';
+        ItemUnitPriceCaptionLbl: Label 'Unit Price', Comment = 'FRA="Prix unitaire"';
+        LocalCurrentyLbl: Label 'Local Currency', Comment = 'FRA="Devise société"';
+        OrderDateLbl: Label 'Order Date', Comment = 'FRA="Date commande"';
+        OrderNoCaptionLbl: Label 'Order No.', Comment = 'FRA="N° commande"';
+        PageCaptionLbl: Label 'Page', Comment = 'FRA="Page"';
+        PageLbl: Label 'Page %1', Comment = 'FRA="Page %1"';
+        PaymentDetailsCaptionLbl: Label 'Payment Details', Comment = 'FRA="Détail paiement"';
+        PaymentTermsDescCaptionLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        PrepaymentSpecCaptionLbl: Label 'Prepayment Specification', Comment = 'FRA="Spécification acompte"';
+        PrepmtInvBuDescCaptionLbl: Label 'Description', Comment = 'FRA="Désignation"';
+        PrepmtInvBufGLAccNoCaptionLbl: Label 'G/L Account No.', Comment = 'FRA="N° compte général"';
+        PrepymtTermsDescCaptionLbl: Label 'Prepmt. Payment Terms', Comment = 'FRA="Conditions paiement acompte"';
+        PrepymtVATAmtSpecCaptionLbl: Label 'Prepayment VAT Amount Specification', Comment = 'FRA="Spécification montant TVA acompte"';
+        PricesIncludingVATCaptionLbl: Label 'Prices Including VAT', Comment = 'FRA="Prix TTC"';
+        PricesInclVATtxtLbl: Label 'Prices Including VAT', Comment = 'FRA="Prix TTC"';
+        PurchLineInvDiscAmtCaptionLbl: Label 'Invoice Discount Amount', Comment = 'FRA="Montant remise facture"';
+        PurchLineLineDiscCaptionLbl: Label 'Discount %', Comment = 'FRA="% remise"';
+        PurchOrderCaptionLbl: Label 'PURCHASE ORDER', Comment = 'FRA="COMMANDE ACHAT"';
+        PurchOrderDateCaptionLbl: Label 'Purchase Order Date:', Comment = 'FRA="Date Commande achat :"';
+        PurchOrderNumCaptionLbl: Label 'Purchase Order Number:', Comment = 'FRA="N° commande achat :"';
+        ReceivebyCaptionLbl: Label 'Receive By', Comment = 'FRA="Réceptionner par"';
+        ShipmentMethodDescCaptionLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
+        ShiptoAddressCaptionLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
+        SubtotalCaptionLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        TaxIdentTypeCaptionLbl: Label 'Tax Ident. Type', Comment = 'FRA="Type Ident. Taxe"';
+        ToCaptionLbl: Label 'To:', Comment = 'FRA="À :"';
+        TotalCaptionLbl: Label 'Total', Comment = 'FRA="Total"';
+        TotalPriceCaptionLbl: Label 'Total Price', Comment = 'FRA="Prix total"';
+        VALVATBaseLCYCaptionLbl: Label 'VAT Base', Comment = 'FRA="Base TVA"';
+        VATAmountSpecificationLbl: Label 'VAT Amount Specification in ', Comment = 'FRA="Détail TVA dans "';
+        VATAmtLineInvDiscBaseAmtCaptionLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
+        VATAmtLineLineAmtCaptionLbl: Label 'Line Amount', Comment = 'FRA="Montant ligne"';
+        VATAmtLineVATAmtCaptionLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        VATAmtLineVATCaptionLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
+        VATAmtSpecCaptionLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
+        VATDiscountAmountCaptionLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
+        VATIdentifierCaptionLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
+        VendNoCaptionLbl: Label 'Vendor No.', Comment = 'FRA="N° fournisseur"';
+        VendorIDCaptionLbl: Label 'Vendor ID', Comment = 'FRA="ID fournisseur"';
         AllowInvDisctxt: Text[30];
-        PurchaserText: Text[30];
-        BuyFromAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        PurchaserText: Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];
         VALExchRate: Text[50];
-        VendAddr: array[8] of Text[50];
         ReferenceText: Text[80];
         VALSpecLCYHeader: Text[80];
         VATNoText: Text[80];
+        BuyFromAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        VendAddr: array[8] of Text[100];
         DimText: Text[120];
 
     procedure InitializeRequest(LogInteractionParam: Boolean)
     begin
-        BoolLogInteraction := LogInteractionParam;
+        LogInteraction := LogInteractionParam;
     end;
 
-    local procedure FormatAddressFields(var PurchaseHeader: Record "Purchase Header")
+    local procedure FormatAddressFields(var PurchaseHeader: Record 38)
     begin
         FormatAddr.GetCompanyAddr(PurchaseHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
         FormatAddr.PurchHeaderBuyFrom(BuyFromAddr, PurchaseHeader);
@@ -1039,24 +1027,21 @@ report 50004 "Standard Purchase - Order W"
         FormatAddr.PurchHeaderShipTo(ShipToAddr, PurchaseHeader);
     end;
 
-    local procedure FormatDocumentFields(PurchaseHeader: Record "Purchase Header")
+    local procedure FormatDocumentFields(PurchaseHeader: Record 38)
     begin
-        with PurchaseHeader do begin
-            FormatDocument.SetTotalLabels("Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
-            FormatDocument.SetPurchaser(SalespersonPurchaser, "Purchaser Code", PurchaserText);
-            FormatDocument.SetPaymentTerms(PaymentTerms, "Payment Terms Code", "Language Code");
-            FormatDocument.SetPaymentTerms(PrepmtPaymentTerms, "Prepmt. Payment Terms Code", "Language Code");
-            FormatDocument.SetShipmentMethod(ShipmentMethod, "Shipment Method Code", "Language Code");
-            ReferenceText := FormatDocument.SetText("Your Reference" <> '', FIELDCAPTION("Your Reference"));
-            VATNoText := FormatDocument.SetText("VAT Registration No." <> '', FIELDCAPTION("VAT Registration No."));
-        end;
+        FormatDocument.SetTotalLabels(PurchaseHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetPurchaser(SalespersonPurchaser, PurchaseHeader."Purchaser Code", PurchaserText);
+        FormatDocument.SetPaymentTerms(PaymentTerms, PurchaseHeader."Payment Terms Code", PurchaseHeader."Language Code");
+        FormatDocument.SetPaymentTerms(PrepmtPaymentTerms, PurchaseHeader."Prepmt. Payment Terms Code", PurchaseHeader."Language Code");
+        FormatDocument.SetShipmentMethod(ShipmentMethod, PurchaseHeader."Shipment Method Code", PurchaseHeader."Language Code");
+
+        ReferenceText := FormatDocument.SetText(PurchaseHeader."Your Reference" <> '', PurchaseHeader.FIELDCAPTION("Your Reference"));
+        VATNoText := FormatDocument.SetText(PurchaseHeader."VAT Registration No." <> '', PurchaseHeader.FIELDCAPTION("VAT Registration No."));
     end;
 
     local procedure InitLogInteraction()
-    var
-        DocumentType: Enum "Interaction Log Entry Document Type";
     begin
-        BoolLogInteraction := SegManagement.FindInteractionTemplateCode(DocumentType::"Purch. Ord.") <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Purch. Ord.") <> '';
     end;
 }
 

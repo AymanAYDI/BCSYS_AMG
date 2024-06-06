@@ -1,5 +1,4 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Purchases.Vendor;
 using System.Utilities;
 using Microsoft.Purchases.Payables;
@@ -7,10 +6,9 @@ using Microsoft.Foundation.Period;
 report 50013 "Grand Livre Fourn. Modif."
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/RDL/GrandLivreFournModif.rdlc';
-    Caption = 'Vendor Detail Trial Balance';
-    ApplicationArea = All;
-
+    RDLCLayout = './src/report/rdl/GrandLivreFournModif.rdl';
+    Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre Fournisseurs"';
+    UsageCategory = None;
     dataset
     {
         dataitem(Vendor; Vendor)
@@ -31,7 +29,7 @@ report 50013 "Grand Livre Fourn. Modif."
             column(STRSUBSTNO_Text004_PreviousStartDate_; STRSUBSTNO(Text004, PreviousStartDate))
             {
             }
-            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, CurrReport.PAGENO()))
+            column(STRSUBSTNO_Text005_CurrReport_PAGENO_; STRSUBSTNO(Text005, ''))
             {
             }
             column(PageCaption; STRSUBSTNO(Text005, ''))
@@ -40,7 +38,7 @@ report 50013 "Grand Livre Fourn. Modif."
             column(PrintedByCaption; STRSUBSTNO(Text003, ''))
             {
             }
-            column(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+            column(ExcludeBalanceOnly; ExcludeBalanceOnly)
             {
             }
             column(Customer_TABLECAPTION__________Filter; Vendor.TABLECAPTION + ': ' + Filter)
@@ -160,7 +158,7 @@ report 50013 "Grand Livre Fourn. Modif."
             column(Grand_TotalCaption; Grand_TotalCaptionLbl)
             {
             }
-            column(AffichageEcrituresOuvretes; BoolShowOnlyUnappliedWritings)
+            column(AffichageEcrituresOuvretes; ShowOnlyUnappliedWritings)
             {
             }
             column(PreviousDebitAmountLCY_Open; PreviousDebitAmountLCY_Open)
@@ -366,11 +364,11 @@ report 50013 "Grand Livre Fourn. Modif."
 
 
                         // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if BoolShowOnlyUnappliedWritings then begin
+                        if ShowOnlyUnappliedWritings then begin
                             GRecVendorLedgEntry.RESET();
                             if GRecVendorLedgEntry.GET("Vendor Ledger Entry No.") then begin
-                                GRecVendorLedgEntry.SetRange("Date Filter", StartDate, EndDate);
-                                //  GRecVendorLedgEntry.SetRange("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
+                                GRecVendorLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
+                                //  GRecVendorLedgEntry.SETRANGE("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
                                 GRecVendorLedgEntry.CALCFIELDS("Remaining Amount");
                                 if GRecVendorLedgEntry."Remaining Amount" <> 0 then GBooOpen := true else GBooOpen := false;
                                 if GRecVendorLedgEntry."Remaining Amount" > 0 then begin
@@ -398,13 +396,13 @@ report 50013 "Grand Livre Fourn. Modif."
 
                     trigger OnPreDataItem()
                     begin
-                        if BoolDocNumSort then
+                        if DocNumSort then
                             SETCURRENTKEY("Vendor No.", "Document No.", "Posting Date");
                         if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
                         if EndDate < Date."Period End" then
                             Date."Period End" := EndDate;
-                        SetRange("Posting Date", Date."Period Start", Date."Period End");
+                        SETRANGE("Posting Date", Date."Period Start", Date."Period End");
                     end;
                 }
 
@@ -417,7 +415,7 @@ report 50013 "Grand Livre Fourn. Modif."
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -432,8 +430,8 @@ report 50013 "Grand Livre Fourn. Modif."
 
                 VendorLedgEntry.SETCURRENTKEY(
                   "Vendor No.", "Posting Date", "Entry Type", "Initial Entry Global Dim. 1", "Initial Entry Global Dim. 2", "Currency Code");
-                VendorLedgEntry.SetRange("Vendor No.", "No.");
-                VendorLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
+                VendorLedgEntry.SETRANGE("Vendor No.", "No.");
+                VendorLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 VendorLedgEntry.SETFILTER(
                   "Entry Type", '%1|%2|%3|%4|%5|%6|%7|%8',
                   VendorLedgEntry."Entry Type"::"Initial Entry", VendorLedgEntry."Entry Type"::"Unrealized Loss",
@@ -444,16 +442,16 @@ report 50013 "Grand Livre Fourn. Modif."
                     repeat
                         PreviousDebitAmountLCY := PreviousDebitAmountLCY + VendorLedgEntry."Debit Amount (LCY)";
                         PreviousCreditAmountLCY := PreviousCreditAmountLCY + VendorLedgEntry."Credit Amount (LCY)";
-                    until VendorLedgEntry.Next() = 0;
+                    until VendorLedgEntry.NEXT() = 0;
 
                 // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
-                GRecVendorLedgEntry.Reset();
-                GRecVendorLedgEntry.SetRange("Vendor No.", "No.");
-                GRecVendorLedgEntry.SetRange("Posting Date", 0D, PreviousEndDate);
+                GRecVendorLedgEntry.RESET();
+                GRecVendorLedgEntry.SETRANGE("Vendor No.", "No.");
+                GRecVendorLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 if GRecVendorLedgEntry.FINDSET() then
                     repeat
                         // DEB Calcul total lettré et non lettré 31/08/2015
-                        GRecVendorLedgEntry.SetRange("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
+                        GRecVendorLedgEntry.SETRANGE("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
 
                         GRecVendorLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
                         if GRecVendorLedgEntry."Remaining Amt. (LCY)" <> 0 then
@@ -463,14 +461,13 @@ report 50013 "Grand Livre Fourn. Modif."
                                 PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecVendorLedgEntry."Remaining Amt. (LCY)"
                             else
                                 PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open - GRecVendorLedgEntry."Remaining Amt. (LCY)";
-
                     // FIN Calcul total lettré et non lettré 31/08/2015
-                    until GRecVendorLedgEntry.Next() = 0;
+                    until GRecVendorLedgEntry.NEXT() = 0;
 
 
                 VendorLedgEntry2.COPYFILTERS(VendorLedgEntry);
                 VendorLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if BoolExcludeBalanceOnly then begin
+                if ExcludeBalanceOnly then begin
                     if VendorLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
@@ -497,13 +494,13 @@ report 50013 "Grand Livre Fourn. Modif."
                 CreditPeriodAmount_Open := 0;
 
                 //DEB MHR Solde ouvert de la période
-                GRecVendorLedgEntry.Reset();
-                GRecVendorLedgEntry.SetRange("Vendor No.", "No.");
-                GRecVendorLedgEntry.SetRange("Posting Date", StartDate, EndDate);
+                GRecVendorLedgEntry.RESET();
+                GRecVendorLedgEntry.SETRANGE("Vendor No.", "No.");
+                GRecVendorLedgEntry.SETRANGE("Posting Date", StartDate, EndDate);
                 if GRecVendorLedgEntry.FINDSET() then
                     repeat
                         // DEB Calcul total lettré et non lettré 31/08/2015
-                        GRecVendorLedgEntry.SetRange("Date Filter", StartDate, EndDate);
+                        GRecVendorLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
 
                         GRecVendorLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
                         if GRecVendorLedgEntry."Remaining Amt. (LCY)" <> 0 then
@@ -513,15 +510,13 @@ report 50013 "Grand Livre Fourn. Modif."
                                 DebitPeriodAmount_Open := DebitPeriodAmount_Open + GRecVendorLedgEntry."Remaining Amt. (LCY)"
                             else
                                 CreditPeriodAmount_Open := CreditPeriodAmount_Open - GRecVendorLedgEntry."Remaining Amt. (LCY)";
-
-
                     // FIN Calcul total lettré et non lettré 31/08/2015
-                    until GRecVendorLedgEntry.Next() = 0;
+                    until GRecVendorLedgEntry.NEXT() = 0;
                 // FIN MHR
 
 
                 // FIN Calcul total lettré et non lettré 31/08/2015
-                CurrReport.PRINTONLYIFDETAIL := BoolExcludeBalanceOnly or (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPostDataItem()
@@ -530,8 +525,6 @@ report 50013 "Grand Livre Fourn. Modif."
             end;
 
             trigger OnPreDataItem()
-            var
-                AMG_Functions: Codeunit AMG_Functions;
             begin
                 if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
@@ -562,46 +555,30 @@ report 50013 "Grand Livre Fourn. Modif."
             {
                 group(Options)
                 {
-                    Caption = 'Options';
-                    field(DocNumSort; BoolDocNumSort)
+                    Caption = 'Options', Comment = 'FRA="Options"';
+                    field(DocNumSortF; DocNumSort)
                     {
-                        Caption = 'Sorted by Document No.';
+                        Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                         Visible = false;
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Sorted by Document No. field.';
                     }
-                    field(ExcludeBalanceOnly; BoolExcludeBalanceOnly)
+                    field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        Caption = 'Exclude Vendors That Have a Balance Only';
+                        Caption = 'Exclude Vendors That Have a Balance Only', Comment = 'FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"';
                         MultiLine = true;
                         Visible = false;
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Exclude Vendors That Have a Balance Only field.';
                     }
-                    field(ShowOnlyUnappliedWritings; BoolShowOnlyUnappliedWritings)
+                    field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
                     {
-                        Caption = 'Show Only Unapplied Writings';
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Show Only Unapplied Writings field.';
+                        Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
                     }
-                    field(GBoolSoldeZero; BoolSoldeZero)
+                    field(GBoolSoldeZeroF; GBoolSoldeZero)
                     {
-                        Caption = 'Exclure les fournisseurs avec solde à 0';
+                        Caption = 'Exclure les fournisseurs avec solde à 0', Comment = 'FRA="Exclure les fournisseurs avec solde à 0"';
                         Visible = false;
-                        ApplicationArea = All;
-                        ToolTip = 'Specifies the value of the Exclure les fournisseurs avec solde à 0 field.';
                     }
                 }
             }
         }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 
     trigger OnInitReport()
@@ -620,12 +597,13 @@ report 50013 "Grand Livre Fourn. Modif."
         VendorLedgEntry2: Record "Detailed Vendor Ledg. Entry";
         GRecVendorLedgEntry: Record "Vendor Ledger Entry";
         OriginalLedgerEntry: Record "Vendor Ledger Entry";
+        AMG_Functions: Codeunit AMG_Functions;
         FiltreDateCalc: codeunit "DateFilter-Calc";
-        BoolDocNumSort: Boolean;
-        BoolExcludeBalanceOnly: Boolean;
-        BoolSoldeZero: Boolean;
+        DocNumSort: Boolean;
+        ExcludeBalanceOnly: Boolean;
+        GBoolSoldeZero: Boolean;
         GBooOpen: Boolean;
-        BoolShowOnlyUnappliedWritings: Boolean;
+        ShowOnlyUnappliedWritings: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
@@ -649,33 +627,33 @@ report 50013 "Grand Livre Fourn. Modif."
         ReportCreditAmountLCY: Decimal;
         ReportDebitAmountLCY: Decimal;
         DatePeriodTypeInt: Integer;
-        BalanceCaptionLbl: Label 'Balance';
-        ContinuedCaptionLbl: Label 'Continued';
-        CreditCaptionLbl: Label 'Credit';
-        Current_pageCaptionLbl: Label 'Current page';
-        Customer_Detail_Trial_BalanceCaptionLbl: Label 'Customer Detail Trial Balance';
-        DebitCaptionLbl: Label 'Debit';
-        DescriptionCaptionLbl: Label 'Description';
-        Document_No_CaptionLbl: Label 'Document No.';
-        External_Document_No_CaptionLbl: Label 'External Document No.';
-        Grand_TotalCaptionLbl: Label 'Grand Total';
-        Posting_DateCaptionLbl: Label 'Posting Date';
-        Previous_pageCaptionLbl: Label 'Previous page';
-        Source_CodeCaptionLbl: Label 'Source Code';
-        Text001: Label 'You must fill in the %1 field.', Comment = '%1="Date Filter"';
-        Text002: Label 'You must specify a Starting Date.';
-        Text003: Label 'Printed by %1', Comment = '%1=USERID';
-        Text004: Label 'Fiscal Year Start Date : %1', Comment = '%1=PreviousStartDate';
-        Text005: Label 'Page %1', Comment = '%1=PAGENO';
-        Text006: Label 'Balance at %1 ', Comment = '%1=PreviousEndDate';
-        Text007: Label 'Balance at %1', Comment = '%1=EndDate';
-        Text008: Label 'Total';
-        Text009: Label 'Balance Unrecognized at %1', Comment = '%1=PreviousEndDate';
-        This_report_also_includes_customers_that_only_have_balances_CaptionLbl: Label 'This report also includes customers that only have balances.';
-        To_be_continuedCaptionLbl: Label 'To be continued';
-        Total_Date_RangeCaptionLbl: Label 'Total Date Range';
+        BalanceCaptionLbl: Label 'Balance', Comment = 'FRA="Solde"';
+        ContinuedCaptionLbl: Label 'Continued', Comment = 'FRA="Suite"';
+        CreditCaptionLbl: Label 'Credit', Comment = 'FRA="Crédit"';
+        Current_pageCaptionLbl: Label 'Current page', Comment = 'FRA="Page courante"';
+        Customer_Detail_Trial_BalanceCaptionLbl: Label 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
+        DebitCaptionLbl: Label 'Debit', Comment = 'FRA="Débit"';
+        DescriptionCaptionLbl: Label 'Description', Comment = 'FRA="Désignation"';
+        Document_No_CaptionLbl: Label 'Document No.', Comment = 'FRA="N° document"';
+        External_Document_No_CaptionLbl: Label 'External Document No.', Comment = 'FRA="N° doc. externe"';
+        Grand_TotalCaptionLbl: Label 'Grand Total', Comment = 'FRA="Total général"';
+        Posting_DateCaptionLbl: Label 'Posting Date', Comment = 'FRA="Date comptabilisation"';
+        Previous_pageCaptionLbl: Label 'Previous page', Comment = 'FRA="Page précédente"';
+        Source_CodeCaptionLbl: Label 'Source Code', Comment = 'FRA="Code journal"';
+        Text001: Label 'You must fill in the %1 field.', Comment = 'FRA="Vous devez renseigner le champ %1."';
+        Text002: Label 'You must specify a Starting Date.', Comment = 'FRA="Vous devez spécifier une date de début."';
+        Text003: Label 'Printed by %1', Comment = 'FRA="Imprimé par %1"';
+        Text004: Label 'Fiscal Year Start Date : %1', Comment = 'FRA="Début exercice comptable : %1"';
+        Text005: Label 'Page %1', Comment = 'FRA="Page %1"';
+        Text006: Label 'Balance at %1 ', Comment = 'FRA="Solde au %1 "';
+        Text007: Label 'Balance at %1', Comment = 'FRA="Solde au %1"';
+        Text008: Label 'Total', Comment = 'FRA="Total"';
+        Text009: Label 'Solde Non-lettré au %1', Comment = 'FRA="Solde Non-lettré au %1"';
+        This_report_also_includes_customers_that_only_have_balances_CaptionLbl: Label 'This report also includes customers that only have balances.', Comment = 'FRA="Cet état inclut aussi les fournisseurs ne présentant que des soldes."';
+        To_be_continuedCaptionLbl: Label 'To be continued', Comment = 'FRA="À suivre"';
+        Total_Date_RangeCaptionLbl: Label 'Total Date Range', Comment = 'FRA="Total plage de dates"';
         TotalBy: Option Date,Week,Month,Quarter,Year;
         "Filter": Text;
-        TextDate: Text[30]; //TODO Verif was (TextDate: Text;)
+        TextDate: Text;
 }
 

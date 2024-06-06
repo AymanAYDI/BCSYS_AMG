@@ -1,10 +1,9 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Inventory.Item;
 report 50005 "MAJ PriceProfit Calculation"
 {
     ProcessingOnly = true;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -16,26 +15,11 @@ report 50005 "MAJ PriceProfit Calculation"
 
             trigger OnAfterGetRecord()
             begin
-                Validate("Price/Profit Calculation", Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit");
-                Modify();
+                //DELPHI AUB 11.06.2019 - MAJ du mode de calcul du prix de vente
+                VALIDATE("Price/Profit Calculation", Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit");
+                MODIFY;
             end;
         }
-    }
-
-    requestpage
-    {
-
-        layout
-        {
-        }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 }
 
