@@ -57,7 +57,7 @@ pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
                 trigger OnAction()
                 begin
                     Rec.SETFILTER("No.", Rec."No.");
-                    REPORT.RunModal(Report::"Etiquette Packaging", true, false, Rec)
+                    REPORT.RunModal(Report::"Etiquette Colisage", true, false, Rec)
                 end;
             }
         }

@@ -1,37 +1,38 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Sales.History;
-using System.Utilities;
 using Microsoft.Finance.VAT.Calculation;
+using System.Utilities;
 using Microsoft.Assembly.History;
 using Microsoft.Foundation.Reporting;
 using Microsoft.Bank.Setup;
-using Microsoft.Projects.Project.Job;
 using Microsoft.Utilities;
-using Microsoft.Foundation.Shipping;
-using Microsoft.Bank.BankAccount;
-using Microsoft.Foundation.PaymentTerms;
-using Microsoft.CRM.Team;
-using Microsoft.Foundation.Address;
-using Microsoft.Inventory.Location;
 using Microsoft.Foundation.Company;
+using Microsoft.Foundation.Address;
+using Microsoft.Foundation.Shipping;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Bank.BankAccount;
+using Microsoft.CRM.Team;
 using Microsoft.Sales.Customer;
-using Microsoft.Sales.Reminder;
-using System.Globalization;
-using Microsoft.Sales.Receivables;
-using Microsoft.Foundation.UOM;
-using Microsoft.CRM.Segment;
-using Microsoft.Sales.Setup;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Finance.Currency;
 using Microsoft.Finance.VAT.Clause;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Sales.Reminder;
+using Microsoft.Finance.Currency;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Sales.Setup;
+using Microsoft.Inventory.Location;
+using System.Globalization;
+using Microsoft.Inventory.Item;
+using Microsoft.CRM.Segment;
 using Microsoft.CRM.Contact;
+using Microsoft.Projects.Project.Job;
+using Microsoft.Sales.Receivables;
+using Microsoft.Foundation.UOM;
+using System.EMail;
 using Microsoft.CRM.Interaction;
-report 50002 "Standard Sales - Invoice word"
+report 50306 "Standard Sales - Invoice"
 {
-    RDLCLayout = './src/report/rdl/StandardSalesInvoiceword.rdl';
-    WordLayout = './src/report/rdl/StandardSalesInvoiceword.docx';
+    RDLCLayout = './src/report/rdl/StandardSalesInvoice.rdl';
+    WordLayout = './src/report/rdl/StandardSalesInvoice.docx';
     Caption = 'Sales - Invoice', Comment = 'FRA="Ventes : Facture"';
     DefaultLayout = Word;
     EnableHyperlinks = true;
@@ -65,6 +66,15 @@ report 50002 "Standard Sales - Invoice word"
             column(CompanyAddress6; CompanyAddr[6])
             {
             }
+            column(CompanyAddress7; CompanyAddr[7])
+            {
+            }
+            column(CompanyAddress8; CompanyAddr[8])
+            {
+            }
+            column(CompanyInfoPays; GTxtCompanyInfoPays)
+            {
+            }
             column(CompanyHomePage; CompanyInfo."Home Page")
             {
             }
@@ -77,7 +87,7 @@ report 50002 "Standard Sales - Invoice word"
             column(CompanyPhoneNo; CompanyInfo."Phone No.")
             {
             }
-            column(CompanyPhoneNo_Lbl; CompanyInfoPhoneNoLbl)
+            column(CompanyPhoneNo_Lbl; GTxtCompanyPhoneNo)
             {
             }
             column(CompanyGiroNo; CompanyInfo."Giro No.")
@@ -86,34 +96,34 @@ report 50002 "Standard Sales - Invoice word"
             column(CompanyGiroNo_Lbl; CompanyInfoGiroNoLbl)
             {
             }
-            column(CompanyBankName; CompanyInfo."Bank Name")
+            column(CompanyBankName; GTxtBankName)
             {
             }
             column(CompanyBankName_Lbl; CompanyInfoBankNameLbl)
             {
             }
-            column(CompanyBankBranchNo; CompanyInfo."Bank Branch No.")
+            column(CompanyBankBranchNo; GTxtBankBranchNo)
             {
             }
-            column(CompanyBankBranchNo_Lbl; CompanyInfo.FIELDCAPTION("Bank Branch No."))
+            column(CompanyBankBranchNo_Lbl; GTxtCompanyBankBranch)
             {
             }
-            column(CompanyBankAccountNo; CompanyInfo."Bank Account No.")
+            column(CompanyBankAccountNo; GTxtBankAcountNo)
             {
             }
-            column(CompanyBankAccountNo_Lbl; CompanyInfoBankAccNoLbl)
+            column(CompanyBankAccountNo_Lbl; GTxtCompanyBankNr)
             {
             }
-            column(CompanyIBAN; CompanyInfo.IBAN)
+            column(CompanyIBAN; GTxtBankIBAN)
             {
             }
             column(CompanyIBAN_Lbl; CompanyInfo.FIELDCAPTION(IBAN))
             {
             }
-            column(CompanySWIFT; CompanyInfo."SWIFT Code")
+            column(CompanySWIFT; GTxtBankSwift)
             {
             }
-            column(CompanySWIFT_Lbl; CompanyInfo.FIELDCAPTION("SWIFT Code"))
+            column(CompanySWIFT_Lbl; GTxtCompanyBankSWIFT)
             {
             }
             column(CompanyLogoPosition; CompanyLogoPosition)
@@ -134,7 +144,13 @@ report 50002 "Standard Sales - Invoice word"
             column(CompanyVATRegistrationNo; CompanyInfo.GetVATRegistrationNumber())
             {
             }
-            column(CompanyVATRegistrationNo_Lbl; CompanyInfo.GetVATRegistrationNumberLbl())
+            column(CompanyVATRegistrationNo_Lbl; GTxtCompanyVAT)
+            {
+            }
+            column(CompanyVAT_ICE_Lbl; GTxtCompanyVAT_ICE)
+            {
+            }
+            column(TxtOrigineCE_ICE; GTxtOrigineCE)
             {
             }
             column(CompanyLegalOffice; '')
@@ -150,6 +166,12 @@ report 50002 "Standard Sales - Invoice word"
             {
             }
             column(CompanyLegalStatement; GetLegalStatement())
+            {
+            }
+            column(CompanyNoEORI; CompanyInfo."No. EORI")
+            {
+            }
+            column(CompanyNoEORI_Lbl; CompanyInfo.FIELDCAPTION("No. EORI"))
             {
             }
             column(DisplayAdditionalFeeNote; DisplayAdditionalFeeNote)
@@ -245,7 +267,7 @@ report 50002 "Standard Sales - Invoice word"
             column(PaymentMethodDescription_Lbl; PaymentMethodDescLbl)
             {
             }
-            column(DocumentCopyText; STRSUBSTNO(DocumentCaption(), CopyText))
+            column(DocumentCopyText; GTxtDocumentCopyText)
             {
             }
             column(BilltoCustumerNo; "Bill-to Customer No.")
@@ -290,9 +312,6 @@ report 50002 "Standard Sales - Invoice word"
             column(SalesPerson_Lbl; SalespersonLbl)
             {
             }
-            column(Salesperson_Lbl2; SalespersonLbl2)
-            {
-            }
             column(SalesPersonBlank_Lbl; SalesPersonText)
             {
             }
@@ -317,7 +336,22 @@ report 50002 "Standard Sales - Invoice word"
             column(GlobalLocationNumber_Lbl; GetCustomerGlobalLocationNumberLbl())
             {
             }
+            column(SellToFaxNo; GetSellToCustomerFaxNo())
+            {
+            }
+            column(SellToPhoneNo; "Sell-to Phone No.")
+            {
+            }
             column(PaymentReference; GetPaymentReference())
+            {
+            }
+            column(From_Lbl; FromLbl)
+            {
+            }
+            column(BilledTo_Lbl; BilledToLbl)
+            {
+            }
+            column(ChecksPayable_Lbl; ChecksPayableText)
             {
             }
             column(PaymentReference_Lbl; GetPaymentReferenceLbl())
@@ -359,10 +393,28 @@ report 50002 "Standard Sales - Invoice word"
             column(SalesInvoiceLineDiscount_Lbl; SalesInvLineDiscLbl)
             {
             }
-            column(DocumentTitle_Lbl; SalesInvoiceLbl)
+            column(Questions_Lbl; QuestionsLbl)
+            {
+            }
+            column(Contact_Lbl; CompanyInfo.GetContactUsText())
+            {
+            }
+            column(DocumentTitle_Lbl; DocumentCaption())
+            {
+            }
+            column(YourDocumentTitle_Lbl; YourSalesInvoiceLbl)
+            {
+            }
+            column(Thanks_Lbl; ThanksLbl)
             {
             }
             column(ShowWorkDescription; ShowWorkDescription)
+            {
+            }
+            column(RemainingAmount; RemainingAmount)
+            {
+            }
+            column(RemainingAmountText; RemainingAmountTxt)
             {
             }
             column(Subtotal_Lbl; SubtotalLbl)
@@ -404,15 +456,78 @@ report 50002 "Standard Sales - Invoice word"
             column(ShippingAgentCode_Lbl; FIELDCAPTION("Shipping Agent Code"))
             {
             }
+            column(PaymentInstructions_Txt; PaymentInstructionsTxt)
+            {
+            }
+            column(CompanyFaxNo; CompanyInfo."Fax No.")
+            {
+            }
+            column(CompanyFaxNo_Lbl; GTxtCompanyFaxNo)
+            {
+            }
+            column(SalesPersonPhone; SalespersonPurchaser."Phone No.")
+            {
+            }
+            column(SalesPersonEmail; SalespersonPurchaser."E-Mail")
+            {
+            }
+            column(ShipAgent; Header."Shipping Agent Code")
+            {
+            }
+            column(NomTransporteur; GTxtTransporteur)
+            {
+            }
+            column(MentionLegalFR; GTxTMentionLegaleFR)
+            {
+            }
+            column(NumTVAClient; GTxtNumTVAClient)
+            {
+            }
+            column(FactorNom; FactorNom)
+            {
+            }
+            column(FactorTel; FactorTel)
+            {
+            }
+            column(FactorEmail; FactorEMail)
+            {
+            }
+            column(FactorAdresse; FactorAdresse)
+            {
+            }
+            column(FactorBanque; FactorBanque)
+            {
+            }
+            column(FactorRIB; FactorRIB)
+            {
+            }
+            column(FactorIBAN; FactorIBAN)
+            {
+            }
+            column(FacteurBIC; FactorBIC)
+            {
+            }
+            column(FactorTextDebut; FactorTextPrécédent)
+            {
+            }
+            column(FactorTexteFin; FactorTexteFin)
+            {
+            }
+            column(FactorTexteMilieu; FactorTexteMilieu)
+            {
+            }
+            column(NumCommande; TLblNoCommande)
+            {
+            }
             dataitem(Line; "Sales Invoice Line")
             {
-                DataItemLink = "Document No." = field("No.");
+                DataItemLink = "Document No." = FIELD("No.");
                 DataItemLinkReference = Header;
                 DataItemTableView = sorting("Document No.", "Line No.");
                 column(LineNo_Line; "Line No.")
                 {
                 }
-                column(AmountExcludingVAT_Line; ZeroIsBlanckDecimal(Amount))
+                column(AmountExcludingVAT_Line; Amount)
                 {
                     AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 1;
@@ -420,8 +535,9 @@ report 50002 "Standard Sales - Invoice word"
                 column(AmountExcludingVAT_Line_Lbl; FIELDCAPTION(Amount))
                 {
                 }
-                column(AmountIncludingVAT_Line; ZeroIsBlanckDecimal("Amount Including VAT"))
+                column(AmountIncludingVAT_Line; "Amount Including VAT")
                 {
+                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 1;
                 }
                 column(AmountIncludingVAT_Line_Lbl; FIELDCAPTION("Amount Including VAT"))
@@ -432,54 +548,62 @@ report 50002 "Standard Sales - Invoice word"
                 column(Description_Line; Description)
                 {
                 }
+                column(Description2_Line; "Description 2")
+                {
+                }
                 column(Description_Line_Lbl; FIELDCAPTION(Description))
                 {
                 }
-                column(LineDiscountPercent_Line; ZeroIsBlanckDecimal("Line Discount %"))
+                column(LineDiscountPercent_Line; "Line Discount %")
                 {
                 }
                 column(LineDiscountPercentText_Line; LineDiscountPctText)
                 {
                 }
-                column(LineAmount_Line; ZeroIsBlanckDecimal("Line Amount"))
+                column(LineDiscountAmount_Line; Line."Line Discount Amount")
                 {
+                }
+                column(LineAmount_Line; FormattedLineAmount)
+                {
+                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 1;
                 }
                 column(LineAmount_Line_Lbl; FIELDCAPTION("Line Amount"))
                 {
                 }
-                column(ItemNo_Line; "No.")
+                column(ItemNo_Line; GTxtItemNo)
                 {
                 }
-                column(ItemNo_Line_Lbl; FIELDCAPTION("No."))
+                column(ItemNo_Line_Lbl; GTxtItemNo_Line_Lbl)
                 {
                 }
-                column(ShipmentDate_Line; FORMAT(PostedShipmentDate))
+                column(ShipmentDate_Line; FORMAT("Shipment Date"))
                 {
                 }
                 column(ShipmentDate_Line_Lbl; PostedShipmentDateLbl)
                 {
                 }
-                column(Quantity_Line; ZeroIsBlanckInteger(Quantity))
+                column(Quantity_Line; FormattedQuantity)
                 {
                 }
-                column(Quantity_Line_Lbl; FIELDCAPTION(Quantity))
+                column(Quantity_Line_Lbl; GTxtQuantity_Line_Lbl)
                 {
                 }
                 column(Type_Line; FORMAT(Type))
                 {
                 }
-                column(UnitPrice; ZeroIsBlanckDecimal("Unit Price"))
+                column(UnitPrice; FormattedUnitPrice)
                 {
+                    AutoFormatExpression = GetCurrencyCode();
                     AutoFormatType = 2;
                 }
-                column(UnitPrice_Lbl; FIELDCAPTION("Unit Price"))
+                column(UnitPrice_Lbl; GTxtUnitPrice_Lbl)
                 {
                 }
                 column(UnitOfMeasure; "Unit of Measure")
                 {
                 }
-                column(UnitOfMeasure_Lbl; FIELDCAPTION("Unit of Measure"))
+                column(UnitOfMeasure_Lbl; GTxtUnitOfMeasure_Lbl)
                 {
                 }
                 column(VATIdentifier_Line; "VAT Identifier")
@@ -488,7 +612,7 @@ report 50002 "Standard Sales - Invoice word"
                 column(VATIdentifier_Line_Lbl; FIELDCAPTION("VAT Identifier"))
                 {
                 }
-                column(VATPct_Line; "VAT %")
+                column(VATPct_Line; FormattedVATPct)
                 {
                 }
                 column(VATPct_Line_Lbl; FIELDCAPTION("VAT %"))
@@ -517,6 +641,27 @@ report 50002 "Standard Sales - Invoice word"
                 column(JobNo; JobNo)
                 {
                 }
+                column(Reference_Externe; Line."Item Reference No.")
+                {
+                }
+                column(NomenclatureArticle; GTxtNomenclatureArticle)
+                {
+                }
+                column(CodeRegionOrigine; GTxtCodeRegionOrigine)
+                {
+                }
+                column(Unit_Lbl; UnitLbl)
+                {
+                }
+                column(Qty_Lbl; QtyLbl)
+                {
+                }
+                column(Price_Lbl; PriceLbl)
+                {
+                }
+                column(PricePer_Lbl; PricePerLbl)
+                {
+                }
                 dataitem(ShipmentLine; "Sales Shipment Buffer")
                 {
                     DataItemTableView = sorting("Document No.", "Line No.", "Entry No.");
@@ -530,8 +675,9 @@ report 50002 "Standard Sales - Invoice word"
                     column(PostingDate_ShipmentLine_Lbl; FIELDCAPTION("Posting Date"))
                     {
                     }
-                    column(Quantity_ShipmentLine; ZeroIsBlanckInteger(Quantity))
+                    column(Quantity_ShipmentLine; Quantity)
                     {
+                        DecimalPlaces = 0 : 5;
                     }
                     column(Quantity_ShipmentLine_Lbl; FIELDCAPTION(Quantity))
                     {
@@ -552,8 +698,9 @@ report 50002 "Standard Sales - Invoice word"
                     column(Description_AssemblyLine; Description)
                     {
                     }
-                    column(Quantity_AssemblyLine; ZeroIsBlanckInteger(Quantity))
+                    column(Quantity_AssemblyLine; Quantity)
                     {
+                        DecimalPlaces = 0 : 5;
                     }
                     column(UnitOfMeasure_AssemblyLine; GetUOMText("Unit of Measure Code"))
                     {
@@ -575,14 +722,16 @@ report 50002 "Standard Sales - Invoice word"
                 }
 
                 trigger OnAfterGetRecord()
+                var
+                    LRecCountry: Record "Country/Region";
                 begin
-                    JobNo := "Job No.";
-                    JobTaskNo := "Job Task No.";
-
-                    PostedShipmentDate := 0D;
-                    if Quantity <> 0 then
-                        PostedShipmentDate := FindPostedShipmentDate();
-
+                    //DEB DELPHI XAV 11/26/2018
+                    //DELPHI AUB 22.10.2019 1ère ligne commentée pour ne pas faire afficher les textes étendus
+                    //IF (Line.Type = Line.Type::Item) OR (Line.Type = Line.Type::"G/L Account") THEN
+                    if Line.Quantity = 0 then
+                        CurrReport.SKIP();
+                    //FIN DELPHI XAV 11/26/2018
+                    InitializeShipmentLine();
                     if Type = Type::"G/L Account" then
                         "No." := '';
 
@@ -619,6 +768,9 @@ report 50002 "Standard Sales - Invoice word"
                         CLEAR(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
 
+                    JobNo := "Job No.";
+                    JobTaskNo := "Job Task No.";
+
                     if JobTaskNo <> '' then begin
                         JobTaskNoLbl := JobTaskNoLbl2;
                         JobTaskDescription := GetJobTaskDescription(JobNo, JobTaskNo);
@@ -630,7 +782,43 @@ report 50002 "Standard Sales - Invoice word"
                     if JobNo <> '' then
                         JobNoLbl := JobNoLbl2
                     else
-                        JobNoLbl := ''
+                        JobNoLbl := '';
+
+                    FormatDocument.SetSalesInvoiceLine(Line, FormattedQuantity, FormattedUnitPrice, FormattedVATPct, FormattedLineAmount);
+
+                    // DEB DELPHI XAV
+                    GTxtNomenclatureArticle := '';
+                    GTxtCodeRegionOrigine := '';
+                    if Line.Type = Line.Type::Item then begin
+                        if GBooFactureExport then
+                            if GRecItem.GET(Line."No.") then
+                                if GRecItem."Tariff No." <> '' then
+                                    GTxtNomenclatureArticle := TarifDouanier + ' ' + GRecItem."Tariff No.";
+                        //DELPHI AUB 01.10.2019
+                        GRecItem.RESET();
+
+                        if GRecItem.GET(Line."No.") then begin
+                            if (GRecItem."Tariff No." <> '') and GBooAffichageOrigine then
+                                GTxtNomenclatureArticle := 'TD :' + GRecItem."Tariff No."
+                            else
+                                GTxtNomenclatureArticle := '';
+                            if (GRecItem."Country/Region of Origin Code" <> '') and GBooAffichageOrigine then begin
+                                if LRecCountry.GET(GRecItem."Country/Region of Origin Code") then
+                                    GTxtCodeRegionOrigine := ' Origine: ' + LRecCountry.Name
+                            end else
+                                GTxtCodeRegionOrigine := '';
+                        end;
+                        //END DELPHI AUB
+                    end;
+
+                    GTxtDesignationComplete := Line.Description + ' ' + Line."Description 2";
+                    // FIN DELPHI XAV
+                    //DELPHI AUB 15/02/2019
+                    GTxtItemNo := Line."No.";
+                    if Line.Type = Line.Type::Item then
+                        if Line."Item Reference No." <> '' then
+                            GTxtItemNo := Line."Item Reference No.";
+                    //END DELPHI AUB
                 end;
 
                 trigger OnPreDataItem()
@@ -648,7 +836,6 @@ report 50002 "Standard Sales - Invoice word"
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
-                    CompanyInfo.CALCFIELDS(Picture);
                 end;
             }
             dataitem(WorkDescriptionLines; Integer)
@@ -685,28 +872,31 @@ report 50002 "Standard Sales - Invoice word"
             {
                 DataItemTableView = sorting("VAT Identifier", "VAT Calculation Type", "Tax Group Code", "Use Tax", Positive);
                 UseTemporary = true;
-                column(InvoiceDiscountAmount_VATAmountLine; ZeroIsBlanckDecimal("Invoice Discount Amount"))
+                column(InvoiceDiscountAmount_VATAmountLine; "Invoice Discount Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(InvoiceDiscountAmount_VATAmountLine_Lbl; FIELDCAPTION("Invoice Discount Amount"))
                 {
                 }
-                column(InvoiceDiscountBaseAmount_VATAmountLine; ZeroIsBlanckDecimal("Inv. Disc. Base Amount"))
+                column(InvoiceDiscountBaseAmount_VATAmountLine; "Inv. Disc. Base Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(InvoiceDiscountBaseAmount_VATAmountLine_Lbl; FIELDCAPTION("Inv. Disc. Base Amount"))
                 {
                 }
-                column(LineAmount_VatAmountLine; ZeroIsBlanckDecimal("Line Amount"))
+                column(LineAmount_VatAmountLine; "Line Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(LineAmount_VatAmountLine_Lbl; FIELDCAPTION("Line Amount"))
                 {
                 }
-                column(VATAmount_VatAmountLine; ZeroIsBlanckDecimal("VAT Amount"))
+                column(VATAmount_VatAmountLine; "VAT Amount")
                 {
                     AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
@@ -714,20 +904,21 @@ report 50002 "Standard Sales - Invoice word"
                 column(VATAmount_VatAmountLine_Lbl; FIELDCAPTION("VAT Amount"))
                 {
                 }
-                column(VATAmountLCY_VATAmountLine; ZeroIsBlanckDecimal(VATAmountLCY))
+                column(VATAmountLCY_VATAmountLine; VATAmountLCY)
                 {
                 }
                 column(VATAmountLCY_VATAmountLine_Lbl; VATAmountLCYLbl)
                 {
                 }
-                column(VATBase_VatAmountLine; ZeroIsBlanckDecimal("VAT Base"))
+                column(VATBase_VatAmountLine; "VAT Base")
                 {
+                    AutoFormatExpression = Line.GetCurrencyCode();
                     AutoFormatType = 1;
                 }
                 column(VATBase_VatAmountLine_Lbl; FIELDCAPTION("VAT Base"))
                 {
                 }
-                column(VATBaseLCY_VATAmountLine; ZeroIsBlanckDecimal(VATBaseLCY))
+                column(VATBaseLCY_VATAmountLine; VATBaseLCY)
                 {
                 }
                 column(VATBaseLCY_VATAmountLine_Lbl; VATBaseLCYLbl)
@@ -772,6 +963,9 @@ report 50002 "Standard Sales - Invoice word"
 
                 trigger OnPreDataItem()
                 begin
+                    CLEAR(VATBaseLCY);
+                    CLEAR(VATAmountLCY);
+
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
                 end;
@@ -779,6 +973,9 @@ report 50002 "Standard Sales - Invoice word"
             dataitem(VATClauseLine; "VAT Amount Line")
             {
                 UseTemporary = true;
+                column(VATClausesHeader; VATClausesText)
+                {
+                }
                 column(VATIdentifier_VATClauseLine; "VAT Identifier")
                 {
                 }
@@ -794,11 +991,15 @@ report 50002 "Standard Sales - Invoice word"
                 column(Description2_VATClauseLine; VATClause."Description 2")
                 {
                 }
-                column(VATAmount_VATClauseLine; ZeroIsBlanckDecimal("VAT Amount"))
+                column(VATAmount_VATClauseLine; "VAT Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(NoOfVATClauses; COUNT)
+                {
+                }
+                column(VATClause1; GTxtVATClause1)
                 {
                 }
 
@@ -809,6 +1010,16 @@ report 50002 "Standard Sales - Invoice word"
                     if not VATClause.GET("VAT Clause Code") then
                         CurrReport.SKIP();
                     VATClause.TranslateDescription(Header."Language Code");
+                    // DEB DELPHI XAV
+                    GTxtVATClause1 += ' ' + VATClause.Description + ' ' + VATClause."Description 2";
+                end;
+
+                trigger OnPreDataItem()
+                begin
+                    if COUNT = 0 then
+                        VATClausesText := ''
+                    else
+                        VATClausesText := VATClausesLbl;
                 end;
             }
             dataitem(ReportTotalsLine; "Report Totals Buffer")
@@ -818,7 +1029,7 @@ report 50002 "Standard Sales - Invoice word"
                 column(Description_ReportTotalsLine; Description)
                 {
                 }
-                column(Amount_ReportTotalsLine; ZeroIsBlanckDecimal(Amount))
+                column(Amount_ReportTotalsLine; Amount)
                 {
                 }
                 column(AmountFormatted_ReportTotalsLine; "Amount Formatted")
@@ -878,7 +1089,7 @@ report 50002 "Standard Sales - Invoice word"
                 {
                 }
             }
-            dataitem(LeftHeader; 823)
+            dataitem(LeftHeader; "Name/Value Buffer")
             {
                 DataItemTableView = sorting(ID);
                 UseTemporary = true;
@@ -889,7 +1100,7 @@ report 50002 "Standard Sales - Invoice word"
                 {
                 }
             }
-            dataitem(RightHeader; 823)
+            dataitem(RightHeader; "Name/Value Buffer")
             {
                 DataItemTableView = sorting(ID);
                 UseTemporary = true;
@@ -928,29 +1139,33 @@ report 50002 "Standard Sales - Invoice word"
             {
                 DataItemTableView = sorting(Number)
                                     where(Number = const(1));
-                column(TotalNetAmount; ZeroIsBlanckDecimal(TotalAmount))
+                column(TotalNetAmount; TotalAmount)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATBaseLCY; ZeroIsBlanckDecimal(TotalVATBaseLCY))
+                column(TotalVATBaseLCY; TotalVATBaseLCY)
                 {
                 }
-                column(TotalAmountIncludingVAT; ZeroIsBlanckDecimal(TotalAmountInclVAT))
+                column(TotalAmountIncludingVAT; TotalAmountInclVAT)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmount; ZeroIsBlanckDecimal(TotalAmountVAT))
+                column(TotalVATAmount; TotalAmountVAT)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmountLCY; ZeroIsBlanckDecimal(TotalVATAmountLCY))
+                column(TotalVATAmountLCY; TotalVATAmountLCY)
                 {
                 }
-                column(TotalInvoiceDiscountAmount; ZeroIsBlanckDecimal(TotalInvDiscAmount))
+                column(TotalInvoiceDiscountAmount; TotalInvDiscAmount)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalPaymentDiscountOnVAT; ZeroIsBlanckDecimal(TotalPaymentDiscOnVAT))
+                column(TotalPaymentDiscountOnVAT; TotalPaymentDiscOnVAT)
                 {
                 }
                 column(TotalVATAmountText; VATAmountLine.VATAmountText())
@@ -962,17 +1177,18 @@ report 50002 "Standard Sales - Invoice word"
                 column(TotalIncludingVATText; TotalInclVATText)
                 {
                 }
-                column(TotalSubTotal; ZeroIsBlanckDecimal(TotalSubTotal))
+                column(TotalSubTotal; TotalSubTotal)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalSubTotalMinusInvoiceDiscount; ZeroIsBlanckDecimal(TotalSubTotal + TotalInvDiscAmount))
+                column(TotalSubTotalMinusInvoiceDiscount; TotalSubTotal + TotalInvDiscAmount)
                 {
                 }
                 column(TotalText; TotalText)
                 {
                 }
-                column(TotalAmountExclInclVAT; ZeroIsBlanckDecimal(TotalAmountExclInclVATValue))
+                column(TotalAmountExclInclVAT; TotalAmountExclInclVATValue)
                 {
                 }
                 column(TotalAmountExclInclVATText; TotalAmountExclInclVATTextValue)
@@ -996,16 +1212,18 @@ report 50002 "Standard Sales - Invoice word"
                 CurrencyExchangeRate: Record "Currency Exchange Rate";
                 PaymentServiceSetup: Record "Payment Service Setup";
             begin
+                CurrReport.LANGUAGE := LanguageMgt.GetLanguageIdOrDefault("Language Code");
+
                 FillLeftHeader();
                 FillRightHeader();
 
-                if not CurrReport.PREVIEW then
+                if not IsReportInPreviewMode() then
                     CODEUNIT.RUN(CODEUNIT::"Sales Inv.-Printed", Header);
-
-                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
 
                 CALCFIELDS("Work Description");
                 ShowWorkDescription := "Work Description".HASVALUE;
+
+                ChecksPayableText := STRSUBSTNO(ChecksPayableLbl, CompanyInfo.Name);
 
                 FormatAddressFields(Header);
                 FormatDocumentFields(Header);
@@ -1022,17 +1240,17 @@ report 50002 "Standard Sales - Invoice word"
 
                 GetLineFeeNoteOnReportHist("No.");
 
-                if LogInteraction and not CurrReport.PREVIEW then
-                    if "Bill-to Contact No." <> '' then
-                        SegManagement.LogDocument(
-                          4, "No.", 0, 0, DATABASE::Contact, "Bill-to Contact No.", "Salesperson Code",
-                          "Campaign No.", "Posting Description", '')
-                    else
-                        SegManagement.LogDocument(
-                          4, "No.", 0, 0, DATABASE::Customer, "Bill-to Customer No.", "Salesperson Code",
-                          "Campaign No.", "Posting Description", '');
-
                 PaymentServiceSetup.CreateReportingArgs(PaymentReportingArgument, Header);
+
+                CALCFIELDS("Amount Including VAT");
+                RemainingAmount := GetRemainingAmount();
+                if RemainingAmount = 0 then
+                    RemainingAmountTxt := AlreadyPaidLbl
+                else
+                    if RemainingAmount <> "Amount Including VAT" then
+                        RemainingAmountTxt := STRSUBSTNO(PartiallyPaidLbl, FORMAT(RemainingAmount, 0, '<Precision,2><Standard Format,0>'))
+                    else
+                        RemainingAmountTxt := '';
 
                 TotalSubTotal := 0;
                 TotalInvDiscAmount := 0;
@@ -1040,6 +1258,50 @@ report 50002 "Standard Sales - Invoice word"
                 TotalAmountVAT := 0;
                 TotalAmountInclVAT := 0;
                 TotalPaymentDiscOnVAT := 0;
+
+                // DELPHI AUB 11.06.2019
+                GTxtCompanyVAT_ICE := 'No. TVA';
+                GTxtOrigineCE := '';
+                if Cust.ICE then begin
+                    GTxtCompanyVAT_ICE := 'No. ICE';
+                    GTxtOrigineCE := 'L''exportateur des produits couverts par le présent document déclare que sauf indication claire du contraire ces produits ont l''origine préférentielle CE.';
+                end;
+                if Cust."VAT Registration No." = '' then
+                    GTxtCompanyVAT_ICE := '';
+
+                // DEB DELPHI XAV
+                if ShipmentMethod.GET(Header."Shipment Method Code") then begin
+                    if GrecTraductionTransport.GET(ShipmentMethod.Code, Header."Language Code") then
+                        GTxtTraductionTransport := GrecTraductionTransport.Description
+                    else
+                        GTxtTraductionTransport := ShipmentMethod.Description;
+                    if ShipmentMethod.Incoterms then
+                        GTxtCondLivraisonEtendues := GTxtTraductionTransport + ' - ' + Header."Compl. cond. livraison" + ' - Incoterms © 2010'
+                    else
+                        GTxtCondLivraisonEtendues := ShipmentMethod.Code + ' ' + GTxtTraductionTransport + ' - ' + Header."Compl. cond. livraison";
+                end;
+                if GrecTransporteur.GET(Header."Shipping Agent Code") then
+                    GTxtTransporteur := GrecTransporteur.Name
+                else
+                    GTxtTransporteur := Header."Shipping Agent Code";
+                GTxtBankName := CompanyInfo."Bank Name";
+                GTxtBankBranchNo := CompanyInfo."Bank Branch No.";
+                GTxtBankAcountNo := CompanyInfo."Bank Account No.";
+                GTxtBankIBAN := CompanyInfo.IBAN;
+                GTxtBankSwift := CompanyInfo."SWIFT Code";
+
+                if GRecCountry.GET(CompanyInfo."Country/Region Code") then
+                    GTxtCompanyInfoPays := GRecCountry.Name
+                else
+                    GTxtCompanyInfoPays := CompanyInfo.County;
+
+                if GRecCust2.GET("Bill-to Customer No.") then
+                    GTxtNumTVAClient := GRecCust2."VAT Registration No.";
+
+                if Header."Order No." <> '' then
+                    "GTxtN°Commande" := TLblNoCommande + ' ' + Header."Order No.";
+
+                //FIN DELPHI XAV
             end;
 
             trigger OnPreDataItem()
@@ -1068,6 +1330,7 @@ report 50002 "Standard Sales - Invoice word"
                     }
                     field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
+                        ApplicationArea = Assembly;
                         Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
                     }
                     field(DisplayShipmentInformationF; DisplayShipmentInformation)
@@ -1079,6 +1342,42 @@ report 50002 "Standard Sales - Invoice word"
                     {
                         ApplicationArea = Basic, Suite;
                         Caption = 'Show Additional Fee Note', Comment = 'FRA="Afficher la note de frais supplémentaires"';
+                    }
+                }
+                group(Optionen)
+                {
+                    Caption = 'Options', Comment = 'FRA="Options AMG"';
+                    field("Facture FR Factor"; GBooFactureFranceAvecFactor)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Log Interaction', Comment = 'FRA="Facture France avec Factor"';
+                        Enabled = LogInteractionEnable;
+
+                        trigger OnValidate()
+                        begin
+                            if GBooFactureFranceAvecFactor then
+                                GBooFactureExportAvecFactor := false;
+                        end;
+                    }
+                    field("Facture Export"; GBooFactureExport)
+                    {
+                        Caption = 'Facture Export', Comment = 'FRA="Facture Export"';
+                    }
+                    field("Facture Export Factor"; GBooFactureExportAvecFactor)
+                    {
+                        Caption = 'Facture Export avec Factor', Comment = 'FRA="Facture Export avec Factor"';
+
+                        trigger OnValidate()
+                        begin
+                            if GBooFactureExportAvecFactor then begin
+                                GBooFactureExport := true;
+                                GBooFactureFranceAvecFactor := false;
+                            end;
+                        end;
+                    }
+                    field(AffichageOrigine; GBooAffichageOrigine)
+                    {
+                        Caption = 'Affichage Origine', Comment = 'FRA="Affichage Origine"';
                     }
                 }
             }
@@ -1096,16 +1395,44 @@ report 50002 "Standard Sales - Invoice word"
         end;
     }
 
-    labels
-    {
-    }
-
     trigger OnInitReport()
     begin
         GLSetup.GET();
+        CompanyInfo.SETAUTOCALCFIELDS(Picture);
         CompanyInfo.GET();
         SalesSetup.GET();
         CompanyInfo.VerifyAndSetPaymentInfo();
+
+        // DEB DELPHI XAV
+        GTxtVATClause1 := '';
+        FactorNom := '';
+        FactorBanque := '';
+        FactorAdresse := '';
+        FactorEMail := '';
+        FactorTel := '';
+        FactorBIC := '';
+        FactorIBAN := '';
+        FactorRIB := '';
+        FactorTextPrécédent := '';
+        FactorTexteFin := '';
+        //DELPHI AUB 16.05.2019 changement textes
+        FactorTexteMilieu := '';
+    end;
+
+    trigger OnPostReport()
+    begin
+        if LogInteraction and not IsReportInPreviewMode() then
+            if Header.FINDSET() then
+                repeat
+                    if Header."Bill-to Contact No." <> '' then
+                        SegManagement.LogDocument(
+                          4, Header."No.", 0, 0, DATABASE::Contact, Header."Bill-to Contact No.", Header."Salesperson Code",
+                          Header."Campaign No.", Header."Posting Description", '')
+                    else
+                        SegManagement.LogDocument(
+                          4, Header."No.", 0, 0, DATABASE::Customer, Header."Bill-to Customer No.", Header."Salesperson Code",
+                          Header."Campaign No.", Header."Posting Description", '');
+                until Header.NEXT() = 0;
     end;
 
     trigger OnPreReport()
@@ -1117,122 +1444,221 @@ report 50002 "Standard Sales - Invoice word"
             InitLogInteraction();
 
         CompanyLogoPosition := SalesSetup."Logo Position on Documents";
+
+        // DEB DELPHI XAV
+        if GBooFactureExportAvecFactor then begin //Export avec Factor
+            FactorNom := 'Ancienne Maison GALLOIS domiciliée chez ' + CompanyInfo."Nom Factor";
+            FactorBanque := '';
+            FactorAdresse := CompanyInfo."Adresse Factor";
+            FactorEMail := 'E-mail : ' + CompanyInfo."EMail Factor";
+            FactorTel := 'Tel : ' + CompanyInfo."Telephone Factor";
+            FactorBIC := ' ' + CompanyInfo."BIC Factor Exp";
+            FactorIBAN := 'IBAN : ' + CompanyInfo."IBAN Factor Exp";
+            FactorRIB := '';
+            FactorTexteFin := TxtFinFactor;
+            FactorTextPrécédent := TxtDebutFactor;
+            FactorTexteMilieu := TxtMilieuFactor;
+        end;
+
+        if GBooFactureFranceAvecFactor then begin // France avec Factor
+            FactorNom := CompanyInfo."Nom Factor";
+            FactorBanque := '';
+            FactorAdresse := CompanyInfo."Adresse Factor";
+            FactorEMail := 'E-mail : ' + CompanyInfo."EMail Factor";
+            FactorTel := 'Tel : ' + CompanyInfo."Telephone Factor";
+            FactorBIC := 'BIC ' + CompanyInfo."BIC Factor";
+            FactorIBAN := 'IBAN' + CompanyInfo."IBAN Factor";
+            FactorRIB := '';
+            FactorTexteFin := TxtFinFactor;
+            FactorTextPrécédent := TxtDebutFactor;
+            FactorTexteMilieu := TxtMilieuFactor;
+        end;
     end;
 
     var
-        SalesInvoiceNoLbl: Label 'Sales - Invoice %1', Comment = 'FRA="Ventes : Facture %1"';
-        SalespersonLbl: Label 'Sales person', Comment = 'FRA="Vendeur"';
-        CompanyInfoBankAccNoLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
+        GRecCountry: Record 9;
+        GRecCust2: Record 18;
+        CompanyInfo: Record "Company Information";
+        Cust: Record Customer;
+        GLSetup: Record "General Ledger Setup";
+        GRecItem: Record Item;
+        TempLineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist." temporary;
+        PaymentMethod: Record "Payment Method";
+        PaymentTerms: Record "Payment Terms";
+        RespCenter: Record "Responsibility Center";
+        SalesSetup: Record "Sales & Receivables Setup";
+        SalespersonPurchaser: Record "Salesperson/Purchaser";
+        ShipmentMethod: Record "Shipment Method";
+        GrecTraductionTransport: Record "Shipment Method Translation";
+        GrecTransporteur: Record "Shipping Agent";
+        VATClause: Record "VAT Clause";
+        FormatAddr: Codeunit "Format Address";
+        FormatDocument: Codeunit "Format Document";
+        LanguageMgt: Codeunit Language;
+        SegManagement: Codeunit SegManagement;
+        DisplayAdditionalFeeNote: Boolean;
+        DisplayAssemblyInformation: Boolean;
+        DisplayShipmentInformation: Boolean;
+        FirstLineHasBeenOutput: Boolean;
+        GBooAffichageOrigine: Boolean;
+        GBooFactureExport: Boolean;
+        GBooFactureExportAvecFactor: Boolean;
+        GBooFactureFranceAvecFactor: Boolean;
+        LogInteraction: Boolean;
+        LogInteractionEnable: Boolean;
+        MoreLines: Boolean;
+        ShowShippingAddr: Boolean;
+        ShowWorkDescription: Boolean;
+        JobNo: Code[20];
+        JobTaskNo: Code[20];
+        CalculatedExchRate: Decimal;
+        PrevLineAmount: Decimal;
+        RemainingAmount: Decimal;
+        TotalAmount: Decimal;
+        TotalAmountExclInclVATValue: Decimal;
+        TotalAmountInclVAT: Decimal;
+        TotalAmountVAT: Decimal;
+        TotalInvDiscAmount: Decimal;
+        TotalPaymentDiscOnVAT: Decimal;
+        TotalSubTotal: Decimal;
+        TotalVATAmountLCY: Decimal;
+        TotalVATBaseLCY: Decimal;
+        TransHeaderAmount: Decimal;
+        VATAmountLCY: Decimal;
+        VATBaseLCY: Decimal;
+        WorkDescriptionInstream: InStream;
+        CompanyLogoPosition: Integer;
+        AlreadyPaidLbl: Label 'The invoice has been paid.', Comment = 'FRA="La facture a été payée."';
+        BilledToLbl: Label 'Billed to', Comment = 'FRA="Facturé à"';
+        BodyLbl: Label 'Thank you for your business. Your invoice is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre facture est jointe à ce message."';
+        ChecksPayableLbl: Label 'Please make checks payable to %1', Comment = 'FRA="Les chèques peuvent être payés à %1"';
+        ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
         CompanyInfoBankNameLbl: Label 'Bank', Comment = 'FRA="Banque"';
         CompanyInfoGiroNoLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
         CompanyInfoPhoneNoLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
         CopyLbl: Label 'Copy', Comment = 'FRA="Copie"';
         EMailLbl: Label 'Email', Comment = 'FRA="Adresse e-mail"';
+        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
+        FromLbl: Label 'From', Comment = 'FRA="De"';
+        GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
+        GTxtCompanyBankBranch: Label 'Bk Code', Comment = 'FRA="Code Bq"';
+        GTxtCompanyBankNr: Label 'Bk Num.', Comment = 'FRA="No. Cpte"';
+        GTxtCompanyBankSWIFT: Label 'SWIFT', Comment = 'FRA="SWIFT"';
+        GTxtCompanyFaxNo: Label 'Fax.', Comment = 'FRA="Fax."';
+        GTxtCompanyPhoneNo: Label 'Phone', Comment = 'FRA="Tél."';
+        GTxtCompanyVAT: Label 'VAT Id. Num.', Comment = 'FRA="No. TVA"';
+        GTxtDocumentCopyText: Label 'Invoice', Comment = 'FRA="Facture N°"';
+        GTxtItemNo_Line_Lbl: Label 'Item No.', Comment = 'FRA="N° d''article"';
+        GTxTMentionLegaleFR: Label 'Late payments are subject to a monthly interest of 1.5%. No discount for earlyment.', Comment = 'FRA="Les retards de paiement sont soumis à un intérêt mensuel de 1,5%. Pas d’escompte pour règlement anticipé."';
+        GTxtQuantity_Line_Lbl: Label 'Qty', Comment = 'FRA="Qté"';
+        GTxtUnitOfMeasure_Lbl: Label 'Unit', Comment = 'FRA="Unité"';
+        GTxtUnitPrice_Lbl: Label 'Unit Price', Comment = 'FRA="Prix Unit."';
         HomePageLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
         InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
         InvDiscountAmtLbl: Label 'Invoice Discount', Comment = 'FRA="Remise facture"';
         InvNoLbl: Label 'Invoice No.', Comment = 'FRA="N° facture"';
+        JobNoLbl2: Label 'Job No.', Comment = 'FRA="N° projet"';
+        JobTaskDescLbl: Label 'Job Task Description', Comment = 'FRA="Description tâche projet"';
+        JobTaskNoLbl2: Label 'Job Task No.', Comment = 'FRA="N° tâche projet"';
         LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
         LocalCurrencyLbl: Label 'Local Currency', Comment = 'FRA="Devise société"';
+        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.', Comment = 'FRA="Vous devez spécifier un ou plusieurs filtres pour éviter d''imprimer accidentellement tous les documents."';
         PageLbl: Label 'Page', Comment = 'FRA="Page"';
-        PaymentTermsDescLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        PartiallyPaidLbl: Label 'The invoice has been partially paid. The remaining amount is %1', Comment = 'FRA="La facture a été payée partiellement. Le montant restant est de %1"';
         PaymentMethodDescLbl: Label 'Payment Method', Comment = 'FRA="Mode de règlement"';
+        PaymentTermsDescLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = 'FRA="Si nous recevons le paiement avant le %1, vous pouvez bénéficier d''un escompte de 2%."';
         PostedShipmentDateLbl: Label 'Shipment Date', Comment = 'FRA="Date d''expédition"';
+        PriceLbl: Label 'Price', Comment = 'FRA="Prix"';
+        PricePerLbl: Label 'Price per', Comment = 'FRA="Code Bq"';
+        QtyLbl: Label 'Qty', Comment = 'FRA="Qté"';
+        QuestionsLbl: Label 'Questions?', Comment = 'FRA="Vous avez des questions?"';
         SalesInvLineDiscLbl: Label 'Discount %', Comment = 'FRA="% remise"';
         SalesInvoiceLbl: Label 'Invoice', Comment = 'FRA="Facture"';
+        SalespersonLbl: Label 'Salesperson', Comment = 'FRA="Vendeur"';
         ShipmentLbl: Label 'Shipment', Comment = 'FRA="Expédition"';
         ShiptoAddrLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
         ShptMethodDescLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
         SubtotalLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        TarifDouanier: Label 'TD :', Comment = 'FRA="TD :"';
+        ThanksLbl: Label 'Thank You!', Comment = 'FRA="Merci!"';
+        TLblNoCommande: Label 'Order N°', Comment = 'FRA="N° Commande"';
         TotalLbl: Label 'Total', Comment = 'FRA="Total"';
-        VATAmtSpecificationLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
-        VATAmtLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        TxtDebutFactor: Label 'Pour être libératoire, votre règlement doit être effectué directement à l''ordre de :', Comment = 'FRA="Pour être libératoire, votre règlement doit être effectué directement à l''ordre de :"';
+        TxtFinFactor: Label 'Toutes réclamations et demandes de renseignements doivent être adressées à :', Comment = 'FRA="Toutes réclamations et demandes de renseignements doivent être adressées à :"';
+        TxtMilieuFactor: Label 'qui le recoit par subrogation dans le cadre d''un contrat d''affacturage. Paiement par virement :', Comment = 'FRA="qui le recoit par subrogation dans le cadre d''un contrat d''affacturage. Paiement par virement :"';
+        UnitLbl: Label 'Unit', Comment = 'FRA="Unité"';
         VATAmountLCYLbl: Label 'VAT Amount (LCY)', Comment = 'FRA="Montant TVA DS"';
+        VATAmtLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
+        VATAmtSpecificationLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
         VATBaseLbl: Label 'VAT Base', Comment = 'FRA="Base TVA"';
         VATBaseLCYLbl: Label 'VAT Base (LCY)', Comment = 'FRA="Base TVA (DS)"';
         VATClausesLbl: Label 'VAT Clause', Comment = 'FRA="Clause TVA"';
         VATIdentifierLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
         VATPercentageLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
-        GLSetup: Record "General Ledger Setup";
-        ShipmentMethod: Record "Shipment Method";
-        PaymentTerms: Record "Payment Terms";
-        PaymentMethod: Record "Payment Method";
-        SalespersonPurchaser: Record "Salesperson/Purchaser";
-        CompanyInfo: Record "Company Information";
-        SalesSetup: Record "Sales & Receivables Setup";
-        Cust: Record Customer;
-        RespCenter: Record "Responsibility Center";
-        LanguageCdu: Codeunit Language;
-        VATClause: Record "VAT Clause";
-        TempLineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist." temporary;
-        FormatAddr: Codeunit "Format Address";
-        FormatDocument: Codeunit "Format Document";
-        SegManagement: Codeunit SegManagement;
-        JobNo: Code[20];
-        JobTaskNo: Code[20];
-        PostedShipmentDate: Date;
-        WorkDescriptionInstream: InStream;
-        WorkDescriptionLine: Text;
-        CustAddr: array[8] of Text[100];
-        ShipToAddr: array[8] of Text[100];
-        CompanyAddr: array[8] of Text[100];
-        SalesPersonText: Text[50];
-        TotalText: Text[50];
-        TotalExclVATText: Text[50];
-        TotalInclVATText: Text[50];
-        LineDiscountPctText: Text;
-        PmtDiscText: Text;
+        YourSalesInvoiceLbl: Label 'Your Invoice', Comment = 'FRA="Votre facture"';
+        ChecksPayableText: Text;
+        ExchangeRateText: Text;
+        FormattedLineAmount: Text;
+        FormattedQuantity: Text;
+        FormattedUnitPrice: Text;
+        FormattedVATPct: Text;
         JobNoLbl: Text;
         JobTaskNoLbl: Text;
+        LineDiscountPctText: Text;
+        PaymentInstructionsTxt: Text;
+        PmtDiscText: Text;
+        RemainingAmountTxt: Text;
         TotalAmountExclInclVATTextValue: Text;
-        MoreLines: Boolean;
-        ShowWorkDescription: Boolean;
-        CopyText: Text[30];
-        ShowShippingAddr: Boolean;
-        LogInteraction: Boolean;
-        SalesPrepInvoiceNoLbl: Label 'Sales - Prepayment Invoice %1', Comment = 'FRA="Ventes - Facture acompte %1"';
-        TotalSubTotal: Decimal;
-        TotalAmount: Decimal;
-        TotalAmountInclVAT: Decimal;
-        TotalAmountVAT: Decimal;
-        TotalInvDiscAmount: Decimal;
-        TotalPaymentDiscOnVAT: Decimal;
-        TransHeaderAmount: Decimal;
-        LogInteractionEnable: Boolean;
-        DisplayAssemblyInformation: Boolean;
-        DisplayShipmentInformation: Boolean;
-        CompanyLogoPosition: Integer;
-        FirstLineHasBeenOutput: Boolean;
-        CalculatedExchRate: Decimal;
-        ExchangeRateText: Text;
-        ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
-        VATBaseLCY: Decimal;
-        VATAmountLCY: Decimal;
-        TotalVATBaseLCY: Decimal;
-        TotalVATAmountLCY: Decimal;
-        PrevLineAmount: Decimal;
-        NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.', Comment = 'FRA="Vous devez spécifier un ou plusieurs filtres pour éviter d''imprimer accidentellement tous les documents."';
-        TotalAmountExclInclVATValue: Decimal;
-        DisplayAdditionalFeeNote: Boolean;
-        GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
-        ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = 'FRA="Si nous recevons le paiement avant le %1, vous pouvez bénéficier d''un escompte de 2 %."';
-        BodyLbl: Label 'Thank you for your business. Your invoice is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre facture est jointe à ce message."';
-        SalespersonLbl2: Label 'Salesperson', Comment = 'FRA="Commercial"';
-        JobNoLbl2: Label 'Job No.', Comment = 'FRA="N° projet"';
-        JobTaskNoLbl2: Label 'Job Task No.', Comment = 'FRA="N° tâche projet"';
+        VATClausesText: Text;
+        WorkDescriptionLine: Text;
+        GTxtBankBranchNo: Text[20];
+        GTxtBankSwift: Text[20];
+        FactorTel: Text[30];
+        GTxtBankAcountNo: Text[30];
+        FactorBIC: Text[40];
+        GTxtBankIBAN: Text[50];
+        GTxtCompanyInfoPays: Text[50];
+        GTxtItemNo: Text[50];
+        SalesPersonText: Text[50];
+        TotalExclVATText: Text[50];
+        TotalInclVATText: Text[50];
+        TotalText: Text[50];
+        GTxtNumTVAClient: Text[60];
+        "GTxtN°Commande": Text[65];
+        GTxtCodeRegionOrigine: Text[80];
+        GTxtCompanyVAT_ICE: Text[80];
+        GTxtTransporteur: Text[80];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
+        FactorAdresse: Text[100];
+        FactorBanque: Text[100];
+        FactorEMail: Text[120];
+        FactorIBAN: Text[100];
+        FactorRIB: Text[100];
+        GTxtBankName: Text[100];
+        GTxtNomenclatureArticle: Text[100];
+        GTxtTraductionTransport: Text[100];
         JobTaskDescription: Text[100];
-        JobTaskDescLbl: Label 'Job Task Description', Comment = 'FRA="Description tâche projet"';
+        ShipToAddr: array[8] of Text[100];
+        GTxtCondLivraisonEtendues: Text[120];
+        FactorNom: Text[200];
+        FactorTexteFin: Text[250];
+        FactorTexteMilieu: Text[250];
+        "FactorTextPrécédent": Text[250];
+        GTxtDesignationComplete: Text[250];
+        GTxtOrigineCE: Text[250];
+        GTxtVATClause1: Text[1024];
 
     local procedure InitLogInteraction()
     begin
         LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Inv.") <> '';
     end;
 
-    local procedure FindPostedShipmentDate(): Date
+    local procedure InitializeShipmentLine(): Date
     var
-        SalesShipmentHeader: Record "Sales Shipment Header";
         SalesShipmentBuffer2: Record "Sales Shipment Buffer";
+        SalesShipmentHeader: Record "Sales Shipment Header";
     begin
         if Line."Shipment No." <> '' then
             if SalesShipmentHeader.GET(Line."Shipment No.") then
@@ -1264,16 +1690,25 @@ report 50002 "Standard Sales - Invoice word"
     end;
 
     local procedure DocumentCaption(): Text[250]
+    var
+        DocCaption: Text;
     begin
-        if Header."Prepayment Invoice" then
-            exit(SalesPrepInvoiceNoLbl);
-        exit(SalesInvoiceNoLbl);
+        if DocCaption <> '' then
+            exit(DocCaption);
+        exit(SalesInvoiceLbl);
     end;
 
     procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
     begin
         LogInteraction := NewLogInteraction;
         DisplayAssemblyInformation := DisplayAsmInfo;
+    end;
+
+    local procedure IsReportInPreviewMode(): Boolean
+    var
+        MailManagement: Codeunit "Mail Management";
+    begin
+        exit(CurrReport.PREVIEW or MailManagement.IsHandlingGetEmailBody());
     end;
 
     local procedure GetUOMText(UOMCode: Code[10]): Text[50]
@@ -1304,9 +1739,9 @@ report 50002 "Standard Sales - Invoice word"
 
     local procedure GetLineFeeNoteOnReportHist(SalesInvoiceHeaderNo: Code[20])
     var
-        LineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist.";
         CustLedgerEntry: Record "Cust. Ledger Entry";
         Customer: Record Customer;
+        LineFeeNoteOnReportHist: Record "Line Fee Note on Report Hist.";
     begin
         TempLineFeeNoteOnReportHist.DELETEALL();
         CustLedgerEntry.SETRANGE("Document Type", CustLedgerEntry."Document Type"::Invoice);
@@ -1326,7 +1761,7 @@ report 50002 "Standard Sales - Invoice word"
                 TempLineFeeNoteOnReportHist.INSERT();
             until LineFeeNoteOnReportHist.NEXT() = 0
         else begin
-            LineFeeNoteOnReportHist.SETRANGE("Language Code", LanguageCdu.GetUserLanguageCode());
+            LineFeeNoteOnReportHist.SETRANGE("Language Code", LanguageMgt.GetUserLanguageCode());
             if LineFeeNoteOnReportHist.FINDSET() then
                 repeat
                     TempLineFeeNoteOnReportHist.INIT();
@@ -1340,7 +1775,7 @@ report 50002 "Standard Sales - Invoice word"
     begin
         LeftHeader.DELETEALL();
 
-        FillNameValueTable(LeftHeader, Header.FIELDCAPTION("Your Reference"), Header."Your Reference");
+        FillNameValueTable(LeftHeader, Header.FIELDCAPTION("External Document No."), Header."External Document No.");
         FillNameValueTable(LeftHeader, Header.FIELDCAPTION("Bill-to Customer No."), Header."Bill-to Customer No.");
         FillNameValueTable(LeftHeader, Header.GetCustomerVATRegistrationNumberLbl(), Header.GetCustomerVATRegistrationNumber());
         FillNameValueTable(LeftHeader, Header.GetCustomerGlobalLocationNumberLbl(), Header.GetCustomerGlobalLocationNumber());
@@ -1395,7 +1830,7 @@ report 50002 "Standard Sales - Invoice word"
 
     local procedure FormatDocumentFields(SalesInvoiceHeader: Record "Sales Invoice Header")
     begin
-        FormatDocument.SetTotalLabels(SalesInvoiceHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetTotalLabels(SalesInvoiceHeader.GetCurrencySymbol(), TotalText, TotalInclVATText, TotalExclVATText);
         FormatDocument.SetSalesPerson(SalespersonPurchaser, SalesInvoiceHeader."Salesperson Code", SalesPersonText);
         FormatDocument.SetPaymentTerms(PaymentTerms, SalesInvoiceHeader."Payment Terms Code", SalesInvoiceHeader."Language Code");
         FormatDocument.SetPaymentMethod(PaymentMethod, SalesInvoiceHeader."Payment Method Code", SalesInvoiceHeader."Language Code");
@@ -1412,22 +1847,6 @@ report 50002 "Standard Sales - Invoice word"
             exit(JobTask.Description);
 
         exit('');
-    end;
-
-    local procedure ZeroIsBlanckDecimal(Decimale: Decimal) Return: Text[150]
-    begin
-        if Decimale <> 0 then
-            Return := FORMAT(Decimale, 10, '<Standard Format,0>')
-        else
-            Return := '';
-    end;
-
-    local procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[150]
-    begin
-        if Integer <> 0 then
-            Return := FORMAT(Integer)
-        else
-            Return := '';
     end;
 }
 

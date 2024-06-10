@@ -1,10 +1,9 @@
 namespace BCSYS.AMGALLOIS.Basic;
+
 using Microsoft.Sales.Document;
-using Microsoft.Finance.VAT.Calculation;
-using Microsoft.Assembly.Document;
 using System.Utilities;
+using Microsoft.Finance.VAT.Calculation;
 using Microsoft.Foundation.Reporting;
-using Microsoft.CRM.Contact;
 using Microsoft.Foundation.Company;
 using Microsoft.Foundation.Address;
 using Microsoft.Foundation.Shipping;
@@ -13,21 +12,23 @@ using Microsoft.Bank.BankAccount;
 using Microsoft.CRM.Team;
 using Microsoft.Sales.Customer;
 using Microsoft.Finance.VAT.Clause;
-using Microsoft.Finance.Currency;
-using Microsoft.Utilities;
-using Microsoft.Sales.Posting;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Location;
 using System.Globalization;
+using Microsoft.Inventory.Item;
+using Microsoft.Utilities;
 using Microsoft.CRM.Segment;
-using Microsoft.Foundation.UOM;
+using System.EMail;
+using Microsoft.CRM.Contact;
 using Microsoft.CRM.Interaction;
-report 50000 "Standard Sales - Order Conf. W"
+using Microsoft.Finance.Currency;
+using Microsoft.Sales.Posting;
+report 50304 "Standard Sales - Quote"
 {
-    RDLCLayout = './src/report/rdl/StandardSalesOrderConfW.rdl';
-    WordLayout = './src/report/rdl/StandardSalesOrderConfW.docx';
-    Caption = 'Sales - Confirmation', Comment = 'FRA="Ventes - Confirmation"';
+    RDLCLayout = './src/report/rdl/StandardSalesQuote.rdl';
+    WordLayout = './src/report/rdl/StandardSalesQuote.docx';
+    Caption = 'Sales - Quote', Comment = 'FRA="Ventes : Devis"';
     DefaultLayout = Word;
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
@@ -38,9 +39,9 @@ report 50000 "Standard Sales - Order Conf. W"
         dataitem(Header; "Sales Header")
         {
             DataItemTableView = sorting("Document Type", "No.")
-                                where("Document Type" = const(Order));
+                                where("Document Type" = const(Quote));
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
-            RequestFilterHeading = 'Sales Order', Comment = 'FRA="Commande vente"';
+            RequestFilterHeading = 'Sales Quote', Comment = 'FRA="Devis"';
             column(CompanyAddress1; CompanyAddr[1])
             {
             }
@@ -59,6 +60,15 @@ report 50000 "Standard Sales - Order Conf. W"
             column(CompanyAddress6; CompanyAddr[6])
             {
             }
+            column(CompanyAddress7; CompanyAddr[7])
+            {
+            }
+            column(CompanyAddress8; CompanyAddr[8])
+            {
+            }
+            column(CompanyInfoPays; GTxtCompanyInfoPays)
+            {
+            }
             column(CompanyHomePage; CompanyInfo."Home Page")
             {
             }
@@ -71,7 +81,13 @@ report 50000 "Standard Sales - Order Conf. W"
             column(CompanyPhoneNo; CompanyInfo."Phone No.")
             {
             }
-            column(CompanyPhoneNo_Lbl; CompanyInfoPhoneNoLbl)
+            column(CompanyPhoneNo_Lbl; GTxtCompanyPhoneNo)
+            {
+            }
+            column(CompanyFaxNo; CompanyInfo."Fax No.")
+            {
+            }
+            column(CompanyFaxNo_Lbl; GTxtCompanyFaxNo)
             {
             }
             column(CompanyGiroNo; CompanyInfo."Giro No.")
@@ -80,34 +96,37 @@ report 50000 "Standard Sales - Order Conf. W"
             column(CompanyGiroNo_Lbl; CompanyInfoGiroNoLbl)
             {
             }
-            column(CompanyBankName; CompanyInfo."Bank Name")
+            column(CompanyBankName; GTxtBankName)
             {
             }
             column(CompanyBankName_Lbl; CompanyInfoBankNameLbl)
             {
             }
-            column(CompanyBankBranchNo; CompanyInfo."Bank Branch No.")
+            column(CompanyBankBranchNo; GTxtBankBranchNo)
             {
             }
-            column(CompanyBankBranchNo_Lbl; CompanyInfo.FIELDCAPTION("Bank Branch No."))
+            column(CompanyBankBranchNo_Lbl; GTxtCompanyBankBranch)
             {
             }
-            column(CompanyBankAccountNo; CompanyInfo."Bank Account No.")
+            column(CompanyBankAccountNo; GTxtBankAcountNo)
             {
             }
-            column(CompanyBankAccountNo_Lbl; CompanyInfoBankAccNoLbl)
+            column(CompanyBankAccountNo_Lbl; GTxtCompanyBankNr)
             {
             }
-            column(CompanyIBAN; CompanyInfo.IBAN)
+            column(CompanyRCS_Lbl; GTxtCompanyTrib)
+            {
+            }
+            column(CompanyIBAN; GTxtBankIBAN)
             {
             }
             column(CompanyIBAN_Lbl; CompanyInfo.FIELDCAPTION(IBAN))
             {
             }
-            column(CompanySWIFT; CompanyInfo."SWIFT Code")
+            column(CompanySWIFT; GTxtBankSwift)
             {
             }
-            column(CompanySWIFT_Lbl; CompanyInfo.FIELDCAPTION("SWIFT Code"))
+            column(CompanySWIFT_Lbl; GTxtCompanyBankSWIFT)
             {
             }
             column(CompanyLogoPosition; CompanyLogoPosition)
@@ -128,7 +147,13 @@ report 50000 "Standard Sales - Order Conf. W"
             column(CompanyVATRegistrationNo; CompanyInfo.GetVATRegistrationNumber())
             {
             }
-            column(CompanyVATRegistrationNo_Lbl; CompanyInfo.GetVATRegistrationNumberLbl())
+            column("CompanySiège_Lbl"; GTxtCompanySitz)
+            {
+            }
+            column(CompanyDirector_Lbl; GTxtCompanyGesch)
+            {
+            }
+            column(CompanyVATRegistrationNo_Lbl; GTxtCompanyVAT)
             {
             }
             column(CompanyLegalOffice; '')
@@ -144,6 +169,9 @@ report 50000 "Standard Sales - Order Conf. W"
             {
             }
             column(CompanyLegalStatement; GetLegalStatement())
+            {
+            }
+            column(CompanyNoEORI_Lbl; CompanyInfo.FIELDCAPTION("No. EORI"))
             {
             }
             column(CustomerAddress1; CustAddr[1])
@@ -176,7 +204,7 @@ report 50000 "Standard Sales - Order Conf. W"
             column(YourReference; "Your Reference")
             {
             }
-            column(YourReference_Lbl; FIELDCAPTION("Your Reference"))
+            column(YourReference__Lbl; FIELDCAPTION("Your Reference"))
             {
             }
             column(ShipmentMethodDescription; ShipmentMethod.Description)
@@ -186,12 +214,6 @@ report 50000 "Standard Sales - Order Conf. W"
             {
             }
             column(Shipment_Lbl; ShipmentLbl)
-            {
-            }
-            column(ShipmentDate; FORMAT("Shipment Date", 0, 4))
-            {
-            }
-            column(ShipmentDate_Lbl; FIELDCAPTION("Shipment Date"))
             {
             }
             column(ShowShippingAddress; ShowShippingAddr)
@@ -245,7 +267,7 @@ report 50000 "Standard Sales - Order Conf. W"
             column(BilltoCustomerNo_Lbl; FIELDCAPTION("Bill-to Customer No."))
             {
             }
-            column(DocumentDate; FORMAT("Document Date", 0, 4))
+            column(DocumentDate; GdocDate)
             {
             }
             column(DocumentDate_Lbl; FIELDCAPTION("Document Date"))
@@ -257,16 +279,16 @@ report 50000 "Standard Sales - Order Conf. W"
             column(DueDate_Lbl; FIELDCAPTION("Due Date"))
             {
             }
+            column(QuoteValidToDate; FORMAT("Quote Valid Until Date", 0, 4))
+            {
+            }
+            column(QuoteValidToDate_Lbl; QuoteValidToDateLbl)
+            {
+            }
             column(DocumentNo; "No.")
             {
             }
             column(DocumentNo_Lbl; InvNoLbl)
-            {
-            }
-            column(QuoteNo; "Quote No.")
-            {
-            }
-            column(QuoteNo_Lbl; FIELDCAPTION("Quote No."))
             {
             }
             column(PricesIncludingVAT; "Prices Including VAT")
@@ -278,10 +300,10 @@ report 50000 "Standard Sales - Order Conf. W"
             column(PricesIncludingVATYesNo; FORMAT("Prices Including VAT"))
             {
             }
-            column(SalesPerson_Lbl; SalespersonLbl)
+            column(SalesPerson_Lbl; GTxtCompanySalespers)
             {
             }
-            column(SalesPersonText_Lbl; SalesPersonText)
+            column(SalesPersonBlank_Lbl; SalesPersonText)
             {
             }
             column(SalesPersonName; SalespersonPurchaser.Name)
@@ -290,7 +312,31 @@ report 50000 "Standard Sales - Order Conf. W"
             column(SelltoCustomerNo; "Sell-to Customer No.")
             {
             }
-            column(SelltoCustomerNo_Lbl; FIELDCAPTION("Sell-to Customer No."))
+            column(SelltoCustomerNo_Lbl; GTxtCustomerNum)
+            {
+            }
+            column(SelltoAddress1; GTxtSelltoAddr[1])
+            {
+            }
+            column(SelltoAddress2; GTxtSelltoAddr[2])
+            {
+            }
+            column(SelltoAddress3; GTxtSelltoAddr[3])
+            {
+            }
+            column(SelltoAddress4; GTxtSelltoAddr[4])
+            {
+            }
+            column(SelltoAddress5; GTxtSelltoAddr[5])
+            {
+            }
+            column(SelltoAddress6; GTxtSelltoAddr[6])
+            {
+            }
+            column(SelltoAddress7; GTxtSelltoAddr[7])
+            {
+            }
+            column(SelltoAddress8; GTxtSelltoAddr[8])
             {
             }
             column(VATRegistrationNo; GetCustomerVATRegistrationNumber())
@@ -314,10 +360,34 @@ report 50000 "Standard Sales - Order Conf. W"
             column(Copy_Lbl; CopyLbl)
             {
             }
-            column(EMail_Lbl; EMailLbl)
+            column(EMail_Lbl; GTxtCompanyemail)
             {
             }
-            column(HomePage_Lbl; HomePageLbl)
+            column(HomePage_Lbl; GTxtCompanyHomepage)
+            {
+            }
+            column(Estimate_Lbl; EstimateLbl)
+            {
+            }
+            column(YourEstimate_Lbl; YourEstimateLbl)
+            {
+            }
+            column(EstimateBody_Lbl; EstimateBodyLbl)
+            {
+            }
+            column(From_Lbl; FromLbl)
+            {
+            }
+            column(EstimateFor_Lbl; EstimateForLbl)
+            {
+            }
+            column(Questions_Lbl; QuestionsLbl)
+            {
+            }
+            column(Contact_Lbl; CompanyInfo.GetContactUsText())
+            {
+            }
+            column(Thanks_Lbl; ThanksLbl)
             {
             }
             column(InvoiceDiscountBaseAmount_Lbl; InvDiscBaseAmtLbl)
@@ -341,7 +411,10 @@ report 50000 "Standard Sales - Order Conf. W"
             column(SalesInvoiceLineDiscount_Lbl; SalesInvLineDiscLbl)
             {
             }
-            column(Invoice_Lbl; SalesConfirmationLbl)
+            column(DocumentTitle_Lbl; GtxtDocumentTitle_Lbl)
+            {
+            }
+            column(ShowWorkDescription; ShowWorkDescription)
             {
             }
             column(Subtotal_Lbl; SubtotalLbl)
@@ -371,10 +444,64 @@ report 50000 "Standard Sales - Order Conf. W"
             column(VATClause_Lbl; VATClause.TABLECAPTION)
             {
             }
-            column(ExtDocNo_SalesHeader; "External Document No.")
+            column(SalesPersonEmail; SalespersonPurchaser."E-Mail")
             {
             }
-            column(ShowWorkDescription; ShowWorkDescription)
+            column(SalesPersonPhone; SalespersonPurchaser."Phone No.")
+            {
+            }
+            column(Terms_Lbl; GTxtTerms_Lbl)
+            {
+            }
+            column(Delivery_Lbl; GTxtDelivery_Lbl)
+            {
+            }
+            column(Paymentterms_Lbl; GTxtPaymentterms_Lbl)
+            {
+            }
+            column(Warranty_Lbl; GTxtWarranty_Lbl)
+            {
+            }
+            column(Prices_Lbl; GTxtPrices_Lbl)
+            {
+            }
+            column(Validity_Lbl; GTxtValidity_Lbl)
+            {
+            }
+            column(TextLbl; GTxTextLbl)
+            {
+            }
+            column(NetWeight; Header."Net Weight")
+            {
+            }
+            column(GrossWeight; Header."Gross Weight")
+            {
+            }
+            column(MentionLegalFR; GTxTMentionLegaleFR)
+            {
+            }
+            column(NumTVAClient; GTxtNumTVAClient)
+            {
+            }
+            column(ReferenceText; ReferenceText)
+            {
+            }
+            column(PageCaption; STRSUBSTNO(Text005, ''))
+            {
+            }
+            column("Délaidelivraison_Header"; Header."Delai de livraison")
+            {
+            }
+            column("Duréedevalidité_Header"; Header."Duree de validite")
+            {
+            }
+            column(DelaiLiv_Lbl; GTxtDelaiLiv_Lbl)
+            {
+            }
+            column(DureeValid_Lbl; GTxtDureeValid_Lbl)
+            {
+            }
+            column(DocumentNoFormat_Header; GTxtDocumentNo)
             {
             }
             dataitem(Line; "Sales Line")
@@ -386,7 +513,10 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(LineNo_Line; "Line No.")
                 {
                 }
-                column(AmountExcludingVAT_Line; ZeroIsBlanckDecimal(Amount))
+                column(ItemNo_Line_Lbl; GTxtLineNoLbl)
+                {
+                }
+                column(AmountExcludingVAT_Line; Amount)
                 {
                     AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
@@ -394,29 +524,37 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(AmountExcludingVAT_Line_Lbl; FIELDCAPTION(Amount))
                 {
                 }
-                column(AmountIncludingVAT_Line; ZeroIsBlanckDecimal("Amount Including VAT"))
+                column(AmountIncludingVAT_Line; "Amount Including VAT")
                 {
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
                 column(AmountIncludingVAT_Line_Lbl; FIELDCAPTION("Amount Including VAT"))
                 {
-                    AutoFormatExpression = "Currency Code";
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(Description_Line; Description)
                 {
                 }
+                column(Description2_Line; "Description 2")
+                {
+                }
                 column(Description_Line_Lbl; FIELDCAPTION(Description))
                 {
                 }
-                column(LineDiscountPercent_Line; ZeroIsBlanckDecimal("Line Discount %"))
+                column(LineDiscountPercent_Line; "Line Discount %")
                 {
                 }
                 column(LineDiscountPercentText_Line; LineDiscountPctText)
                 {
                 }
-                column(LineAmount_Line; ZeroIsBlanckDecimal("Line Amount"))
+                column(LineDiscountAmount_Line; Line."Line Discount Amount")
                 {
+                }
+                column(LineAmount_Line; FormattedLineAmount)
+                {
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
                 column(LineAmount_Line_Lbl; FIELDCAPTION("Line Amount"))
@@ -425,35 +563,36 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(ItemNo_Line; "No.")
                 {
                 }
-                column(ItemNo_Line_Lbl; FIELDCAPTION("No."))
+                column(ItemNoOrRef_Line; GTxtItemNo)
                 {
                 }
-                column(ShipmentDate_Line; FORMAT(PostedShipmentDate))
+                column(ShipmentDate_Line; FORMAT("Shipment Date"))
                 {
                 }
-                column(ShipmentDate_Line_Lbl; PostedShipmentDateLbl)
+                column(ShipmentDate_Lbl; PostedShipmentDateLbl)
                 {
                 }
-                column(Quantity_Line; ZeroIsBlanckInteger(Quantity))
+                column(Quantity_Line; FormattedQuantity)
                 {
                 }
-                column(Quantity_Line_Lbl; FIELDCAPTION(Quantity))
+                column(Quantity_Line_Lbl; GTxtQuantity_Line_Lbl)
                 {
                 }
                 column(Type_Line; FORMAT(Type))
                 {
                 }
-                column(UnitPrice; ZeroIsBlanckDecimal("Unit Price"))
+                column(UnitPrice; FormattedUnitPrice)
                 {
+                    AutoFormatExpression = "Currency Code";
                     AutoFormatType = 2;
                 }
-                column(UnitPrice_Lbl; FIELDCAPTION("Unit Price"))
+                column(UnitPrice_Lbl; GTxtUnitPrice_Lbl)
                 {
                 }
                 column(UnitOfMeasure; "Unit of Measure")
                 {
                 }
-                column(UnitOfMeasure_Lbl; FIELDCAPTION("Unit of Measure"))
+                column(UnitOfMeasure_Lbl; GTxtUnitOfMeasure_Lbl)
                 {
                 }
                 column(VATIdentifier_Line; "VAT Identifier")
@@ -462,7 +601,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(VATIdentifier_Line_Lbl; FIELDCAPTION("VAT Identifier"))
                 {
                 }
-                column(VATPct_Line; "VAT %")
+                column(VATPct_Line; FormattedVATPct)
                 {
                 }
                 column(VATPct_Line_Lbl; FIELDCAPTION("VAT %"))
@@ -473,17 +612,44 @@ report 50000 "Standard Sales - Order Conf. W"
                     AutoFormatExpression = "Currency Code";
                     AutoFormatType = 1;
                 }
-                column(CrossReferenceNo; "Item Reference No.")
+                column(Unit_Lbl; UnitLbl)
                 {
                 }
-                column(CrossReferenceNo_Lbl; FIELDCAPTION("Item Reference No."))
+                column(Qty_Lbl; QtyLbl)
+                {
+                }
+                column(Price_Lbl; PriceLbl)
+                {
+                }
+                column(PricePer_Lbl; PricePerLbl)
+                {
+                }
+                column(Reference_Externe; Line."Item Reference No.")
+                {
+                }
+                column(NomenclatureArticle; GTxtNomenclatureArticle)
+                {
+                }
+                column(CodeRegionOrigine; GTxtCodeRegionOrigine)
+                {
+                }
+                column(Qty_Line; GTxtQty)
+                {
+                }
+                column(UnitPrice_Line; GTxtPrixUnitaire)
+                {
+                }
+                column(Amount_Line; GTxtMontantLigne)
+                {
+                }
+                column(DiscountLbl; DiscountLbl)
                 {
                 }
 
                 trigger OnAfterGetRecord()
+                var
+                    LRecCountry: Record "Country/Region";
                 begin
-                    PostedShipmentDate := 0D;
-
                     if Type = Type::"G/L Account" then
                         "No." := '';
 
@@ -491,9 +657,6 @@ report 50000 "Standard Sales - Order Conf. W"
                         LineDiscountPctText := ''
                     else
                         LineDiscountPctText := STRSUBSTNO('%1%', -ROUND("Line Discount %", 0.1));
-
-                    if DisplayAssemblyInformation then
-                        AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
 
                     TransHeaderAmount += PrevLineAmount;
                     PrevLineAmount := "Line Amount";
@@ -504,9 +667,54 @@ report 50000 "Standard Sales - Order Conf. W"
                     TotalAmountInclVAT += "Amount Including VAT";
                     TotalPaymentDiscOnVAT += -("Line Amount" - "Inv. Discount Amount" - "Amount Including VAT");
 
+                    FormatDocument.SetSalesLine(Line, FormattedQuantity, FormattedUnitPrice, FormattedVATPct, FormattedLineAmount);
+
                     if FirstLineHasBeenOutput then
                         CLEAR(CompanyInfo.Picture);
                     FirstLineHasBeenOutput := true;
+
+                    // DEB DELPHI XAV
+                    if GRecItem.GET(Line."No.") then begin
+                        //DEB DELPHI AUB 10.10.2019
+                        if (GRecItem."Tariff No." <> '') and GBooAffichageOrigine then
+                            GTxtNomenclatureArticle := 'TD :' + GRecItem."Tariff No."
+                        else
+                            GTxtNomenclatureArticle := '';
+                        if (GRecItem."Country/Region of Origin Code" <> '') and GBooAffichageOrigine then begin
+                            if LRecCountry.GET(GRecItem."Country/Region of Origin Code") then
+                                GTxtCodeRegionOrigine := ' Origine: ' + LRecCountry.Name
+                        end else
+                            GTxtCodeRegionOrigine := '';
+                        //END DELPHI AUB
+                        GTxtBrand := GRecItem.Brand;
+                        GTxTGrade := GRecItem.Grade;
+                        GTxtColor := GRecItem.Color;
+                    end
+                    else begin
+                        GTxtNomenclatureArticle := '';
+                        GTxtBrand := '';
+                        GTxTGrade := '';
+                        GTxtColor := '';
+                        GTxtCodeRegionOrigine := ''; //DELPHI AUB
+                    end;
+
+                    // FIN DELPHI XAV
+                    //DELPHI AUB 18/02/2019
+                    GTxtItemNo := Line."No.";
+                    if Line.Type = Line.Type::Item then
+                        if Line."Item Reference No." <> '' then
+                            GTxtItemNo := Line."Item Reference No.";
+
+                    if (Line.Quantity = 0) then begin
+                        GTxtQty := '';
+                        GTxtPrixUnitaire := '';
+                        GTxtMontantLigne := '';
+                    end else begin
+                        GTxtQty := FORMAT(Line.Quantity);
+                        GTxtMontantLigne := FORMAT(Line.Amount);
+                        GTxtPrixUnitaire := FORMAT(Line."Unit Price");
+                    end;
+                    //END DELPHI AUB
                 end;
 
                 trigger OnPreDataItem()
@@ -520,7 +728,6 @@ report 50000 "Standard Sales - Order Conf. W"
                     TransHeaderAmount := 0;
                     PrevLineAmount := 0;
                     FirstLineHasBeenOutput := false;
-                    CompanyInfo.CALCFIELDS(Picture);
                 end;
             }
             dataitem(WorkDescriptionLines; Integer)
@@ -532,35 +739,6 @@ report 50000 "Standard Sales - Order Conf. W"
                 }
                 column(WorkDescriptionLine; WorkDescriptionLine)
                 {
-                }
-                dataitem(AssemblyLine; "Assembly Line")
-                {
-                    DataItemTableView = sorting("Document No.", "Line No.");
-                    column(LineNo_AssemblyLine; "No.")
-                    {
-                    }
-                    column(Description_AssemblyLine; Description)
-                    {
-                    }
-                    column(Quantity_AssemblyLine; ZeroIsBlanckInteger(Quantity))
-                    {
-                    }
-                    column(UnitOfMeasure_AssemblyLine; GetUOMText("Unit of Measure Code"))
-                    {
-                    }
-                    column(VariantCode_AssemblyLine; "Variant Code")
-                    {
-                    }
-
-                    trigger OnPreDataItem()
-                    begin
-                        if not DisplayAssemblyInformation then
-                            CurrReport.BREAK();
-                        if not AsmInfoExistsForLine then
-                            CurrReport.BREAK();
-                        SETRANGE("Document Type", AsmHeader."Document Type");
-                        SETRANGE("Document No.", AsmHeader."No.");
-                    end;
                 }
 
                 trigger OnAfterGetRecord()
@@ -586,7 +764,7 @@ report 50000 "Standard Sales - Order Conf. W"
             {
                 DataItemTableView = sorting("VAT Identifier", "VAT Calculation Type", "Tax Group Code", "Use Tax", Positive);
                 UseTemporary = true;
-                column(InvoiceDiscountAmount_VATAmountLine; ZeroIsBlanckDecimal("Invoice Discount Amount"))
+                column(InvoiceDiscountAmount_VATAmountLine; "Invoice Discount Amount")
                 {
                     AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
@@ -594,7 +772,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(InvoiceDiscountAmount_VATAmountLine_Lbl; FIELDCAPTION("Invoice Discount Amount"))
                 {
                 }
-                column(InvoiceDiscountBaseAmount_VATAmountLine; ZeroIsBlanckDecimal("Inv. Disc. Base Amount"))
+                column(InvoiceDiscountBaseAmount_VATAmountLine; "Inv. Disc. Base Amount")
                 {
                     AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
@@ -602,21 +780,23 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(InvoiceDiscountBaseAmount_VATAmountLine_Lbl; FIELDCAPTION("Inv. Disc. Base Amount"))
                 {
                 }
-                column(LineAmount_VatAmountLine; ZeroIsBlanckDecimal("Line Amount"))
+                column(LineAmount_VatAmountLine; "Line Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(LineAmount_VatAmountLine_Lbl; FIELDCAPTION("Line Amount"))
                 {
                 }
-                column(VATAmount_VatAmountLine; ZeroIsBlanckDecimal("VAT Amount"))
+                column(VATAmount_VatAmountLine; "VAT Amount")
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
                 column(VATAmount_VatAmountLine_Lbl; FIELDCAPTION("VAT Amount"))
                 {
                 }
-                column(VATAmountLCY_VATAmountLine; ZeroIsBlanckDecimal(VATAmountLCY))
+                column(VATAmountLCY_VATAmountLine; VATAmountLCY)
                 {
                 }
                 column(VATAmountLCY_VATAmountLine_Lbl; VATAmountLCYLbl)
@@ -630,7 +810,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(VATBase_VatAmountLine_Lbl; FIELDCAPTION("VAT Base"))
                 {
                 }
-                column(VATBaseLCY_VATAmountLine; ZeroIsBlanckDecimal(VATBaseLCY))
+                column(VATBaseLCY_VATAmountLine; VATBaseLCY)
                 {
                 }
                 column(VATBaseLCY_VATAmountLine_Lbl; VATBaseLCYLbl)
@@ -666,54 +846,15 @@ report 50000 "Standard Sales - Order Conf. W"
 
                     TotalVATBaseLCY += VATBaseLCY;
                     TotalVATAmountLCY += VATAmountLCY;
-
-                    if "VAT Clause Code" <> '' then begin
-                        VATClauseLine := VATAmountLine;
-                        if VATClauseLine.INSERT() then;
-                    end;
                 end;
 
                 trigger OnPreDataItem()
                 begin
+                    CLEAR(VATBaseLCY);
+                    CLEAR(VATAmountLCY);
+
                     TotalVATBaseLCY := 0;
                     TotalVATAmountLCY := 0;
-
-                    VATClauseLine.DELETEALL();
-                end;
-            }
-            dataitem(VATClauseLine; "VAT Amount Line")
-            {
-                UseTemporary = true;
-                column(VATIdentifier_VATClauseLine; "VAT Identifier")
-                {
-                }
-                column(Code_VATClauseLine; VATClause.Code)
-                {
-                }
-                column(Code_VATClauseLine_Lbl; VATClause.FIELDCAPTION(Code))
-                {
-                }
-                column(Description_VATClauseLine; VATClause.Description)
-                {
-                }
-                column(Description2_VATClauseLine; VATClause."Description 2")
-                {
-                }
-                column(VATAmount_VATClauseLine; ZeroIsBlanckDecimal("VAT Amount"))
-                {
-                    AutoFormatType = 1;
-                }
-                column(NoOfVATClauses; COUNT)
-                {
-                }
-
-                trigger OnAfterGetRecord()
-                begin
-                    if "VAT Clause Code" = '' then
-                        CurrReport.SKIP();
-                    if not VATClause.GET("VAT Clause Code") then
-                        CurrReport.SKIP();
-                    VATClause.TranslateDescription(Header."Language Code");
                 end;
             }
             dataitem(ReportTotalsLine; "Report Totals Buffer")
@@ -723,7 +864,7 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(Description_ReportTotalsLine; Description)
                 {
                 }
-                column(Amount_ReportTotalsLine; ZeroIsBlanckDecimal(Amount))
+                column(Amount_ReportTotalsLine; Amount)
                 {
                 }
                 column(AmountFormatted_ReportTotalsLine; "Amount Formatted")
@@ -769,29 +910,33 @@ report 50000 "Standard Sales - Order Conf. W"
             {
                 DataItemTableView = sorting(Number)
                                     where(Number = const(1));
-                column(TotalNetAmount; ZeroIsBlanckDecimal(TotalAmount))
+                column(TotalNetAmount; TotalAmount)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATBaseLCY; ZeroIsBlanckDecimal(TotalVATBaseLCY))
+                column(TotalVATBaseLCY; TotalVATBaseLCY)
                 {
                 }
-                column(TotalAmountIncludingVAT; ZeroIsBlanckDecimal(TotalAmountInclVAT))
+                column(TotalAmountIncludingVAT; TotalAmountInclVAT)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmount; ZeroIsBlanckDecimal(TotalAmountVAT))
+                column(TotalVATAmount; TotalAmountVAT)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalVATAmountLCY; ZeroIsBlanckDecimal(TotalVATAmountLCY))
+                column(TotalVATAmountLCY; TotalVATAmountLCY)
                 {
                 }
-                column(TotalInvoiceDiscountAmount; ZeroIsBlanckDecimal(TotalInvDiscAmount))
+                column(TotalInvoiceDiscountAmount; TotalInvDiscAmount)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalPaymentDiscountOnVAT; ZeroIsBlanckDecimal(TotalPaymentDiscOnVAT))
+                column(TotalPaymentDiscountOnVAT; TotalPaymentDiscOnVAT)
                 {
                 }
                 column(TotalVATAmountText; VATAmountLine.VATAmountText())
@@ -800,19 +945,52 @@ report 50000 "Standard Sales - Order Conf. W"
                 column(TotalExcludingVATText; TotalExclVATText)
                 {
                 }
+                column(TotalExcludingVATLbl; GTxtTotalHT_Lbl)
+                {
+                }
                 column(TotalIncludingVATText; TotalInclVATText)
                 {
                 }
-                column(TotalSubTotal; ZeroIsBlanckDecimal(TotalSubTotal))
+                column(TotalSubTotal; TotalSubTotal)
                 {
+                    AutoFormatExpression = Header."Currency Code";
                     AutoFormatType = 1;
                 }
-                column(TotalSubTotalMinusInvoiceDiscount; ZeroIsBlanckDecimal(TotalSubTotal + TotalInvDiscAmount))
+                column(TotalSubTotalMinusInvoiceDiscount; TotalSubTotal + TotalInvDiscAmount)
                 {
                 }
                 column(TotalText; TotalText)
                 {
                 }
+                column(TotalVATDisplay; GTxtDisplayTotalAmountVAT)
+                {
+                }
+                column(TotalTTCDisplay; GTxtDisplayTotalAmountInclVAT)
+                {
+                }
+                column(TotalVATDisplay_Lbl; GTxtTotalTVA_Lbl)
+                {
+                }
+                column(TotalTTCDisplay_Lbl; GTxtTotalTTC_Lbl)
+                {
+                }
+
+                trigger OnAfterGetRecord()
+                begin
+
+                    //DEB DELPHI AUB 15.10.2019
+                    GTxtDisplayTotalAmountVAT := '';
+                    GTxtDisplayTotalAmountInclVAT := '';
+                    GTxtTotalTVA_Lbl := '';
+                    GTxtTotalTTC_Lbl := '';
+                    if TotalAmountVAT > 0 then begin
+                        GTxtDisplayTotalAmountVAT := FORMAT(TotalAmountVAT, 0, '<Integer Thousand><Decimals,3>');
+                        GTxtDisplayTotalAmountInclVAT := FORMAT(TotalAmountInclVAT, 0, '<Integer Thousand><Decimals,3>');
+                        GTxtTotalTVA_Lbl := 'Total EUR TVA';
+                        GTxtTotalTTC_Lbl := 'Total EUR TTC';
+                    end;
+                    //END DELPHI AUB 15.10.2019
+                end;
             }
 
             trigger OnAfterGetRecord()
@@ -821,6 +999,20 @@ report 50000 "Standard Sales - Order Conf. W"
                 ArchiveManagement: Codeunit ArchiveManagement;
                 SalesPost: Codeunit "Sales-Post";
             begin
+                CurrReport.Language := LanguageMgt.GetLanguageIdOrDefault("Language Code");
+                //DEB DELPHI XAV
+                Header.CALCFIELDS("Net Weight", "Gross Weight");
+                //FIN DELPHI XAV
+                //DELPHI AUB 16.07.2019 edited 14.10.2019
+                if GBooProforma then begin
+                    GtxtDocumentTitle_Lbl := GTxtProforma;
+                    GTxtDocumentNo := Header."No.";
+                    GTxtDocumentNo := CONVERTSTR(GTxtDocumentNo, 'DV', 'PF');
+                end else begin
+                    GtxtDocumentTitle_Lbl := GTxtQuoteLbl;
+                    GTxtDocumentNo := Header."No.";
+                end;
+                //END DELPHI
                 FirstLineHasBeenOutput := false;
                 CLEAR(Line);
                 CLEAR(SalesPost);
@@ -830,16 +1022,12 @@ report 50000 "Standard Sales - Order Conf. W"
                 Line.CalcVATAmountLines(0, Header, Line, VATAmountLine);
                 Line.UpdateVATOnLines(0, Header, Line, VATAmountLine);
 
-                if not CurrReport.PREVIEW then
-                    CODEUNIT.RUN(CODEUNIT::"Sales-Printed", Header);
-
-                CurrReport.LANGUAGE := LanguageCdu.GetLanguageIdOrDefault("Language Code");
-
                 CALCFIELDS("Work Description");
                 ShowWorkDescription := "Work Description".HASVALUE;
 
                 FormatAddr.GetCompanyAddr("Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
                 FormatAddr.SalesHeaderBillTo(CustAddr, Header);
+                FormatAddr.SalesHeaderSellTo(GTxtSelltoAddr, Header);
                 ShowShippingAddr := FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, Header);
 
                 if not Cust.GET("Bill-to Customer No.") then
@@ -852,34 +1040,70 @@ report 50000 "Standard Sales - Order Conf. W"
                     ExchangeRateText := STRSUBSTNO(ExchangeRateTxt, CalculatedExchRate, CurrencyExchangeRate."Exchange Rate Amount");
                 end;
 
-                FormatDocumentFields(Header);
 
-                if not CurrReport.PREVIEW and
+
+                if not IsReportInPreviewMode() and
                    (CurrReport.USEREQUESTPAGE and ArchiveDocument or
-                    not CurrReport.USEREQUESTPAGE and SalesSetup."Archive Orders")
+                    not CurrReport.USEREQUESTPAGE and (SalesSetup."Archive Quotes" <> SalesSetup."Archive Quotes"::Never))
                 then
-                    ArchiveManagement.StoreSalesDocument(Header, LogInteraction);
-
-                if LogInteraction and not CurrReport.PREVIEW then begin
-                    CALCFIELDS("No. of Archived Versions");
-                    if "Bill-to Contact No." <> '' then
-                        SegManagement.LogDocument(
-                          3, "No.", "Doc. No. Occurrence",
-                          "No. of Archived Versions", DATABASE::Contact, "Bill-to Contact No."
-                          , "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.")
-                    else
-                        SegManagement.LogDocument(
-                          3, "No.", "Doc. No. Occurrence",
-                          "No. of Archived Versions", DATABASE::Customer, "Bill-to Customer No.",
-                          "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.");
-                end;
+                    case SalesSetup."Archive Quotes" of
+                        SalesSetup."Archive Quotes"::Always:
+                            ArchiveManagement.ArchSalesDocumentNoConfirm(Header);
+                        SalesSetup."Archive Quotes"::Question:
+                            ArchiveManagement.ArchiveSalesDocument(Header);
+                    end;
 
                 TotalSubTotal := 0;
                 TotalInvDiscAmount := 0;
                 TotalAmount := 0;
                 TotalAmountVAT := 0;
                 TotalAmountInclVAT := 0;
-                TotalPaymentDiscOnVAT := 0;
+
+                // DELPHI AUB 15.07.2019
+                //GTxtCompanyVAT := 'No. TVA';
+                GTxtCompanyVAT := GTxtTVaLbl;
+                if Cust.ICE then
+                    GTxtCompanyVAT := 'No. ICE';
+                if Cust."VAT Registration No." = '' then
+                    GTxtCompanyVAT := '';
+
+
+                // DEB DELPHI XAV Livraison
+                if ShipmentMethod.GET(Header."Shipment Method Code") then
+                    if GrecTraductionTransport.GET(ShipmentMethod.Code, Header."Language Code") then
+                        GTxtTraductionTransport := GrecTraductionTransport.Description
+                    else
+                        GTxtTraductionTransport := ShipmentMethod.Description;
+                if ShipmentMethod.Incoterms then
+                    GTxtCondLivraisonEtendues := GTxtTraductionTransport + ' - ' + Header."Compl. cond. livraison" + ' - Incoterms © 2010'
+                else
+                    GTxtCondLivraisonEtendues := ShipmentMethod.Code + ' ' + GTxtTraductionTransport + ' - ' + Header."Compl. cond. livraison";
+                GTxtBankName := CompanyInfo."Bank Name";
+                GTxtBankBranchNo := CompanyInfo."Bank Branch No.";
+                GTxtBankAcountNo := CompanyInfo."Bank Account No.";
+                GTxtBankIBAN := CompanyInfo.IBAN;
+                GTxtBankSwift := CompanyInfo."SWIFT Code";
+
+                if GRecCountry.GET(CompanyInfo."Country/Region Code") then
+                    GTxtCompanyInfoPays := GRecCountry.Name
+                else
+                    GTxtCompanyInfoPays := CompanyInfo.County;
+
+                if GRecCust2.GET("Sell-to Customer No.") then
+                    GTxtNumTVAClient := GRecCust2."VAT Registration No.";
+
+                //--> BC6 NC 13052024
+                if LanguageMgt.GetUserLanguageCode() = 'ENU' then
+                    GdocDate := FORMAT(Header."Document Date", 0, '<Month Text> <Closing><Day>, <Year4>')
+                else
+                    GdocDate := FORMAT(Header."Document Date", 0, 4);
+
+                FormatDocumentFields(Header);
+            end;
+
+            trigger OnPreDataItem()
+            begin
+                FirstLineHasBeenOutput := false;
             end;
         }
     }
@@ -901,10 +1125,6 @@ report 50000 "Standard Sales - Order Conf. W"
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
-                    field(DisplayAsmInformationF; DisplayAssemblyInformation)
-                    {
-                        Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
-                    }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
                         ApplicationArea = Basic, Suite;
@@ -916,28 +1136,57 @@ report 50000 "Standard Sales - Order Conf. W"
                                 LogInteraction := false;
                         end;
                     }
+                    field(GBooProformaF; GBooProforma)
+                    {
+                        Caption = 'Facture Pro-forma', Comment = 'FRA="Facture Pro-forma"';
+                    }
+                    field(AffichageOrigineF; GBooAffichageOrigine)
+                    {
+                        Caption = 'Affichage Origine', Comment = 'FRA="Affichage Origine"';
+                    }
                 }
             }
         }
+
         trigger OnInit()
         begin
             LogInteractionEnable := true;
+            ArchiveDocument := SalesSetup."Archive Quotes" <> SalesSetup."Archive Quotes"::Never;
         end;
 
         trigger OnOpenPage()
         begin
             InitLogInteraction();
             LogInteractionEnable := LogInteraction;
-            ArchiveDocument := SalesSetup."Archive Orders";
         end;
     }
 
     trigger OnInitReport()
     begin
         GLSetup.GET();
+        CompanyInfo.SETAUTOCALCFIELDS(Picture);
         CompanyInfo.GET();
         SalesSetup.GET();
         CompanyInfo.VerifyAndSetPaymentInfo();
+    end;
+
+    trigger OnPostReport()
+    begin
+        if LogInteraction and not IsReportInPreviewMode() then
+            if Header.FINDSET() then
+                repeat
+                    Header.CALCFIELDS("No. of Archived Versions");
+                    if Header."Bill-to Contact No." <> '' then
+                        SegManagement.LogDocument(
+                          1, Header."No.", Header."Doc. No. Occurrence",
+                          Header."No. of Archived Versions", DATABASE::Contact, Header."Bill-to Contact No.",
+                          Header."Salesperson Code", Header."Campaign No.", Header."Posting Description", Header."Opportunity No.")
+                    else
+                        SegManagement.LogDocument(
+                          1, Header."No.", Header."Doc. No. Occurrence",
+                          Header."No. of Archived Versions", DATABASE::Customer, Header."Bill-to Customer No.",
+                          Header."Salesperson Code", Header."Campaign No.", Header."Posting Description", Header."Opportunity No.");
+                until Header.NEXT() = 0;
     end;
 
     trigger OnPreReport()
@@ -952,31 +1201,33 @@ report 50000 "Standard Sales - Order Conf. W"
     end;
 
     var
-        AsmHeader: Record "Assembly Header";
         CompanyInfo: Record "Company Information";
+        GRecCountry: Record "Country/Region";
         Cust: Record Customer;
+        GRecCust2: Record Customer;
         GLSetup: Record "General Ledger Setup";
+        GRecItem: Record Item;
         PaymentMethod: Record "Payment Method";
         PaymentTerms: Record "Payment Terms";
         RespCenter: Record "Responsibility Center";
         SalesSetup: Record "Sales & Receivables Setup";
         SalespersonPurchaser: Record "Salesperson/Purchaser";
         ShipmentMethod: Record "Shipment Method";
+        GrecTraductionTransport: Record "Shipment Method Translation";
         VATClause: Record "VAT Clause";
         FormatAddr: Codeunit "Format Address";
         FormatDocument: Codeunit "Format Document";
-        LanguageCdu: Codeunit Language;
+        LanguageMgt: Codeunit Language;
         SegManagement: Codeunit SegManagement;
         ArchiveDocument: Boolean;
-        AsmInfoExistsForLine: Boolean;
-        DisplayAssemblyInformation: Boolean;
         FirstLineHasBeenOutput: Boolean;
+        GBooAffichageOrigine: Boolean;
+        GBooProforma: Boolean;
         LogInteraction: Boolean;
         LogInteractionEnable: Boolean;
         MoreLines: Boolean;
         ShowShippingAddr: Boolean;
         ShowWorkDescription: Boolean;
-        PostedShipmentDate: Date;
         CalculatedExchRate: Decimal;
         PrevLineAmount: Decimal;
         TotalAmount: Decimal;
@@ -990,37 +1241,77 @@ report 50000 "Standard Sales - Order Conf. W"
         TransHeaderAmount: Decimal;
         VATAmountLCY: Decimal;
         VATBaseLCY: Decimal;
+        WorkDescriptionInstream: InStream;
         CompanyLogoPosition: Integer;
-        BodyLbl: Label 'Thank you for your business. Your order confirmation is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre confirmation de commande est jointe à ce message."';
+        BodyLbl: Label 'Thank you for your business. Your quote is attached to this message.', Comment = 'FRA="Merci de votre collaboration. Votre devis est joint à ce message."';
         ClosingLbl: Label 'Sincerely', Comment = 'FRA="Cordialement"';
-        CompanyInfoBankAccNoLbl: Label 'Account No.', Comment = 'FRA="N° compte"';
         CompanyInfoBankNameLbl: Label 'Bank', Comment = 'FRA="Banque"';
         CompanyInfoGiroNoLbl: Label 'Giro No.', Comment = 'FRA="N° CCP"';
-        CompanyInfoPhoneNoLbl: Label 'Phone No.', Comment = 'FRA="N° téléphone"';
         CopyLbl: Label 'Copy', Comment = 'FRA="Copier"';
-        EMailLbl: Label 'Email', Comment = 'FRA="Adresse e-mail"';
+        DiscountLbl: Label 'Discount', Comment = 'FRA="Remise"';
+        EstimateBodyLbl: Label 'As promised, here''s our estimate. Please see the attached estimate for details.', Comment = 'FRA="Comme convenu, voici notre estimation. Consultez l''estimation jointe pour plus d''informations."';
+        EstimateForLbl: Label 'Estimate for', Comment = 'FRA="Estimation pour"';
+        EstimateLbl: Label 'Estimate', Comment = 'FRA="Estimation"';
         ExchangeRateTxt: Label 'Exchange rate: %1/%2', Comment = 'FRA="Taux de change : %1/%2"';
+        FromLbl: Label 'From', Comment = 'FRA="De"';
         GreetingLbl: Label 'Hello', Comment = 'FRA="Bonjour"';
-        HomePageLbl: Label 'Home Page', Comment = 'FRA="Page d''accueil"';
+        GTxtCompanyBankBranch: Label 'Bk Code', Comment = 'FRA="Code Bq"';
+        GTxtCompanyBankNr: Label 'Bk Num.', Comment = 'FRA="No. Cpte"';
+        GTxtCompanyBankSWIFT: Label 'SWIFT', Comment = 'FRA="SWIFT"';
+        GTxtCompanyemail: Label 'E-Mail', Comment = 'FRA="E-Mail"';
+        GTxtCompanyFaxNo: Label 'Fax.', Comment = 'FRA="Fax."';
+        GTxtCompanyGesch: Label 'Director', Comment = 'FRA="Gérant"';
+        GTxtCompanyHomepage: Label 'Website', Comment = 'FRA="Site Web"';
+        GTxtCompanyPhoneNo: Label 'Phone', Comment = 'FRA="Tél."';
+        GTxtCompanySalespers: Label 'Agent', Comment = 'FRA="Commercial"';
+        GTxtCompanySitz: Label 'H. Q.', Comment = 'FRA="Siège"';
+        GTxtCompanyTrib: Label 'Trial court', Comment = 'FRA="RCS"';
+        GTxtCustomerNum: Label 'Customer num.', Comment = 'FRA="No. Client"';
+        GTxtDelaiLiv_Lbl: Label 'Shipment Time', Comment = 'FRA="Délai de livraison"';
+        GTxtDelivery_Lbl: Label 'Delivery', Comment = 'FRA="Livraison"';
+        GTxtDureeValid_Lbl: Label 'Durée de validité', Comment = 'FRA="Durée de validité"';
+        GTxTextLbl: Label 'Free text typing', Comment = 'FRA="Saisie de texte libre"';
+        GTxtLineNoLbl: Label 'Item No', Comment = 'FRA="N° article"';
+        GTxTMentionLegaleFR: Label 'Late payments are subject to a monthly interest of 1.5%. No discount for earlyment.', Comment = 'FRA="Les retards de paiement sont soumis à un intérêt mensuel de 1,5%. Pas d’escompte pour règlement anticipé."';
+        GTxtPaymentterms_Lbl: Label 'Payment terms', Comment = 'FRA="Conditions de paiement"';
+        GTxtPrices_Lbl: Label 'Prices', Comment = 'FRA="Prix"';
+        GTxtProforma: Label 'Proforma Invoice No ', Comment = 'FRA="Facture Pro-forma N° "';
+        GTxtQuantity_Line_Lbl: Label 'Qty', Comment = 'FRA="Qté"';
+        GTxtQuoteLbl: Label 'Quote', Comment = 'FRA="Devis"';
+        GTxtTerms_Lbl: Label 'Terms of delivery and payement', Comment = 'FRA="Conditions de livraison et de paiement"';
+        GTxtTotalHT_Lbl: Label 'Total EUR HT', Comment = 'FRA="Total EUR HT"';
+        GTxtTVaLbl: Label 'VAT No', Comment = 'FRA="N° TVA"';
+        GTxtUnitOfMeasure_Lbl: Label 'Unit', Comment = 'FRA="Unité"';
+        GTxtUnitPrice_Lbl: Label 'Unit Price', Comment = 'FRA="Prix Unit."';
+        GTxtValidity_Lbl: Label 'Validity', Comment = 'FRA="Validité"';
+        GTxtWarranty_Lbl: Label 'Warranty', Comment = 'FRA="Garantie"';
         InvDiscBaseAmtLbl: Label 'Invoice Discount Base Amount', Comment = 'FRA="Montant base remise facture"';
         InvDiscountAmtLbl: Label 'Invoice Discount', Comment = 'FRA="Remise facture"';
-        InvNoLbl: Label 'Order No.', Comment = 'FRA="N° commande"';
+        InvNoLbl: Label 'No.', Comment = 'FRA="N°"';
         LineAmtAfterInvDiscLbl: Label 'Payment Discount on VAT', Comment = 'FRA="Escompte sur TVA"';
         LocalCurrencyLbl: Label 'Local Currency', Comment = 'FRA="Devise société"';
         NoFilterSetErr: Label 'You must specify one or more filters to avoid accidently printing all documents.', Comment = 'FRA="Vous devez spécifier un ou plusieurs filtres pour éviter d''imprimer accidentellement tous les documents."';
         PageLbl: Label 'Page', Comment = 'FRA="Page"';
         PaymentMethodDescLbl: Label 'Payment Method', Comment = 'FRA="Mode de règlement"';
         PaymentTermsDescLbl: Label 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
-        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = 'FRA="Si nous recevons le paiement avant le %1, vous pouvez bénéficier d''un escompte de 2 %."';
+        PmtDiscTxt: Label 'If we receive the payment before %1, you are eligible for a 2% payment discount.', Comment = 'FRA="Si nous recevons le paiement avant le %1, vous pouvez bénéficier d''un escompte de 2%."';
         PostedShipmentDateLbl: Label 'Shipment Date', Comment = 'FRA="Date d''expédition"';
-        SalesConfirmationLbl: Label 'Order Confirmation', Comment = 'FRA="Confirmation de commande"';
+        PriceLbl: Label 'Price', Comment = 'FRA="Prix"';
+        PricePerLbl: Label 'Price per', Comment = 'FRA="Prix par"';
+        QtyLbl: Label 'Qty', Comment = 'FRA="Qté"';
+        QuestionsLbl: Label 'Questions?', Comment = 'FRA="Vous avez des questions?"';
+        QuoteValidToDateLbl: Label 'Valid to', Comment = 'FRA="Valide jusqu''au"';
+        ReferenceText: Label 'Your Reference', Comment = 'FRA="Votre référence"';
+        SalesConfirmationLbl: Label 'Sales Quote', Comment = 'FRA="Devis"';
         SalesInvLineDiscLbl: Label 'Discount %', Comment = 'FRA="% remise"';
-        SalespersonLbl: Label 'Sales person', Comment = 'FRA="Vendeur"';
         ShipmentLbl: Label 'Shipment', Comment = 'FRA="Expédition"';
         ShiptoAddrLbl: Label 'Ship-to Address', Comment = 'FRA="Adresse destinataire"';
         ShptMethodDescLbl: Label 'Shipment Method', Comment = 'FRA="Conditions de livraison"';
         SubtotalLbl: Label 'Subtotal', Comment = 'FRA="Sous-total"';
+        Text005: Label 'Page %1', Comment = 'FRA="Page %1"';
+        ThanksLbl: Label 'Thank You!', Comment = 'FRA="Merci!"';
         TotalLbl: Label 'Total', Comment = 'FRA="Total"';
+        UnitLbl: Label 'Unit', Comment = 'FRA="Unité"';
         VATAmountLCYLbl: Label 'VAT Amount (LCY)', Comment = 'FRA="Montant TVA DS"';
         VATAmtLbl: Label 'VAT Amount', Comment = 'FRA="Montant TVA"';
         VATAmtSpecificationLbl: Label 'VAT Amount Specification', Comment = 'FRA="Détail montant TVA"';
@@ -1029,23 +1320,54 @@ report 50000 "Standard Sales - Order Conf. W"
         VATClausesLbl: Label 'VAT Clause', Comment = 'FRA="Clause TVA"';
         VATIdentifierLbl: Label 'VAT Identifier', Comment = 'FRA="Identifiant TVA"';
         VATPercentageLbl: Label 'VAT %', Comment = 'FRA="% TVA"';
+        YourEstimateLbl: Label 'Your Estimate', Comment = 'FRA="Votre estimation"';
         ExchangeRateText: Text;
+        FormattedLineAmount: Text;
+        FormattedQuantity: Text;
+        FormattedUnitPrice: Text;
+        FormattedVATPct: Text;
+        GdocDate: Text;
+        GTxtCondLivraisonEtendues: Text;
         LineDiscountPctText: Text;
         PmtDiscText: Text;
-        WorkDescriptionInstream: InStream;
         WorkDescriptionLine: Text;
+        GTxtBankBranchNo: Text[20];
+        GTxtBankSwift: Text[20];
         CopyText: Text[30];
+        GTxtNomenclatureArticle: Text[30];
+        GTxtBankAcountNo: Text[50];
+        GTxtBankIBAN: Text[50];
+        GTxtBrand: Text[50];
+        GTxtColor: Text[50];
+        GTxtCompanyInfoPays: Text[50];
+        GTxtDisplayTotalAmountInclVAT: Text[50];
+        GTxtDisplayTotalAmountVAT: Text[50];
+        GTxtDocumentNo: Text[50];
+        GTxTGrade: Text[50];
+        GTxtItemNo: Text[50];
+        GTxtSelltoAddr: array[8] of Text[50];
+        GTxtTotalTTC_Lbl: Text[50];
+        GTxtTotalTVA_Lbl: Text[50];
         SalesPersonText: Text[50];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];
+        GTxtCodeRegionOrigine: Text[60];
+        GTxtNumTVAClient: Text[60];
+        GTxtCompanyVAT: Text[80];
+        GtxtDocumentTitle_Lbl: Text[80];
+        GTxtMontantLigne: Text[80];
+        GTxtPrixUnitaire: Text[80];
+        GTxtQty: Text[80];
         CompanyAddr: array[8] of Text[100];
         CustAddr: array[8] of Text[100];
+        GTxtBankName: Text[100];
+        GTxtTraductionTransport: Text[100];
         ShipToAddr: array[8] of Text[100];
 
     local procedure InitLogInteraction()
     begin
-        LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Ord. Cnfrmn.") <> '';
+        LogInteraction := SegManagement.FindInteractionTemplateCode(Enum::"Interaction Log Entry Document Type"::"Sales Qte.") <> '';
     end;
 
     local procedure DocumentCaption(): Text[250]
@@ -1053,28 +1375,25 @@ report 50000 "Standard Sales - Order Conf. W"
         exit(SalesConfirmationLbl);
     end;
 
-    procedure InitializeRequest(NewLogInteraction: Boolean; DisplayAsmInfo: Boolean)
+    procedure InitializeRequest(NewLogInteraction: Boolean)
     begin
         LogInteraction := NewLogInteraction;
-        DisplayAssemblyInformation := DisplayAsmInfo;
+    end;
+
+    local procedure IsReportInPreviewMode(): Boolean
+    var
+        MailManagement: Codeunit "Mail Management";
+    begin
+        exit(CurrReport.PREVIEW or MailManagement.IsHandlingGetEmailBody());
     end;
 
     local procedure FormatDocumentFields(SalesHeader: Record "Sales Header")
     begin
-        FormatDocument.SetTotalLabels(SalesHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
+        FormatDocument.SetTotalLabels(SalesHeader.GetCurrencySymbol(), TotalText, TotalInclVATText, TotalExclVATText);
         FormatDocument.SetSalesPerson(SalespersonPurchaser, SalesHeader."Salesperson Code", SalesPersonText);
         FormatDocument.SetPaymentTerms(PaymentTerms, SalesHeader."Payment Terms Code", SalesHeader."Language Code");
         FormatDocument.SetPaymentMethod(PaymentMethod, SalesHeader."Payment Method Code", SalesHeader."Language Code");
         FormatDocument.SetShipmentMethod(ShipmentMethod, SalesHeader."Shipment Method Code", SalesHeader."Language Code");
-    end;
-
-    local procedure GetUOMText(UOMCode: Code[10]): Text[50]
-    var
-        UnitOfMeasure: Record "Unit of Measure";
-    begin
-        if not UnitOfMeasure.GET(UOMCode) then
-            exit(UOMCode);
-        exit(UnitOfMeasure.Description);
     end;
 
     local procedure CreateReportTotalLines()
@@ -1089,22 +1408,6 @@ report 50000 "Standard Sales - Order Conf. W"
         end;
         if TotalAmountVAT <> 0 then
             ReportTotalsLine.Add(VATAmountLine.VATAmountText(), TotalAmountVAT, false, true, false);
-    end;
-
-    local procedure ZeroIsBlanckDecimal(Decimale: Decimal) Return: Text[150]
-    begin
-        if Decimale <> 0 then
-            Return := FORMAT(Decimale, 10, '<Standard Format,0>')
-        else
-            Return := '';
-    end;
-
-    local procedure ZeroIsBlanckInteger("Integer": Integer) Return: Text[150]
-    begin
-        if Integer <> 0 then
-            Return := FORMAT(Integer)
-        else
-            Return := '';
     end;
 }
 
