@@ -1,10 +1,10 @@
 {
   "id": "6f313cba-7f15-43b1-9ba2-1d03563edc39",
-  "name": "AM GALLOIS",
+  "name": "AMGALLOIS",
   "publisher": "BCSYS",
   "version": "23.0.0.0",
-  "brief": "AM GALLOIS",
-  "description": "AM GALLOIS",
+  "brief": "AMGALLOIS",
+  "description": "AMGALLOIS",
   "privacyStatement": "https://www.bcsys.fr/",
   "EULA": "https://www.bcsys.fr/",
   "help": "https://www.bcsys.fr/",
@@ -17,7 +17,7 @@
   "idRanges": [
     {
       "from": 50000,
-      "to": 50199
+      "to": 50399
     }
   ],
   "resourceExposurePolicy": {

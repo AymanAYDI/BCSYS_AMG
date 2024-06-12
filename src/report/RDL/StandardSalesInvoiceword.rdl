@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,12 +11,66 @@
       <rd:DataSourceID>b23244e3-9790-4712-be0f-6041ac5f0e69</rd:DataSourceID>
     </DataSource>
   </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>8.56217cm</Height>
+        <Style />
+      </Body>
+      <Width>8.97051cm</Width>
+      <Page>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>21cm</PageWidth>
+        <LeftMargin>1.9cm</LeftMargin>
+        <RightMargin>0.4cm</RightMargin>
+        <TopMargin>0.4cm</TopMargin>
+        <BottomMargin>1cm</BottomMargin>
+        <ColumnSpacing>1.27cm</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <DataSets>
     <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
       <Fields>
         <Field Name="CompanyAddress1">
           <DataField>CompanyAddress1</DataField>
@@ -387,9 +441,6 @@
         <Field Name="AmountIncludingVAT_Line">
           <DataField>AmountIncludingVAT_Line</DataField>
         </Field>
-        <Field Name="AmountIncludingVAT_LineFormat">
-          <DataField>AmountIncludingVAT_LineFormat</DataField>
-        </Field>
         <Field Name="AmountIncludingVAT_Line_Lbl">
           <DataField>AmountIncludingVAT_Line_Lbl</DataField>
         </Field>
@@ -401,9 +452,6 @@
         </Field>
         <Field Name="LineDiscountPercent_Line">
           <DataField>LineDiscountPercent_Line</DataField>
-        </Field>
-        <Field Name="LineDiscountPercent_LineFormat">
-          <DataField>LineDiscountPercent_LineFormat</DataField>
         </Field>
         <Field Name="LineDiscountPercentText_Line">
           <DataField>LineDiscountPercentText_Line</DataField>
@@ -429,9 +477,6 @@
         <Field Name="Quantity_Line">
           <DataField>Quantity_Line</DataField>
         </Field>
-        <Field Name="Quantity_LineFormat">
-          <DataField>Quantity_LineFormat</DataField>
-        </Field>
         <Field Name="Quantity_Line_Lbl">
           <DataField>Quantity_Line_Lbl</DataField>
         </Field>
@@ -440,9 +485,6 @@
         </Field>
         <Field Name="UnitPrice">
           <DataField>UnitPrice</DataField>
-        </Field>
-        <Field Name="UnitPriceFormat">
-          <DataField>UnitPriceFormat</DataField>
         </Field>
         <Field Name="UnitPrice_Lbl">
           <DataField>UnitPrice_Lbl</DataField>
@@ -504,9 +546,6 @@
         <Field Name="Quantity_ShipmentLine">
           <DataField>Quantity_ShipmentLine</DataField>
         </Field>
-        <Field Name="Quantity_ShipmentLineFormat">
-          <DataField>Quantity_ShipmentLineFormat</DataField>
-        </Field>
         <Field Name="Quantity_ShipmentLine_Lbl">
           <DataField>Quantity_ShipmentLine_Lbl</DataField>
         </Field>
@@ -518,9 +557,6 @@
         </Field>
         <Field Name="Quantity_AssemblyLine">
           <DataField>Quantity_AssemblyLine</DataField>
-        </Field>
-        <Field Name="Quantity_AssemblyLineFormat">
-          <DataField>Quantity_AssemblyLineFormat</DataField>
         </Field>
         <Field Name="UnitOfMeasure_AssemblyLine">
           <DataField>UnitOfMeasure_AssemblyLine</DataField>
@@ -537,17 +573,11 @@
         <Field Name="InvoiceDiscountAmount_VATAmountLine">
           <DataField>InvoiceDiscountAmount_VATAmountLine</DataField>
         </Field>
-        <Field Name="InvoiceDiscountAmount_VATAmountLineFormat">
-          <DataField>InvoiceDiscountAmount_VATAmountLineFormat</DataField>
-        </Field>
         <Field Name="InvoiceDiscountAmount_VATAmountLine_Lbl">
           <DataField>InvoiceDiscountAmount_VATAmountLine_Lbl</DataField>
         </Field>
         <Field Name="InvoiceDiscountBaseAmount_VATAmountLine">
           <DataField>InvoiceDiscountBaseAmount_VATAmountLine</DataField>
-        </Field>
-        <Field Name="InvoiceDiscountBaseAmount_VATAmountLineFormat">
-          <DataField>InvoiceDiscountBaseAmount_VATAmountLineFormat</DataField>
         </Field>
         <Field Name="InvoiceDiscountBaseAmount_VATAmountLine_Lbl">
           <DataField>InvoiceDiscountBaseAmount_VATAmountLine_Lbl</DataField>
@@ -555,17 +585,11 @@
         <Field Name="LineAmount_VatAmountLine">
           <DataField>LineAmount_VatAmountLine</DataField>
         </Field>
-        <Field Name="LineAmount_VatAmountLineFormat">
-          <DataField>LineAmount_VatAmountLineFormat</DataField>
-        </Field>
         <Field Name="LineAmount_VatAmountLine_Lbl">
           <DataField>LineAmount_VatAmountLine_Lbl</DataField>
         </Field>
         <Field Name="VATAmount_VatAmountLine">
           <DataField>VATAmount_VatAmountLine</DataField>
-        </Field>
-        <Field Name="VATAmount_VatAmountLineFormat">
-          <DataField>VATAmount_VatAmountLineFormat</DataField>
         </Field>
         <Field Name="VATAmount_VatAmountLine_Lbl">
           <DataField>VATAmount_VatAmountLine_Lbl</DataField>
@@ -573,26 +597,17 @@
         <Field Name="VATAmountLCY_VATAmountLine">
           <DataField>VATAmountLCY_VATAmountLine</DataField>
         </Field>
-        <Field Name="VATAmountLCY_VATAmountLineFormat">
-          <DataField>VATAmountLCY_VATAmountLineFormat</DataField>
-        </Field>
         <Field Name="VATAmountLCY_VATAmountLine_Lbl">
           <DataField>VATAmountLCY_VATAmountLine_Lbl</DataField>
         </Field>
         <Field Name="VATBase_VatAmountLine">
           <DataField>VATBase_VatAmountLine</DataField>
         </Field>
-        <Field Name="VATBase_VatAmountLineFormat">
-          <DataField>VATBase_VatAmountLineFormat</DataField>
-        </Field>
         <Field Name="VATBase_VatAmountLine_Lbl">
           <DataField>VATBase_VatAmountLine_Lbl</DataField>
         </Field>
         <Field Name="VATBaseLCY_VATAmountLine">
           <DataField>VATBaseLCY_VATAmountLine</DataField>
-        </Field>
-        <Field Name="VATBaseLCY_VATAmountLineFormat">
-          <DataField>VATBaseLCY_VATAmountLineFormat</DataField>
         </Field>
         <Field Name="VATBaseLCY_VATAmountLine_Lbl">
           <DataField>VATBaseLCY_VATAmountLine_Lbl</DataField>
@@ -633,9 +648,6 @@
         <Field Name="VATAmount_VATClauseLine">
           <DataField>VATAmount_VATClauseLine</DataField>
         </Field>
-        <Field Name="VATAmount_VATClauseLineFormat">
-          <DataField>VATAmount_VATClauseLineFormat</DataField>
-        </Field>
         <Field Name="NoOfVATClauses">
           <DataField>NoOfVATClauses</DataField>
         </Field>
@@ -644,9 +656,6 @@
         </Field>
         <Field Name="Amount_ReportTotalsLine">
           <DataField>Amount_ReportTotalsLine</DataField>
-        </Field>
-        <Field Name="Amount_ReportTotalsLineFormat">
-          <DataField>Amount_ReportTotalsLineFormat</DataField>
         </Field>
         <Field Name="AmountFormatted_ReportTotalsLine">
           <DataField>AmountFormatted_ReportTotalsLine</DataField>
@@ -702,44 +711,23 @@
         <Field Name="TotalNetAmount">
           <DataField>TotalNetAmount</DataField>
         </Field>
-        <Field Name="TotalNetAmountFormat">
-          <DataField>TotalNetAmountFormat</DataField>
-        </Field>
         <Field Name="TotalVATBaseLCY">
           <DataField>TotalVATBaseLCY</DataField>
-        </Field>
-        <Field Name="TotalVATBaseLCYFormat">
-          <DataField>TotalVATBaseLCYFormat</DataField>
         </Field>
         <Field Name="TotalAmountIncludingVAT">
           <DataField>TotalAmountIncludingVAT</DataField>
         </Field>
-        <Field Name="TotalAmountIncludingVATFormat">
-          <DataField>TotalAmountIncludingVATFormat</DataField>
-        </Field>
         <Field Name="TotalVATAmount">
           <DataField>TotalVATAmount</DataField>
-        </Field>
-        <Field Name="TotalVATAmountFormat">
-          <DataField>TotalVATAmountFormat</DataField>
         </Field>
         <Field Name="TotalVATAmountLCY">
           <DataField>TotalVATAmountLCY</DataField>
         </Field>
-        <Field Name="TotalVATAmountLCYFormat">
-          <DataField>TotalVATAmountLCYFormat</DataField>
-        </Field>
         <Field Name="TotalInvoiceDiscountAmount">
           <DataField>TotalInvoiceDiscountAmount</DataField>
         </Field>
-        <Field Name="TotalInvoiceDiscountAmountFormat">
-          <DataField>TotalInvoiceDiscountAmountFormat</DataField>
-        </Field>
         <Field Name="TotalPaymentDiscountOnVAT">
           <DataField>TotalPaymentDiscountOnVAT</DataField>
-        </Field>
-        <Field Name="TotalPaymentDiscountOnVATFormat">
-          <DataField>TotalPaymentDiscountOnVATFormat</DataField>
         </Field>
         <Field Name="TotalVATAmountText">
           <DataField>TotalVATAmountText</DataField>
@@ -753,14 +741,8 @@
         <Field Name="TotalSubTotal">
           <DataField>TotalSubTotal</DataField>
         </Field>
-        <Field Name="TotalSubTotalFormat">
-          <DataField>TotalSubTotalFormat</DataField>
-        </Field>
         <Field Name="TotalSubTotalMinusInvoiceDiscount">
           <DataField>TotalSubTotalMinusInvoiceDiscount</DataField>
-        </Field>
-        <Field Name="TotalSubTotalMinusInvoiceDiscountFormat">
-          <DataField>TotalSubTotalMinusInvoiceDiscountFormat</DataField>
         </Field>
         <Field Name="TotalText">
           <DataField>TotalText</DataField>
@@ -768,76 +750,14 @@
         <Field Name="TotalAmountExclInclVAT">
           <DataField>TotalAmountExclInclVAT</DataField>
         </Field>
-        <Field Name="TotalAmountExclInclVATFormat">
-          <DataField>TotalAmountExclInclVATFormat</DataField>
-        </Field>
         <Field Name="TotalAmountExclInclVATText">
           <DataField>TotalAmountExclInclVATText</DataField>
         </Field>
       </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
     </DataSet>
   </DataSets>
-  <ReportSections>
-    <ReportSection>
-      <Body>
-        <Height>8.56217cm</Height>
-        <Style />
-      </Body>
-      <Width>8.97051cm</Width>
-      <Page>
-        <PageHeight>29.7cm</PageHeight>
-        <PageWidth>21cm</PageWidth>
-        <LeftMargin>1.9cm</LeftMargin>
-        <RightMargin>0.4cm</RightMargin>
-        <TopMargin>0.4cm</TopMargin>
-        <BottomMargin>1cm</BottomMargin>
-        <ColumnSpacing>1.27cm</ColumnSpacing>
-        <Style />
-      </Page>
-    </ReportSection>
-  </ReportSections>
-  <Code>Public Function BlankZero(ByVal Value As Decimal)
-    if Value = 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankPos(ByVal Value As Decimal)
-    if Value &gt; 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankZeroAndPos(ByVal Value As Decimal)
-    if Value &gt;= 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankNeg(ByVal Value As Decimal)
-    if Value &lt; 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-
-Public Function BlankNegAndZero(ByVal Value As Decimal)
-    if Value &lt;= 0 then
-        Return ""
-    end if
-    Return Value
-End Function
-</Code>
-  <Language>=User!Language</Language>
-  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
 </Report>
