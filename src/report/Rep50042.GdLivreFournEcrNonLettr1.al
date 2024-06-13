@@ -10,6 +10,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
     RDLCLayout = './src/report/rdl/GdLivreFournEcrNonLettr1.rdl';
     Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs écritures non lettrées"';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -292,7 +293,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                     column(BalanceLCY_Control1120142; BalanceLCY)
                     {
                     }
-                    column(FooterEnable; NOT (Date."Period Type" = Date."Period Type"::Year))
+                    column(FooterEnable; not (Date."Period Type" = Date."Period Type"::Year))
                     {
                     }
                     column(Detailed_Vendor_Ledg__Entry_Vendor_No_; "Vendor No.")
@@ -331,9 +332,9 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 
                     trigger OnAfterGetRecord()
                     begin
-                        IF ("Debit Amount (LCY)" = 0) AND
+                        if ("Debit Amount (LCY)" = 0) and
                            ("Credit Amount (LCY)" = 0)
-                        THEN
+                        then
                             CurrReport.SKIP();
                         BalanceLCY := BalanceLCY + "Debit Amount (LCY)" - "Credit Amount (LCY)";
 
@@ -352,23 +353,23 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                                 GRecVendLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
                                 //  GRecCustLedgEntry.SETRANGE("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
                                 GRecVendLedgEntry.CALCFIELDS("Remaining Amount");
-                                IF GRecVendLedgEntry."Remaining Amount" <> 0 THEN GBooOpen := TRUE ELSE GBooOpen := FALSE;
-                                IF GRecVendLedgEntry."Remaining Amount" > 0 THEN BEGIN
+                                if GRecVendLedgEntry."Remaining Amount" <> 0 then GBooOpen := true else GBooOpen := false;
+                                if GRecVendLedgEntry."Remaining Amount" > 0 then begin
                                     GeneralDebitAmountLCY_Open := GeneralDebitAmountLCY_Open + GRecVendLedgEntry."Remaining Amount";
                                     GDecDebit := GRecVendLedgEntry."Remaining Amount";
                                     BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
                                 end else
                                     GDecDebit := 0;
 
-                                IF GRecVendLedgEntry."Remaining Amount" < 0 THEN BEGIN
+                                if GRecVendLedgEntry."Remaining Amount" < 0 then begin
                                     GeneralCreditAmountLCY_Open := GeneralCreditAmountLCY_Open + (GRecVendLedgEntry."Remaining Amount" * -1);
                                     GDecCredit := GRecVendLedgEntry."Remaining Amount" * -1;
                                     BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
                                 end else
                                     GDecCredit := 0;
                                 //BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
-                            END;
-                        END;
+                            end;
+                        end;
                         // MHR
                     end;
 
@@ -380,11 +381,11 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 
                     trigger OnPreDataItem()
                     begin
-                        IF DocNumSort THEN
+                        if DocNumSort then
                             SETCURRENTKEY("Vendor No.", "Document No.", "Posting Date");
-                        IF StartDate > Date."Period Start" THEN
+                        if StartDate > Date."Period Start" then
                             Date."Period Start" := StartDate;
-                        IF EndDate < Date."Period End" THEN
+                        if EndDate < Date."Period End" then
                             Date."Period End" := EndDate;
                         SETRANGE("Posting Date", Date."Period Start", Date."Period End");
                     end;
@@ -394,7 +395,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 begin
                     SETRANGE("Period Type", TotalBy);
                     SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
-                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly OR (BalanceLCY = 0);
+                    CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
@@ -419,7 +420,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                   VendLedgEntry."Entry Type"::"Payment Discount (VAT Excl.)", VendLedgEntry."Entry Type"::"Payment Discount (VAT Adjustment)",
                   VendLedgEntry."Entry Type"::"Payment Tolerance", VendLedgEntry."Entry Type"::"Payment Discount Tolerance (VAT Adjustment)");
                 if VendLedgEntry.FINDSET() then
-                    REPEAT
+                    repeat
                         PreviousDebitAmountLCY := PreviousDebitAmountLCY + VendLedgEntry."Debit Amount (LCY)";
                         PreviousCreditAmountLCY := PreviousCreditAmountLCY + VendLedgEntry."Credit Amount (LCY)";
                     until VendLedgEntry.NEXT() = 0;
@@ -430,17 +431,17 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 GRecVendLedgEntry.SETRANGE("Vendor No.", "No.");
                 GRecVendLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 if GRecVendLedgEntry.FINDSET() then
-                    REPEAT
+                    repeat
                         // DEB Calcul total lettré et non lettré 20.06.2019
                         GRecVendLedgEntry.SETRANGE("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
 
                         GRecVendLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
-                        IF GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 THEN
+                        if GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 then
                             //OLD PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecCustLedgEntry."Debit Amount (LCY)";
                             //OLD PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open + GRecCustLedgEntry."Credit Amount (LCY)";
-                            IF GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 THEN
+                            if GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 then
                                 PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecVendLedgEntry."Remaining Amt. (LCY)"
-                            ELSE
+                            else
                                 PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open - GRecVendLedgEntry."Remaining Amt. (LCY)";
                     // FIN Calcul total lettré et non lettré 20.06.2019
                     until GRecVendLedgEntry.NEXT() = 0;
@@ -449,23 +450,23 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
                 VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                IF ExcludeBalanceOnly THEN BEGIN
-                    IF VendLedgEntry2.COUNT > 0 THEN BEGIN
+                if ExcludeBalanceOnly then begin
+                    if VendLedgEntry2.COUNT > 0 then begin
                         GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                         GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
                         // DEB Calcul total lettré et non lettré 25.06.2019
                         GeneralDebitAmountLCY_Open += PreviousDebitAmountLCY_Open;
                         GeneralCreditAmountLCY_Open += PreviousCreditAmountLCY_Open;
                         // FIN Calcul total lettré et non lettré 25.06.2019
-                    END;
-                END ELSE BEGIN
+                    end;
+                end else begin
                     GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                     GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
                     // DEB Calcul total lettré et non lettré 25.06.2019
                     GeneralDebitAmountLCY_Open += PreviousDebitAmountLCY_Open;
                     GeneralCreditAmountLCY_Open += PreviousCreditAmountLCY_Open;
                     // FIN Calcul total lettré et non lettré 25.06.2019
-                END;
+                end;
                 BalanceLCY := PreviousDebitAmountLCY - PreviousCreditAmountLCY;
                 BalanceLCY_Open := PreviousDebitAmountLCY_Open - PreviousCreditAmountLCY_Open; //DELPHI AUB 29.07.19
 
@@ -480,31 +481,31 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 GRecVendLedgEntry.SETRANGE("Vendor No.", "No.");
                 GRecVendLedgEntry.SETRANGE("Posting Date", StartDate, EndDate);
                 if GRecVendLedgEntry.FINDSET() then
-                    REPEAT
+                    repeat
                         // DEB Calcul total lettré et non lettré 31/08/2015
                         GRecVendLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
 
                         GRecVendLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
-                        IF GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 THEN
+                        if GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 then
                             //OLD DebitPeriodAmount_Open :=  DebitPeriodAmount_Open + GRecCustLedgEntry."Debit Amount (LCY)";
                             //OLD CreditPeriodAmount_Open := CreditPeriodAmount_Open + GRecCustLedgEntry."Credit Amount (LCY)";
-                            IF GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 THEN
+                            if GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 then
                                 DebitPeriodAmount_Open := DebitPeriodAmount_Open + GRecVendLedgEntry."Remaining Amt. (LCY)"
-                            ELSE
+                            else
                                 CreditPeriodAmount_Open := CreditPeriodAmount_Open - GRecVendLedgEntry."Remaining Amt. (LCY)";
                     // FIN Calcul total lettré et non lettré 31/08/2015
                     until GRecVendLedgEntry.NEXT() = 0;
                 // FIN MHR
 
 
-                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly OR (BalanceLCY = 0);
+                CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPreDataItem()
             begin
-                IF GETFILTER("Date Filter") = '' THEN
+                if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
-                IF COPYSTR(GETFILTER("Date Filter"), 1, 1) = '.' THEN
+                if COPYSTR(GETFILTER("Date Filter"), 1, 1) = '.' then
                     ERROR(Text002);
                 StartDate := GETRANGEMIN("Date Filter");
                 PreviousEndDate := CLOSINGDATE(StartDate - 1);
@@ -513,9 +514,9 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                 AMG_Functions.VerifiyDateFilter(TextDate);
                 TextDate := COPYSTR(TextDate, 1, 8);
                 EVALUATE(PreviousStartDate, TextDate);
-                IF COPYSTR(GETFILTER("Date Filter"), STRLEN(GETFILTER("Date Filter")), 1) = '.' THEN
+                if COPYSTR(GETFILTER("Date Filter"), STRLEN(GETFILTER("Date Filter")), 1) = '.' then
                     EndDate := 0D
-                ELSE
+                else
                     EndDate := GETRANGEMAX("Date Filter");
             end;
         }
@@ -534,12 +535,12 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(DocNumSortF; DocNumSort)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
                     field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Exclude Vendors That Have A Balance Only', Comment = 'FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"';
                         MultiLine = true;
                         Visible = false;
@@ -547,6 +548,7 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
                     field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
+                        ApplicationArea = All;
                     }
                 }
             }
@@ -562,9 +564,9 @@ report 50042 "Gd Livre Fourn. Ecr.Non Lettr1"
     begin
         Filter := Vendor.GETFILTERS;
         //DELPHI AUB 29.07.2019
-        IF ShowOnlyUnappliedWritings THEN
+        if ShowOnlyUnappliedWritings then
             GTxtDocumentTitle := 'Grand Livre Fourn.:  écritures non lettrées'
-        ELSE
+        else
             GTxtDocumentTitle := 'Grand Livre Fourn. Classique';
         //END DELPHI AUB
     end;

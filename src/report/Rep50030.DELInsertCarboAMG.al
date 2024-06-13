@@ -7,6 +7,7 @@ report 50030 DELInsertCarboAMG
     Caption = 'Choix de l''emballage Carboglace';
     ProcessingOnly = true;
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem(Item; Item)
@@ -34,6 +35,7 @@ report 50030 DELInsertCarboAMG
                     {
                         Caption = 'N° article';
                         TableRelation = Item."No.";
+                        ApplicationArea = All;
 
                         trigger OnLookup(var Text: Text): Boolean
                         begin
@@ -47,6 +49,7 @@ report 50030 DELInsertCarboAMG
                     field("Quantité"; GDecQty)
                     {
                         Caption = 'Quantité';
+                        ApplicationArea = All;
                     }
                 }
             }

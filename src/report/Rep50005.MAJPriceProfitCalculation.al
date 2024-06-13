@@ -4,6 +4,7 @@ report 50005 "MAJ PriceProfit Calculation"
 {
     ProcessingOnly = true;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -17,7 +18,7 @@ report 50005 "MAJ PriceProfit Calculation"
             begin
                 //DELPHI AUB 11.06.2019 - MAJ du mode de calcul du prix de vente
                 VALIDATE("Price/Profit Calculation", Item."Price/Profit Calculation"::"Price=Last Direct Cost+Profit");
-                MODIFY;
+                MODIFY();
             end;
         }
     }

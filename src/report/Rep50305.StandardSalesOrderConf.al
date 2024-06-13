@@ -34,6 +34,7 @@ report 50305 "Standard Sales - Order Conf."
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -1216,7 +1217,7 @@ report 50305 "Standard Sales - Order Conf."
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
@@ -1227,7 +1228,7 @@ report 50305 "Standard Sales - Order Conf."
                     }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
 
                         trigger OnValidate()
@@ -1239,10 +1240,12 @@ report 50305 "Standard Sales - Order Conf."
                     field(AffichageOrigineF; GBooAffichageOrigine)
                     {
                         Caption = 'Affichage Origine';
+                        ApplicationArea = All;
                     }
                     field(GBooProformaF; GBooProforma)
                     {
                         Caption = 'Facture Pro-forma';
+                        ApplicationArea = All;
                     }
                 }
             }

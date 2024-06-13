@@ -32,6 +32,7 @@ report 50000 "Standard Sales - Order Conf. W"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -897,17 +898,18 @@ report 50000 "Standard Sales - Order Conf. W"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
                     field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
+                        ApplicationArea = All;
                     }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
 
                         trigger OnValidate()

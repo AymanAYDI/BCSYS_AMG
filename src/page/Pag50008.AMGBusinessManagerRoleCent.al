@@ -53,22 +53,22 @@ page 50008 "AMG Business Manager Role Cent"
         {
             part("Headline RC Business Manager"; "Headline RC Business Manager")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
             }
             part("O365 Activities"; "O365 Activities")
             {
                 AccessByPermission = TableData "Activities Cue" = I;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
             }
             part("Favorite Accounts"; "My Accounts")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Favorite Accounts', Comment = 'FRA="Comptes favoris"';
             }
             part("Trial Balance"; "Trial Balance")
             {
                 AccessByPermission = TableData "G/L Entry" = R;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
             }
             part("Team Member Activities No Msgs"; "Team Member Activities No Msgs")
             {
@@ -77,7 +77,7 @@ page 50008 "AMG Business Manager Role Cent"
             part("Report Inbox Part"; "Report Inbox Part")
             {
                 AccessByPermission = TableData "Report Inbox" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
             }
         }
     }
@@ -89,7 +89,7 @@ page 50008 "AMG Business Manager Role Cent"
             action("Sales Quote")
             {
                 AccessByPermission = TableData "Sales Header" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Sales Quote', Comment = 'FRA="Devis"';
                 Image = NewSalesQuote;
                 RunObject = Page "Sales Quote";
@@ -98,7 +98,7 @@ page 50008 "AMG Business Manager Role Cent"
             action("Sales Order")
             {
                 AccessByPermission = TableData "Sales Header" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Sales Order', Comment = 'FRA="Commande vente"';
                 Image = NewOrder;
                 RunObject = Page "Sales Order";
@@ -107,7 +107,7 @@ page 50008 "AMG Business Manager Role Cent"
             action("Sales Invoice")
             {
                 AccessByPermission = TableData "Sales Header" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Sales Invoice', Comment = 'FRA="Facture vente"';
                 Image = NewSalesInvoice;
                 RunObject = Page "Sales Invoice";
@@ -134,7 +134,7 @@ page 50008 "AMG Business Manager Role Cent"
             action("Purchase Invoice")
             {
                 AccessByPermission = TableData "Purchase Header" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Purchase Invoice', Comment = 'FRA="Facture achat"';
                 Image = NewPurchaseInvoice;
                 RunObject = Page "Purchase Invoice";
@@ -155,7 +155,7 @@ page 50008 "AMG Business Manager Role Cent"
                 action(Customer)
                 {
                     AccessByPermission = TableData Customer = IMD;
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Customer', Comment = 'FRA="Client"';
                     Image = Customer;
                     RunObject = Page "Customer Card";
@@ -164,7 +164,7 @@ page 50008 "AMG Business Manager Role Cent"
                 action(Vendor)
                 {
                     AccessByPermission = TableData Vendor = IMD;
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Vendor', Comment = 'FRA="Fournisseur"';
                     Image = Vendor;
                     RunObject = Page "Vendor Card";
@@ -176,7 +176,7 @@ page 50008 "AMG Business Manager Role Cent"
                 Caption = 'Payments', Comment = 'FRA="Paiements"';
                 action("Payment Reconciliation Journals")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Reconcile Imported Payments', Comment = 'FRA="Rapprocher les paiements importés"';
                     Image = ApplyEntries;
                     RunObject = Codeunit "Pmt. Rec. Journals Launcher";
@@ -184,7 +184,7 @@ page 50008 "AMG Business Manager Role Cent"
                 action("Import Bank Transactions")
                 {
                     AccessByPermission = TableData "Bank Export/Import Setup" = IMD;
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Import Bank Transactions...', Comment = 'FRA="Importer les transactions bancaires..."';
                     Image = Import;
                     RunObject = Codeunit "Pmt. Rec. Jnl. Import Trans.";
@@ -192,14 +192,14 @@ page 50008 "AMG Business Manager Role Cent"
                 action("Register Customer Payments")
                 {
                     AccessByPermission = TableData "Payment Registration Setup" = IMD;
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Register Customer Payments', Comment = 'FRA="Enregistrer les paiements client"';
                     Image = Payment;
                     RunObject = Page "Payment Registration";
                 }
                 action("Create Vendor Payments")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Create Vendor Payments', Comment = 'FRA="Créer des paiements fournisseur"';
                     Image = SuggestVendorPayments;
                     RunObject = Page "Vendor Ledger Entries";
@@ -217,28 +217,28 @@ page 50008 "AMG Business Manager Role Cent"
                     Image = ReferenceData;
                     action("Balance Sheet")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Balance Sheet', Comment = 'FRA="Bilan"';
                         Image = "Report";
                         RunObject = Report "Balance Sheet";
                     }
                     action("Income Statement")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Income Statement', Comment = 'FRA="Comptes de gestion"';
                         Image = "Report";
                         RunObject = Report "Income Statement";
                     }
                     action("Statement of Cash Flows")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Statement of Cash Flows', Comment = 'FRA="Déclaration des trésoreries"';
                         Image = "Report";
                         RunObject = Report "Statement of Cashflows";
                     }
                     action("Statement of Retained Earnings")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Statement of Retained Earnings', Comment = 'FRA="Déclaration des réserves"';
                         Image = "Report";
                         RunObject = Report "Retained Earnings Statement";
@@ -251,14 +251,14 @@ page 50008 "AMG Business Manager Role Cent"
                 Image = Setup;
                 action("Company Settings")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Company Settings', Comment = 'FRA="Paramètres de la société"';
                     Image = CompanyInformation;
                     RunObject = Page "Company Information";
                 }
                 action("Assisted Setup")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Assisted Setup', Comment = 'FRA="Configuration assistée"';
                     Image = QuestionaireSetup;
                     RunObject = Page "Assisted Setup";
@@ -269,7 +269,7 @@ page 50008 "AMG Business Manager Role Cent"
                     Image = ServiceSetup;
                     action(Extensions1)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Extensions', Comment = 'FRA="Extensions"';
                         Image = NonStockItemSetup;
                         RunObject = Page "Extension Management";
@@ -292,49 +292,49 @@ page 50008 "AMG Business Manager Role Cent"
                 Image = Excel;
                 action(ExcelTemplatesBalanceSheet)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Balance Sheet', Comment = 'FRA="Bilan"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Balance Sheet";
                 }
                 action(ExcelTemplateIncomeStmt)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Income Statement', Comment = 'FRA="Comptes de gestion"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Income Stmt.";
                 }
                 action(ExcelTemplateCashFlowStmt)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Cash Flow Statement', Comment = 'FRA="Déclaration de trésorerie"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template CashFlow Stmt.";
                 }
                 action(ExcelTemplateRetainedEarn)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Retained Earnings Statement', Comment = 'FRA="Déclaration de réserves"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Retained Earn.";
                 }
                 action(ExcelTemplateTrialBalance)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Trial Balance', Comment = 'FRA="Comptabilité fournisseur âgée"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Trial Balance";
                 }
                 action(ExcelTemplateAgedAccPay)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Aged Accounts Payable', Comment = 'FRA="Comptabilité client âgée"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Aged Acc. Pay.";
                 }
                 action(ExcelTemplateAgedAccRec)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Aged Accounts Receivable', Comment = 'FRA="Clients"';
                     Image = "Report";
                     RunObject = Codeunit "Run Template Aged Acc. Rec.";
@@ -345,32 +345,32 @@ page 50008 "AMG Business Manager Role Cent"
         {
             action(Customers)
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Customers', Comment = 'FRA="Fournisseurs"';
                 RunObject = Page "Customer List";
             }
             action(Vendors)
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Vendors', Comment = 'FRA="Fournisseurs"';
                 RunObject = Page "Vendor List";
             }
             action(Items)
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Items', Comment = 'FRA="Articles"';
                 RunObject = Page "Item List";
             }
             action("Bank Accounts")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Bank Accounts', Comment = 'FRA="Comptes bancaires"';
                 Image = BankAccount;
                 RunObject = Page "Bank Account List";
             }
             action("Chart of Accounts")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Chart of Accounts', Comment = 'FRA="Plan comptable"';
                 RunObject = Page "Chart of Accounts";
             }
@@ -383,7 +383,7 @@ page 50008 "AMG Business Manager Role Cent"
                 Image = Journals;
                 action(GeneralJournals)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'General Journals', Comment = 'FRA="Feuilles comptabilité"';
                     Image = Journal;
                     RunObject = Page "General Journal Batches";
@@ -392,13 +392,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Chart of Accounts1")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Chart of Accounts', Comment = 'FRA="Plan comptable"';
                     RunObject = Page "Chart of Accounts";
                 }
                 action("G/L Account Categories")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'G/L Account Categories', Comment = 'FRA="Catégories de compte général"';
                     RunObject = Page "G/L Account Categories";
                 }
@@ -416,7 +416,7 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Account Schedules")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Account Schedules', Comment = 'FRA="Tableaux d''analyse"';
                     RunObject = Page "Account Schedule Names";
                 }
@@ -452,7 +452,7 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("VAT Reports")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'VAT Reports', Comment = 'FRA="États TVA"';
                     RunObject = Page "VAT Report List";
                 }
@@ -471,7 +471,7 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("VAT Statements")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'VAT Statements', Comment = 'FRA="Déclarations de TVA"';
                     RunObject = Page "VAT Statement Names";
                 }
@@ -487,31 +487,31 @@ page 50008 "AMG Business Manager Role Cent"
                 Caption = 'Cash Management', Comment = 'FRA="Banques"';
                 action("Cash Flow Forecasts")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Cash Flow Forecasts', Comment = 'FRA="Prévisions de la trésorerie"';
                     RunObject = Page "Cash Flow Forecast List";
                 }
                 action("Chart of Cash Flow Accounts")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Chart of Cash Flow Accounts', Comment = 'FRA="Plan comptable de trésorerie"';
                     RunObject = Page "Chart of Cash Flow Accounts";
                 }
                 action("Cash Flow Manual Revenues")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Cash Flow Manual Revenues', Comment = 'FRA="Opérations diverses positives de trésorerie"';
                     RunObject = Page "Cash Flow Manual Revenues";
                 }
                 action("Cash Flow Manual Expenses")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Cash Flow Manual Expenses', Comment = 'FRA="Opérations diverses négatives de trésorerie"';
                     RunObject = Page "Cash Flow Manual Expenses";
                 }
                 action(CashReceiptJournals)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Cash Receipt Journals', Comment = 'FRA="Feuilles règlement"';
                     Image = Journals;
                     RunObject = Page "General Journal Batches";
@@ -520,7 +520,7 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action(PaymentJournals)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Payment Journals', Comment = 'FRA="Feuilles paiement"';
                     Image = Journals;
                     RunObject = Page "General Journal Batches";
@@ -529,34 +529,34 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Bank Accounts1")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Bank Accounts', Comment = 'FRA="Comptes bancaires"';
                     Image = BankAccount;
                     RunObject = Page "Bank Account List";
                 }
                 action("Bank Acc. Statements")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Bank Acc. Statements', Comment = 'FRA="Relevés bancaires"';
                     Image = BankAccountStatement;
                     RunObject = Page "Bank Account Statement List";
                 }
                 action("Payment Recon. Journals")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Payment Recon. Journals', Comment = 'FRA="Feuilles rapprochement bancaire"';
                     Image = ApplyEntries;
                     RunObject = Page "Pmt. Reconciliation Journals";
                 }
                 action("Direct Debit Collections")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Direct Debit Collections', Comment = 'FRA="Recouvrements prélèvement"';
                     RunObject = Page "Direct Debit Collections";
                 }
                 action("Payment Terms")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Payment Terms', Comment = 'FRA="Conditions de paiement"';
                     Image = Payment;
                     RunObject = Page "Payment Terms";
@@ -568,13 +568,13 @@ page 50008 "AMG Business Manager Role Cent"
                 Image = Sales;
                 action(Sales_CustomerList)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Customers', Comment = 'FRA="Clients"';
                     RunObject = Page "Customer List";
                 }
                 action(Items2)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Items', Comment = 'FRA="Articles"';
                     RunObject = Page "Item List";
                 }
@@ -586,13 +586,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Sales Quotes")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Quotes', Comment = 'FRA="Devis"';
                     RunObject = Page "Sales Quotes";
                 }
                 action("Sales Orders")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Orders', Comment = 'FRA="Commandes vente"';
                     RunObject = Page "Sales Order List";
                 }
@@ -605,13 +605,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Sales Invoices")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Invoices', Comment = 'FRA="Factures vente"';
                     RunObject = Page "Sales Invoice List";
                 }
                 action("Sales Credit Memos")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Credit Memos', Comment = 'FRA="Avoirs vente"';
                     RunObject = Page "Sales Credit Memos";
                 }
@@ -637,13 +637,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("Posted Sales Invoices")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Posted Sales Invoices', Comment = 'FRA="Factures vente enregistrées"';
                     RunObject = Page "Posted Sales Invoices";
                 }
                 action("Posted Sales Credit Memos")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Posted Sales Credit Memos', Comment = 'FRA="Avoirs vente enregistrés"';
                     RunObject = Page "Posted Sales Credit Memos";
                 }
@@ -674,13 +674,13 @@ page 50008 "AMG Business Manager Role Cent"
                 Image = AdministrationSalesPurchases;
                 action(Purchase_VendorList)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Vendors', Comment = 'FRA="Fournisseurs"';
                     RunObject = Page "Vendor List";
                 }
                 action("Incoming Documents")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Incoming Documents', Comment = 'FRA="Documents entrants"';
                     Gesture = None;
                     RunObject = Page "Incoming Documents";
@@ -711,13 +711,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("<Page Purchase Invoices>")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Purchase Invoices', Comment = 'FRA="Factures achat"';
                     RunObject = Page "Purchase Invoices";
                 }
                 action("<Page Purchase Credit Memos>")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Purchase Credit Memos', Comment = 'FRA="Avoirs achat"';
                     RunObject = Page "Purchase Credit Memos";
                 }
@@ -729,13 +729,13 @@ page 50008 "AMG Business Manager Role Cent"
                 }
                 action("<Page Posted Purchase Invoices>")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Posted Purchase Invoices', Comment = 'FRA="Factures achat enregistrées"';
                     RunObject = Page "Posted Purchase Invoices";
                 }
                 action("<Page Posted Purchase Credit Memos>")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Posted Purchase Credit Memos', Comment = 'FRA="Avoirs achat enregistrés"';
                     RunObject = Page "Posted Purchase Credit Memos";
                 }

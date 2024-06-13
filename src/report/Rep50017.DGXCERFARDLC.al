@@ -10,6 +10,7 @@ report 50017 "DGX CERFA RDLC"
     RDLCLayout = './src/report/rdl/DGXCERFARDLC.rdl';
     DefaultLayout = RDLC;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -267,6 +268,7 @@ report 50017 "DGX CERFA RDLC"
                     field("No DGX"; "DGX Header"."No DGX")
                     {
                         TableRelation = "DGX Header"."No DGX";
+                        ApplicationArea = All;
                     }
                 }
             }

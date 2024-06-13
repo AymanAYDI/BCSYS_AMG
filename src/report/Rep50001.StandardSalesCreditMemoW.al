@@ -33,6 +33,7 @@ report 50001 "Standard Sales - Credit Memo W"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -878,17 +879,18 @@ report 50001 "Standard Sales - Credit Memo W"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
                     field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
+                        ApplicationArea = All;
                     }
                     field(DisplayShipmentInformationF; DisplayShipmentInformation)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Shipments', Comment = 'FRA="Afficher expéditions"';
                     }
                 }

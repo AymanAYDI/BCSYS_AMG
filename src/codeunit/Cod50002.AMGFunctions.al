@@ -1,3 +1,14 @@
+namespace BCSYS.AMGALLOIS.Basic;
+
+using Microsoft.Foundation.ExtendedText;
+using Microsoft.Inventory.Item;
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Document;
+using Microsoft.Utilities;
+using Microsoft.Foundation.Period;
+using System.Utilities;
+
 codeunit 50002 "AMG_Functions"
 {
     SingleInstance = true;
@@ -110,6 +121,25 @@ codeunit 50002 "AMG_Functions"
     begin
         if Filter = ',,,' then
             Error(Text10800);
+    end;
+
+    procedure CheckFiscalYearStatus(PeriodRange: Text[30]): Text[30]
+    var
+        AccountingPeriod: Record "Accounting Period";
+        Date: Record Date;
+        Text009: Label 'Fiscally Closed', Comment = 'FRA="Clôturé fiscalement"';
+        Text010: Label 'Fiscally Open', Comment = 'FRA="Ouvert fiscalement"';
+    begin
+        Date.SetRange("Period Type", Date."Period Type"::Date);
+        Date.SetFilter("Period Start", PeriodRange);
+        Date.FindLast();
+        AccountingPeriod.SetFilter("Starting Date", '<=%1', Date."Period Start");
+        AccountingPeriod.SetRange("New Fiscal Year", true);
+        AccountingPeriod.FindLast();
+        if AccountingPeriod."Fiscally Closed" then
+            exit(Text009);
+
+        exit(Text010);
     end;
 
 

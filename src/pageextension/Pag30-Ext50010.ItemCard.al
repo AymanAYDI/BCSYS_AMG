@@ -1,7 +1,6 @@
 namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Inventory.Item;
-using BCSYS.AMGALLOIS.Basic;
 
 pageextension 50010 "ItemCard" extends "Item Card" //30
 {

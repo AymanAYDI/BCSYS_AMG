@@ -39,6 +39,7 @@ report 50002 "Standard Sales - Invoice word"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -1062,22 +1063,23 @@ report 50002 "Standard Sales - Invoice word"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
                     field(DisplayAsmInformationF; DisplayAssemblyInformation)
                     {
                         Caption = 'Show Assembly Components', Comment = 'FRA="Afficher composants d''assemblage"';
+                        ApplicationArea = All;
                     }
                     field(DisplayShipmentInformationF; DisplayShipmentInformation)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Shipments', Comment = 'FRA="Afficher expéditions"';
                     }
                     field(DisplayAdditionalFeeNoteF; DisplayAdditionalFeeNote)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Additional Fee Note', Comment = 'FRA="Afficher la note de frais supplémentaires"';
                     }
                 }

@@ -57,7 +57,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field(FilteredTypeField; TypeAsText)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Type', Comment = 'FRA="Type"';
                     Editable = CurrPageIsEditable;
                     LookupPageID = "Option Lookup List";
@@ -77,7 +77,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("No."; Rec."No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     ShowMandatory = not IsCommentLine;
                     StyleExpr = GTxtStyleText;
 
@@ -97,7 +97,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Item Reference No."; Rec."Item Reference No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
 
                     trigger OnLookup(var Text: Text): Boolean
@@ -148,23 +148,23 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Purchasing Code"; Rec."Purchasing Code")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                     Visible = true;
                 }
                 field(Nonstock; Rec.Nonstock)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("VAT Prod. Posting Group"; Rec."VAT Prod. Posting Group")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field(Description; Rec.Description)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     QuickEntry = false;
                     ShowMandatory = not IsCommentLine;
                     StyleExpr = GTxtStyleText;
@@ -192,7 +192,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Special Order"; Rec."Special Order")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Special Order Purchase No."; Rec."Special Order Purchase No.")
@@ -240,7 +240,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field(Quantity; Rec.Quantity)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     Editable = not (IsCommentLine or IsBlankNumber);
                     Enabled = not (IsCommentLine or IsBlankNumber);
@@ -289,7 +289,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Editable = UnitofMeasureCodeIsChangeable;
                     Enabled = UnitofMeasureCodeIsChangeable;
                     QuickEntry = false;
@@ -312,19 +312,19 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Unit Cost (LCY)"; Rec."Unit Cost (LCY)")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field(SalesPriceExist; Rec.PriceExists())
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Price Exists', Comment = 'FRA="Prix vente existant"';
                     Editable = false;
                     Visible = false;
                 }
                 field("Unit Price"; Rec."Unit Price")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     Editable = not (IsCommentLine or IsBlankNumber);
                     Enabled = not (IsCommentLine or IsBlankNumber);
@@ -338,7 +338,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Line Amount"; Rec."Line Amount")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     Editable = not (IsCommentLine or IsBlankNumber);
                     Enabled = not (IsCommentLine or IsBlankNumber);
@@ -352,7 +352,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field(SalesLineDiscExists; Rec.LineDiscExists())
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Line Disc. Exists', Comment = 'FRA="Rem. ligne vente existante"';
                     Editable = false;
                     Visible = false;
@@ -376,7 +376,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Line Discount %"; Rec."Line Discount %")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
 
                     trigger OnValidate()
@@ -386,7 +386,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Line Discount Amount"; Rec."Line Discount Amount")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
 
                     trigger OnValidate()
@@ -411,7 +411,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Allow Invoice Disc."; Rec."Allow Invoice Disc.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
 
                     trigger OnValidate()
@@ -424,17 +424,17 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Inv. Discount Amount"; Rec."Inv. Discount Amount")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Inv. Disc. Amount to Invoice"; Rec."Inv. Disc. Amount to Invoice")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Qty. to Ship"; Rec."Qty. to Ship")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
 
@@ -448,20 +448,20 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Quantity Shipped"; Rec."Quantity Shipped")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     QuickEntry = false;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Qty. to Invoice"; Rec."Qty. to Invoice")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Quantity Invoiced"; Rec."Quantity Invoiced")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     BlankZero = true;
                     StyleExpr = GTxtStyleText;
                 }
@@ -508,7 +508,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Requested Delivery Date"; Rec."Requested Delivery Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
 
                     trigger OnValidate()
@@ -547,7 +547,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Shipment Date"; Rec."Shipment Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     QuickEntry = false;
 
                     trigger OnValidate()
@@ -567,7 +567,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Shipping Time"; Rec."Shipping Time")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Work Type Code"; Rec."Work Type Code")
@@ -637,12 +637,12 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Appl.-from Item Entry"; Rec."Appl.-from Item Entry")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Appl.-to Item Entry"; Rec."Appl.-to Item Entry")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Deferral Code"; Rec."Deferral Code")
@@ -753,7 +753,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Document No."; Rec."Document No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Editable = false;
                     Visible = false;
                 }
@@ -765,7 +765,7 @@ page 50007 "Sales Order Subform Color"
                 }
                 field("Line No."; Rec."Line No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Editable = false;
                     Visible = false;
                 }
@@ -777,7 +777,7 @@ page 50007 "Sales Order Subform Color"
                     ShowCaption = false;
                     field(TotalSalesLine_LineAmount; TotalSalesLine."Line Amount")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalLineAmountWithVATAndCurrencyCaption(Currency.Code, TotalSalesHeader."Prices Including VAT");
@@ -786,7 +786,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     field("Invoice Discount Amount"; InvoiceDiscountAmount)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetInvoiceDiscAmountWithVATAndCurrencyCaption(Rec.FIELDCAPTION("Inv. Discount Amount"), Currency.Code);
@@ -801,7 +801,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     field("Invoice Disc. Pct."; InvoiceDiscountPct)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Invoice Discount %', Comment = 'FRA="% remise facture"';
                         DecimalPlaces = 0 : 3;
                         Editable = InvDiscAmountEditable;
@@ -820,7 +820,7 @@ page 50007 "Sales Order Subform Color"
                     ShowCaption = false;
                     field("Total Amount Excl. VAT"; TotalSalesLine.Amount)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalExclVATCaption(Currency.Code);
@@ -830,7 +830,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     field("Total VAT Amount"; VATAmount)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalVATCaption(Currency.Code);
@@ -839,7 +839,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     field("Total Amount Incl. VAT"; TotalSalesLine."Amount Including VAT")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         AutoFormatExpression = Rec."Currency Code";
                         AutoFormatType = 1;
                         CaptionClass = DocumentTotals.GetTotalInclVATCaption(Currency.Code);
@@ -858,7 +858,7 @@ page 50007 "Sales Order Subform Color"
             action(SelectMultiItems)
             {
                 AccessByPermission = TableData Item = R;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Select items', Comment = 'FRA="Sélectionner des articles"';
                 Ellipsis = true;
                 Image = NewItem;
@@ -944,7 +944,7 @@ page 50007 "Sales Order Subform Color"
                     action(GetPrice)
                     {
                         AccessByPermission = TableData "Sales Price" = R;
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Get Price', Comment = 'FRA="Extraire prix"';
                         Ellipsis = true;
                         Image = Price;
@@ -957,7 +957,7 @@ page 50007 "Sales Order Subform Color"
                     action("Get Li&ne Discount")
                     {
                         AccessByPermission = TableData "Sales Line Discount" = R;
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Get Li&ne Discount', Comment = 'FRA="Extraire remise ligne"';
                         Ellipsis = true;
                         Image = LineDiscount;
@@ -982,7 +982,7 @@ page 50007 "Sales Order Subform Color"
                     action("Insert Ext. Texts")
                     {
                         AccessByPermission = TableData "Extended Text Header" = R;
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Insert &Ext. Texts', Comment = 'FRA="Insérer textes étendus"';
                         Image = Text;
 
@@ -1006,7 +1006,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(OrderTracking)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Order &Tracking', Comment = 'FRA="Chaînage"';
                         Image = OrderTracking;
 
@@ -1018,7 +1018,7 @@ page 50007 "Sales Order Subform Color"
                     action("Select Nonstoc&k Items")
                     {
                         AccessByPermission = TableData "Nonstock Item" = R;
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Select Ca&talog Items', Comment = 'FRA="Sélectionner des articles de catalogue"';
                         Image = NonStockItem;
 
@@ -1034,7 +1034,7 @@ page 50007 "Sales Order Subform Color"
                     Image = ItemAvailability;
                     action("<Action3>")
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Event', Comment = 'FRA="Événement"';
                         Image = "Event";
 
@@ -1045,7 +1045,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(ItemAvailabilityByPeriod)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Period', Comment = 'FRA="Période"';
                         Image = Period;
 
@@ -1239,7 +1239,7 @@ page 50007 "Sales Order Subform Color"
                     }
                     action(DocumentLineTracking)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Document &Line Tracking', Comment = 'FRA="Traçabilité ligne document"';
                         Image = Navigate;
 
@@ -1290,7 +1290,7 @@ page 50007 "Sales Order Subform Color"
                     action(OpenSpecialPurchaseOrder)
                     {
                         AccessByPermission = TableData "Purch. Rcpt. Header" = R;
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Purchase &Order', Comment = 'FRA="Commande achat"';
                         Image = Document;
 
@@ -1744,10 +1744,11 @@ page 50007 "Sales Order Subform Color"
     var
         DocumentLineTrackingPage: Page "Document Line Tracking";
     begin
-        Clear(DocumentLineTrackingPage);
-        DocumentLineTrackingPage.SetSourceDoc(
-            "Document Line Source Type"::"Sales Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocumentLineTrackingPage.RunModal();
+        //TODO : A activer après migration des données
+        // Clear(DocumentLineTrackingPage);
+        // DocumentLineTrackingPage.SetSourceDoc(
+        //     "Document Line Source Type"::"Sales Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        // DocumentLineTrackingPage.RunModal();
     end;
 
     local procedure SetLocationCodeMandatory()

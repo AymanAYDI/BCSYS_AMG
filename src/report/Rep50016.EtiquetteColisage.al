@@ -29,6 +29,7 @@ report 50016 "Etiquette Colisage"
     Caption = 'Sales - Shipment', Comment = 'FRA="Etiquette colisage"';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -796,7 +797,6 @@ report 50016 "Etiquette Colisage"
                         begin
                             if TrackingSpecCount = 0 then
                                 CurrReport.BREAK();
-                            CurrReport.NEWPAGE();
                             SETRANGE(Number, 1, TrackingSpecCount);
                             TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");

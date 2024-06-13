@@ -30,6 +30,7 @@ report 50303 "Standard Sales - Draft Invoice"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem(Header; "Sales Header")
@@ -1089,7 +1090,7 @@ report 50303 "Standard Sales - Draft Invoice"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(ArchiveDocument; ArchiveDocument)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
                     }
                 }

@@ -8,7 +8,8 @@ report 50011 "Gd Livre Client Ecr.Non Lettr."
     DefaultLayout = RDLC;
     RDLCLayout = './src/report/rdl/GdLivreClientEcrNonLettr.rdl';
     Caption = 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre clients écritures non lettrées"';
-    UsageCategory = None;
+    UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -537,12 +538,12 @@ report 50011 "Gd Livre Client Ecr.Non Lettr."
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(DocNumSortF; DocNumSort)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
                     field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Exclude Customers That Have a Balance Only', Comment = 'FRA="Exclure seulement les clients qui ont un solde ouvert"';
                         MultiLine = true;
                         Visible = false;
@@ -550,6 +551,7 @@ report 50011 "Gd Livre Client Ecr.Non Lettr."
                     field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
+                        ApplicationArea = All;
                     }
                 }
             }

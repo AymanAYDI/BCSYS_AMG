@@ -29,7 +29,7 @@ using Microsoft.Purchases.Archive;
 using Microsoft.Warehouse.Request;
 page 50005 "Liste Commandes Ventes Couleur"
 {
-    Caption = 'Sales Orders', Comment = 'FRA="Commandes GALLOIS"';
+    Caption = 'Sales Orders', Comment = 'FRA="Commandes vente AMG"';
     CardPageID = "Sales Order";
     DataCaptionFields = "Sell-to Customer No.";
     Editable = false;
@@ -40,7 +40,7 @@ page 50005 "Liste Commandes Ventes Couleur"
     SourceTableView = sorting("No.", "Document Type")
                       order(descending)
                       where("Document Type" = const(Order));
-    UsageCategory = None;
+    UsageCategory = Lists;
     ApplicationArea = All;
 
     layout
@@ -51,7 +51,7 @@ page 50005 "Liste Commandes Ventes Couleur"
             {
                 field("No."; Rec."No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Your Reference"; Rec."Your Reference")
@@ -64,12 +64,12 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field("Sell-to Customer Name"; Rec."Sell-to Customer Name")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("External Document No."; Rec."External Document No.")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Sell-to Post Code"; Rec."Sell-to Post Code")
@@ -134,7 +134,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
@@ -170,12 +170,12 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field("Document Date"; Rec."Document Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Requested Delivery Date"; Rec."Requested Delivery Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                     Visible = false;
                 }
@@ -189,22 +189,22 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field("Payment Terms Code"; Rec."Payment Terms Code")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Due Date"; Rec."Due Date")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Payment Discount %"; Rec."Payment Discount %")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Shipment Method Code"; Rec."Shipment Method Code")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Visible = false;
                 }
                 field("Shipping Agent Code"; Rec."Shipping Agent Code")
@@ -228,7 +228,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field("Completely Shipped"; Rec."Completely Shipped")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Job Queue Status"; Rec."Job Queue Status")
@@ -238,12 +238,12 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 field(Amount; Rec.Amount)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Amount Including VAT"; Rec."Amount Including VAT")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
             }
@@ -256,19 +256,19 @@ page 50005 "Liste Commandes Ventes Couleur"
             }
             part("Customer Statistics FactBox"; "Customer Statistics FactBox")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 SubPageLink = "No." = field("Bill-to Customer No."),
                               "Date Filter" = field("Date Filter");
             }
             part("Customer Details FactBox"; "Customer Details FactBox")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 SubPageLink = "No." = field("Bill-to Customer No."),
                               "Date Filter" = field("Date Filter");
             }
             part(IncomingDocAttachFactBox; "Incoming Doc. Attach. FactBox")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 ShowFilter = false;
                 Visible = false;
             }
@@ -348,7 +348,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                 Image = Documents;
                 action("S&hipments")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'S&hipments', Comment = 'FRA="Expéditions"';
                     Image = Shipment;
                     RunObject = page "Posted Sales Shipments";
@@ -357,7 +357,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                 }
                 action(PostedSalesInvoices)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Invoices', Comment = 'FRA="Factures"';
                     Image = Invoice;
                     RunObject = page "Posted Sales Invoices";
@@ -411,7 +411,7 @@ page 50005 "Liste Commandes Ventes Couleur"
                 Visible = CRMIntegrationEnabled;
                 action(CRMGoToSalesOrderListInNAV)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Sales Order List', Comment = 'FRA="Liste des commandes vente"';
                     Enabled = CRMIntegrationEnabled;
                     Image = "Order";

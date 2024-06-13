@@ -10,6 +10,7 @@ report 50010 "CpyVendor Detail Trial Balance"
     RDLCLayout = './src/report/rdl/CpyVendorDetailTrialBalance.rdl';
     Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem(Vendor; Vendor)
@@ -403,12 +404,12 @@ report 50010 "CpyVendor Detail Trial Balance"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(DocNumSortF; DocNumSort)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
                     field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Exclude Vendors That Have A Balance Only', Comment = 'FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"';
                         MultiLine = true;
                     }

@@ -39,7 +39,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         {
             part(SalesLinesColor; "Sales Order Subform Color")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Editable = IsSalesLinesEditable2;
                 Enabled = IsSalesLinesEditable2;
                 SubPageLink = "Document No." = field("No.");
@@ -57,7 +57,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         {
             part(Substitution; "Sustitutions possibles")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Provider = SalesLinesColor;
                 SubPageLink = "No." = field("No.");
                 ShowFilter = false;

@@ -1,3 +1,7 @@
+namespace BCSYS.AMGALLOIS.Basic;
+
+using Microsoft.Foundation.Reporting;
+
 report 50399 "Update Report Selection"
 {
     Caption = 'Update Report Selection';
@@ -23,6 +27,8 @@ report 50399 "Update Report Selection"
                         "Report ID" := 50306;
                     1307:
                         "Report ID" := 50307;
+                    1322:
+                        "Report ID" := 50322;
                 end;
                 Modify();
             end;
@@ -42,6 +48,8 @@ report 50399 "Update Report Selection"
                         "Report ID" := 50306;
                     1307:
                         "Report ID" := 50307;
+                    1322:
+                        "Report ID" := 50322;
                 end;
                 Modify();
             end;
@@ -61,6 +69,8 @@ report 50399 "Update Report Selection"
                         "Report ID" := 50306;
                     1307:
                         "Report ID" := 50307;
+                    1322:
+                        "Report ID" := 50322;
                 end;
                 Modify();
             end;
@@ -81,6 +91,8 @@ report 50399 "Update Report Selection"
                         "Report ID" := 50306;
                     1307:
                         "Report ID" := 50307;
+                    1322:
+                        "Report ID" := 50322;
                 end;
                 Modify();
             end;
@@ -100,6 +112,8 @@ report 50399 "Update Report Selection"
                         "Report ID" := 50306;
                     1307:
                         "Report ID" := 50307;
+                    1322:
+                        "Report ID" := 50322;
                 end;
                 Modify();
             end;

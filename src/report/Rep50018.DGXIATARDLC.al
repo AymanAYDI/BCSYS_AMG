@@ -12,6 +12,7 @@ report 50018 "DGX IATA RDLC"
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {

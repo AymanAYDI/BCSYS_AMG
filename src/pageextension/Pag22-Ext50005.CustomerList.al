@@ -67,7 +67,7 @@ pageextension 50005 CustomerList extends "Customer List" //22
         {
             action(ReportCustomerDetailTrial2)
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Image = "Report";
                 Caption = 'Customer - Detail Trial Bal.', Comment = 'FRA="Clients : Grand livre client"';
 

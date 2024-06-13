@@ -433,6 +433,86 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table ONU table - Field Version - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 3921243024" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche expédition. Une expédition vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text009</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 2939533186" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures enregistrées. Une facture enregistrée vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text012</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 4214926420" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for posted credit memos. An empty posted credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche d'avoirs enregistrés. Un avoir enregistré vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text014</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 1148659762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for return receipts. An empty return receipt %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des réceptions retour. Une réception retour vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text030</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 3631965282" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for prepayment invoices. An empty prepayment invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures d'acompte. Une facture d'acompte vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text056</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 2994268665" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deleting this document will cause a gap in the number series for prepayment credit memos. An empty prepayment credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des avoirs acompte. Un avoir acompte vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text057</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Commande achat,Commande achat avec attestation TVA</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextSTR</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choisisez votre impression :</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextDemande</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Commande achat,Commande achat avec attestation TVA</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextSTR</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choisisez votre impression :</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextDemande</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 2120271594" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase - Quote</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Demande de prix"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType PurchQuoteTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3803183111 - Method 2595072665 - NamedType 3921243024" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscally Closed</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Clôturé fiscalement"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method CheckFiscalYearStatus - NamedType Text009</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3803183111 - Method 2595072665 - NamedType 1664139952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscally Open</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Ouvert fiscalement"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method CheckFiscalYearStatus - NamedType Text010</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3803183111 - Method 2376705618 - NamedType 2476940767" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Il n"existe aucun article avec la référence externe %1.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method GetNewSpecialOrders - NamedType Text000</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3803183111 - Method 2376705618 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Quantity per Unit of Measure %1 has changed from %2 to %3 since the sales order was created. Adjust the quantity on the sales order or the unit of measure.</source>
+          <note from="Developer" annotates="general" priority="2">%1=Unit of Measure Code,%2=Qty. per Unit of Measure in Sales Line,%3=Qty. per Unit of Measure in Item Unit of Measure</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method GetNewSpecialOrders - NamedType Text001</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3803183111 - Method 3460811878 - NamedType 2247286032" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected date is not a starting period.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La date choisie n'est pas un début de période."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method VerifiyDateFilter - NamedType Text10800</note>
+        </trans-unit>
         <trans-unit id="Page 4276077570 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Business Manager</source>
           <note from="Developer" annotates="general" priority="2">FRA="Gestionnaire d'activité"</note>
@@ -965,7 +1045,7 @@
         </trans-unit>
         <trans-unit id="Page 2386961650 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales Orders</source>
-          <note from="Developer" annotates="general" priority="2">FRA="Commandes GALLOIS"</note>
+          <note from="Developer" annotates="general" priority="2">FRA="Commandes vente AMG"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Liste Commandes Ventes Couleur - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2386961650 - Action 2038220399 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1858,6 +1938,146 @@
           <note from="Developer" annotates="general" priority="2">FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report CpyVendor Detail Trial Balance - Control ExcludeBalanceOnlyF - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Report 676532619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre clients"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 1653612302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 4036938315" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Continued</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Suite"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType ContinuedCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 1535750739" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Crédit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType CreditCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2285057371" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page courante"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Current_pageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2734534006" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre clients"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Customer_Detail_Trial_BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 1057048686" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Debit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Débit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType DebitCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 817831222" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Description"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType DescriptionCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2124006630" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 44615812" size-unit="char" translate="yes" xml:space="preserve">
+          <source>External Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° doc. externe"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType External_Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 3438806337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Grand Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total général"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Grand_TotalCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 638740601" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting Date</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date comptabilisation"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Posting_DateCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2861401771" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previous page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page précédente"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Previous_pageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 1924545757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source Code</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Code journal"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Source_CodeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must fill in the %1 field.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez renseigner le champ %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text001</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 3752334001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must specify a Starting Date.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez spécifier une date de début."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text002</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 95063322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Printed by %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Imprimé par %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text003</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 732759939" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscal Year Start Date : %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Début exercice comptable : %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text004</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 1370456556" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text005</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2008153173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1 </source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1 "</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text006</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 2645849790" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text007</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 3283546407" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Text008</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 4214946092" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This report also includes customers that only have balances.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Cet état inclut aussi les clients ne présentant que des soldes."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType This_report_also_includes_customers_that_only_have_balances_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 3260976911" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total Date Range</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total plage de dates"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType Total_Date_RangeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - NamedType 815601071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>To be continued</source>
+          <note from="Developer" annotates="general" priority="2">FRA="À suivre"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - NamedType To_be_continuedCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Options"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - Control 2655717446 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sorted by Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Trié par n° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - Control DocNumSortF - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 676532619 - Control 1976944990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exclude Customers That Have a Balance Only</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Exclure seulement les clients qui ont un solde ouvert"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Customer Detail Trial Balance - Control ExcludeBalanceOnlyF - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Report 202810368 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choix de l'emballage Carboglace</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -2327,6 +2547,141 @@
           <source>Posted Sales Shipment</source>
           <note from="Developer" annotates="general" priority="2">FRA="Expédition vente enregistrée"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Etiquette Colisage - ReportDataItem Sales Shipment Header - Property RequestFilterHeading</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>G/L Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre comptes généraux"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1653612302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1535750739" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Crédit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType CreditCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1057048686" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Debit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Débit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType DebitCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 817831222" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Description"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType DescriptionCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 2124006630" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 44615812" size-unit="char" translate="yes" xml:space="preserve">
+          <source>External Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° doc. externe"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType External_Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 3438806337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Grand Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total général"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Grand_TotalCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 2421246614" size-unit="char" translate="yes" xml:space="preserve">
+          <source>G/L Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre comptes généraux"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType G_L_Detail_Trial_BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 638740601" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting Date</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date comptabilisation"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Posting_DateCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1924545757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source Code</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Code journal"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Source_CodeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must fill in the %1 field.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez renseigner le champ %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text001</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 3752334001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must specify a Starting Date.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez spécifier une date de début."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text002</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 95063322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Printed by %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Imprimé par %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text003</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 732759939" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscal Year Start Date : %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Début exercice comptable : %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text004</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1370456556" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text005</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 2008153173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1 </source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1 "</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text006</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 2645849790" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text007</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 3283546407" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text008</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1664139952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected starting date %1 is not the start of a %2.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La date de début choisie (%1) ne correspond pas au début de %2."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text010</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 1026443335" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected ending date %1 is not the end of a %2.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La date de fin choisie (%1) ne correspond pas à la fin de %2."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text011</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 2939533186" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscal-Year Status: %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Statut de l'exercice comptable : %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Text012</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - NamedType 3260976911" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total Date Range</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total plage de dates"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - NamedType Total_Date_RangeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Options"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - Control 3039568554 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sorted by Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Trié par n° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - Control SortedByDocumentNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - Control 1123946404 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Summarize by</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Totaliser par"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - Control SummarizeBy - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 4266281019 - Control 1123946404 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source> ,Week,Month,Quarter,Year</source>
+          <note from="Developer" annotates="general" priority="2">FRA=" ,Semaine,Mois,Trimestre,Année"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report G/L Detail Trial Balance - Control SummarizeBy - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="Report 341900602 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Customer Detail Trial Balance</source>
@@ -3722,6 +4077,436 @@
           <source>Show Internal Information</source>
           <note from="Developer" annotates="general" priority="2">FRA="Afficher info. internes"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Sales-Quote AMGallois ICE - Control ShowInternalInfoF - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase - Order</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Commande Achat"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2189117947" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Allow Invoice Discount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Autoriser remise facture"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType AllowInvoiceDiscCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3285233284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType AmountCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1908025102" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The purchase order is attached to this message.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="La commande achat est jointe à ce message."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType BodyLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2771379227" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sincerely</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Cordialement"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ClosingLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2438826717" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Account No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° compte"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType CompanyInfoBankAccNoCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1275674192" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Banque"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType CompanyInfoBankNameCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 75049271" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Confirm To</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Confirmer à"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ConfirmToCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2728513993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document Date</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType DocumentDateCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2623093095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Order</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Commande achat"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType DocumentTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3897674943" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Email</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Adresse e-mail"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType EmailIDCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1909269221" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exchange rate: %1/%2</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Taux de change: %1/%2"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ExchangeRateLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 514421613" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Hello</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Bonjour"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GreetingLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2058730818" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing address</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Adresse de facturation"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtBillAdresse_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1845183550" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bk Code</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Code Bq"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyBankBranch</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1198921414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bk Num.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="No. Cpte"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyBankNr</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1190160539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>SWIFT</source>
+          <note from="Developer" annotates="general" priority="2">FRA="SWIFT"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyBankSWIFT</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1960987800" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-Mail</source>
+          <note from="Developer" annotates="general" priority="2">FRA="E-Mail"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyemail</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1488242082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fax.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Fax."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyFaxNo</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2300310974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Director</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Gérant"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyGesch</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1499997456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Website</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Site Web"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyHomepage</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3424580479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phone</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Tél."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyPhoneNo</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2162547976" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Agent</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Commercial"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanySalespers</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 205896752" size-unit="char" translate="yes" xml:space="preserve">
+          <source>H. Q.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Siège"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanySitz</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1530136031" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Trial court</source>
+          <note from="Developer" annotates="general" priority="2">FRA="RCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyTrib</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 342465749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Id. Num.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="No. TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtCompanyVAT</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3065332313" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° d'article"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtItemNo_Line_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 744849476" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Qty</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Qté"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtQuantity_Line_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 483972343" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtTotalPrice_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 970341671" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Unité"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtUnitOfMeasure_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3783837451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit Price</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Prix Unit."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType GTxtUnitPrice_Lbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2862688884" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Home Page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page d'accueil"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType HomePageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1170285572" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice Discount:</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Remise facture:"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType InvDiscCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3392267841" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Description"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemDescriptionCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3269490021" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant ligne"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemLineAmountCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 41194798" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° article"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemNumberCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1497765590" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Quantité"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemQuantityCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 313566497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Unité"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemUnitCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1072087502" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit Price</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Prix unitaire"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ItemUnitPriceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3184947576" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Job No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° projet"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType JobNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1742294907" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Job Task No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° tâche projet"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType JobTaskNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2134599625" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Local Currency</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Devise société"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType LocalCurrentyLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1095348740" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Order Date</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date commande"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType OrderDateLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2219219549" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Order No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° commande"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType OrderNoCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 650077689" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1877187315" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PageLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2893846144" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Details</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Détail paiement"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PaymentDetailsCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3169568710" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Terms</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Conditions de paiement"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PaymentTermsDescCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3013644840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepayment Specification</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Spécification acompte"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PrepaymentSpecCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2780112871" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Désignation"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PrepmtInvBuDescCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1225323363" size-unit="char" translate="yes" xml:space="preserve">
+          <source>G/L Account No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° compte général"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PrepmtInvBufGLAccNoCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2677110465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepmt. Payment Terms</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Conditions paiement acompte"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PrepymtTermsDescCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 182229247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepayment VAT Amount Specification</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Spécification montant TVA acompte"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PrepymtVATAmtSpecCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 611284396" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prices Including VAT</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Prix TTC"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PricesIncludingVATCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1332311937" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prices Including VAT</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Prix TTC"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PricesInclVATtxtLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 634581238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice Discount Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant remise facture"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PurchLineInvDiscAmtCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3411081103" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Discount %</source>
+          <note from="Developer" annotates="general" priority="2">FRA="% remise"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PurchLineLineDiscCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1517777218" size-unit="char" translate="yes" xml:space="preserve">
+          <source>PURCHASE ORDER</source>
+          <note from="Developer" annotates="general" priority="2">FRA="COMMANDE ACHAT"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PurchOrderCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 147899814" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Order Date:</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date Commande achat:"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PurchOrderDateCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 4270456244" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Order Number:</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° commande achat:"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType PurchOrderNumCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 415620768" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive By</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Réceptionner par"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ReceivebyCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 203962742" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment Method</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Conditions de livraison"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ShipmentMethodDescCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 232471621" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship-to Address</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Adresse destinataire"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ShiptoAddressCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3126303398" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Subtotal</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Sous-total"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType SubtotalCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1729335317" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Tax Ident. Type</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Type Ident. Taxe"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType TaxIdentTypeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3724780003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quote N°</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° Devis"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType TextNoDevis</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2566983481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>To:</source>
+          <note from="Developer" annotates="general" priority="2">FRA="À :"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType ToCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1583171122" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType TotalCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2786556803" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit Price (LCY)</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Prix unitaire DS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType UnitPriceLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2096959425" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Base</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Base TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VALVATBaseLCYCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3915137156" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Amount Specification in </source>
+          <note from="Developer" annotates="general" priority="2">FRA="Détail TVA dans "</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmountSpecificationLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1223243188" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice Discount Base Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant base remise facture"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmtLineInvDiscBaseAmtCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3691499681" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant ligne"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmtLineLineAmtCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 977652710" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Amount</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Montant TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmtLineVATAmtCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1210262078" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT %</source>
+          <note from="Developer" annotates="general" priority="2">FRA="% TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmtLineVATCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1396908878" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Amount Specification</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Détail montant TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATAmtSpecCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 232398666" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Discount on VAT</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Escompte sur TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATDiscountAmountCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 2012124496" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Identifier</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Identifiant TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VATIdentifierCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 132160432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° fournisseur"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VendNoCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 361562039" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor ID</source>
+          <note from="Developer" annotates="general" priority="2">FRA="ID fournisseur"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VendorIDCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 1397476154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Invoice No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° facture fournisseur"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VendorInvoiceNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - NamedType 3257397675" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Order No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° commande fournisseur"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - NamedType VendorOrderNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - ReportDataItem 2072992664 - Property 1806354803" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard Purchase - Order</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Codes achat standard - commande"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - ReportDataItem Purchase Header - Property RequestFilterHeading</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Options"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - Control 407849901 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Archive Document</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Archiver document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - Control ArchiveDocumentF - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 2244614141 - Control 218814212 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Log Interaction</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Journal interaction"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Standard Purchase - Order - Control LogInteractionF - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 992810112 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purchase - Order</source>
@@ -6603,6 +7388,151 @@
           <note from="Developer" annotates="general" priority="2">FRA="Journal interaction"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Standard Sales - Quote - Control LogInteractionF - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Report 1910335745 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Report Selection</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Update Report Selection - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre fournisseurs"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1653612302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 4036938315" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Continued</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Suite"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType ContinuedCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1535750739" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Crédit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType CreditCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2285057371" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page courante"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Current_pageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1057048686" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Debit</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Débit"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType DebitCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 817831222" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Description"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType DescriptionCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2124006630" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 44615812" size-unit="char" translate="yes" xml:space="preserve">
+          <source>External Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="N° doc. externe"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType External_Document_No_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 3438806337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Grand Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total général"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Grand_TotalCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 638740601" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting Date</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Date comptabilisation"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Posting_DateCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2861401771" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previous page</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page précédente"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Previous_pageCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1924545757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source Code</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Code journal"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Source_CodeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must fill in the %1 field.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez renseigner le champ %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text001</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 3752334001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You must specify a Starting Date.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Vous devez spécifier une date de début."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text002</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 95063322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Printed by %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Imprimé par %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text003</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 732759939" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fiscal Year Start Date : %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Début exercice comptable : %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text004</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1370456556" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Page %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text005</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2008153173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1 </source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1 "</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text006</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2645849790" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Balance at %1</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Solde au %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text007</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 3283546407" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Text008</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 1518686516" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This report also includes vendors that only have balances.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Cet état inclut aussi les fournisseurs ne présentant que des soldes."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType This_report_also_includes_vendors_that_only_have_balances_CaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 3260976911" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total Date Range</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Total plage de dates"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Total_Date_RangeCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 815601071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>To be continued</source>
+          <note from="Developer" annotates="general" priority="2">FRA="À suivre"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType To_be_continuedCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - NamedType 2300041214" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre fournisseurs"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - NamedType Vendor_Detail_Trial_BalanceCaptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Options"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - Control 2655717446 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sorted by Document No.</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Trié par n° document"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - Control DocNumSortF - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3384070579 - Control 1976944990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exclude Vendors That Have A Balance Only</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Vendor Detail Trial Balance - Control ExcludeBalanceOnlyF - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2764867601 - Action 1216513157 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3105459369">
           <source>View a detail trial balance for the general ledger accounts that you specify.</source>
           <note from="Developer" annotates="general" priority="2">FRA="Affichez un grand livre pour les comptes généraux que vous spécifiez."</note>
@@ -6697,6 +7627,11 @@
           <source>Create Package</source>
           <note from="Developer" annotates="general" priority="2">FRA="Créer Colis"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedSalesShptSubform - Action Create Package - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1083553356 - Control 3823797279 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887151548">
+          <source>Nom Client</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PurchaseLineFactBox - Control Nom Client - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1640572759 - Action 3713517018 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 387971303">
           <source>Inject New Special Order</source>
@@ -7172,86 +8107,6 @@
           <source>S.Proforma</source>
           <note from="Developer" annotates="general" priority="2">FRA="S.Proforma"</note>
           <note from="Xliff Generator" annotates="general" priority="3">EnumExtension ReportSelectionUsage - EnumValue S.Proforma - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 1083553356 - Control 3823797279 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2887151548">
-          <source>Nom Client</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PurchaseLineFactBox - Control Nom Client - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 3921243024" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for shipments. An empty shipment %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche expédition. Une expédition vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text009</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 2939533186" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for posted invoices. An empty posted invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures enregistrées. Une facture enregistrée vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text012</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 4214926420" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for posted credit memos. An empty posted credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche d'avoirs enregistrés. Un avoir enregistré vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text014</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 1148659762" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for return receipts. An empty return receipt %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des réceptions retour. Une réception retour vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text030</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 3631965282" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for prepayment invoices. An empty prepayment invoice %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des factures d'acompte. Une facture d'acompte vide %1 va être créée pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text056</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2722592983 - NamedType 2994268665" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deleting this document will cause a gap in the number series for prepayment credit memos. An empty prepayment credit memo %1 will be created to fill this gap in the number series.\\Do you want to continue?</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La suppression de ce document va engendrer une discontinuité dans la souche des avoirs acompte. Un avoir acompte vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text057</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Commande achat,Commande achat avec attestation TVA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextSTR</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choisisez votre impression :</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextDemande</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Commande achat,Commande achat avec attestation TVA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextSTR</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choisisez votre impression :</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextDemande</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 2120271594" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Purchase - Quote</source>
-          <note from="Developer" annotates="general" priority="2">FRA="Demande de prix"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType PurchQuoteTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3803183111 - Method 2376705618 - NamedType 2476940767" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Il n"existe aucun article avec la référence externe %1.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method GetNewSpecialOrders - NamedType Text000</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3803183111 - Method 2376705618 - NamedType 3114637384" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Quantity per Unit of Measure %1 has changed from %2 to %3 since the sales order was created. Adjust the quantity on the sales order or the unit of measure.</source>
-          <note from="Developer" annotates="general" priority="2">%1=Unit of Measure Code,%2=Qty. per Unit of Measure in Sales Line,%3=Qty. per Unit of Measure in Item Unit of Measure</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method GetNewSpecialOrders - NamedType Text001</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3803183111 - Method 3460811878 - NamedType 2247286032" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The selected date is not a starting period.</source>
-          <note from="Developer" annotates="general" priority="2">FRA="La date choisie n'est pas un début de période."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Functions - Method VerifiyDateFilter - NamedType Text10800</note>
-        </trans-unit>
-        <trans-unit id="Report 1910335745 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Update Report Selection</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Report Update Report Selection - Property Caption</note>
         </trans-unit>
       </group>
     </body>

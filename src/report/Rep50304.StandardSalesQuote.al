@@ -33,6 +33,7 @@ report 50304 "Standard Sales - Quote"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -1121,13 +1122,13 @@ report 50304 "Standard Sales - Quote"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
 
                         trigger OnValidate()
@@ -1139,10 +1140,12 @@ report 50304 "Standard Sales - Quote"
                     field(GBooProformaF; GBooProforma)
                     {
                         Caption = 'Facture Pro-forma', Comment = 'FRA="Facture Pro-forma"';
+                        ApplicationArea = All;
                     }
                     field(AffichageOrigineF; GBooAffichageOrigine)
                     {
                         Caption = 'Affichage Origine', Comment = 'FRA="Affichage Origine"';
+                        ApplicationArea = All;
                     }
                 }
             }

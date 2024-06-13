@@ -8,6 +8,7 @@ report 50021 "MAJ Description GL Entry"
     ProcessingOnly = true;
     UseRequestPage = false;
     UsageCategory = None;
+    ApplicationArea = All;
 
     trigger OnInitReport()
     var

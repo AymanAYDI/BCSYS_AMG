@@ -35,6 +35,7 @@ report 50307 "Standard Sales - Credit Memo"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -986,7 +987,7 @@ report 50307 "Standard Sales - Credit Memo"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
@@ -997,7 +998,7 @@ report 50307 "Standard Sales - Credit Memo"
                     }
                     field(DisplayShipmentInformationF; DisplayShipmentInformation)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Shipments', Comment = 'FRA="Afficher expéditions"';
                     }
                 }

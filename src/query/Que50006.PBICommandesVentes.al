@@ -7,7 +7,7 @@ query 50006 "PBI_Commandes_Ventes"
     {
         dataitem(Sales_Header; "Sales Header")
         {
-            DataItemTableFilter = "Document Type" = FILTER(Order);
+            DataItemTableFilter = "Document Type" = filter(Order);
             column(No_donneur_ordre; "Sell-to Customer No.")
             {
             }

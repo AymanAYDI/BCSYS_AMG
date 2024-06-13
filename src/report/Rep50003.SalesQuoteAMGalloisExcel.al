@@ -28,6 +28,7 @@ report 50003 "Sales - Quote AMGallois Excel"
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -66,11 +67,11 @@ report 50003 "Sales - Quote AMGallois Excel"
             }
             dataitem(CopyLoop; Integer)
             {
-                DataItemTableView = SORTING(Number);
+                DataItemTableView = sorting(Number);
                 dataitem(PageLoop; Integer)
                 {
-                    DataItemTableView = SORTING(Number)
-                                        WHERE(Number = CONST(1));
+                    DataItemTableView = sorting(Number)
+                                        where(Number = const(1));
                     column(NumTVAClient; GTxtNumTVAClient)
                     {
                     }
@@ -251,8 +252,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                     dataitem(DimensionLoop1; Integer)
                     {
                         DataItemLinkReference = "Sales Header";
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = FILTER(1 ..));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = filter(1 ..));
                         column(DimText; DimText)
                         {
                         }
@@ -262,34 +263,34 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnAfterGetRecord()
                         begin
-                            IF Number = 1 THEN BEGIN
+                            if Number = 1 then begin
                                 if not DimSetEntry1.FINDSET() then
                                     CurrReport.BREAK();
-                            END ELSE
-                                IF NOT Continue THEN
+                            end else
+                                if not Continue then
                                     CurrReport.BREAK();
 
                             CLEAR(DimText);
-                            Continue := FALSE;
-                            REPEAT
+                            Continue := false;
+                            repeat
                                 OldDimText := DimText;
-                                IF DimText = '' THEN
+                                if DimText = '' then
                                     DimText := STRSUBSTNO('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
-                                ELSE
+                                else
                                     DimText :=
                                       STRSUBSTNO(
                                         '%1, %2 %3', DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                IF STRLEN(DimText) > MAXSTRLEN(OldDimText) THEN BEGIN
+                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                     DimText := OldDimText;
-                                    Continue := TRUE;
-                                    EXIT;
-                                END;
+                                    Continue := true;
+                                    exit;
+                                end;
                             until DimSetEntry1.NEXT() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            IF NOT ShowInternalInfo THEN
+                            if not ShowInternalInfo then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -307,7 +308,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                     }
                     dataitem(RoundLoop; Integer)
                     {
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(Desc_SalesLine; GTxtDescriptionLine)
                         {
                         }
@@ -431,8 +432,8 @@ report 50003 "Sales - Quote AMGallois Excel"
                         }
                         dataitem(DimensionLoop2; Integer)
                         {
-                            DataItemTableView = SORTING(Number)
-                                                WHERE(Number = FILTER(1 ..));
+                            DataItemTableView = sorting(Number)
+                                                where(Number = filter(1 ..));
                             column(DimText_DimnLoop2; DimText)
                             {
                             }
@@ -442,35 +443,35 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                             trigger OnAfterGetRecord()
                             begin
-                                IF Number = 1 THEN BEGIN
+                                if Number = 1 then begin
                                     if not DimSetEntry2.FINDSET() then
                                         CurrReport.BREAK();
-                                END ELSE
-                                    IF NOT Continue THEN
+                                end else
+                                    if not Continue then
                                         CurrReport.BREAK();
 
                                 CLEAR(DimText);
-                                Continue := FALSE;
-                                REPEAT
+                                Continue := false;
+                                repeat
                                     OldDimText := DimText;
-                                    IF DimText = '' THEN
+                                    if DimText = '' then
                                         DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
-                                    ELSE
+                                    else
                                         DimText :=
                                           STRSUBSTNO(
                                             '%1, %2 %3', DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    IF STRLEN(DimText) > MAXSTRLEN(OldDimText) THEN BEGIN
+                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
-                                        Continue := TRUE;
-                                        EXIT;
-                                    END;
+                                        Continue := true;
+                                        exit;
+                                    end;
                                 until DimSetEntry2.NEXT() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                IF NOT ShowInternalInfo THEN
+                                if not ShowInternalInfo then
                                     CurrReport.BREAK();
 
                                 DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
@@ -481,18 +482,18 @@ report 50003 "Sales - Quote AMGallois Excel"
                         var
                             LRecItem: Record Item;
                         begin
-                            IF Number = 1 THEN
+                            if Number = 1 then
                                 SalesLine.FIND('-')
-                            ELSE
+                            else
                                 SalesLine.NEXT();
                             "Sales Line" := SalesLine;
 
-                            IF NOT "Sales Header"."Prices Including VAT" AND
+                            if not "Sales Header"."Prices Including VAT" and
                                (SalesLine."VAT Calculation Type" = SalesLine."VAT Calculation Type"::"Full VAT")
-                            THEN
+                            then
                                 SalesLine."Line Amount" := 0;
 
-                            IF (SalesLine.Type = SalesLine.Type::"G/L Account") AND (NOT ShowInternalInfo) THEN
+                            if (SalesLine.Type = SalesLine.Type::"G/L Account") and (not ShowInternalInfo) then
                                 "Sales Line"."No." := '';
 
                             // DEB DELPHI XAV 20/06/18 AUB 26.02.2019
@@ -501,7 +502,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                                 LRecItem.SETFILTER("No.", "Sales Line"."No.");
                                 if LRecItem.FINDFIRST() then
                                     GTxtDescriptionLine := "Sales Line".Description + ' ' + LRecItem."Description 2";
-                            END ELSE
+                            end else
                                 GTxtDescriptionLine := "Sales Line".Description + ' ' + "Sales Line"."Description 2";
                             //FIN DELPHI XAV
                         end;
@@ -514,12 +515,12 @@ report 50003 "Sales - Quote AMGallois Excel"
                         trigger OnPreDataItem()
                         begin
                             MoreLines := SalesLine.FIND('+');
-                            WHILE MoreLines AND (SalesLine.Description = '') AND (SalesLine."Description 2" = '') AND
-                                  (SalesLine."No." = '') AND (SalesLine.Quantity = 0) AND
+                            while MoreLines and (SalesLine.Description = '') and (SalesLine."Description 2" = '') and
+                                  (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
-                            DO
+                            do
                                 MoreLines := SalesLine.NEXT(-1) <> 0;
-                            IF NOT MoreLines THEN
+                            if not MoreLines then
                                 CurrReport.BREAK();
                             SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
                             SETRANGE(Number, 1, SalesLine.COUNT);
@@ -527,7 +528,7 @@ report 50003 "Sales - Quote AMGallois Excel"
                     }
                     dataitem(VATCounter; Integer)
                     {
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(VATBase_VATAmtLine; VATAmountLine."VAT Base")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
@@ -592,14 +593,14 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnPreDataItem()
                         begin
-                            IF VATAmount = 0 THEN
+                            if VATAmount = 0 then
                                 CurrReport.BREAK();
                             SETRANGE(Number, 1, VATAmountLine.COUNT);
                         end;
                     }
                     dataitem(VATCounterLCY; Integer)
                     {
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(VALExchRate; VALExchRate)
                         {
                         }
@@ -635,17 +636,17 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnPreDataItem()
                         begin
-                            IF (NOT GLSetup."Print VAT specification in LCY") OR
-                               ("Sales Header"."Currency Code" = '') OR
+                            if (not GLSetup."Print VAT specification in LCY") or
+                               ("Sales Header"."Currency Code" = '') or
                                (VATAmountLine.GetTotalVATAmount() = 0)
-                            THEN
+                            then
                                 CurrReport.BREAK();
 
                             SETRANGE(Number, 1, VATAmountLine.COUNT);
 
-                            IF GLSetup."LCY Code" = '' THEN
+                            if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text008 + Text009
-                            ELSE
+                            else
                                 VALSpecLCYHeader := Text008 + FORMAT(GLSetup."LCY Code");
 
                             CurrExchRate.FindCurrency("Sales Header"."Order Date", "Sales Header"."Currency Code", 1);
@@ -654,13 +655,13 @@ report 50003 "Sales - Quote AMGallois Excel"
                     }
                     dataitem(Total; Integer)
                     {
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = CONST(1));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = const(1));
                     }
                     dataitem(Total2; Integer)
                     {
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = CONST(1));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = const(1));
                         column(SelltoCustNo_SalesHeader; "Sales Header"."Sell-to Customer No.")
                         {
                         }
@@ -697,7 +698,7 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                         trigger OnPreDataItem()
                         begin
-                            IF NOT ShowShippingAddr THEN
+                            if not ShowShippingAddr then
                                 CurrReport.BREAK();
                         end;
                     }
@@ -720,15 +721,15 @@ report 50003 "Sales - Quote AMGallois Excel"
                       VATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
                     TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT();
 
-                    IF Number > 1 THEN BEGIN
+                    if Number > 1 then begin
                         CopyText := FormatDocument.GetCOPYText();
                         OutputNo += 1;
-                    END;
+                    end;
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    IF Print THEN
+                    if Print then
                         CODEUNIT.RUN(CODEUNIT::"Sales-Printed", "Sales Header");
                 end;
 
@@ -750,43 +751,43 @@ report 50003 "Sales - Quote AMGallois Excel"
 
                 DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
 
-                IF Print THEN BEGIN
-                    IF CurrReport.USEREQUESTPAGE AND ArchiveDocument OR
+                if Print then begin
+                    if CurrReport.USEREQUESTPAGE and ArchiveDocument or
                       not CurrReport.UseRequestPage and (SalesSetup."Archive Quotes" <> SalesSetup."Archive Quotes"::Never) then
                         ArchiveManagement.StoreSalesDocument("Sales Header", LogInteraction);
 
-                    IF LogInteraction THEN BEGIN
+                    if LogInteraction then begin
                         CALCFIELDS("No. of Archived Versions");
-                        IF "Bill-to Contact No." <> '' THEN
+                        if "Bill-to Contact No." <> '' then
                             SegManagement.LogDocument(
                               1, "No.", "Doc. No. Occurrence",
                               "No. of Archived Versions", DATABASE::Contact, "Bill-to Contact No.",
                               "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.")
-                        ELSE
+                        else
                             SegManagement.LogDocument(
                               1, "No.", "Doc. No. Occurrence",
                               "No. of Archived Versions", DATABASE::Customer, "Bill-to Customer No.",
                               "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.");
-                    END;
-                END;
-                MARK(TRUE);
+                    end;
+                end;
+                MARK(true);
 
                 //DEB DELPHI XAV 20/06/18
-                IF GRecCust2.GET("Sell-to Customer No.") THEN
+                if GRecCust2.GET("Sell-to Customer No.") then
                     GTxtNumTVAClient := GRecCust2."VAT Registration No.";
                 // FIN DELPHI XAV
             end;
 
             trigger OnPostDataItem()
             begin
-                MARKEDONLY := TRUE;
+                MARKEDONLY := true;
                 COMMIT();
                 CurrReport.LANGUAGE := GLOBALLANGUAGE;
             end;
 
             trigger OnPreDataItem()
             begin
-                Print := Print OR NOT CurrReport.PREVIEW;
+                Print := Print or not CurrReport.PREVIEW;
             end;
         }
     }
@@ -805,29 +806,33 @@ report 50003 "Sales - Quote AMGallois Excel"
                     field(NoOfCopiesF; NoOfCopies)
                     {
                         Caption = 'No. of Copies', Comment = 'FRA="Nombre de copies"';
+                        ApplicationArea = All;
                     }
                     field(ShowInternalInfoF; ShowInternalInfo)
                     {
                         Caption = 'Show Internal Information', Comment = 'FRA="Afficher info. internes"';
+                        ApplicationArea = All;
                     }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
+                        ApplicationArea = All;
 
                         trigger OnValidate()
                         begin
-                            IF NOT ArchiveDocument THEN
-                                LogInteraction := FALSE;
+                            if not ArchiveDocument then
+                                LogInteraction := false;
                         end;
                     }
                     field(LogInteractionF; LogInteraction)
                     {
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
+                        ApplicationArea = All;
 
                         trigger OnValidate()
                         begin
-                            IF LogInteraction THEN
+                            if LogInteraction then
                                 ArchiveDocument := ArchiveDocumentEnable;
                         end;
                     }
@@ -837,7 +842,7 @@ report 50003 "Sales - Quote AMGallois Excel"
 
         trigger OnInit()
         begin
-            LogInteractionEnable := TRUE;
+            LogInteractionEnable := true;
         end;
 
         trigger OnOpenPage()

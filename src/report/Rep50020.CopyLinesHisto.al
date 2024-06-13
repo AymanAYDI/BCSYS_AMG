@@ -8,6 +8,7 @@ report 50020 CopyLinesHisto
     ProcessingOnly = true;
     UseRequestPage = false;
     UsageCategory = None;
+    ApplicationArea = All;
     trigger OnPreReport()
     begin
         GRecHisto.DELETEALL();

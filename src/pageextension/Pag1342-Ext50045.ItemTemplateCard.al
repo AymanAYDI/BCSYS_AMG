@@ -1,6 +1,6 @@
-namespace BCSYS_AMG.BCSYS_AMG;
+namespace BCSYS.AMGALLOIS.Basic;
 
-pageextension 50045 "ItemTemplateCard" extends "Item Template Card" //1342
-{
-    //TODO : To Merge
-}
+// pageextension 50045 "ItemTemplateCard" extends "Item Template Card" //1342
+// {
+//     //TODO : To Merge
+// }

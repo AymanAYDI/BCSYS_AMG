@@ -1,16 +1,15 @@
 namespace BCSYS.AMGALLOIS.Basic;
-
 using Microsoft.Purchases.Vendor;
 using System.Utilities;
 using Microsoft.Purchases.Payables;
 using Microsoft.Foundation.Period;
-report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
+report 50208 "Vendor Detail Trial Balance"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/report/rdl/GdLivreFournEcrNonLettr.rdl';
-    Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs écritures non lettrées"';
+    RDLCLayout = './src/report/rdl/VendorDetailTrialBalance.rdl';
+    ApplicationArea = Basic, Suite;
+    Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
     UsageCategory = ReportsAndAnalysis;
-    ApplicationArea = All;
 
     dataset
     {
@@ -22,7 +21,7 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
             column(FORMAT_TODAY_0_4_; FORMAT(TODAY, 0, 4))
             {
             }
-            column(COMPANYNAME; COMPANYNAME)
+            column(COMPANYNAME; COMPANYPROPERTY.DISPLAYNAME())
             {
             }
             column(STRSUBSTNO_Text003_USERID_; STRSUBSTNO(Text003, USERID))
@@ -65,9 +64,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
             {
             }
             column(STRSUBSTNO_Text006_PreviousEndDate_; STRSUBSTNO(Text006, PreviousEndDate))
-            {
-            }
-            column(STRSUBSTNO_Text009_PreviousEndDate_; STRSUBSTNO(Text009, PreviousEndDate))
             {
             }
             column(PreviousDebitAmountLCY; PreviousDebitAmountLCY)
@@ -148,21 +144,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
             column(Grand_TotalCaption; Grand_TotalCaptionLbl)
             {
             }
-            column(AffichageEcrituresOuvertes; ShowOnlyUnappliedWritings)
-            {
-            }
-            column(PreviousDebitAmountLCY_Open; PreviousDebitAmountLCY_Open)
-            {
-            }
-            column(PreviousCreditAmountLCY_Open; PreviousCreditAmountLCY_Open)
-            {
-            }
-            column(PreviousDebitAmountLCY_PreviousCreditAmountLCY_Open; PreviousDebitAmountLCY_Open - PreviousCreditAmountLCY_Open)
-            {
-            }
-            column(GTxtDocumentTitle; GTxtDocumentTitle)
-            {
-            }
             dataitem(Date; Date)
             {
                 DataItemTableView = sorting("Period Type");
@@ -175,15 +156,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                 column(DebitPeriodAmount_PreviousDebitAmountLCY; DebitPeriodAmount + PreviousDebitAmountLCY)
                 {
                 }
-                column(DebitPeriodAmount_PreviousDebitAmountLCY___CreditPeriodAmount_PreviousCreditAmountLCY__Open; (DebitPeriodAmount_Open + PreviousDebitAmountLCY_Open) - (CreditPeriodAmount_Open + PreviousCreditAmountLCY_Open))
-                {
-                }
-                column(CreditPeriodAmount_PreviousCreditAmountLCY_Open; CreditPeriodAmount_Open + PreviousCreditAmountLCY_Open)
-                {
-                }
-                column(DebitPeriodAmount_PreviousDebitAmountLCY_Open; DebitPeriodAmount_Open + PreviousDebitAmountLCY_Open)
-                {
-                }
                 column(STRSUBSTNO_Text006_EndDate_; STRSUBSTNO(Text006, EndDate))
                 {
                 }
@@ -191,9 +163,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                 {
                 }
                 column(STRSUBSTNO_Text007_EndDate_; STRSUBSTNO(Text007, EndDate))
-                {
-                }
-                column(STRSUBSTNO_Text009_EndDate_; STRSUBSTNO(Text009, EndDate))
                 {
                 }
                 column(DebitPeriodAmount; DebitPeriodAmount)
@@ -266,9 +235,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                     column(BalanceLCY; BalanceLCY)
                     {
                     }
-                    column(BalanceLCY_Open; BalanceLCY_Open)
-                    {
-                    }
                     column(Det_Vendor_L_E___Entry_No__; "Detailed Vendor Ledg. Entry"."Entry No.")
                     {
                     }
@@ -320,15 +286,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                     column(PostingYearValue; FORMAT(DATE2DMY("Posting Date", 3)))
                     {
                     }
-                    column(EcritureOuverte; GBooOpen)
-                    {
-                    }
-                    column(GDecDebit; GDecDebit)
-                    {
-                    }
-                    column(GDecCredit; GDecCredit)
-                    {
-                    }
 
                     trigger OnAfterGetRecord()
                     begin
@@ -345,32 +302,6 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
 
                         DebitPeriodAmount := DebitPeriodAmount + "Debit Amount (LCY)";
                         CreditPeriodAmount := CreditPeriodAmount + "Credit Amount (LCY)";
-
-                        // CALCUL DU SOLDE RESTANT ET DETERMINATION SI L'ECRITURE ETAIT OUVERTE DANS LA PERIODE
-                        if ShowOnlyUnappliedWritings then begin
-                            GRecVendLedgEntry.RESET();
-                            if GRecVendLedgEntry.GET("Vendor Ledger Entry No.") then begin
-                                GRecVendLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
-                                //  GRecCustLedgEntry.SETRANGE("Posting Date",StartDate,EndDate); // Pour calculer le montant ouvert à date
-                                GRecVendLedgEntry.CALCFIELDS("Remaining Amount");
-                                if GRecVendLedgEntry."Remaining Amount" <> 0 then GBooOpen := true else GBooOpen := false;
-                                if GRecVendLedgEntry."Remaining Amount" > 0 then begin
-                                    GeneralDebitAmountLCY_Open := GeneralDebitAmountLCY_Open + GRecVendLedgEntry."Remaining Amount";
-                                    GDecDebit := GRecVendLedgEntry."Remaining Amount";
-                                    BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
-                                end else
-                                    GDecDebit := 0;
-
-                                if GRecVendLedgEntry."Remaining Amount" < 0 then begin
-                                    GeneralCreditAmountLCY_Open := GeneralCreditAmountLCY_Open + (GRecVendLedgEntry."Remaining Amount" * -1);
-                                    GDecCredit := GRecVendLedgEntry."Remaining Amount" * -1;
-                                    BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
-                                end else
-                                    GDecCredit := 0;
-                                //BalanceLCY_Open := BalanceLCY_Open + GRecVendLedgEntry."Remaining Amount";
-                            end;
-                        end;
-                        // MHR
                     end;
 
                     trigger OnPostDataItem()
@@ -394,114 +325,42 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                 trigger OnPreDataItem()
                 begin
                     SETRANGE("Period Type", TotalBy);
-                    SETRANGE("Period Start", StartDate, CLOSINGDATE(EndDate));
+                    SETRANGE("Period Start", CALCDATE('<-CM>', StartDate), CLOSINGDATE(EndDate));
                     CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
                 end;
             }
 
             trigger OnAfterGetRecord()
             begin
-                PreviousDebitAmountLCY := 0;
-                PreviousCreditAmountLCY := 0;
-
-                // DELPHI AUB Calcul total lettré et non lettré 25.06.2019
-                PreviousDebitAmountLCY_Open := 0;
-                PreviousCreditAmountLCY_Open := 0;
-
                 VendLedgEntry.SETCURRENTKEY(
                   "Vendor No.", "Posting Date", "Entry Type", "Initial Entry Global Dim. 1", "Initial Entry Global Dim. 2", "Currency Code");
                 VendLedgEntry.SETRANGE("Vendor No.", "No.");
                 VendLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
                 VendLedgEntry.SETFILTER(
-                  "Entry Type", '%1|%2|%3|%4|%5|%6|%7|%8|%9..%10',
-                  VendLedgEntry."Entry Type"::"Initial Entry", VendLedgEntry."Entry Type"::"Unrealized Loss",
-                  VendLedgEntry."Entry Type"::"Unrealized Gain", VendLedgEntry."Entry Type"::"Realized Loss",
-                  VendLedgEntry."Entry Type"::"Realized Gain", VendLedgEntry."Entry Type"::"Payment Discount",
-                  VendLedgEntry."Entry Type"::"Payment Discount (VAT Excl.)", VendLedgEntry."Entry Type"::"Payment Discount (VAT Adjustment)",
-                  VendLedgEntry."Entry Type"::"Payment Tolerance", VendLedgEntry."Entry Type"::"Payment Discount Tolerance (VAT Adjustment)");
-                if VendLedgEntry.FINDSET() then
-                    repeat
-                        PreviousDebitAmountLCY := PreviousDebitAmountLCY + VendLedgEntry."Debit Amount (LCY)";
-                        PreviousCreditAmountLCY := PreviousCreditAmountLCY + VendLedgEntry."Credit Amount (LCY)";
-                    until VendLedgEntry.NEXT() = 0;
+                  "Entry Type", '<>%1&<>%2',
+                  VendLedgEntry."Entry Type"::Application,
+                  VendLedgEntry."Entry Type"::"Appln. Rounding");
 
-                // DELPHI AUB 25.06.2019
-                // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
-                GRecVendLedgEntry.RESET();
-                GRecVendLedgEntry.SETRANGE("Vendor No.", "No.");
-                GRecVendLedgEntry.SETRANGE("Posting Date", 0D, PreviousEndDate);
-                if GRecVendLedgEntry.FINDSET() then
-                    repeat
-                        // DEB Calcul total lettré et non lettré 20.06.2019
-                        GRecVendLedgEntry.SETRANGE("Date Filter", 0D, EndDate); // Ecritures de l'exercice précédent non lettrées à la date de fin du calcul
-
-                        GRecVendLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
-                        if GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 then
-                            //OLD PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecCustLedgEntry."Debit Amount (LCY)";
-                            //OLD PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open + GRecCustLedgEntry."Credit Amount (LCY)";
-                            if GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 then
-                                PreviousDebitAmountLCY_Open := PreviousDebitAmountLCY_Open + GRecVendLedgEntry."Remaining Amt. (LCY)"
-                            else
-                                PreviousCreditAmountLCY_Open := PreviousCreditAmountLCY_Open - GRecVendLedgEntry."Remaining Amt. (LCY)";
-                    // FIN Calcul total lettré et non lettré 20.06.2019
-                    until GRecVendLedgEntry.NEXT() = 0;
-                // END DELPHI AUB
-
+                VendLedgEntry.CALCSUMS("Debit Amount (LCY)", "Credit Amount (LCY)");
+                PreviousDebitAmountLCY := VendLedgEntry."Debit Amount (LCY)";
+                PreviousCreditAmountLCY := VendLedgEntry."Credit Amount (LCY)";
 
                 VendLedgEntry2.COPYFILTERS(VendLedgEntry);
                 VendLedgEntry2.SETRANGE("Posting Date", StartDate, EndDate);
-                if ExcludeBalanceOnly then begin
-                    if VendLedgEntry2.COUNT > 0 then begin
-                        GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
-                        GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
-                        // DEB Calcul total lettré et non lettré 25.06.2019
-                        GeneralDebitAmountLCY_Open += PreviousDebitAmountLCY_Open;
-                        GeneralCreditAmountLCY_Open += PreviousCreditAmountLCY_Open;
-                        // FIN Calcul total lettré et non lettré 25.06.2019
-                    end;
-                end else begin
+                if not (ExcludeBalanceOnly and VendLedgEntry2.ISEMPTY) then begin
                     GeneralDebitAmountLCY := GeneralDebitAmountLCY + PreviousDebitAmountLCY;
                     GeneralCreditAmountLCY := GeneralCreditAmountLCY + PreviousCreditAmountLCY;
-                    // DEB Calcul total lettré et non lettré 25.06.2019
-                    GeneralDebitAmountLCY_Open += PreviousDebitAmountLCY_Open;
-                    GeneralCreditAmountLCY_Open += PreviousCreditAmountLCY_Open;
-                    // FIN Calcul total lettré et non lettré 25.06.2019
                 end;
                 BalanceLCY := PreviousDebitAmountLCY - PreviousCreditAmountLCY;
-                BalanceLCY_Open := PreviousDebitAmountLCY_Open - PreviousCreditAmountLCY_Open; //DELPHI AUB 29.07.19
 
                 DebitPeriodAmount := 0;
                 CreditPeriodAmount := 0;
-                // DEB Calcul total lettré et non lettré 25.06.2019
-                DebitPeriodAmount_Open := 0;
-                CreditPeriodAmount_Open := 0;
-
-                //DEB MHR Solde ouvert de la période
-                GRecVendLedgEntry.RESET();
-                GRecVendLedgEntry.SETRANGE("Vendor No.", "No.");
-                GRecVendLedgEntry.SETRANGE("Posting Date", StartDate, EndDate);
-                if GRecVendLedgEntry.FINDSET() then
-                    repeat
-                        // DEB Calcul total lettré et non lettré 31/08/2015
-                        GRecVendLedgEntry.SETRANGE("Date Filter", StartDate, EndDate);
-
-                        GRecVendLedgEntry.CALCFIELDS("Remaining Amt. (LCY)", "Debit Amount (LCY)", "Credit Amount (LCY)");
-                        if GRecVendLedgEntry."Remaining Amt. (LCY)" <> 0 then
-                            //OLD DebitPeriodAmount_Open :=  DebitPeriodAmount_Open + GRecCustLedgEntry."Debit Amount (LCY)";
-                            //OLD CreditPeriodAmount_Open := CreditPeriodAmount_Open + GRecCustLedgEntry."Credit Amount (LCY)";
-                            if GRecVendLedgEntry."Remaining Amt. (LCY)" >= 0 then
-                                DebitPeriodAmount_Open := DebitPeriodAmount_Open + GRecVendLedgEntry."Remaining Amt. (LCY)"
-                            else
-                                CreditPeriodAmount_Open := CreditPeriodAmount_Open - GRecVendLedgEntry."Remaining Amt. (LCY)";
-                    // FIN Calcul total lettré et non lettré 31/08/2015
-                    until GRecVendLedgEntry.NEXT() = 0;
-                // FIN MHR
-
-
                 CurrReport.PRINTONLYIFDETAIL := ExcludeBalanceOnly or (BalanceLCY = 0);
             end;
 
             trigger OnPreDataItem()
+            var
+                AMG_Functions: Codeunit AMG_Functions;
             begin
                 if GETFILTER("Date Filter") = '' then
                     ERROR(Text001, FIELDCAPTION("Date Filter"));
@@ -535,20 +394,14 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(DocNumSortF; DocNumSort)
                     {
-                        ApplicationArea = All;
+                        ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
                     }
                     field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
-                        ApplicationArea = All;
+                        ApplicationArea = Basic, Suite;
                         Caption = 'Exclude Vendors That Have A Balance Only', Comment = 'FRA="Exclure seulement les fournisseurs qui ont un solde ouvert"';
                         MultiLine = true;
-                        Visible = false;
-                    }
-                    field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
-                    {
-                        Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
-                        ApplicationArea = All;
                     }
                 }
             }
@@ -563,45 +416,26 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
     trigger OnPreReport()
     begin
         Filter := Vendor.GETFILTERS;
-        //DELPHI AUB 29.07.2019
-        if ShowOnlyUnappliedWritings then
-            GTxtDocumentTitle := 'Grand Livre Fourn.:  écritures non lettrées'
-        else
-            GTxtDocumentTitle := 'Grand Livre Fourn. Classique';
-        //END DELPHI AUB
     end;
 
     var
         VendLedgEntry: Record "Detailed Vendor Ledg. Entry";
         VendLedgEntry2: Record "Detailed Vendor Ledg. Entry";
-        GRecVendLedgEntry: Record "Vendor Ledger Entry";
         OriginalLedgerEntry: Record "Vendor Ledger Entry";
-        AMG_Functions: Codeunit AMG_Functions;
         FiltreDateCalc: codeunit "DateFilter-Calc";
         DocNumSort: Boolean;
         ExcludeBalanceOnly: Boolean;
-        GBooOpen: Boolean;
-        ShowOnlyUnappliedWritings: Boolean;
         EndDate: Date;
         PreviousEndDate: Date;
         PreviousStartDate: Date;
         StartDate: Date;
         BalanceLCY: Decimal;
-        BalanceLCY_Open: Decimal;
         CreditPeriodAmount: Decimal;
-        CreditPeriodAmount_Open: Decimal;
         DebitPeriodAmount: Decimal;
-        DebitPeriodAmount_Open: Decimal;
-        GDecCredit: Decimal;
-        GDecDebit: Decimal;
         GeneralCreditAmountLCY: Decimal;
-        GeneralCreditAmountLCY_Open: Decimal;
         GeneralDebitAmountLCY: Decimal;
-        GeneralDebitAmountLCY_Open: Decimal;
         PreviousCreditAmountLCY: Decimal;
-        PreviousCreditAmountLCY_Open: Decimal;
         PreviousDebitAmountLCY: Decimal;
-        PreviousDebitAmountLCY_Open: Decimal;
         ReportCreditAmountLCY: Decimal;
         ReportDebitAmountLCY: Decimal;
         BalanceCaptionLbl: Label 'Balance', Comment = 'FRA="Solde"';
@@ -624,14 +458,12 @@ report 50012 "Gd Livre Fourn. Ecr.Non Lettr."
         Text006: Label 'Balance at %1 ', Comment = 'FRA="Solde au %1 "';
         Text007: Label 'Balance at %1', Comment = 'FRA="Solde au %1"';
         Text008: Label 'Total', Comment = 'FRA="Total"';
-        Text009: Label 'Solde Non-lettré au %1', Comment = 'FRA="Solde Non-lettré au %1"';
         This_report_also_includes_vendors_that_only_have_balances_CaptionLbl: Label 'This report also includes vendors that only have balances.', Comment = 'FRA="Cet état inclut aussi les fournisseurs ne présentant que des soldes."';
         To_be_continuedCaptionLbl: Label 'To be continued', Comment = 'FRA="À suivre"';
         Total_Date_RangeCaptionLbl: Label 'Total Date Range', Comment = 'FRA="Total plage de dates"';
-        Vendor_Detail_Trial_BalanceCaptionLbl: Label 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs écr. non lettrées"';
+        Vendor_Detail_Trial_BalanceCaptionLbl: Label 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
         TotalBy: Option Date,Week,Month,Quarter,Year;
         "Filter": Text;
-        TextDate: Text;
-        GTxtDocumentTitle: Text[80];
+        TextDate: Text[30];
 }
 

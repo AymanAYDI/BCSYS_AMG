@@ -24,6 +24,7 @@ report 50022 "BC6 Purchase - Quote"
     Caption = 'Purchase - Quote', Comment = 'FRA="Achats : Demande de prix"';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Purchase Header"; "Purchase Header")

@@ -9,6 +9,7 @@ report 50014 "Grand Livre Client DDIF"
     RDLCLayout = './src/report/rdl/GrandLivreClientDDIF.rdl';
     Caption = 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre clients"';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -571,20 +572,24 @@ report 50014 "Grand Livre Client DDIF"
                     field(DocNumSortF; DocNumSort)
                     {
                         Caption = 'Sorted by Document No.', Comment = 'FRA="Trié par n° document"';
+                        ApplicationArea = All;
                     }
                     field(ExcludeBalanceOnlyF; ExcludeBalanceOnly)
                     {
                         Caption = 'Exclude Customers That Have a Balance Only', Comment = 'FRA="Exclure seulement les clients qui ont un solde ouvert"';
                         MultiLine = true;
                         Visible = false;
+                        ApplicationArea = All;
                     }
                     field(ShowOnlyUnappliedWritingsF; ShowOnlyUnappliedWritings)
                     {
                         Caption = 'Show Only Unapplied Writings', Comment = 'FRA="Montrer uniquement les écritures non lettrées "';
+                        ApplicationArea = All;
                     }
                     field(GBoolSoldeZeroF; GBoolSoldeZero)
                     {
                         Caption = 'Exclure les clients avec solde à 0', Comment = 'FRA="Exclure les clients avec solde à 0"';
+                        ApplicationArea = All;
                     }
                 }
             }

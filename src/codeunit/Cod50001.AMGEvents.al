@@ -1,3 +1,25 @@
+namespace BCSYS.AMGALLOIS.Basic;
+
+using BCSYS.AMGALLOIS.Basic;
+using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Finance.GeneralLedger.Posting;
+using Microsoft.Foundation.Address;
+using Microsoft.Foundation.AuditCodes;
+using Microsoft.Foundation.Reporting;
+using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
+using Microsoft.Purchases.Document;
+using Microsoft.Sales.Customer;
+using Microsoft.Sales.Document;
+using Microsoft.Sales.History;
+using Microsoft.Sales.Posting;
+using Microsoft.Sales.Receivables;
+using Microsoft.Utilities;
+using System.Utilities;
+
 codeunit 50001 "AMG_Events"
 {
     //Record 36
@@ -120,7 +142,7 @@ codeunit 50001 "AMG_Events"
             DocumentSendingProfile.TrySendToPrinterVendor(
               DummyReportSelections.Usage::"P.Order".AsInteger(), PurchaseHeader, PurchaseHeader.FieldNo("Buy-from Vendor No."), ShowRequestForm)
         else
-            if Selected = 2 Then
+            if Selected = 2 then
                 DocumentSendingProfile.TrySendToPrinterVendor(
                  DummyReportSelections.Usage::"P.OrderVAT".AsInteger(),
                  PurchaseHeader, PurchaseHeader.FIELDNO("Buy-from Vendor No."), ShowRequestForm);

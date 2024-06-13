@@ -20,7 +20,7 @@ pageextension 50008 "VendorList" extends "Vendor List" //27
         {
             action("Vendor - Detail Trial Balance spe")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = All;
                 Caption = 'Vendor - Detail Trial Balance', Comment = 'FRA="Fourn. : Grand livre fourn."';
                 Image = "Report";
                 trigger OnAction()

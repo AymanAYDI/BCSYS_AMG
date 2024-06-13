@@ -40,6 +40,7 @@ report 50306 "Standard Sales - Invoice"
     PreviewMode = PrintLayout;
     WordMergeDataItem = Header;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -521,7 +522,7 @@ report 50306 "Standard Sales - Invoice"
             }
             dataitem(Line; "Sales Invoice Line")
             {
-                DataItemLink = "Document No." = FIELD("No.");
+                DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = Header;
                 DataItemTableView = sorting("Document No.", "Line No.");
                 column(LineNo_Line; "Line No.")
@@ -1324,7 +1325,7 @@ report 50306 "Standard Sales - Invoice"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
@@ -1335,12 +1336,12 @@ report 50306 "Standard Sales - Invoice"
                     }
                     field(DisplayShipmentInformationF; DisplayShipmentInformation)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Shipments', Comment = 'FRA="Afficher expéditions"';
                     }
                     field(DisplayAdditionalFeeNoteF; DisplayAdditionalFeeNote)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Additional Fee Note', Comment = 'FRA="Afficher la note de frais supplémentaires"';
                     }
                 }
@@ -1349,7 +1350,7 @@ report 50306 "Standard Sales - Invoice"
                     Caption = 'Options', Comment = 'FRA="Options AMG"';
                     field("Facture FR Factor"; GBooFactureFranceAvecFactor)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Facture France avec Factor"';
                         Enabled = LogInteractionEnable;
 
@@ -1362,10 +1363,12 @@ report 50306 "Standard Sales - Invoice"
                     field("Facture Export"; GBooFactureExport)
                     {
                         Caption = 'Facture Export', Comment = 'FRA="Facture Export"';
+                        ApplicationArea = All;
                     }
                     field("Facture Export Factor"; GBooFactureExportAvecFactor)
                     {
                         Caption = 'Facture Export avec Factor', Comment = 'FRA="Facture Export avec Factor"';
+                        ApplicationArea = All;
 
                         trigger OnValidate()
                         begin
@@ -1378,6 +1381,7 @@ report 50306 "Standard Sales - Invoice"
                     field(AffichageOrigine; GBooAffichageOrigine)
                     {
                         Caption = 'Affichage Origine', Comment = 'FRA="Affichage Origine"';
+                        ApplicationArea = All;
                     }
                 }
             }

@@ -113,12 +113,12 @@ table 50006 "DGX Header"
     begin
         if "No DGX" = '' then begin
             ParamVente.GET();
-            "No DGX" := GestionNoSouche.DoGetNextNo(ParamVente."Souche No. DGX", TODAY, true, false);
+            "No DGX" := GestionNoSouche.GetNextNo(ParamVente."Souche No. DGX", TODAY);
         end;
     end;
 
     var
         ParamVente: Record "Sales & Receivables Setup";
-        GestionNoSouche: Codeunit NoSeriesManagement;
+        GestionNoSouche: Codeunit "No. Series";
 }
 

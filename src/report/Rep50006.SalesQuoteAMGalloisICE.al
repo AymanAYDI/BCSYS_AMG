@@ -27,6 +27,7 @@ report 50006 "Sales-Quote AMGallois ICE"
     DefaultLayout = RDLC;
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -829,14 +830,17 @@ report 50006 "Sales-Quote AMGallois ICE"
                     field(NoOfCopiesF; NoOfCopies)
                     {
                         Caption = 'No. of Copies', Comment = 'FRA="Nombre de copies"';
+                        ApplicationArea = All;
                     }
                     field(ShowInternalInfoF; ShowInternalInfo)
                     {
                         Caption = 'Show Internal Information', Comment = 'FRA="Afficher info. internes"';
+                        ApplicationArea = All;
                     }
                     field(ArchiveDocumentF; ArchiveDocument)
                     {
                         Caption = 'Archive Document', Comment = 'FRA="Archiver document"';
+                        ApplicationArea = All;
 
                         trigger OnValidate()
                         begin
@@ -848,6 +852,7 @@ report 50006 "Sales-Quote AMGallois ICE"
                     {
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
+                        ApplicationArea = All;
 
                         trigger OnValidate()
                         begin

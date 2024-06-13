@@ -5,6 +5,7 @@ report 50015 "Etiquette article"
     DefaultLayout = RDLC;
     RDLCLayout = './src/report/rdl/Etiquettearticle.rdl';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {

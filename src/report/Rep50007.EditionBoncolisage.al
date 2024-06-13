@@ -30,6 +30,7 @@ report 50007 "Edition Bon colisage"
     Caption = 'Sales - Shipment', Comment = 'FRA="Ventes : Expédition"';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -848,7 +849,6 @@ report 50007 "Edition Bon colisage"
                         begin
                             if TrackingSpecCount = 0 then
                                 CurrReport.BREAK();
-                            CurrReport.NEWPAGE();
                             SETRANGE(Number, 1, TrackingSpecCount);
                             TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");
@@ -1016,28 +1016,28 @@ report 50007 "Edition Bon colisage"
                     Caption = 'Options', Comment = 'FRA="Options"';
                     field(NoOfCopiesF; NoOfCopies)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'No. of Copies', Comment = 'FRA="Nombre de copies"';
                     }
                     field(ShowInternalInfoF; ShowInternalInfo)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Internal Information', Comment = 'FRA="Afficher info. internes"';
                     }
                     field(LogInteractionF; LogInteraction)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Log Interaction', Comment = 'FRA="Journal interaction"';
                         Enabled = LogInteractionEnable;
                     }
                     field("Show Correction Lines"; ShowCorrectionLines)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Correction Lines', Comment = 'FRA="Afficher lignes correction"';
                     }
                     field(ShowLotSNF; ShowLotSN)
                     {
-                        ApplicationArea = Basic, Suite;
+                        ApplicationArea = All;
                         Caption = 'Show Serial/Lot Number Appendix', Comment = 'FRA="Afficher annexe numéro série/lot"';
                     }
                     field(DisplayAsmInfoF; DisplayAssemblyInformation)

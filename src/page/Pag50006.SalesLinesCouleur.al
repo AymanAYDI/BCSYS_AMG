@@ -34,7 +34,7 @@ page 50006 "Sales Lines Couleur"
                 }
                 field(Description; Rec.Description)
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     StyleExpr = GTxtStyleText;
                 }
                 field("Qty. to Ship"; Rec."Qty. to Ship")
@@ -85,7 +85,7 @@ page 50006 "Sales Lines Couleur"
                 Image = Line;
                 action("Show Document")
                 {
-                    ApplicationArea = Basic, Suite;
+                    ApplicationArea = All;
                     Caption = 'Show Document', Comment = 'FRA="Afficher document"';
                     Image = View;
                     Promoted = true;

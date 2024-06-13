@@ -1,3 +1,8 @@
+namespace BCSYS.AMGALLOIS.Basic;
+
+using Microsoft.Inventory.Item;
+using System.Text;
+
 codeunit 50000 MgtBarCode //TODO: A revoir
 {
     //     // Manager BARCODE

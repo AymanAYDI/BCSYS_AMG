@@ -11,6 +11,7 @@ report 50008 "DGX IATA"
     PreviewMode = PrintLayout;
     WordMergeDataItem = CopyLoop;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
