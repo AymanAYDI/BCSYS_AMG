@@ -470,31 +470,31 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeCheckNoAndShowConfirm - NamedType Text057</note>
           <target>La suppression de ce document va engendrer une discontinuité dans la souche des avoirs acompte. Un avoir acompte vide %1 va être créé pour éviter une discontinuité dans la souche de numéros.\\Voulez-vous continuer ?</target>
         </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Commande achat,Commande achat avec attestation TVA</source>
-          <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextSTR</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
           <source>Choisisez votre impression :</source>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextDemande</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1551035253 - Method 340030009 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
           <source>Commande achat,Commande achat avec attestation TVA</source>
           <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextSTR</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Choisisez votre impression :</source>
-          <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextDemande</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforePrintRecords - NamedType TextSTR</note>
         </trans-unit>
         <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 2120271594" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purchase - Quote</source>
           <note from="Developer" annotates="general" priority="2">FRA="Demande de prix"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType PurchQuoteTxt</note>
           <target>Demande de prix</target>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1648330321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choisisez votre impression :</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextDemande</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1551035253 - Method 2254131206 - NamedType 1757572700" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Commande achat,Commande achat avec attestation TVA</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit AMG_Events - Method OnBeforeSendRecords - NamedType TextSTR</note>
         </trans-unit>
         <trans-unit id="Codeunit 3803183111 - Method 2595072665 - NamedType 3921243024" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fiscally Closed</source>
@@ -9269,10 +9269,10 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item - Field Grade - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 3276313895 - Field 4201773078 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
-          <source>History</source>
+        <trans-unit id="TableExtension 3276313895 - Field 3647717853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
+          <source>Historique</source>
           <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item - Field History - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item - Field Historique - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3276313895 - Field 508993606 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
           <source>Last Date Modified Price</source>
@@ -9409,13 +9409,15 @@
         </trans-unit>
         <trans-unit id="TableExtension 2156531793 - Field 4239513174 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
           <source>Gross Weight</source>
-          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Developer" annotates="general" priority="2">FRA="Poids brut"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesHeader - Field Gross Weight - Property Caption</note>
+          <target>Poids brut</target>
         </trans-unit>
         <trans-unit id="TableExtension 2156531793 - Field 3088522385 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
           <source>Net Weight</source>
-          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Developer" annotates="general" priority="2">FRA="Poids net"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesHeader - Field Net Weight - Property Caption</note>
+          <target>Poids net</target>
         </trans-unit>
         <trans-unit id="TableExtension 1335712434 - Field 246996468 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809936682">
           <source>Additional terms of delivery</source>
@@ -9425,13 +9427,15 @@
         </trans-unit>
         <trans-unit id="TableExtension 3664586602 - Field 3907478209 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2574427010">
           <source>Vendor</source>
-          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Developer" annotates="general" priority="2">FRA="Fabricant"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesLine - Field Fournisseur article - Property Caption</note>
+          <target>Fabricant</target>
         </trans-unit>
         <trans-unit id="TableExtension 3664586602 - Field 457244448 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2574427010">
           <source>Marge</source>
-          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Developer" annotates="general" priority="2">FRA="Marge"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesLine - Field Marge - Property Caption</note>
+          <target>Marge</target>
         </trans-unit>
         <trans-unit id="TableExtension 3664586602 - Field 3255363281 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2574427010">
           <source>% Marge</source>
@@ -9440,8 +9444,9 @@
         </trans-unit>
         <trans-unit id="TableExtension 3664586602 - Field 3823797279 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2574427010">
           <source>Customer Name</source>
-          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Developer" annotates="general" priority="2">FRA="Nom Client"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesLine - Field Nom Client - Property Caption</note>
+          <target>Nom Client</target>
         </trans-unit>
         <trans-unit id="TableExtension 3664586602 - Field 1957029838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2574427010">
           <source>Sel</source>

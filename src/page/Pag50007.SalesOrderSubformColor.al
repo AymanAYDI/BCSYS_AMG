@@ -1744,11 +1744,10 @@ page 50007 "Sales Order Subform Color"
     var
         DocumentLineTrackingPage: Page "Document Line Tracking";
     begin
-        //TODO : A activer après migration des données
-        // Clear(DocumentLineTrackingPage);
-        // DocumentLineTrackingPage.SetSourceDoc(
-        //     "Document Line Source Type"::"Sales Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        // DocumentLineTrackingPage.RunModal();
+        Clear(DocumentLineTrackingPage);
+        DocumentLineTrackingPage.SetSourceDoc(
+            "Document Line Source Type"::"Sales Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        DocumentLineTrackingPage.RunModal();
     end;
 
     local procedure SetLocationCodeMandatory()

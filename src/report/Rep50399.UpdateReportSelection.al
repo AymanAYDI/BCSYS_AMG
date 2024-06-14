@@ -17,6 +17,8 @@ report 50399 "Update Report Selection"
             trigger OnAfterGetRecord()
             begin
                 case "Report ID" of
+                    208:
+                        "Report ID" := 50308;
                     1303:
                         "Report ID" := 50303;
                     1304:
@@ -38,6 +40,8 @@ report 50399 "Update Report Selection"
             trigger OnAfterGetRecord()
             begin
                 case "Report ID" of
+                    208:
+                        "Report ID" := 50308;
                     1303:
                         "Report ID" := 50303;
                     1304:
@@ -59,6 +63,8 @@ report 50399 "Update Report Selection"
             trigger OnAfterGetRecord()
             begin
                 case "Report ID" of
+                    208:
+                        "Report ID" := 50308;
                     1303:
                         "Report ID" := 50303;
                     1304:
@@ -81,6 +87,8 @@ report 50399 "Update Report Selection"
             trigger OnAfterGetRecord()
             begin
                 case "Report ID" of
+                    208:
+                        "Report ID" := 50308;
                     1303:
                         "Report ID" := 50303;
                     1304:
@@ -102,6 +110,8 @@ report 50399 "Update Report Selection"
             trigger OnAfterGetRecord()
             begin
                 case "Report ID" of
+                    208:
+                        "Report ID" := 50308;
                     1303:
                         "Report ID" := 50303;
                     1304:

@@ -8,7 +8,7 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
     {
         addafter("Description 2")
         {
-            field(Historique; Rec.History)
+            field(Historique; Rec.Historique)
             {
                 Lookup = true;
                 DrillDown = true;
@@ -160,10 +160,8 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
                 trigger OnAction()
                 var
                     LRecArticle: Record Item;
-                    LCUCodeBar: Codeunit MgtBarCode;
                 begin
-                    if not Rec.CodeBar then
-                        LCUCodeBar.AddCodeBarAztec(Rec);
+                    Rec.AddCodeBarAztec();
                     LRecArticle.SetRange("No.", Rec."No.");
                     REPORT.RUN(Report::"Etiquette article", true, true, LRecArticle);
                 end;

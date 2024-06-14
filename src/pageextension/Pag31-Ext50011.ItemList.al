@@ -14,7 +14,7 @@ pageextension 50011 ItemList extends "Item List" //31
         }
         addafter("Unit Price")
         {
-            field(Historique; Rec.History)
+            field(Historique; Rec.Historique)
             {
                 TableRelation = "Historique ventes".Reference;
                 ApplicationArea = All;
@@ -36,10 +36,6 @@ pageextension 50011 ItemList extends "Item List" //31
             {
                 Caption = 'ONU', Comment = 'FRA="ONU"';
                 Image = "Table";
-                Promoted = true;
-                PromotedCategory = Category13;
-                PromotedIsBig = true;
-                PromotedOnly = true;
                 RunObject = Page "Liste ONU";
                 ApplicationArea = All;
             }

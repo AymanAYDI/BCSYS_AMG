@@ -135,7 +135,7 @@ table 50009 Colis
     begin
         if "No." = '' then begin
             ParamVente.GET();
-            "No." := GestionNoSouche.DoGetNextNo(ParamVente."Souche No. colis", TODAY, true, false);
+            "No." := GestionNoSouche.GetNextNo(ParamVente."Souche No. colis", TODAY);
         end;
 
         if Rec.GETFILTER("No. expedition") <> '' then
@@ -147,7 +147,7 @@ table 50009 Colis
         GRecColisage: Record Colisage;
         ParamVente: Record "Sales & Receivables Setup";
         GRecSalesShipingLine: Record "Sales Shipment Line";
-        GestionNoSouche: Codeunit NoSeriesManagement;
+        GestionNoSouche: Codeunit "No. Series";
 
     procedure FModiReferenceColis(PSigne: Option PLUS,MOINS)
     begin

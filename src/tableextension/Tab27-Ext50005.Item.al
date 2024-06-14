@@ -57,13 +57,13 @@ tableextension 50005 Item extends Item //27
         {
             Caption = 'Material', Comment = 'FRA="Matérial"';
         }
-        field(50100; History; Boolean)
+        field(50100; Historique; Boolean)
         {
             CalcFormula = exist("Historique ventes" where(Reference = field("No.")));
             Editable = false;
             FieldClass = FlowField;
             TableRelation = "Historique ventes";
-            Caption = 'History';
+            Caption = 'Historique';
         }
         field(50110; "Type carbo"; Boolean)
         {
@@ -122,5 +122,13 @@ tableextension 50005 Item extends Item //27
         exit(VATPostingSetup."VAT %" / 100);
     end;
 
+    procedure AddCodeBarAztec()
+    begin
+        if not Rec.CodeBar then begin
+            Rec.CodeBar := true;
+            Rec.Modify();
+            COMMIT();
+        end;
+    end;
 }
 

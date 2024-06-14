@@ -49,7 +49,6 @@ permissionset 50000 "AM GALLOIS"
         report "Update Report Selection" = X,
         codeunit AMG_Events = X,
         codeunit AMG_Functions = X,
-        codeunit MgtBarCode = X,
         page "AMG Business Manager Role Cent" = X,
         page Colis = X,
         page DELItemDrillDownCarbo = X,

@@ -17,7 +17,7 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         {
             CalcFormula = sum("Sales Line"."Gross Weight" where("Document Type" = field("Document Type"),
                                                                  "Document No." = field("No.")));
-            Caption = 'Gross Weight';
+            Caption = 'Gross Weight', Comment = 'FRA="Poids brut"';
             DecimalPlaces = 0 : 5;
             FieldClass = FlowField;
         }
@@ -25,7 +25,7 @@ tableextension 50007 SalesHeader extends "Sales Header" //36
         {
             CalcFormula = sum("Sales Line"."Net Weight" where("Document Type" = field("Document Type"),
                                                                "Document No." = field("No.")));
-            Caption = 'Net Weight';
+            Caption = 'Net Weight', Comment = 'FRA="Poids net"';
             DecimalPlaces = 0 : 5;
             FieldClass = FlowField;
         }
