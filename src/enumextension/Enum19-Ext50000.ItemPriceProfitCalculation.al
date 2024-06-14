@@ -6,6 +6,6 @@ enumextension 50000 "ItemPriceProfitCalculation" extends "Item Price Profit Calc
 
     value(50000; "Price=Last Direct Cost+Profit")
     {
-        Caption = 'Price=Last Direct Cost+Profit', Comment = 'FRA="Prix=DCA+Marge"';
+        Caption = 'Price=Last Direct Cost+Profit', Comment = 'FRA="Prix>>DCA+Marge"';
     }
 }

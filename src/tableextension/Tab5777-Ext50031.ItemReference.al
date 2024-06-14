@@ -4,7 +4,6 @@ using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Item;
 tableextension 50031 ItemReference extends "Item Reference" //5777
 {
-    //TODO check 
     fields
     {
         modify("Item No.")
