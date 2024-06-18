@@ -29,6 +29,7 @@ report 50322 "Standard Purchase - Order"
     PreviewMode = PrintLayout;
     WordMergeDataItem = "Purchase Header";
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Purchase Header"; "Purchase Header")

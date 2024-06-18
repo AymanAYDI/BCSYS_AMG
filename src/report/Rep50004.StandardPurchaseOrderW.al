@@ -1019,7 +1019,7 @@ report 50004 "Standard Purchase - Order W"
         LogInteraction := LogInteractionParam;
     end;
 
-    local procedure FormatAddressFields(var PurchaseHeader: Record 38)
+    local procedure FormatAddressFields(var PurchaseHeader: Record "Purchase Header")
     begin
         FormatAddr.GetCompanyAddr(PurchaseHeader."Responsibility Center", RespCenter, CompanyInfo, CompanyAddr);
         FormatAddr.PurchHeaderBuyFrom(BuyFromAddr, PurchaseHeader);
@@ -1028,7 +1028,7 @@ report 50004 "Standard Purchase - Order W"
         FormatAddr.PurchHeaderShipTo(ShipToAddr, PurchaseHeader);
     end;
 
-    local procedure FormatDocumentFields(PurchaseHeader: Record 38)
+    local procedure FormatDocumentFields(PurchaseHeader: Record "Purchase Header")
     begin
         FormatDocument.SetTotalLabels(PurchaseHeader."Currency Code", TotalText, TotalInclVATText, TotalExclVATText);
         FormatDocument.SetPurchaser(SalespersonPurchaser, PurchaseHeader."Purchaser Code", PurchaserText);

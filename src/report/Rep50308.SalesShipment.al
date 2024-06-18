@@ -29,6 +29,7 @@ report 50308 "Sales - Shipment"
     Caption = 'Sales - Shipment', Comment = 'FRA="Ventes : Expédition"';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Sales Shipment Header"; "Sales Shipment Header")

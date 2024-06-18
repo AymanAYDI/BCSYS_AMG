@@ -1480,8 +1480,8 @@ report 50306 "Standard Sales - Invoice"
     end;
 
     var
-        GRecCountry: Record 9;
-        GRecCust2: Record 18;
+        GRecCountry: Record "Country/Region";
+        GRecCust2: Record Customer;
         CompanyInfo: Record "Company Information";
         Cust: Record Customer;
         GLSetup: Record "General Ledger Setup";
