@@ -7788,6 +7788,11 @@
           <note from="Developer" annotates="general" priority="2">FRA="Clients : Grand livre client"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension CustomerList - Action ReportCustomerDetailTrial2 - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1310899134 - Action 2446593857 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1997869518">
+          <source>Décocher tout sauf Devis</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ExtendedText - Action ActDecocher - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2009136746 - Action 1216513157 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4219821699">
           <source>View a detail trial balance for the general ledger accounts that you specify.</source>
           <note from="Developer" annotates="general" priority="2">FRA="Affichez un grand livre pour les comptes généraux que vous spécifiez."</note>
@@ -8332,6 +8337,11 @@
           <source>S.Proforma</source>
           <note from="Developer" annotates="general" priority="2">FRA="S.Proforma"</note>
           <note from="Xliff Generator" annotates="general" priority="3">EnumExtension ReportSelectionUsage - EnumValue S.Proforma - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="EnumExtension 2411879780 - EnumValue 3333484349 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Enum 405939076">
+          <source>P.OrderVAT</source>
+          <note from="Developer" annotates="general" priority="2">FRA="P.Commande avec TVA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">EnumExtension ReportSelectionUsagePurchase - EnumValue P.OrderVAT - Property Caption</note>
         </trans-unit>
       </group>
     </body>

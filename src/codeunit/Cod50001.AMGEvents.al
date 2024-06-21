@@ -2,6 +2,7 @@ namespace BCSYS.AMGALLOIS.Basic;
 
 using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Posting;
+using Microsoft.Purchases.Setup;
 using Microsoft.Foundation.Address;
 using Microsoft.Foundation.AuditCodes;
 using Microsoft.Foundation.Reporting;
@@ -18,7 +19,6 @@ using Microsoft.Sales.Posting;
 using Microsoft.Sales.Receivables;
 using Microsoft.Utilities;
 using System.Utilities;
-using Microsoft.Finance.ReceivablesPayables;
 using System.IO;
 using Microsoft.Finance.Currency;
 using System.Reflection;
@@ -314,12 +314,21 @@ codeunit 50001 "AMG_Events"
     begin
         ShowConfirmCloseUnposted := false;
     end;
+    //Page 347
+    [EventSubscriber(ObjectType::Page, Page::"Report Selection - Purchase", OnSetUsageFilterOnAfterSetFiltersByReportUsage, '', false, false)]
+    local procedure OnSetUsageFilterOnAfterSetFiltersByReportUsage(var Rec: Record "Report Selections"; ReportUsage2: Enum "Report Selection Usage Purchase")
+    begin
+        if ReportUsage2 = ReportUsage2::"P.OrderVAT" then
+            Rec.SETRANGE(Usage, Rec.Usage::"P.OrderVAT");
+    end;
+
     //Codeunit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", OnUpdateUnitCostOnAfterAssignLastDirectCost, '', false, false)]
     local procedure OnUpdateUnitCostOnAfterAssignLastDirectCost(var ValueEntry: Record "Value Entry"; var Item: Record Item; LastDirectCost: Decimal)
     begin
         Item.Validate("Last Direct Cost", LastDirectCost);
     end;
+
     //Codeunit 80
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnAfterPostSalesDoc, '', false, false)]
     local procedure OnAfterPostSalesDoc(var SalesHeader: Record "Sales Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; SalesShptHdrNo: Code[20]; RetRcpHdrNo: Code[20]; SalesInvHdrNo: Code[20]; SalesCrMemoHdrNo: Code[20]; CommitIsSuppressed: Boolean; InvtPickPutaway: Boolean; var CustLedgerEntry: Record "Cust. Ledger Entry"; WhseShip: Boolean; WhseReceiv: Boolean; PreviewMode: Boolean)

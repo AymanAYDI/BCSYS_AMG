@@ -9,7 +9,7 @@
   "EULA": "https://www.bcsys.fr/",
   "help": "https://www.bcsys.fr/",
   "url": "https://www.bcsys.fr/",
-  "logo": "./resource/logo/BCSYS.jpg",
+  "logo": "./resource/logo/AMG.jpg",
   "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
@@ -25,7 +25,7 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "12.0",
+  "runtime": "13.0",
   "target": "Cloud",
     "features": [
 "NoImplicitWith",
