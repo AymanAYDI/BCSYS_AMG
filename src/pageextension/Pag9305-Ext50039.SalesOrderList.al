@@ -27,5 +27,10 @@ pageextension 50039 SalesOrderList extends "Sales Order List" //9305
             end;
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("No.", "Document Type");
+        Rec.Ascending(false);
+    end;
 }
 

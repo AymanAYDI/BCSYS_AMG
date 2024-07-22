@@ -13,12 +13,16 @@ pageextension 50029 PostedSalesInvoices extends "Posted Sales Invoices" //143
             }
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("No.");
+    end;
+
     trigger OnDeleteRecord(): Boolean
     var
         DeleteErr: Label 'Deletion not authorized', Comment = 'FRA="Suppresion non autorisée"';
     begin
         Error(DeleteErr);
     end;
-
 }
 

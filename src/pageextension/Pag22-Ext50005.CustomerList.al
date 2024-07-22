@@ -83,4 +83,9 @@ pageextension 50005 CustomerList extends "Customer List" //22
             }
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey(Name);
+        Rec.Ascending(true);
+    end;
 }

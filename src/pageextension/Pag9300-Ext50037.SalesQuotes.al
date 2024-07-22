@@ -24,5 +24,10 @@ pageextension 50037 SalesQuotes extends "Sales Quotes" //9300
             end;
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("No.", "Document Type");
+        Rec.Ascending(false);
+    end;
 }
 

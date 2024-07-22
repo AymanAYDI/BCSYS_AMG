@@ -29,5 +29,10 @@ pageextension 50040 PurchaseOrderList extends "Purchase Order List" //9307
             }
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("No.", "Document Type");
+        Rec.Ascending(false);
+    end;
 }
 

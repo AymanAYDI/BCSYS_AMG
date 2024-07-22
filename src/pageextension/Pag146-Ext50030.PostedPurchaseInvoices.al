@@ -9,7 +9,7 @@ pageextension 50030 PostedPurchaseInvoices extends "Posted Purchase Invoices" //
         LRecParamAchat: Record "Purchases & Payables Setup";
         LTextDate: Text[30];
     begin
-        Rec.FindFirst();
+        Rec.SetCurrentKey("No.");
         // r‚cup‚ration de la date saisie dans les paramŠtres achats pour affichage des factures achat enregistr‚es
         // dont la date de comptabilisation est sup‚rieure ou ‚gale … la date dans les paramŠtres
         LRecParamAchat.FINDFIRST();
