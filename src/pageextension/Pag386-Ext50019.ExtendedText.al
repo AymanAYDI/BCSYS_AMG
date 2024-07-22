@@ -15,6 +15,7 @@ pageextension 50019 "ExtendedText" extends "Extended Text" //386
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ApplicationArea = All;
                 trigger OnAction()
                 begin
                     Rec."Sales Quote" := true;

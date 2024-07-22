@@ -352,7 +352,7 @@ codeunit 50001 "AMG_Events"
         LRecHisto.DELDeleteDevis(SalesHeader."No.");
         LRecHisto.DELAddCmdVente(SalesHeader2."No.", SalesHeader2."Document Date");
     end;
-    //Codeunit 229 //TODO : A tester le fonctionnement
+    //Codeunit 229
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", OnBeforeDoPrintSalesHeader, '', false, false)]
     local procedure OnBeforeDoPrintSalesHeader(var SalesHeader: Record "Sales Header"; ReportUsage: Integer; SendAsEmail: Boolean; var IsPrinted: Boolean)
     var
@@ -361,10 +361,16 @@ codeunit 50001 "AMG_Events"
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Quote then begin
             Selected := DIALOG.STRMENU('Devis,Proforma', 1, 'Choisissez le modèle de document');
-            if Selected = 2 then
-                ReportUsage := ReportSelections.Usage::"S.Proforma".AsInteger()
-            else
-                ReportUsage := ReportSelections.Usage::"S.Quote".AsInteger();
+            if Selected = 0 then
+                Error('');
+            if Selected = 2 then begin
+                if SendAsEmail then
+                    ReportSelections.SendEmailToCust(
+                        ReportSelections.Usage::"S.Proforma".AsInteger(), SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
+                else
+                    ReportSelections.PrintForCust(ReportSelections.Usage::"S.Proforma", SalesHeader, SalesHeader.FieldNo("Bill-to Customer No."));
+                IsPrinted := true;
+            end;
         end;
     end;
     //Codeunit 365
