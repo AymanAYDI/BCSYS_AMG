@@ -1268,6 +1268,16 @@
           <note from="Developer" annotates="general" priority="2">FRA="Liste des articles du colisage"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page ListeColisage - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2208929791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted Sales Shipment - Update</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Expédition vente enregistrée - Mise à jour"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Posted Sales Shpt. Sub Update - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2208929791 - Control 3097346278 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipping</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Livraison"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Posted Sales Shpt. Sub Update - Control Shipping - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3579712350 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales Lines</source>
           <note from="Developer" annotates="general" priority="2">FRA="Lignes vente"</note>
@@ -7768,6 +7778,11 @@
           <note from="Developer" annotates="general" priority="2">FRA="Grand livre"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension ChartofAccounts - Action Detail Trial Balance spe - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 591338493 - Control 1376893302 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
+          <source>Specifies the value of the Info field.</source>
+          <note from="Developer" annotates="general" priority="2">%FRA="Info"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension CompanyInformation - Control Info Picture - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 591338493 - Control 2160116223 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
           <source>Factor</source>
           <note from="Developer" annotates="general" priority="2">FRA="Factor"</note>
@@ -7847,6 +7862,11 @@
           <source>DGX</source>
           <note from="Developer" annotates="general" priority="2">FRA="DGX"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedSalesShipment - Action DGX - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 4033383968 - Action 4250042935 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1227332174">
+          <source>Update Document Line</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Mettre à jour la ligne"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedSalesShptSubform - Action AMG Update Document - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 4033383968 - Action 1163708070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1227332174">
           <source>Colis</source>

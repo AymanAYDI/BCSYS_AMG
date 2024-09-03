@@ -444,4 +444,19 @@ codeunit 50001 "AMG_Events"
         if ReportId = Report::Microsoft.Purchases.Reports."Vendor Detail Trial Balance FR" then
             NewReportId := Report::"Vendor Detail Trial Balance";
     end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Posted Sales Shipment - Update", OnAfterRecordChanged, '', false, false)]
+    local procedure OnAfterRecordChanged(var SalesShipmentHeader: Record "Sales Shipment Header"; xSalesShipmentHeader: Record "Sales Shipment Header"; var IsChanged: Boolean)
+    begin
+        IsChanged := IsChanged or
+          (SalesShipmentHeader."Your Reference" <> xSalesShipmentHeader."Your Reference") or
+            (SalesShipmentHeader."Compl. cond. livraison" <> xSalesShipmentHeader."Compl. cond. livraison");
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Shipment Header - Edit", OnBeforeSalesShptHeaderModify, '', false, false)]
+    local procedure OnBeforeSalesShptHeaderModify(var SalesShptHeader: Record "Sales Shipment Header"; FromSalesShptHeader: Record "Sales Shipment Header")
+    begin
+        SalesShptHeader."Your Reference" := FromSalesShptHeader."Your Reference";
+        SalesShptHeader."Compl. cond. livraison" := FromSalesShptHeader."Compl. cond. livraison";
+    end;
 }

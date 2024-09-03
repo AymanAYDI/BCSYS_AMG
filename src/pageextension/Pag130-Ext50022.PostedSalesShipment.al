@@ -3,8 +3,6 @@ namespace BCSYS.AMGALLOIS.Basic;
 using Microsoft.Sales.History;
 pageextension 50022 PostedSalesShipment extends "Posted Sales Shipment" //130
 {
-    //TODO cannot be customized
-    // ModifyAllowed =true;
     layout
     {
         addafter("Document Date")

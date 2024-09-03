@@ -59,7 +59,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!PurchaseLineNoCaption.Value</Value>
+                                                    <Value>=Fields!PurchaseLineNoCaption.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -97,7 +97,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!PurchaseLineDescCap.Value</Value>
+                                                    <Value>=Fields!PurchaseLineDescCap.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -135,7 +135,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!PurchaseLineQuantityCap.Value</Value>
+                                                    <Value>=Fields!PurchaseLineQuantityCap.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -175,7 +175,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!PurchaseLineUOMCaption.Value</Value>
+                                                    <Value>=Fields!PurchaseLineUOMCaption.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -220,7 +220,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto" />
+                                                    <Value />
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Segoe UI</FontFamily>
@@ -263,7 +263,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto" />
+                                                    <Value />
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Segoe UI</FontFamily>
@@ -305,7 +305,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto" />
+                                                    <Value />
                                                     <Style />
                                                   </TextRun>
                                                 </TextRuns>
@@ -328,7 +328,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!Description_PurchaseLine.Value</Value>
+                                                    <Value>=Fields!Description_PurchaseLine.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -366,7 +366,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!No_PurchaseLine.Value</Value>
+                                                    <Value>=Fields!No_PurchaseLine.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -401,7 +401,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!Description_PurchaseLine.Value</Value>
+                                                    <Value>=Fields!Description_PurchaseLine.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -428,7 +428,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Code.BlankZero(Fields!Quantity_PurchaseLine.Value)</Value>
+                                                    <Value>=Code.BlankZero(Fields!Quantity_PurchaseLine.Value)</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -457,7 +457,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!UnitOfMeasure_PurchaseLine.Value</Value>
+                                                    <Value>=Fields!UnitOfMeasure_PurchaseLine.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -492,7 +492,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!LineDimensionsCaption.Value</Value>
+                                                    <Value>=Fields!LineDimensionsCaption.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -526,7 +526,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=Fields!DimText1.Value</Value>
+                                                    <Value>=Fields!DimText1.Value</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Calibri</FontFamily>
@@ -640,7 +640,7 @@
                               </Filters>
                               <Top>0.3175cm</Top>
                               <Height>2.63172cm</Height>
-                              <Width>7.38771in</Width>
+                              <Width>7.38769in</Width>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -674,7 +674,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto" />
+                                                    <Value />
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Segoe UI</FontFamily>
@@ -778,7 +778,7 @@ Cstr(Fields!FooterVAT.Value)
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value EvaluationMode="Auto">=IIF(Code.IsNewPage(Fields!PurchHeadNo.Value,Fields!OutpuNo.Value),TRUE,FALSE)</Value>
+                                                    <Value>=IIF(Code.IsNewPage(Fields!PurchHeadNo.Value,Fields!OutpuNo.Value),TRUE,FALSE)</Value>
                                                     <Style>
                                                       <FontStyle>Normal</FontStyle>
                                                       <FontFamily>Segoe UI</FontFamily>
@@ -891,7 +891,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=Code.GetData(35,1) &amp; " " &amp; Code.GetGroupPageNumber(ReportItems!NewPage.Value,Globals!PageNumber)</Value>
+                      <Value>=Code.GetData(35,1) &amp; " " &amp; Code.GetGroupPageNumber(ReportItems!NewPage.Value,Globals!PageNumber)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Segoe UI</FontFamily>
@@ -919,7 +919,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(23,1)</Value>
+                      <Value>=code.GetData(23,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -948,7 +948,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=Replace(Replace(Code.GetData(35,1), "%1", Globals!PageNumber), "%2", Globals!TotalPages)</Value>
+                      <Value>=Replace(Replace(Code.GetData(35,1), "%1", Globals!PageNumber), "%2", Globals!TotalPages)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -977,7 +977,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(51,1) + " " + code.GetData(14,1)</Value>
+                      <Value>=code.GetData(51,1) + " " + code.GetData(14,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1025,7 +1025,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(31,1)</Value>
+                      <Value>=code.GetData(31,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1051,7 +1051,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(30,1)</Value>
+                      <Value>=code.GetData(30,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1077,7 +1077,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(29,1)</Value>
+                      <Value>=code.GetData(29,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1103,7 +1103,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(28,1)</Value>
+                      <Value>=code.GetData(28,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1129,7 +1129,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(27,1)</Value>
+                      <Value>=code.GetData(27,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1155,7 +1155,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(26,1)</Value>
+                      <Value>=code.GetData(26,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1181,7 +1181,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(25,1)</Value>
+                      <Value>=code.GetData(25,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1207,7 +1207,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(24,1)</Value>
+                      <Value>=code.GetData(24,1)</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Calibri</FontFamily>
@@ -1236,7 +1236,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(57,1)</Value>
+                          <Value>=code.GetData(57,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                             <FontWeight>Bold</FontWeight>
@@ -1266,7 +1266,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(56,1)</Value>
+                          <Value>=code.GetData(56,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -1297,7 +1297,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(32,1)</Value>
+                          <Value>=code.GetData(32,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -1329,7 +1329,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(19,1)</Value>
+                          <Value>=code.GetData(19,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -1361,7 +1361,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(48,1)</Value>
+                          <Value>=code.GetData(48,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                             <FontWeight>Bold</FontWeight>
@@ -1393,7 +1393,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(36,1)</Value>
+                          <Value>=code.GetData(36,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                             <FontWeight>Bold</FontWeight>
@@ -1425,7 +1425,7 @@ Cstr(Fields!FooterVAT.Value)
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value EvaluationMode="Auto">=code.GetData(55,1)</Value>
+                          <Value>=code.GetData(55,1)</Value>
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -1476,7 +1476,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(43,1)</Value>
+                      <Value>=code.GetData(43,1)</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontWeight>Bold</FontWeight>
@@ -1513,7 +1513,7 @@ Cstr(Fields!FooterVAT.Value)
               <Width>5.40629cm</Width>
               <ZIndex>15</ZIndex>
               <Visibility>
-                <Hidden>=iif((IsNothing(Fields!CompanyPicture.Value) = True), True, False)</Hidden>
+                <Hidden>=iif((IsNothing(Fields!CompanyInfoPicture.Value) = True), True, False)</Hidden>
               </Visibility>
               <Style>
                 <Border>
@@ -1536,7 +1536,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(58,1)</Value>
+                      <Value>=code.GetData(58,1)</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>9pt</FontSize>
@@ -1572,7 +1572,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(59,1) + " " + code.GetData(60,1) + " : " + code.GetData(61,1)</Value>
+                      <Value>=code.GetData(59,1) + " " + code.GetData(60,1) + " : " + code.GetData(61,1)</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>9pt</FontSize>
@@ -1604,7 +1604,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(62,1) + code.GetData(63,1) + " " + code.GetData(64,1) + " " + code.GetData(65,1)</Value>
+                      <Value>=code.GetData(62,1) + code.GetData(63,1) + " " + code.GetData(64,1) + " " + code.GetData(65,1)</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>9pt</FontSize>
@@ -1636,7 +1636,7 @@ Cstr(Fields!FooterVAT.Value)
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=code.GetData(66,1) + "  -  " + code.GetData(67,1) + " " + code.GetData(68,1) + "  -  " + code.GetData(69,1) + " " + code.GetData(70,1)</Value>
+                      <Value>=code.GetData(66,1) + "  -  " + code.GetData(67,1) + " " + code.GetData(68,1) + "  -  " + code.GetData(69,1) + " " + code.GetData(70,1)</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>9pt</FontSize>

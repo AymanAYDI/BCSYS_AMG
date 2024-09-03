@@ -4,10 +4,6 @@ using Microsoft.Sales.History;
 
 pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform" //131
 {
-    //TODO cannot be customized
-    // InsertAllowed =false;
-    // DeleteAllowed =false;
-    // ModifyAllowed =true;
     layout
     {
         modify("No.")
@@ -159,6 +155,23 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
     }
     actions
     {
+        addfirst("F&unctions")
+        {
+            action("AMG Update Document")
+            {
+                ApplicationArea = all;
+                Caption = 'Update Document Line', Comment = 'FRA="Mettre à jour la ligne"';
+                Image = Edit;
+                trigger OnAction()
+                var
+                    PostedSalesShipmentUpdate: Page "Posted Sales Shpt. Sub Update";
+                begin
+                    PostedSalesShipmentUpdate.LookupMode := true;
+                    PostedSalesShipmentUpdate.SetRec(Rec);
+                    PostedSalesShipmentUpdate.RunModal();
+                end;
+            }
+        }
         addlast(processing)
         {
             group(Colis)
@@ -173,57 +186,12 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                     ApplicationArea = All;
                     trigger OnAction()
                     var
-                        LRecColis: Record Colis;
                         LRecSalesShipmentLine: Record "Sales Shipment Line";
-                        LRecColisage: Record Colisage;
-                        LRecColis2: Record Colis;
-                        LIntNbColis: Integer;
-                        LIntI: Integer;
+                        FunctionMgt: Codeunit AMG_Functions;
                     begin
                         CurrPage.SETSELECTIONFILTER(LRecSalesShipmentLine);
 
-                        if LRecSalesShipmentLine.FINDFIRST() then
-                            if LRecSalesShipmentLine."No. Colis" <> '' then
-                                ERROR('Un Numéro de colis est déja atribué à cette ligne, veuillez le supprimer ou sélectionnez une autre ligne')
-                            else begin
-                                LRecColis.INIT();
-                                LRecColis."No. expedition" := LRecSalesShipmentLine."Document No.";
-                                LRecColis.INSERT(true);
-
-                                LRecColisage.INIT();
-                                LRecColisage."No." := LRecColis."No.";
-                                LRecColisage."No. ligne" := 1;
-                                LRecColisage."No. expedition" := LRecSalesShipmentLine."Document No.";
-                                LRecColisage."No. ligne expedition" := LRecSalesShipmentLine."Line No.";
-                                LRecColisage."No. article" := LRecSalesShipmentLine."No.";
-                                LRecColisage.Quantite := LRecSalesShipmentLine.Quantity;
-                                LRecColisage.INSERT(true);
-
-                                LRecSalesShipmentLine."No. Colis" := LRecColis."No.";
-                                LRecSalesShipmentLine.MODIFY();
-
-                                LRecColis."Poids net" := LRecColisage.FCalcPoidsNetColis(LRecColis."No.");
-                                LRecColis.MODIFY();
-                                COMMIT();
-                                //DELPHI AUB 05.07.2021
-                                LIntI := 1;
-                                LRecColis2.RESET();
-                                LRecColis2.SETFILTER("No. expedition", LRecColis."No. expedition");
-                                LIntNbColis := LRecColis2.COUNT;
-                                //IF LRecColis2.FINDFIRST THEN
-                                //LRecColis."R‚f‚rence Colis" := FORMAT(LIntNbColis) + '/' + FORMAT(LIntNbColis);
-
-
-                                if LRecColis2.FIND('-') then
-                                    repeat
-                                        LRecColis2."Reference Colis" := FORMAT(LIntI) + '/' + FORMAT(LIntNbColis);
-                                        LRecColis2.MODIFY();
-                                        COMMIT();
-                                        LIntI += 1;
-                                    until LRecColis2.NEXT() <= 0;
-
-                                //END DELPHI AUB
-                            end;
+                        FunctionMgt.CreerColis(LRecSalesShipmentLine);
                     end;
                 }
             }

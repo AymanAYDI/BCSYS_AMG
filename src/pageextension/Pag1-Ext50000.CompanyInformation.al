@@ -5,6 +5,14 @@ pageextension 50000 CompanyInformation extends "Company Information" //1
 {
     layout
     {
+        addlast(General)
+        {
+            field("Info Picture"; Rec."Info Picture")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Info field.', Comment = '%FRA="Info"';
+            }
+        }
         addafter("VAT Registration No.")
         {
             field("No. EORI"; rec."No. EORI")

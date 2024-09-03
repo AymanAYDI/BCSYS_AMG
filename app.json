@@ -2,7 +2,7 @@
   "id": "6f313cba-7f15-43b1-9ba2-1d03563edc39",
   "name": "AMGALLOIS",
   "publisher": "BCSYS",
-  "version": "23.0.0.4",
+  "version": "23.0.0.9",
   "brief": "AMGALLOIS",
   "description": "AMGALLOIS",
   "privacyStatement": "https://www.bcsys.fr/",
@@ -25,7 +25,7 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "13.0",
+  "runtime": "12.0",
   "target": "Cloud",
     "features": [
 "NoImplicitWith",
