@@ -89,6 +89,24 @@ page 50021 "Sous-formulaire Colis"
                     end;
                 end;
             }
+            action("Update Colis")
+            {
+                ApplicationArea = Suite;
+                Caption = 'Update Colis', Comment = 'FRA="Mettre à jour colis"';
+                Image = Edit;
+                Enabled = Rec."No. expedition" <> '';
+
+                trigger OnAction()
+                var
+                    Colis: Record Colis;
+                    SousformulaireColis: Page "Sous-formulaire Colis";
+                begin
+                    Colis.SetRange("No. expedition", Rec."No. expedition");
+                    SousformulaireColis.SetTableView(Colis);
+                    SousformulaireColis.Editable(true);
+                    SousformulaireColis.RunModal();
+                end;
+            }
         }
     }
 

@@ -1603,6 +1603,11 @@
           <note from="Developer" annotates="general" priority="2">FRA="Expéditions - Colis"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Sous-formulaire Colis - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3213250151 - Action 894135997 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Colis</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Mettre à jour colis"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Sous-formulaire Colis - Action Update Colis - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3213250151 - Action 1524201210 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Visualiser les article du colis</source>
           <note from="Developer" annotates="general" priority="2">FRA="Visualiser les article du colis"</note>

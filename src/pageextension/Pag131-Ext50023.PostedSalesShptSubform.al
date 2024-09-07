@@ -155,23 +155,6 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
     }
     actions
     {
-        addfirst("F&unctions")
-        {
-            action("AMG Update Document")
-            {
-                ApplicationArea = all;
-                Caption = 'Update Document Line', Comment = 'FRA="Mettre à jour la ligne"';
-                Image = Edit;
-                trigger OnAction()
-                var
-                    PostedSalesShipmentUpdate: Page "Posted Sales Shpt. Sub Update";
-                begin
-                    PostedSalesShipmentUpdate.LookupMode := true;
-                    PostedSalesShipmentUpdate.SetRec(Rec);
-                    PostedSalesShipmentUpdate.RunModal();
-                end;
-            }
-        }
         addlast(processing)
         {
             group(Colis)
@@ -194,6 +177,20 @@ pageextension 50023 "PostedSalesShptSubform" extends "Posted Sales Shpt. Subform
                         FunctionMgt.CreerColis(LRecSalesShipmentLine);
                     end;
                 }
+            }
+            action("AMG Update Document")
+            {
+                ApplicationArea = all;
+                Caption = 'Update Document Line', Comment = 'FRA="Mettre à jour la ligne"';
+                Image = Edit;
+                trigger OnAction()
+                var
+                    PostedSalesShipmentUpdate: Page "Posted Sales Shpt. Sub Update";
+                begin
+                    PostedSalesShipmentUpdate.LookupMode := true;
+                    PostedSalesShipmentUpdate.SetRec(Rec);
+                    PostedSalesShipmentUpdate.RunModal();
+                end;
             }
         }
     }
