@@ -48,7 +48,7 @@ pageextension 50015 "SalesOrder" extends "Sales Order" //42
         }
         addafter("Prices Including VAT")
         {
-            field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
+            field("Gen. Bus. Posting Group AMG"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = All;
             }

@@ -41,6 +41,11 @@ using Microsoft.Sales.Reminder;
 using Microsoft.Sales.FinanceCharge;
 using Microsoft.Sales.History;
 using Microsoft.Purchases.History;
+using Microsoft.Sales.Reports;
+using Microsoft.Finance.GeneralLedger.Reports;
+using Microsoft.Purchases.Reports;
+using Microsoft.Finance.AuditFileExport;
+using Microsoft.Inventory.Reports;
 page 50008 "AMG Business Manager Role Cent"
 {
     Caption = 'Business Manager', Comment = 'FRA="Gestionnaire d''activité"';
@@ -286,6 +291,105 @@ page 50008 "AMG Business Manager Role Cent"
         }
         area(reporting)
         {
+            #region reports
+            action("Detail Trial Balance spe")
+            {
+                ApplicationArea = All;
+                Caption = 'Detail Trial Balance', Comment = 'FRA="Grand livre comptes généraux"';
+                Image = "Excel";
+                RunObject = Report "G/L Detail Trial Balance";
+                RunPageMode = Create;
+            }
+            action("Customer Detail Trial Balance")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Detail Trial Balance', Comment = 'FRA="Grand livre clients"';
+                Image = "Excel";
+                RunObject = Report "Customer Detail Trial Balance";
+                RunPageMode = Create;
+            }
+            action("Vendor Detail Trial Balance")
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs"';
+                Image = "Excel";
+                RunObject = Report "Vendor Detail Trial Balance";
+                RunPageMode = Create;
+            }
+            action("G/L Trial Balance")
+            {
+                ApplicationArea = All;
+                Caption = 'G/L Trial Balance', Comment = 'FRA="Balance comptes généraux"';
+                Image = "Excel";
+                RunObject = Report "G/L Trial Balance";
+                RunPageMode = Create;
+            }
+            action("Cust. Trial Balance")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Trial Balance', Comment = 'FRA="Balance clients"';
+                Image = "Excel";
+                RunObject = Report "Customer Trial Balance FR";
+                RunPageMode = Create;
+            }
+            action("Vend. Trial Balance")
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Trial Balance', Comment = 'FRA="Balance fournisseurs"';
+                Image = "Excel";
+                RunObject = Report "Vendor Trial Balance FR";
+                RunPageMode = Create;
+            }
+            action("Gd Livre Client Ecr.Non Lettr.")
+            {
+                ApplicationArea = All;
+                Caption = 'Cust. Detail Trial Balance', Comment = 'FRA="Grand livre clients écritures non lettrées"';
+                Image = "Excel";
+                RunObject = Report "Gd Livre Client Ecr.Non Lettr.";
+                RunPageMode = Create;
+            }
+            action("Gd Livre Fourn. Ecr.Non Lettr.")
+            {
+                ApplicationArea = All;
+                Caption = 'Vend. Detail Trial Balance', Comment = 'FRA="Grand livre fournisseurs non lettrées"';
+                Image = "Excel";
+                RunObject = Report "Gd Livre Fourn. Ecr.Non Lettr.";
+                RunPageMode = Create;
+            }
+            action("Customer - Labels")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer - Labels', Comment = 'FRA="Etiquettes clients"';
+                Image = "Excel";
+                RunObject = Report "Customer - Labels";
+                RunPageMode = Create;
+            }
+            action("Export G/L Entries - Tax Audit ")
+            {
+                ApplicationArea = All;
+                Caption = 'Export G/L Entries - Tax Audit ', Comment = 'FRA="Exporter écritures comptables - Audit fiscal"';
+                Image = "Excel";
+                RunObject = Report "Export G/L Entries - Tax Audit";
+                RunPageMode = Create;
+            }
+            action("Inventory Valuation")
+            {
+                ApplicationArea = All;
+                Caption = 'Inventory Valuation', Comment = 'FRA="Évaluation du stock"';
+                Image = "Excel";
+                RunObject = Report "Inventory Valuation";
+                RunPageMode = Create;
+            }
+            action("FR Account Schedule")
+            {
+                ApplicationArea = All;
+                Caption = 'FR Account Schedule', Comment = 'FRA="Tableau analyse Bilan/Résultat"';
+                Image = "Excel";
+                RunObject = Report "FR Account Schedule";
+                RunPageMode = Create;
+            }
+            #endregion
+
             group("Excel Reports")
             {
                 Caption = 'Excel Reports', Comment = 'FRA="États Excel"';

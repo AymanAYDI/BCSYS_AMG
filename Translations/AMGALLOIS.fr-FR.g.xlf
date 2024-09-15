@@ -717,6 +717,30 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Service Connections1 - Property Caption</note>
           <target>Connexions au service</target>
         </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 2568772933 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Balance clients"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Cust. Trial Balance - Property Caption</note>
+          <target>Balance clients</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 1228875736 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer - Labels</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Etiquettes clients"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Customer - Labels - Property Caption</note>
+          <target>Etiquettes clients</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 676532619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre clients"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Customer Detail Trial Balance - Property Caption</note>
+          <target>Grand livre clients</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 1216513157 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre comptes généraux"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Detail Trial Balance spe - Property Caption</note>
+          <target>Grand livre comptes généraux</target>
+        </trans-unit>
         <trans-unit id="Page 4276077570 - Action 1191026958 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Excel Reports</source>
           <note from="Developer" annotates="general" priority="2">FRA="États Excel"</note>
@@ -764,6 +788,54 @@
           <note from="Developer" annotates="general" priority="2">FRA="Comptabilité fournisseur âgée"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action ExcelTemplateTrialBalance - Property Caption</note>
           <target>Comptabilité fournisseur âgée</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 1840096193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Export G/L Entries - Tax Audit </source>
+          <note from="Developer" annotates="general" priority="2">FRA="Exporter écritures comptables - Audit fiscal"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Export G/L Entries - Tax Audit  - Property Caption</note>
+          <target>Exporter écritures comptables - Audit fiscal</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 777154300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>FR Account Schedule</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Tableau analyse Bilan/Résultat"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action FR Account Schedule - Property Caption</note>
+          <target>Tableau analyse Bilan/Résultat</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 3071465540 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>G/L Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Balance comptes généraux"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action G/L Trial Balance - Property Caption</note>
+          <target>Balance comptes généraux</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 341900602 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre clients écritures non lettrées"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Gd Livre Client Ecr.Non Lettr. - Property Caption</note>
+          <target>Grand livre clients écritures non lettrées</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 2990691795 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vend. Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre fournisseurs non lettrées"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Gd Livre Fourn. Ecr.Non Lettr. - Property Caption</note>
+          <target>Grand livre fournisseurs non lettrées</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 1818270507 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory Valuation</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Évaluation du stock"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Inventory Valuation - Property Caption</note>
+          <target>Évaluation du stock</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 3010866605 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Balance fournisseurs"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Vend. Trial Balance - Property Caption</note>
+          <target>Balance fournisseurs</target>
+        </trans-unit>
+        <trans-unit id="Page 4276077570 - Action 3384070579 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Detail Trial Balance</source>
+          <note from="Developer" annotates="general" priority="2">FRA="Grand livre fournisseurs"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AMG Business Manager Role Cent - Action Vendor Detail Trial Balance - Property Caption</note>
+          <target>Grand livre fournisseurs</target>
         </trans-unit>
         <trans-unit id="Page 4276077570 - Action 149945910 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cash Management</source>

@@ -6,6 +6,13 @@ pageextension 50010 "ItemCard" extends "Item Card" //30
 {
     layout
     {
+        addbefore(Description)
+        {
+            field("No. 2"; Rec."No. 2")
+            {
+                ApplicationArea = All;
+            }
+        }
         addafter("Description 2")
         {
             field(Historique; Rec.Historique)
